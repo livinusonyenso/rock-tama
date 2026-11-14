@@ -13,6 +13,7 @@
 
 ## Identity [CONFIRMED]
 
+- **Brand name:** **ROCK-TAMA** (official spelling; use it for title, metadata, brand references and docs). The hero headline may display "ROCK TAMA" without the hyphen as a visual treatment (D-017).
 - **Project:** ROCK-TAMA Natural Spring Water website
 - **Type:** Premium natural spring water e-commerce and wholesale website
 - **Origin of product:** Nanka, Anambra State, Nigeria
@@ -55,4 +56,6 @@ The reference contains product and quality claims. They are **supplied visual co
 | "ISO 22000" badge and "Manufactured under ISO 22000 Food Safety Management" | **Valid ISO 22000 certificate** (certifying body, number, expiry). Do not display a badge without it. |
 | "International quality standards" | Which standards specifically. |
 | "Nationwide Delivery", "Export Supply", "International Enquiries Welcome" | Confirmation that these services exist operationally. |
-| Regulatory registration (e.g. NAFDAC number for packaged water in Nigeria) | Not shown in the reference; ask whether it should appear (common on packaged-water sites). |
+| NAFDAC registration **A1-2462L** (owner intends to display it) | Verification against the registration documents. **Do not publish until verified** (D-022). |
+
+**Owner direction (2026-11-14, D-013):** keep the visual layout of the quality section, but do not publish unsupported technical or scientific claims. The ISO 22000 badge must not appear as a verified claim until the certificate and its applicability are confirmed; its layout space may be reserved.

@@ -1,26 +1,123 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * The site is light-only (the reference has no dark-mode design).
+ * Re-binding `dark:` to an explicit `.dark` class that we never set means
+ * `dark:` utilities can no longer be triggered by the OS colour scheme.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Source of truth: docs/DESIGN_SYSTEM.md.
+ * Colours are sampled from docs/reference/homepage-reference.png (estimates,
+ * not official brand specs). Each token generates utilities, e.g.
+ * --color-forest-900 -> bg-forest-900 / text-forest-900 / border-forest-900.
+ */
+@theme {
+  /* Greens: dark surfaces */
+  --color-forest-950: #062c1f; /* announcement bar, footer bottom bar */
+  --color-forest-900: #0a2c23; /* hero base */
+  --color-forest-850: #0a3125; /* footer, wholesale banner */
+  --color-forest-800: #0d3427; /* trust strip */
+  --color-forest-700: #153c30; /* hero wave (mid) */
+  --color-forest-600: #1e4a3b; /* hero wave highlight / glow */
+  --color-forest-heading: #0b2a1d; /* dark-green headings on light surfaces */
+
+  /* Gold: accent */
+  --color-gold-200: #fce2a8; /* primary button gradient top */
+  --color-gold-400: #f2c475; /* primary button gradient bottom */
+  --color-gold-500: #e0ad5f; /* gold text and icons on dark green */
+  --color-gold-600: #c9a466; /* gold icons, rules and borders on light surfaces (not for text) */
+  --color-gold-700: #885d1b; /* small gold TEXT on light surfaces (AA >= 4.5:1) */
+
+  /* Light surfaces */
+  --color-ivory-50: #faf5f0; /* page background */
+  --color-ivory-100: #f9f4ed; /* header background */
+  --color-cream-200: #f5ece1; /* product card background */
+  --color-sand-300: #ebdcc6; /* Africa map fill */
+  --color-sage-100: #e5e7da; /* quality section (light end) */
+  --color-sage-200: #cdd1c4; /* quality section (dark end) */
+  --color-placeholder: #dad4cc; /* image placeholder fill */
+  --color-placeholder-ink: #5c5c57; /* image placeholder icon + label */
+
+  /* Text */
+  --color-ink-900: #111814; /* headings on light */
+  --color-ink-700: #2a2823; /* body text on light */
+  --color-ink-500: #5e5b53; /* secondary text on light */
+  --color-on-dark: #f7f8f5; /* primary text on green */
+  --color-on-dark-muted: #c2ccc6; /* footer links, secondary text on green */
+
+  /* Lines */
+  --color-line-light: #dee6e1; /* header bottom border */
+  --color-line-card: #eadfcf; /* card border */
+  --color-line-dark: #758579; /* dividers on green (use with opacity, e.g. /50) */
+  --color-line-dark-strong: #9cb4a7; /* trust strip dividers (use with opacity) */
+
+  /* Type scale: estimates scaled from the reference to a 1440px viewport; tune during visual review */
+  --text-display: 5.25rem; /* hero "ROCK TAMA" ~84px */
+  --text-display--line-height: 1;
+  --text-tagline: 2.125rem; /* hero tagline ~34px */
+  --text-tagline--line-height: 1.2;
+  --text-section: 2.25rem; /* section H2 ~36px */
+  --text-section--line-height: 1.15;
+  --text-card-title: 1.5rem; /* product card titles ~24px */
+  --text-card-title--line-height: 1.2;
+  --text-eyebrow: 0.8125rem; /* eyebrows ~13px */
+  --text-eyebrow--line-height: 1.4;
+
+  --tracking-eyebrow: 0.2em;
+  --tracking-nav: 0.06em;
+
+  /* Spacing (Tailwind's 4px grid stays the default; these are named layout values) */
+  --spacing-section: 5rem; /* desktop content-section padding (80px) */
+  --spacing-section-sm: 3rem; /* mobile content-section padding (48px) */
+  --spacing-strip: 2.5rem; /* trust/quality strip padding (40px) */
+  --spacing-announcement: 2.25rem; /* announcement bar height (36px) */
+  --spacing-header: 5.25rem; /* desktop header height (84px) */
+  --spacing-header-sm: 4rem; /* mobile header height (64px) */
+
+  /* Container max-widths -> max-w-content / max-w-wide */
+  --container-content: 75rem; /* 1200px: header, hero, origin */
+  --container-wide: 82.5rem; /* 1320px: product grid, banner, footer */
+
+  /* Radii */
+  --radius-button: 0.25rem; /* 4px */
+  --radius-card: 0.5rem; /* 8px */
+  --radius-banner: 0.75rem; /* 12px */
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(60 40 10 / 0.05);
+  --shadow-gold: 0 4px 14px rgb(224 173 95 / 0.25);
 }
 
+/*
+ * Font tokens reference the CSS variables that next/font sets on <html>
+ * (app/layout.tsx). `inline` makes Tailwind emit the var() reference
+ * directly instead of resolving it at :root, where it doesn't exist.
+ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-source-sans), system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Primary button fill: gold vertical gradient sampled from the reference CTAs */
+@utility bg-gold-gradient {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-gold-200),
+    var(--color-gold-400)
+  );
+}
+
+@layer base {
+  html {
+    color-scheme: light;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background-color: var(--color-ivory-50);
+    color: var(--color-ink-700);
+    font-family: var(--font-sans);
+  }
 }

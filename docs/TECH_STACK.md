@@ -11,7 +11,8 @@
 | TypeScript | 5.9.3 | `strict: true`, path alias `@/*` → project root |
 | Tailwind CSS | 4.3.3 | Loaded via `@tailwindcss/turbopack` loader rule in `next.config.ts` (**no** `postcss.config.mjs`). CSS-first config: `@import "tailwindcss"` + `@theme` in `app/globals.css`. |
 | ESLint | 9 (flat config) | `eslint-config-next` core-web-vitals + typescript. `npm run lint` runs `eslint` (Next 16 removed `next lint`). |
-| Git | **Not initialised** | Proposed: `git init` before implementation (D-016). |
+| Git | Repo on `main`, remote `origin` → github.com/livinusonyenso/rock-tama | Owner initialised it. Baseline commits added 2026-11-14 (D-016). Push only on request. |
+| Fonts | Cormorant Garamond + Source Sans 3 via `next/font/google` | Self-hosted at build. Verified: 17 `woff2` files in the build output (M1). |
 
 ### `next.config.ts` flags [CONFIRMED present]
 
@@ -23,7 +24,7 @@
 
 - `npm run lint`: passes, no output.
 - `npx tsc --noEmit`: passes, no errors.
-- `npm run build`: **not yet run** in this session.
+- `npm run build`: passes after M1 (2026-11-14). `/` and `/_not-found` are prerendered as static.
 - Dev server: owner reports it runs [CONFIRMED by owner].
 
 ### Existing app files
@@ -43,7 +44,7 @@ Next.js 16 is newer than much of the public tutorial material. **Prefer the vers
 | Package | Purpose | When | Status |
 |---|---|---|---|
 | (none required for M1–M8) | Fonts via `next/font` (built in), images via `next/image` (built in) | — | — |
-| `lucide-react` (optional) | Generic UI icons (search, user, cart, truck, globe, chevrons) | M2 | Pending D-008. The alternative is hand-written SVGs only. |
+| `lucide-react` | Standard UI icons (search, user, cart, truck, globe, chevrons…). Tree-shaken per icon, Server-Component friendly, `currentColor` + stroke-width props | M2 (install when first used) | **Approved** (D-008). Not installed yet. |
 | `clsx` (optional) | Conditional class names in variant components | M1/M3 | Only if template strings get messy. |
 | `zod` | Server-side validation of form input (newsletter, wholesale enquiry) | Scope B | Pending. Currently present only as a transitive dependency. Don't import it until it's added directly. |
 | Test tooling (`vitest` + Testing Library, or Playwright for visual/e2e) | Automated checks | M8 or earlier on request | Pending decision |

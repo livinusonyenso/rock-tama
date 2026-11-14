@@ -31,11 +31,15 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Approved decisions
 
-Only D-001 (keep the existing stack, npm) and D-002 (the screenshot is the spec). Everything else in `docs/DECISIONS.md` is PROPOSED.
+`docs/DECISIONS.md` is authoritative; check status there before relying on any decision. Key approvals: brand name **ROCK-TAMA** · tokens in `app/globals.css` (`@theme`) · fonts Cormorant Garamond + Source Sans 3 (`font-serif` / `font-sans`) · light-only · `lucide-react` for UI icons · route plan with no broken links and no placeholder pages · no unverified claims (lab, ISO, NAFDAC) · no invented URLs · logo placeholders, never redrawn · real e-commerce planned, backend deferred.
 
 ## Current phase
 
-Discovery and documentation complete → awaiting approval to start **M1 Foundation**.
+M1 Foundation complete → awaiting approval to start **M2 Header**.
+
+## Git
+
+Branch `main`, remote `origin`. After each **verified** task, commit with a meaningful conventional message (`feat:`, `fix:`, `docs:`, `chore:`), code and doc updates together. Never commit `.env*`, credentials or build output. **Never push unless the owner asks.**
 
 ## Keeping records (after every task)
 

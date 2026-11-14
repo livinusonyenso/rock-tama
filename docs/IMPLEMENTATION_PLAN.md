@@ -4,17 +4,15 @@ This is a proposal, not an immutable sequence. Each milestone is split into task
 
 Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus the milestone-specific checks below. `npm run build` is required from M3 onward.
 
-## M1 — Foundation
+## M1 — Foundation — **DONE 2026-11-14** (approved scope)
 
-- **Tasks:** 1.1 `git init` + first commit (if approved) · 1.2 design tokens in `app/globals.css` (`@theme`), remove starter dark-mode tokens · 1.3 fonts via `next/font` in `layout.tsx` + metadata (title/description/lang) · 1.4 `Container`, `ButtonLink`, `MediaFrame` primitives · 1.5 temporary neutral `page.tsx` (replaces the starter demo).
-- **Depends on:** decisions D-006, D-007, D-009, D-010 approved. Font choice confirmed.
-- **Acceptance:** tokens produce utilities (`bg-forest-900`, `font-serif`); no starter Geist/demo content remains; primitives render in a scratch area of the page.
-- **Verify:** lint, tsc, build, visual spot-check of fonts and colours against the reference.
+- **Approved tasks:** 1.1 git baseline · 1.2 design tokens in `app/globals.css` · 1.3 fonts via `next/font` (+ ROCK-TAMA title/description metadata, per D-017) · 1.4 removal of starter dark-mode styling. All done and verified (see `PROGRESS.md`).
+- **Moved out (D-025, proposed):** the earlier tasks "primitives" and "temporary page" are not part of M1. `Container` is built in M2; `ButtonLink` and `MediaFrame` in M3. Starter `app/page.tsx` is replaced in M3.
 
 ## M2 — Header
 
-- **Tasks:** 2.1 `content/site.ts` + `content/navigation.ts` + types · 2.2 `AnnouncementBar` · 2.3 `Logo` (fallback until the asset arrives) · 2.4 `SiteHeader` + `NavLink` (desktop) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
-- **Depends on:** M1; logo asset or approval of a text fallback; icon decision D-008; nav route decision D-015.
+- **Tasks:** 2.1 `content/site.ts` + `content/navigation.ts` + types (with a per-link destination table per D-015) · 2.2 install `lucide-react` + `Container` · 2.3 `AnnouncementBar` · 2.4 `Logo` placeholder (D-020) · 2.5 `SiteHeader` + `NavLink` (desktop) · 2.6 `ShopMenu` · 2.7 `MobileNav`.
+- **Depends on:** M1 ✓; D-008 ✓; D-015 ✓; D-020 ✓; D-003/D-004/D-005 approval.
 - **Acceptance:** matches reference at ≥1280; active state + `aria-current`; dropdown and drawer keyboard accessible (Tab, Escape, focus return); no horizontal scroll at 375 px.
 - **Verify:** lint, tsc, build, keyboard walk-through, 1280/768/375 visual check.
 

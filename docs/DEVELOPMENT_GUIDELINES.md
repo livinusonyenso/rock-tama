@@ -46,6 +46,7 @@ One logical task at a time. No task starts without explicit owner approval. Each
 - [ ] Keyboard and accessibility basics: focus visible, logical tab order, landmarks/headings, alt text or `aria-hidden`.
 - [ ] `PROGRESS.md`, `SESSION_HANDOFF.md`, and (if relevant) `DECISIONS.md` updated.
 - [ ] Results reported honestly, including anything not verified.
+- [ ] Committed (code + docs) with a meaningful conventional message; not pushed unless requested.
 
 ## Known gotchas for this stack
 

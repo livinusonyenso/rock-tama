@@ -1,6 +1,26 @@
-# E-commerce Requirements (Scope B) — **NOT APPROVED**
+# E-commerce Requirements (Scope B)
 
-Nothing in this file is approved. The homepage (Scope A) can be built entirely without any of it.
+## Approved direction — D-024 (2026-11-14)
+
+The target is a **real e-commerce website**, not a brochure with contact forms. There are two purchasing experiences:
+
+| Retail customers (planned) | Wholesale and distributors (planned) |
+|---|---|
+| Product listing | Product and supply information |
+| Product detail pages | Request Wholesale form |
+| Shopping cart | Business and contact details |
+| Checkout | Quantity requirements |
+| Payment integration | Location and delivery requirements |
+| Order confirmation | Enquiry submission and follow-up |
+| Delivery information | |
+
+**Sequencing (owner instruction):** do **not** implement the e-commerce backend yet. First the homepage design, component architecture and overall application requirements are completed and approved; then purchasing workflows are built in separately planned milestones.
+
+**Still requires approval:** payment provider, pricing, currency, delivery rules/zones/fees, payment flow, guest vs. account checkout, order handling process, wholesale form fields and recipient, database choice.
+
+## Detailed checklist (status of individual items still open)
+
+The homepage (Scope A) can be built entirely without any of the items below.
 
 Legend: **Visible** = a UI affordance appears in the reference · **Implied** = a visible element links to or depends on it · **Recommended** = engineering recommendation · **Confirm** = owner decision required.
 
@@ -27,7 +47,7 @@ Legend: **Visible** = a UI affordance appears in the reference · **Implied** = 
 | Analytics / cookies | — | — | Recommended (privacy-friendly) | Tool, consent requirements (Nigeria Data Protection Act) |
 | Database | — | Orders, enquiries, subscribers | Only once forms/orders are approved | — |
 
-**Key question that decides most of Scope B:** is v1 (a) **brochure + enquiries** (forms only, no payments), or (b) **full online ordering**? (a) is much smaller and can ship first. (b) can follow without rework if the data shapes are designed now.
+**Answered (D-024):** full online ordering for retail plus a wholesale enquiry flow. Next step after the homepage: a requirements session to fill in the "Owner must confirm" column above.
 
 ## Backend architecture options
 

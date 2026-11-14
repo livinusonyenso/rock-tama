@@ -2,12 +2,14 @@
 
 _Last updated: 2026-11-14_
 
-**Where we are:** Discovery and documentation are done. **No application code has been written or changed**; `app/*` is still the create-next-app starter. Waiting for the owner to review the docs and approve decisions.
+**Where we are:** M1 Foundation is complete and verified (git baseline, design tokens, fonts, light-only). **Stopped for owner approval before M2 (Header).** `app/page.tsx` is still the create-next-app starter (replaced in M3).
 
-**Read next:** `docs/PROGRESS.md` (blockers + next task) → `docs/DECISIONS.md` (what is still PROPOSED) → the doc for the task at hand.
+**Code changed so far:** only `app/globals.css` (tokens; source of truth `docs/DESIGN_SYSTEM.md`), `app/layout.tsx` (fonts + ROCK-TAMA metadata), `.gitignore` (+ `.claude/settings.local.json`).
 
-**Do not:** start M1 or any UI work until the owner approves it in chat. Approval of one task does not approve the next.
+**Read next:** `docs/PROGRESS.md` (next task + blockers) → `docs/DECISIONS.md` (approved vs proposed) → `docs/UI_BREAKDOWN.md` §01–02 and `docs/COMPONENT_ARCHITECTURE.md` for M2.
 
-**Environment facts:** Next 16.4.6 (App Router, Turbopack, `cacheComponents: true`), React 19.3, TS 5.9 strict, Tailwind 4.3 via the `@tailwindcss/turbopack` loader (no PostCSS config), npm. Not a git repo yet. Lint + tsc pass on the baseline.
+**Key approved facts:** brand = ROCK-TAMA (hero may show "ROCK TAMA") · fonts Cormorant Garamond + Source Sans 3 · `lucide-react` for UI icons (not yet installed) · no broken links in production; no placeholder pages · no unverified claims (lab, ISO, NAFDAC A1-2462L) · no invented social URLs · logo placeholders only · real e-commerce later, no backend yet.
 
-**Open questions:** listed under "Blockers" in `docs/PROGRESS.md`.
+**Git:** branch `main`, remote `origin`. Commit after each verified task with a meaningful message; **do not push** unless asked. M1 code changes are committed as `feat: add design tokens, brand fonts and light-only theme (M1)`.
+
+**Do not:** start M2 until the owner approves it in chat. Approval of one task does not approve the next.

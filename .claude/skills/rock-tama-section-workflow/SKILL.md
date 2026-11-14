@@ -32,5 +32,6 @@ The project docs are the source of truth. Reference them, don't restate them.
 
 ## Phase D: Record and stop
 
-12. **Record changes and unresolved issues:** update `docs/PROGRESS.md` (completed + how verified, blockers, next task), `docs/SESSION_HANDOFF.md`, and `docs/DECISIONS.md` if anything was decided. Mark work [VERIFIED] only for checks that actually ran.
-13. **Stop and request approval** for the next task. Name it, but do not start it.
+12. **Record changes and unresolved issues:** update `docs/PROGRESS.md` (completed + how verified, blockers, next task), `docs/SESSION_HANDOFF.md`, `docs/DESIGN_SYSTEM.md` if tokens changed, and `docs/DECISIONS.md` if anything was decided. Mark work [VERIFIED] only for checks that actually ran.
+13. **Commit** code + docs together with a meaningful conventional message after reviewing the staged files for secrets. Do not push unless asked.
+14. **Stop and request approval** for the next task. Name it, but do not start it.

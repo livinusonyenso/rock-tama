@@ -12,14 +12,31 @@ Ref px = measured in the 1086 px-wide reference. Rendered sizes are estimates at
 | 4 | Carton pack | `public/images/products/carton-pack.webp` | **7 : 4** | 195 × 112 | ~260 × 150 | ≥ 1400 × 800, transparent | `object-contain`, centred |
 | 5 | Distributor pallet | `public/images/products/distributor-pallet.webp` | **2 : 1** | 233 × 114 | ~310 × 155 | ≥ 1600 × 800, transparent | `object-contain`, centred |
 | 6 | Origin landscape | `public/images/origin/nanka-source.webp` | **3 : 1** desktop / **16 : 9** mobile (proposed) | 465 × 157 | ~620 × 210 | ≥ 2400 × 1350 photo (so both crops work) | `object-cover`, focal point set via `object-position` |
-| 7 | Africa map | `components/brand/AfricaMap.tsx` (inline SVG) | ~ 14 : 15 | 140 × 150 | ~185 × 200 | Accurate outline from a **licensed/public-domain** source (e.g. Natural Earth-derived). Pin placed at Anambra State. | Inline SVG, `aria-hidden`, fill `sand-300` |
-| 8 | Logo (header) | `public/brand/rock-tama-logo.svg` | as supplied | ≈ 240 × 50 | ~320 × 66 | **SVG from the brand owner** | `next/image` or inline SVG |
-| 9 | Logo (footer, on dark) | `public/brand/rock-tama-logo-stacked-light.svg` | as supplied | ≈ 130 × 75 | ~170 × 100 | **SVG, light/gold variant** | as above |
+| 7 | Africa map | `components/brand/AfricaMap.tsx` (inline SVG) | ~ 14 : 15 | 140 × 150 | ~185 × 200 | **Natural Earth** outline (see "Licensed sources" below). Pin placed at Anambra State. | Inline SVG, `aria-hidden`, fill `sand-300` |
+| 8 | Logo (header, horizontal) | `public/brand/rock-tama-logo-horizontal.svg` | ≈ 4.8 : 1 | ≈ 240 × 50 | ~320 × 66 | **Official SVG from the owner (pending)**. Until then a placeholder box of the same size labelled "ROCK-TAMA logo" (D-020). Never redrawn. | `next/image` with fixed width/height |
+| 9 | Logo (footer, stacked, on dark) | `public/brand/rock-tama-logo-stacked-light.svg` | ≈ 1.7 : 1 | ≈ 130 × 75 | ~170 × 100 | **Official SVG, light/gold variant (pending)**. Placeholder of the same size until supplied. | as above |
 | 10 | ISO 22000 badge | inline SVG in `QualitySection` | 1 : 1 | ≈ 70 × 70 | ~90 × 90 | Only with a valid certificate. **Never the official ISO logo.** | Conditional render |
 | 11 | Quality texture | CSS gradients first; optional `public/images/textures/water-droplets.webp` | tile/cover | full section | full section | Optional, < 40 KB | `background-image`, decorative |
 | 12 | Hero waves | inline SVG in `HeroWaves` | stretches | full width | full width | none (drawn in code) | `preserveAspectRatio="none"`, `aria-hidden` |
 | 13 | Favicon / app icon | `app/icon.png` or `app/icon.svg` (replaces starter `favicon.ico`) | 1 : 1 | — | — | From the logo mark | Next file convention |
 | 14 | Open Graph image | `app/opengraph-image.png` | 1200 × 630 | — | — | Later (M8) | Next file convention |
+
+## Licensed sources [APPROVED D-021]
+
+| Asset | Source | Licence | Attribution | Status |
+|---|---|---|---|---|
+| Africa outline | Natural Earth (naturalearthdata.com), Admin 0 – Countries, small scale (1:110m) is sufficient at ~200px | Public domain. Natural Earth states its data may be used for any purpose without permission. | Not required; optional "Made with Natural Earth" | To be downloaded and converted to an SVG path in M6. Record the exact dataset version and download date here when done. |
+
+## Pending owner-supplied items
+
+| Item | Status | Rule |
+|---|---|---|
+| Official logo SVGs (horizontal + stacked light) | Pending | Placeholders only; never redraw (D-020) |
+| Product photography (slots 1–6) | Pending | Placeholders only; no stock/generated images |
+| Social URLs (Instagram, Facebook, LinkedIn, YouTube) | Pending | Icons rendered as links only once real URLs exist (D-023) |
+| ISO 22000 certificate | Pending | Badge hidden; space may be reserved (D-013) |
+| NAFDAC registration A1-2462L documents | Pending verification | Not published until verified (D-022) |
+| Lab reports (TDS, heavy metals, pathogens) | Pending | Claims not published until evidenced (D-013) |
 
 ## Placeholder rules [PROPOSED]
 

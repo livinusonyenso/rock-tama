@@ -4,36 +4,39 @@ _Last updated: 2026-11-14_
 
 ## Current state
 
-- **Phase:** Discovery, analysis & documentation (pre-implementation)
-- **Milestone:** none started (M1 Foundation is next, pending approval)
-- **Current task:** awaiting owner review of the plan and docs
+- **Phase:** Implementation (homepage, Scope A)
+- **Milestone:** M1 Foundation **complete** (approved scope). Awaiting approval for M2.
+- **Current task:** none. Stopped for owner review of M1.
 
 ## Completed
 
 | Date | Task | Verification |
 |---|---|---|
-| 2026-11-14 | Project audit (versions, config, files) | Inspected files; `npm run lint` and `npx tsc --noEmit` both pass on the starter code |
-| 2026-11-14 | Reference screenshot saved to `docs/reference/homepage-reference.png`; colours sampled with `sharp` | Sampled values recorded in `DESIGN_SYSTEM.md` |
-| 2026-11-14 | Documentation set + `CLAUDE.md` + `.claude/rules/*` + `rock-tama-section-workflow` skill created | Files exist; content is proposals, not approvals |
+| 2026-11-14 | Project audit (versions, config, files) | Inspected; lint + tsc pass on the starter |
+| 2026-11-14 | Reference saved to `docs/reference/homepage-reference.png`; colours sampled | Values in `DESIGN_SYSTEM.md` |
+| 2026-11-14 | Documentation set, `CLAUDE.md`, `.claude/rules/*`, `rock-tama-section-workflow` skill | Files exist |
+| 2026-11-14 | Owner decisions recorded (D-006–D-008, D-010, D-013, D-015–D-024) | `DECISIONS.md` |
+| 2026-11-14 | **M1.1** Git baseline: reviewed `.gitignore` (already excludes `.env*`, `node_modules`, `.next`, `*.pem`, build output; added `.claude/settings.local.json`); no secret-like files found. Commits `7e3b5be` (scaffold) + `7b7f69e` (docs) on the owner's `50dbb73` | `git status` clean after commits; nothing pushed |
+| 2026-11-14 | **M1.2** Design tokens in `app/globals.css` (`@theme`: colours, type scale, tracking, spacing, containers, radii, shadows; `bg-gold-gradient` utility; base body styles) | `npm run lint` ✓ · `npx tsc --noEmit` ✓ · `npm run build` ✓ · every token compiled with Tailwind's compiler and emits its utility (22 sample classes checked) · WCAG contrast computed for all text pairs (table in `DESIGN_SYSTEM.md`) |
+| 2026-11-14 | **M1.3** Fonts: Cormorant Garamond + Source Sans 3 via `next/font/google` (`--font-cormorant`, `--font-source-sans` → `font-serif`, `font-sans`); metadata title "ROCK-TAMA Natural Spring Water" | Build ✓; fonts self-hosted (17 `woff2` files in `.next/static/media`, both families in built CSS) |
+| 2026-11-14 | **M1.4** Starter dark mode removed: `prefers-color-scheme` block deleted, `color-scheme: light`, `dark:` re-bound to the `.dark` class | Compiled output shows `dark:` utilities scoped to `.dark` only |
 
-No application code has been changed.
+**Not verified:** visual check in a browser. The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
 
-- Owner review of all PROPOSED decisions (`DECISIONS.md` D-003 – D-016)
-- M1 – M8 (see `IMPLEMENTATION_PLAN.md`)
-- Scope B decisions (`ECOMMERCE_REQUIREMENTS.md`)
+- M2 – M8 (see `IMPLEMENTATION_PLAN.md`)
+- PROPOSED decisions awaiting approval: D-003, D-004, D-005, D-009, D-011, D-012, D-014, D-025
+- Scope B requirements session (after homepage)
 
-## Blockers / inputs needed from the owner
+## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
-1. Logo files (SVG: header horizontal + footer stacked/light). **Blocks M2 logo fidelity.**
-2. Brand name spelling: ROCK-TAMA vs ROCK TAMA vs Rock Tama.
-3. Font approval (D-007), icon approach (D-008), link strategy (D-015), git init (D-016).
-4. Evidence for quality claims (TDS, heavy metals, pathogens, ISO 22000).
-5. Copy fixes: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year.
-6. Africa map source/licence.
-7. Social media URLs.
+1. Official logo SVGs (placeholders used meanwhile, D-020)
+2. Lab reports, ISO 22000 certificate, NAFDAC A1-2462L documents
+3. Social URLs
+4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
+5. **Needed for M2:** approval of D-003 (Server/Client boundaries), D-004 (folder structure), D-005 (content modules)
 
 ## Next proposed task
 
-**M1 / Task 1.1 + 1.2:** initialise git, then add design tokens to `app/globals.css` and remove the starter dark-mode tokens. Only after D-006, D-010, D-016 are approved.
+**M2 Header, starting with task 2.1:** `content/site.ts` and `content/navigation.ts` (+ types), including a destination table for every nav link per D-015. Then 2.2: install `lucide-react` and build `Container`. Requires the M2 briefing and approval first.

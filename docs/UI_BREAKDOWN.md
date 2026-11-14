@@ -213,7 +213,7 @@ Source: [`reference/homepage-reference.png`](reference/homepage-reference.png) �
 
 ## Copy and consistency issues found in the reference (need owner decisions)
 
-1. Brand spelling varies: **ROCK-TAMA** (header logo), **ROCK TAMA** (hero, section copy), **Rock Tama** (footer, copyright), **ROCK·TAMA** (footer logo).
+1. ~~Brand spelling varies~~ **Resolved (D-017):** official name **ROCK-TAMA** in copy, title, metadata and docs; the hero headline may show "ROCK TAMA". Copy that reads "Rock Tama" (footer, copyright, section copy) is normalised to ROCK-TAMA when implemented. Logo artwork is used as supplied.
 2. Hero: "Nigeria, Naturally filtered" → "Nigeria. Naturally filtered".
 3. Quality: "Unstilled" → "Undistilled" (assumed).
 4. Products: card 4 title is italic, card 3 is not.
