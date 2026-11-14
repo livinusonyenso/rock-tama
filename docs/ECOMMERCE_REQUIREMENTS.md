@@ -14,9 +14,26 @@ The target is a **real e-commerce website**, not a brochure with contact forms. 
 | Order confirmation | Enquiry submission and follow-up |
 | Delivery information | |
 
-**Sequencing (owner instruction):** do **not** implement the e-commerce backend yet. First the homepage design, component architecture and overall application requirements are completed and approved; then purchasing workflows are built in separately planned milestones.
+**Sequencing (updated 2026-11-15, D-066):** the commercial CTAs must work, so `/wholesale` (F1) and `/shop` (F2) are built **during M3**; cart, checkout and payment follow progressively (F3–F4) as business data and integrations become available. Never fake a step.
 
 **Still requires approval:** payment provider, pricing, currency, delivery rules/zones/fees, payment flow, guest vs. account checkout, order handling process, wholesale form fields and recipient, database choice.
+
+## Business information and integrations required (launch dependencies, 2026-11-15)
+
+| Needed | Unblocks | Interim behaviour (honest, configurable) |
+|---|---|---|
+| Product prices (NGN), pack sizes/variants, MOQ for wholesale | Cart totals, checkout (F3/F4) | Catalogue shows "Price on request"; purchase action submits an order request |
+| Stock policy | Availability display | Treated as available on request |
+| Delivery zones, fees, lead times | Checkout (F4) | Delivery location captured in enquiries |
+| Payment provider choice + merchant account keys (e.g. Paystack / Flutterwave) | Payment (F4) | No payment step; nothing is charged |
+| Enquiry/order recipient email(s) and a sending domain (or a chosen database + admin access) | Production delivery of enquiries (F1) | Local development store; **production build refuses to ship without configured delivery** (proposed) |
+| Hosting target (e.g. Vercel) | Storage/runtime choices | — |
+| Contact details (phone, email, address, WhatsApp) | Contact page (F5), footer | — |
+| Newsletter provider + consent wording | F6 | — |
+| Social media URLs | F8 | Icons not linked |
+| Privacy notice (NDPA), Terms, Delivery & Returns, FAQs copy | F10; **required before public forms** | — |
+| Official logo + product photography | Visual completion | Placeholders |
+| Evidence for quality/process claims | Publication | Flagged |
 
 ## Detailed checklist (status of individual items still open)
 

@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15 (after M2.7)_
 
-**Where we are:** M1–M2.6 and M2.V accepted. **M2.7 (header visual refinement) implemented, verified, committed; awaiting the owner's visual approval.** Do NOT promote baselines until the owner approves; then run `npm run verify:visual -- --approve --section announcement,header,mobile-nav-open` and delete the superseded provisional refs. Known residuals: V-006 (letter-width offsets), V-007 (truck 4px small); V-008 resolved by the fluid inset (D-064). The page below the header is still the create-next-app starter.
+**Where we are:** Direction changed (D-066): ROCK-TAMA is a real e-commerce site; commercial CTAs must work. M3 revised (see `IMPLEMENTATION_PLAN.md`): M3.1–M3.3 hero visuals/animation approved; F0–F2 (functional foundations, `/wholesale`, `/shop` + ShopMenu) need owner decisions. M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)

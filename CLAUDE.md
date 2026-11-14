@@ -1,6 +1,6 @@
 # ROCK-TAMA Natural Spring Water — Project Instructions
 
-Premium natural spring water e-commerce + wholesale website for ROCK-TAMA (Nanka, Anambra State, Nigeria). The owner is an experienced JS/TS developer building this **with** Claude as an engineering partner and mentor, not as an autonomous generator.
+Premium natural spring water e-commerce + wholesale website for ROCK-TAMA (Nanka, Anambra State, Nigeria). **Principle: Design Accuracy + Real Functionality + Clean Architecture + Performance + Maintainability** (D-066): a production e-commerce site; commercial CTAs must work; no fake pages, fake success, invented prices or unverified payments; missing business data is configurable and documented (`docs/ECOMMERCE_REQUIREMENTS.md`). The owner is an experienced JS/TS developer building this **with** Claude as an engineering partner and mentor, not as an autonomous generator.
 
 ## Start of every session
 
@@ -28,6 +28,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 - Never invent product photos, prices, certifications or business facts. Quality/ISO claims need owner-confirmed evidence.
 - No new dependencies without explaining the purpose and getting approval.
 - Never claim a check passed unless it was run. Report failures with output.
+- Verify **visually and functionally**: a feature isn't done until its actions/forms/data paths are tested end to end.
 - Label statements: [CONFIRMED] / [OBSERVED] / [PROPOSED] / [ASSUMPTION] / [APPROVED] / [VERIFIED]. Never mark a proposal approved without the owner's explicit approval.
 
 ## Approved decisions

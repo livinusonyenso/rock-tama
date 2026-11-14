@@ -36,6 +36,17 @@ One logical task at a time. No task starts without explicit owner approval. Each
 14. Docs must stay consistent with code.
 15. Explain structure before writing large files.
 
+## Principle
+
+**Design Accuracy + Real Functionality + Clean Architecture + Performance + Maintainability** (D-066).
+
+## Two kinds of verification (both required where they apply)
+
+- **Visual:** matches the reference, responsive layouts, typography/spacing, animation, accessibility, no layout shift (`npm run verify:visual`).
+- **Functional:** buttons perform their actions, navigation reaches valid destinations, forms validate and submit, data is stored or transmitted reliably, cart/checkout state is correct, errors are handled, no broken journeys (scripted end-to-end checks, added in F0).
+
+A feature is **not complete** because it renders or builds; it is complete when its functional checks pass.
+
 ## Definition of Done (per task)
 
 - [ ] Scope matches the approved briefing, nothing more.
@@ -43,6 +54,7 @@ One logical task at a time. No task starts without explicit owner approval. Each
 - [ ] `npx tsc --noEmit` passes.
 - [ ] `npm run build` passes (from M3 onward, or whenever routes/config change).
 - [ ] `npm run verify:visual` passes, and the reference comparison sheet has been reviewed by a person (desktop), with tablet/mobile checked against the documented behaviour. Baselines updated with `--approve` only after owner acceptance.
+- [ ] Functional checks pass for anything interactive (actions, forms, data), where applicable.
 - [ ] Keyboard and accessibility basics: focus visible, logical tab order, landmarks/headings, alt text or `aria-hidden`.
 - [ ] `PROGRESS.md`, `SESSION_HANDOFF.md`, and (if relevant) `DECISIONS.md` updated.
 - [ ] Results reported honestly, including anything not verified.

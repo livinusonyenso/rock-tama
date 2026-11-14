@@ -21,12 +21,31 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 - **M2.V: Repeatable visual verification script.** **Done 2026-11-15** (D-040, D-041, D-042): `npm run verify:visual`.
 - **M2.7: Header visual refinement.** **Implemented 2026-11-15; awaiting owner visual approval** (then promote header + drawer baselines). Fix the open differences V-001 (filled globe via licensed SVG), V-002/V-004 (local right-edge alignment of bar + header, not a global `Container` change), V-003/V-005 (typography tuning within Source Sans 3), plus any differences found in M2.5–2.6. Approve header baselines after owner review. Log: `docs/verification/README.md`.
 
-## M3 — Hero
+## M3 — Hero (revised 2026-11-15 for D-066/D-067)
 
-- **Tasks:** 3.1 `HeroSection` content + CTAs · 3.2 `HeroWaves` SVG + glow · 3.3 bottle `MediaFrame` · 3.4 responsive layout.
-- **Depends on:** M1 primitives, M2 (page frame).
-- **Acceptance:** single `<h1>`; CTAs are links; bottle box keeps 2:5 with or without an image; no CLS from the placeholder; copy fix approved.
-- **Verify:** build, visual comparison, Lighthouse CLS ≈ 0 for the hero.
+M3 is complete only when the hero matches the reference **and both CTAs work**. Tasks:
+
+| Task | Scope | Status |
+|---|---|---|
+| **M3.1** | Page shell (`app/page.tsx` replaces the starter; starter SVGs removed), `ButtonLink`, `MediaFrame` (incl. generic bottle silhouette) | Approved |
+| **M3.2** | Static hero: `content/hero.ts`, `HeroSection`, `HeroWaves`, responsive layouts, measured against the reference. CTAs are wired through `resolveHref`, so they become live automatically when F1/F2 ship (transitional pending state in local development only, never shipped) | Approved |
+| **M3.3** | CSS entrance animation + button microinteractions + deterministic animation checks in `verify:visual` | Approved (storyboard D-068) |
+| **F0** | Functional foundations: input validation library, `lib/server/` structure, typed env config, enquiry delivery adapter interface, functional (end-to-end) test harness in the verification tooling | **Needs approval** (dependencies, delivery choice) |
+| **F1** | `/wholesale`: wholesale + order enquiry form, Server Action, validation, spam protection, real delivery, success/error states, `?product=` prefill. Activates hero **Request Wholesale** + nav **WHOLESALE** | **Needs decisions** |
+| **F2** | `/shop` listing + `/shop/[slug]` product pages from a typed catalogue (price/stock configurable, `null` = "Price on request"); interim purchase action = order request via F1 until pricing + payment are configured; **M2.5b** `ShopMenu` + mobile nested list in the same change (satisfies the build guard). Activates hero **Shop Now** + nav **SHOP** | **Needs decisions** |
+
+## Functional milestones after M3 (D-066)
+
+| ID | Feature | Depends on |
+|---|---|---|
+| F3 | Cart: add/update/remove, header badge count (replaces the `cartCount={0}` prop source), persisted cart | F2; decision on cart storage (cookie vs local) |
+| F4 | Checkout + payment + order confirmation + order notification | Prices, delivery zones/fees, payment provider + merchant keys, order handling process |
+| F5 | Contact form (reuses F1 infrastructure) | Contact details, recipient |
+| F6 | Newsletter subscription | Provider + consent wording |
+| F7 | Search (catalogue search) | F2 |
+| F8 | Social links | Official URLs |
+| F9 | Customer accounts | Decision whether v1 needs them (guest checkout recommended) |
+| F10 | Policy/info pages (Privacy, Terms, Delivery & Returns, FAQs) | Client copy; **privacy notice required before any form goes live publicly (NDPA)** |
 
 ## M4 — Trust strip
 

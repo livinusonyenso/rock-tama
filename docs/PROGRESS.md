@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** M2.7 accepted provisionally by owner; **V-008 resolved with a fluid inset (D-064), awaiting final visual approval** before baselines are promoted. Animation system documented (proposed). **M3 Hero briefing presented; awaiting approval.**
+- **Current task:** **M3 (revised for real functionality, D-066–D-069).** M3.1–M3.3 (hero visuals + animation) approved and in progress; F0–F2 (functional foundations, `/wholesale`, `/shop`) planned and awaiting decisions. M2.7 baselines still await the owner's final visual approval (V-008 fix).
 
 ## Completed
 
