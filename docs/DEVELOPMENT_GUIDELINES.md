@@ -42,23 +42,54 @@ One logical task at a time. No task starts without explicit owner approval. Each
 - [ ] `npm run lint` passes.
 - [ ] `npx tsc --noEmit` passes.
 - [ ] `npm run build` passes (from M3 onward, or whenever routes/config change).
-- [ ] Visual check against `docs/reference/homepage-reference.png` at desktop (≥1280), plus tablet (768) and mobile (375) behaviour as documented.
+- [ ] `npm run verify:visual` passes, and the reference comparison sheet has been reviewed by a person (desktop), with tablet/mobile checked against the documented behaviour. Baselines updated with `--approve` only after owner acceptance.
 - [ ] Keyboard and accessibility basics: focus visible, logical tab order, landmarks/headings, alt text or `aria-hidden`.
 - [ ] `PROGRESS.md`, `SESSION_HANDOFF.md`, and (if relevant) `DECISIONS.md` updated.
 - [ ] Results reported honestly, including anything not verified.
 - [ ] Committed (code + docs) with a meaningful conventional message; not pushed unless requested.
 
-## Visual verification method (used since M2.2)
+## Visual verification (`npm run verify:visual`, M2.V)
 
-No extra dependencies. Build, then run `npx next start -p 3100`, which avoids the owner's dev server on 3000. Launch the installed Google Chrome headless with `--remote-debugging-port`, and drive it over the DevTools Protocol from a Node script (Node 26 has a global `WebSocket`):
-- set the viewport (375 / 768 / 1024 / 1280 / 1440, plus 1086 = the reference width);
-- measure with `Runtime.evaluate` (visibility, heights, line count, `scrollWidth` overflow, computed colours/fonts, focusable elements);
-- read the accessibility tree with `Accessibility.getFullAXTree`;
-- capture `Page.captureScreenshot`;
-- double the root font size for the 200% text check;
-- compare against the reference crop scaled to 1440 using `sharp`.
+**When to run it:** after implementing any UI task (before reporting it), after changing tokens/shared components (regression check on everything), and before committing UI changes.
 
-Store comparison images in `docs/verification/`. Stop the server and Chrome afterwards.
+**What it does** (`scripts/visual-check.mjs`, configured in `scripts/visual-check.config.mjs`), with no dependencies beyond Node and the installed Chrome:
+1. `next build`, then `next start -p 3100`, which avoids the dev server on 3000 (skip the build with `--no-build`, or use a running server with `--url`).
+2. Headless Chrome over the DevTools Protocol, at each configured viewport (mobile 375, tablet 768, laptop 1024, desktop 1440).
+3. Waits for load, fonts and images, then checks: fonts loaded · no broken images · **no horizontal overflow** (names offending elements) · **no console errors** (console errors, uncaught exceptions, failed network requests) · each configured section present and visible.
+4. Screenshots: viewport + full page per page, plus one per section.
+5. At viewports with `compareWithReference` (desktop): a **reference comparison sheet** stacking the reference crop (scaled from the 1086px mock), the implementation, and a difference overlay.
+6. **Baseline regression:** pixel diff against the approved baseline (fails above 0.5% differing pixels), plus a red-highlighted diff image.
+7. Writes `report.md` + `report.json`. Exit 0 = pass, 1 = a check failed, 2 = incomplete/setup error.
+
+**Commands:**
+```bash
+npm run verify:visual                                   # everything
+npm run verify:visual -- --section announcement         # one section (repeatable / comma list)
+npm run verify:visual -- --viewport desktop,mobile
+npm run verify:visual -- --no-build                     # reuse the last build
+npm run verify:visual -- --approve                      # ONLY after a person reviewed the output: update baselines
+npm run verify:visual -- --save m2.4                    # copy report + comparison images to docs/verification/m2.4/
+```
+
+**Three kinds of images; keep them separate:**
+
+| Kind | Location | Git | Who writes it |
+|---|---|---|---|
+| Reference (the design) | `docs/reference/homepage-reference.png` | committed | owner only |
+| Generated output | `.verification/<UTC timestamp>/` | **ignored** | every run |
+| Approved baselines | `docs/verification/baselines/<section>-<viewport>.png` | committed | `--approve`, only after owner-accepted visual review |
+
+**Adding a section:** when a section ships, add `{ name, page, selector, reference: { x, y, width, height } }` to `sections` in the config (the rectangle is in reference-image pixels; see `UI_BREAKDOWN.md`). Run, review the sheet, report; after owner acceptance, run with `--approve` and commit the baselines.
+
+**Interpreting results:** passing checks catch overflow, loading, console and regression problems. They are **not proof of pixel-perfect accuracy.** The reference sheet is indicative (scaled mock, different copy) and must be reviewed by a person for spacing, alignment, typography, container width, colour and positioning.
+
+**Limitations:**
+- The reference is desktop-only, so reference sheets exist only at 1440. Tablet and mobile are judged against the documented responsive behaviour and baselines.
+- Baselines are machine-specific (font rasterisation, Chrome version). Created on the owner's Mac with Google Chrome; a different OS or CI would need its own baselines.
+- Static rendering only: no hover, focus or open-menu states yet. Interactive states (e.g. the Shop dropdown, M2.5) will need an `actions` extension.
+- Console warnings are not failures; only errors, exceptions and failed requests are.
+- Requires local Chrome (or `CHROME_PATH`) and free ports 3100 and 9333.
+- Section reference rectangles are entered by hand.
 
 ## Known gotchas for this stack
 

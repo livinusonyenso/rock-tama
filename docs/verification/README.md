@@ -1,6 +1,12 @@
 # Visual Verification Records
 
-Evidence images from browser verification, plus the log of known differences from the reference that are deliberately deferred. Method: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification method".
+Run `npm run verify:visual` (how and when: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification"). This folder holds **curated, committed** material only:
+
+- `baselines/`: **approved** section screenshots per viewport, used for regression checks. Updated only with `--approve` after review (D-042). Current: `announcement-{mobile,tablet,laptop,desktop}.png` (from the accepted M2.2 state, captured 2026-11-15 on macOS Chrome).
+- `<task>/`: optional evidence saved with `--save <task>`.
+- the earlier evidence images and the open-differences log below.
+
+Generated run output (`.verification/`) is git-ignored.
 
 ## Evidence
 

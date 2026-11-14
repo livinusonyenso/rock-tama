@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude code (personal, machine-specific settings)
 .claude/settings.local.json
+
+# visual verification output (generated; approved baselines live in docs/verification/baselines)
+/.verification/

@@ -64,6 +64,7 @@ Next.js 16 is newer than much of the public tutorial material. **Prefer the vers
 |---|---|---|---|
 | (none required for M1–M8) | Fonts via `next/font` (built in), images via `next/image` (built in) | — | — |
 | `lucide-react` **1.73.0** | Standard UI icons. Tree-shaken per icon, Server-Component friendly, `currentColor` + stroke-width props; peer React ^19 ✓ | Installed M2.2 (2026-11-15) | **Approved** (D-008) |
+| *(none)* for visual verification | `scripts/visual-check.mjs` uses only Node built-ins + installed Chrome; `sharp` was considered and **not** added (D-041) | M2.V | Done |
 | `clsx` (optional) | Conditional class names in variant components | M1/M3 | Only if template strings get messy. |
 | `zod` | Server-side validation of form input (newsletter, wholesale enquiry) | Scope B | Pending. Currently present only as a transitive dependency. Don't import it until it's added directly. |
 | Test tooling (`vitest` + Testing Library, or Playwright for visual/e2e) | Automated checks | M8 or earlier on request | Pending decision |

@@ -72,6 +72,10 @@ content/                       # typed static content (no React)
 types/
 └── content.ts                 # ✓ M2.1 shared content types
 
+scripts/
+├── visual-check.mjs           # ✓ M2.V `npm run verify:visual`
+└── visual-check.config.mjs    # viewports, pages, sections + reference rects
+
 lib/
 └── navigation.ts              # ✓ M2.1 resolveHref() (only logic; content stays data-only)
 

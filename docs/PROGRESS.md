@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.3 Logo complete (2026-11-15)**; stopped for owner approval before M2.V (verification script, approved D-040).
+- **Current task:** none. M2.3 accepted. **M2.V complete (2026-11-15)**; stopped. M2.4 briefing presented for review.
 
 ## Completed
 
@@ -27,6 +27,8 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **M2.3** `components/brand/Logo.tsx` (Server; `header`/`footer` variants; official file when `available`, otherwise a same-size labelled placeholder); `site.logos` sizes corrected to 314×66 and 170×96 | lint ✓ · tsc ✓ · build ✓ · headless Chrome via a **temporary** harness in `app/page.tsx` (restored with `git restore`, not committed): ratios 4.757/1.771 (targets 4.758/1.771), heights 40→64 and 80→96 at 375/1440, vertically centred, 0 overflow; AX tree: exactly 2 images named "ROCK-TAMA", visible "LOGO" label not exposed · real-file path tested with temporary dummy SVGs + `available: true` (reverted): renders `<img alt="ROCK-TAMA">`, loaded, identical box sizes · evidence `docs/verification/m2.3-*.png` |
 
+| 2026-11-15 | **M2.V** `scripts/visual-check.mjs` + `scripts/visual-check.config.mjs`, `npm run verify:visual`, `.verification/` git-ignored, approved baselines in `docs/verification/baselines/` (announcement ×4 from the accepted M2.2 state); **no new dependencies** (D-041) | lint ✓ · tsc ✓ · build ✓ · clean run: **24 passed, 0 failed**, exit 0, all 4 baselines 0.00% · **negative tests** (temporary, reverted): wide element → overflow FAIL naming the element; missing image → broken-image FAIL + 404 console-error FAIL; changed announcement copy → baseline FAIL (9.99% / 7.08%) with red diff image; wrong baseline → size-mismatch FAIL with **exit 1**; unknown section → exit 2 · outputs confirmed (viewport + full-page shots, section shots, reference sheet, report.md/json) · no server/Chrome processes left running |
+
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
@@ -42,9 +44,8 @@ _Last updated: 2026-11-14_
 3. Social URLs
 4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
 5. Business confirmation of delivery coverage, wholesale fulfilment and export, to finalise announcement wording (D-030)
-6. Owner review of D-036 (wrap instead of truncate under enlarged text)
 7. Official logo SVGs (header horizontal + footer stacked **light** colourway, D-038)
 
 ## Next proposed task
 
-**M2.V:** `scripts/visual-check.mjs` + config, `npm run verify:visual`, `sharp` declared as a devDependency, `.verification/` git-ignored (D-040). Approved in principle; confirm start. Then M2.4 desktop header.
+**M2.4 Desktop header:** `SiteHeader` + `NavLink` (desktop layout, pending-item rendering per D-027, cart count prop per D-029). Briefing presented; awaiting approval.

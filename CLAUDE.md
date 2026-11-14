@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`) and M2.3 (`Logo`) done; next M2.V (verification script), then M2.4 (desktop header). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`) and M2.V (`npm run verify:visual`) done; next M2.4 (desktop header). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 
@@ -62,8 +62,8 @@ Update `docs/PROGRESS.md` (state, completed + how verified, blockers, next task)
 
 ## Visual verification
 
-Headless Chrome (installed) + DevTools Protocol against `next start -p 3100`; method in `docs/DEVELOPMENT_GUIDELINES.md`. Evidence images go in `docs/verification/`.
+Run `npm run verify:visual` after every UI task (add the section to `scripts/visual-check.config.mjs` first). It checks overflow, loading, console errors and baseline regressions, and builds a reference comparison sheet that **a person must review**; passing is not proof of pixel accuracy. Output goes to git-ignored `.verification/`; approved baselines go to `docs/verification/baselines/` via `--approve`, only after owner acceptance. Details: `docs/DEVELOPMENT_GUIDELINES.md`.
 
 ## Commands
 
-`npm run dev` · `npm run lint` · `npx tsc --noEmit` · `npm run build`
+`npm run dev` · `npm run lint` · `npx tsc --noEmit` · `npm run build` · `npm run verify:visual`
