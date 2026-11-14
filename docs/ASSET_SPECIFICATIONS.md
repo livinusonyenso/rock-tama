@@ -13,13 +13,23 @@ Ref px = measured in the 1086 px-wide reference. Rendered sizes are estimates at
 | 5 | Distributor pallet | `public/images/products/distributor-pallet.webp` | **2 : 1** | 233 × 114 | ~310 × 155 | ≥ 1600 × 800, transparent | `object-contain`, centred |
 | 6 | Origin landscape | `public/images/origin/nanka-source.webp` | **3 : 1** desktop / **16 : 9** mobile (proposed) | 465 × 157 | ~620 × 210 | ≥ 2400 × 1350 photo (so both crops work) | `object-cover`, focal point set via `object-position` |
 | 7 | Africa map | `components/brand/AfricaMap.tsx` (inline SVG) | ~ 14 : 15 | 140 × 150 | ~185 × 200 | **Natural Earth** outline (see "Licensed sources" below). Pin placed at Anambra State. | Inline SVG, `aria-hidden`, fill `sand-300` |
-| 8 | Logo (header, horizontal) | `public/brand/rock-tama-logo-horizontal.svg` | ≈ 4.8 : 1 | ≈ 240 × 50 | ~320 × 66 | **Official SVG from the owner (pending)**. Until then a placeholder box of the same size labelled "ROCK-TAMA logo" (D-020). Never redrawn. | `next/image` with fixed width/height |
-| 9 | Logo (footer, stacked, on dark) | `public/brand/rock-tama-logo-stacked-light.svg` | ≈ 1.7 : 1 | ≈ 130 × 75 | ~170 × 100 | **Official SVG, light/gold variant (pending)**. Placeholder of the same size until supplied. | as above |
+| 8 | Logo (header, horizontal) | `public/brand/rock-tama-logo-horizontal.svg` | **4.76 : 1** (measured) | 238 × 50 | 304 × 64 (`h-16`); 190 × 40 mobile | **Official SVG from the owner (pending)**. Until then a placeholder box of the same size labelled "ROCK-TAMA logo" (D-020). Never redrawn. | `next/image` with fixed width/height |
+| 9 | Logo (footer, stacked, on dark) | `public/brand/rock-tama-logo-stacked-light.svg` | **1.78 : 1** (measured) | 128 × 72 | 170 × 96 (`h-24`); 142 × 80 mobile | **Official SVG, light/gold variant (pending)**. Placeholder of the same size until supplied. | as above |
 | 10 | ISO 22000 badge | inline SVG in `QualitySection` | 1 : 1 | ≈ 70 × 70 | ~90 × 90 | Only with a valid certificate. **Never the official ISO logo.** | Conditional render |
 | 11 | Quality texture | CSS gradients first; optional `public/images/textures/water-droplets.webp` | tile/cover | full section | full section | Optional, < 40 KB | `background-image`, decorative |
 | 12 | Hero waves | inline SVG in `HeroWaves` | stretches | full width | full width | none (drawn in code) | `preserveAspectRatio="none"`, `aria-hidden` |
 | 13 | Favicon / app icon | `app/icon.png` or `app/icon.svg` (replaces starter `favicon.ico`) | 1 : 1 | — | — | From the logo mark | Next file convention |
 | 14 | Open Graph image | `app/opengraph-image.png` | 1200 × 630 | — | — | Later (M8) | Next file convention |
+
+## Logo: how to swap in the official files (D-020, D-037, D-038)
+
+The `Logo` component (`components/brand/Logo.tsx`) is implemented. Until the files exist it renders a dashed, labelled placeholder ("ROCK-TAMA LOGO") with the exact aspect ratio, announced to screen readers as an image named "ROCK-TAMA". To replace it:
+
+1. Save the official files exactly at `public/brand/rock-tama-logo-horizontal.svg` (header, for ivory backgrounds) and `public/brand/rock-tama-logo-stacked-light.svg` (footer, light colourway for dark green).
+2. In `content/site.ts` → `logos`, set `available: true` and set `width`/`height` to each SVG's real dimensions (from its `viewBox`).
+3. Run lint/tsc/build and the visual check. No component changes are needed; rendered height is fixed per variant (header 40→64px, footer 80→96px) and width follows the ratio.
+
+Verified (M2.3) with temporary dummy SVGs: the real-image path renders at exactly the same box size as the placeholder.
 
 ## Licensed sources [APPROVED D-021]
 

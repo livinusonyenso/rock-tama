@@ -57,7 +57,7 @@ components/
 │   ├── MediaFrame.tsx
 │   └── ProductCard.tsx
 ├── brand/
-│   ├── Logo.tsx
+│   ├── Logo.tsx               # ✓ M2.3
 │   └── AfricaMap.tsx
 └── icons/
     └── Icon.tsx               # ✓ M2.2 IconName → lucide-react map (custom SVGs added here when needed)

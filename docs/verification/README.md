@@ -8,6 +8,7 @@ Evidence images from browser verification, plus the log of known differences fro
 |---|---|---|
 | M2.2 | `m2.2-announcement-vs-reference-1440.png` | Reference bar (scaled to 1440) vs implementation, full width + 2× detail |
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
+| M2.3 | `m2.3-logo-placeholders-1440-375.png` | Header (ivory) and footer (forest) logo placeholders, rendered in a temporary harness at 1440 and 375 |
 
 ## Open visual differences (to fix in M2.7 "Header visual refinement")
 

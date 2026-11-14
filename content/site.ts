@@ -18,15 +18,15 @@ export const site: SiteConfig = {
     horizontal: {
       src: "/brand/rock-tama-logo-horizontal.svg",
       alt: name,
-      width: 320,
+      width: 314, // measured ratio 4.76 (ref 238×50)
       height: 66,
       available: false,
     },
     stackedLight: {
       src: "/brand/rock-tama-logo-stacked-light.svg",
       alt: name,
-      width: 170,
-      height: 100,
+      width: 170, // measured ratio 1.78 (ref 128×72)
+      height: 96,
       available: false,
     },
   },
