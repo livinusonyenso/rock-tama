@@ -11,7 +11,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 ## M2 — Header
 
-- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (**done 2026-11-15**) · 2.3 `Logo` placeholder (D-020) (**done 2026-11-15**) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) (**done 2026-11-15**) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
+- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (**done 2026-11-15**) · 2.3 `Logo` placeholder (D-020) (**done 2026-11-15**) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) (**done 2026-11-15**) · 2.5 Shop dropdown gating + build guard (**done 2026-11-15**; interactive `ShopMenu` deferred to M2.5b in M5, D-050) · 2.6 `MobileNav`.
 - **Depends on:** M1 ✓; D-008 ✓; D-015 ✓; D-020 ✓; D-003/D-004/D-005 approval.
 - **Acceptance:** matches reference at ≥1280; active state + `aria-current`; dropdown and drawer keyboard accessible (Tab, Escape, focus return); no horizontal scroll at 375 px.
 - **Verify:** lint, tsc, build, keyboard walk-through, 1280/768/375 visual check.
@@ -36,6 +36,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 ## M5 — Products
 
+- **Includes M2.5b `ShopMenu` (D-048, D-050–D-052):** setting `homeSections.products.built = true` makes Shop's children resolve to `/#products`. The build guard in `SiteHeader` then fails until `ShopMenu` is implemented in the same change. Spec: `COMPONENT_ARCHITECTURE.md` §3.
 - **Tasks:** 5.1 `Product` type + `content/products.ts` · 5.2 `SectionHeading` · 5.3 `ProductCard` (`side`, `stacked`) · 5.4 `ProductRangeSection`.
 - **Depends on:** M1 (`MediaFrame`, `ButtonLink`), M4 (pattern for data-driven content).
 - **Acceptance:** 4 / 2 / 1 columns; equal-height cards; no prices; CTA destinations per D-015.

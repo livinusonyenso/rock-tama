@@ -69,7 +69,7 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 |---|---|---|
 | Header shell, logo, link list, icons as links | Server | Static markup, no state. |
 | Active-link indicator (`aria-current="page"`) | Client (`NavLink`, tiny) | Needs `usePathname()`. Only the link is a client island, not the whole nav. |
-| Shop dropdown | Client (`ShopMenu`) | Open/close state, Escape key, click-outside, `aria-expanded`. |
+| Shop dropdown | Client (`ShopMenu`), **deferred to M2.5b (M5)** | Disclosure pattern; only rendered once a Shop destination is available (D-048, D-050). Today SHOP is pending text with its arrow. |
 | Mobile menu drawer | Client (`MobileNav`) | Toggle state, focus management, scroll lock. |
 | Search | **Decision pending:** a plain link to `/search` (Server) or an overlay (Client). | |
 | Cart badge | Server with static `0` for now. Becomes dynamic only when the cart (Scope B) is approved. | |

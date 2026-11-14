@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** M2.5 Shop dropdown. M2.4 **accepted as functionally complete** (2026-11-15); visual refinements V-004/V-005 outstanding (M2.7); header baselines **not** approved (D-049). **M2.5 briefing presented; awaiting approval.**
+- **Current task:** none. **M2.5 (Shop dropdown gating + build guard + provisional references) complete (2026-11-15)**; stopped for owner review before M2.6 (MobileNav).
 
 ## Completed
 
@@ -31,6 +31,8 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **M2.4** `components/layout/SiteHeader.tsx` (Server) + `components/layout/NavLink.tsx` (Client, `usePathname`); `chevron-down` icon; `focus-ring` utility; `tracking-nav` 0.06→0.04em; `<SiteHeader cartCount={0} />` in layout; `header` section added to the verification config | lint ✓ · tsc ✓ · build ✓ · `verify:visual`: **28 passed, 0 failed**, no overflow at 375/768/1024/1440, no console errors, announcement baselines still 0.00% · reference sheet reviewed and tuned in 2 passes (text size/tracking, icon size, underline) · scripted a11y: 0 `href="#"`; header links = logo ("ROCK-TAMA home") + Home (`aria-current=page`); 8 pending items non-focusable, default cursor, no hover colour change, sr text "(Coming soon)" in normal case; Tab order logo → Home with 2px gold focus outline; banner + navigation "Main" landmarks · evidence `docs/verification/m2.4/` · header baselines **not** approved yet |
 
+| 2026-11-15 | **M2.5** `SiteHeader.resolveNavItem`: dropdown items are interactive only via children's availability; **build guard** throws if a child becomes available before `ShopMenu` (M2.5b, moved to M5). `visual-check.mjs`: `--provisional` + `docs/verification/provisional/` (header refs from the accepted M2.4 run) | lint ✓ · tsc ✓ · build ✓ · `verify:visual` **32 passed, 0 failed**; header **0.00%** vs the M2.4 screenshots at all 4 widths (no visual change), labelled "provisional reference (NOT approved)"; announcement approved baselines 0.00% · **guard test** (temporary `products.built = true`, reverted): `next build` exit 1 with the actionable message naming `/#products`, ShopMenu, M2.5b · `--approve --provisional` together → exit 2 · a11y re-check: SHOP still "Shop (Coming soon)", not focusable, 0 `#` links, Tab logo → Home |
+
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
@@ -50,4 +52,4 @@ _Last updated: 2026-11-14_
 
 ## Next proposed task
 
-**M2.5 Shop dropdown (`ShopMenu`, Client):** disclosure for the Shop item with the 4 children (all pending today), keyboard (Enter/Space/Escape, focus return), click-outside. Includes a decision on how a dropdown of only-pending items should behave. Needs a briefing.
+**M2.6 Mobile navigation (`MobileNav`, Client):** hamburger + drawer below `lg`, rendering `mainNav` via `resolveHref` (pending items as text, Shop children as an indented list once available), focus management, Escape, scroll lock, dark/light focus variant as needed. Needs a briefing.

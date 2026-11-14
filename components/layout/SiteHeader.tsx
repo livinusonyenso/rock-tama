@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { headerActions, mainNav, navigationCopy } from "@/content/navigation";
 import { site } from "@/content/site";
 import { resolveHref } from "@/lib/navigation";
-import type { HeaderAction } from "@/types/content";
+import type { HeaderAction, NavItem } from "@/types/content";
 
 type SiteHeaderProps = {
   /** Runtime cart size (D-029). Supplied by the caller; the cart feature will provide it later. */
@@ -20,6 +20,31 @@ const navItemClass = [
   "after:absolute after:inset-x-0 after:bottom-1 after:h-0.75 after:bg-gold-700 after:opacity-0",
   "aria-[current=page]:after:opacity-100",
 ].join(" ");
+
+/**
+ * Destination for a top-level nav item. An item with a dropdown (Shop) is
+ * interactive only through its children's availability, never its own route
+ * (D-048). While none are available it renders as pending text.
+ */
+function resolveNavItem(item: NavItem): string | null {
+  if (!item.children) return resolveHref(item.route);
+
+  const available = item.children
+    .map((child) => resolveHref(child.route))
+    .filter((href): href is string => href !== null);
+
+  if (available.length > 0) {
+    // Guard (D-048): fails the build/prerender instead of shipping a link that
+    // shows a dropdown arrow but has no dropdown.
+    throw new Error(
+      `"${item.label}" now has an available destination (${available[0]}) but its dropdown (ShopMenu) ` +
+        "is not implemented. Build task M2.5b (docs/IMPLEMENTATION_PLAN.md, M5; D-048) in the same change " +
+        "that makes the destination available.",
+    );
+  }
+
+  return null;
+}
 
 /** Main site header (UI_BREAKDOWN §02). Server Component; only NavLink runs on the client. */
 export function SiteHeader({ cartCount }: SiteHeaderProps) {
@@ -42,7 +67,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
             <ul className="flex items-center gap-8 xl:gap-11">
               {mainNav.map((item) => (
                 <li key={item.label}>
-                  <NavLink href={resolveHref(item.route)} className={navItemClass}>
+                  <NavLink href={resolveNavItem(item)} className={navItemClass}>
                     {item.label}
                     {item.children && (
                       <Icon name="chevron-down" strokeWidth={2} className="size-3.5" />

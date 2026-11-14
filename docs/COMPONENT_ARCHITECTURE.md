@@ -27,10 +27,20 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | Component | Section | Responsibility | Reusable | Boundary | Props | Dependencies | Responsive | Priority |
 |---|---|---|---|---|---|---|---|---|
 | `NavLink` ✓ M2.4 | 02 (dropdown M2.5, mobile M2.6) | `href` string → link with `aria-current` on exact path match (never for `#` anchors), hover + `focus-ring`; `href` null → non-interactive text + sr-only "(Coming soon)" (D-027) | Yes | **Client** (`usePathname`) | `href: string \| null`, `children`, `className?` | `next/link`, `navigationCopy` | — | **Implemented** |
-| `ShopMenu` | 02 | "Shop" disclosure dropdown (keyboard, Escape, outside click) | No | **Client** | `items` | `NavLink` | Desktop only; inside `MobileNav` it is a simple list | M2 |
+| `ShopMenu` | 02 | "Shop" disclosure dropdown | No | **Client** | `label`, `items: { label, href }[]` (available children only) | `NavLink`, `Icon` | Desktop only; inside `MobileNav` it is a simple list | **Deferred to M2.5b (built in M5)**; spec below |
 | `MobileNav` | 02 | Hamburger button + drawer with nav, account, focus handling, scroll lock | No | **Client** | `items` | `NavLink` | Visible < `lg` | M2 |
 | `NewsletterForm` | 09 | Email form UI with validation and pending/success/error states | No | **Client** (`useActionState`) | `action?` (wired after Scope B) | — | Full width on mobile | M7 (UI only) |
 | `SearchTrigger` | 02 | **Pending decision:** link vs. overlay. If it's a link, it isn't a component | — | — | — | — | — | Decide in M2 |
+
+### `ShopMenu` specification (M2.5b; approved D-048, D-050–D-052)
+
+- **When it renders:** `SiteHeader` resolves each child of a nav item with `children` via `resolveHref`. No available child → pending text with arrow and "Coming soon" (current behaviour). One or more → `<ShopMenu>` with only the available children (unavailable ones omitted). Until `ShopMenu` exists, the second case **throws at build** (guard in `SiteHeader.resolveNavItem`). Replace the throw with `<ShopMenu>` in M2.5b.
+- **Pattern:** disclosure navigation. `<button type="button" aria-expanded aria-controls="shop-menu">SHOP <chevron/></button>` + `<ul id="shop-menu">` of `NavLink`s. Not `role="menu"`.
+- **Interaction:** click/tap/Enter/Space toggles. **Escape** closes and returns focus to the button. Outside pointer-down and focus leaving the component close it, as does following a link. **No hover-to-open** (touch parity). Optional Down-arrow moves focus into the list.
+- **Visuals:** same nav type as other items; chevron rotates 180° when open; panel below the item, `bg-ivory-100`, `shadow-card`, `rounded-card`, links with `focus-ring`.
+- **State:** a local `useState` boolean plus refs; no state library.
+- **Mobile (M2.6):** no dropdown. `MobileNav` renders the same available children as an indented list.
+- **Verification:** `verify:visual` + scripted keyboard/pointer test (open, Tab through, Escape returns focus, outside click closes) + emulated touch tap; panel screenshot added as a section.
 
 ## 4. Section components (all Server)
 

@@ -10,7 +10,8 @@
  *   npm run verify:visual -- --section announcement --viewport desktop,mobile
  *   npm run verify:visual -- --no-build              reuse the existing .next build
  *   npm run verify:visual -- --url http://localhost:3000   use a running server
- *   npm run verify:visual -- --approve               after review: update baselines
+ *   npm run verify:visual -- --approve               after owner acceptance: update APPROVED baselines
+ *   npm run verify:visual -- --provisional           store PROVISIONAL references (not approved; D-049)
  *   npm run verify:visual -- --save m2.4             copy sheets + report to docs/verification/m2.4/
  *
  * Exit codes: 0 all checks passed · 1 a check failed · 2 incomplete (setup error).
@@ -33,7 +34,8 @@ import config from "./visual-check.config.mjs";
  */
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const BASELINE_DIR = join(ROOT, "docs/verification/baselines");
+const BASELINE_DIR = join(ROOT, "docs/verification/baselines"); // approved by the owner
+const PROVISIONAL_DIR = join(ROOT, "docs/verification/provisional"); // regression only, NOT approved
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -52,6 +54,7 @@ const { values: args } = parseArgs({
     build: { type: "boolean", default: true },
     url: { type: "string" },
     approve: { type: "boolean", default: false },
+    provisional: { type: "boolean", default: false },
     save: { type: "string" },
     "full-page": { type: "boolean", default: true },
   },
@@ -63,6 +66,7 @@ const pick = (list, wanted, label) => {
   if (unknown.length) fatal(`Unknown ${label}: ${unknown.join(", ")}. Known: ${list.map((i) => i.name).join(", ")}`);
   return list.filter((item) => names.includes(item.name));
 };
+if (args.approve && args.provisional) fatal("Use either --approve or --provisional, not both.");
 const sections = pick(config.sections, args.section, "section");
 const viewports = pick(config.viewports, args.viewport, "viewport");
 const pages = config.pages.filter((p) => !args.section || sections.some((s) => s.page === p.name));
@@ -350,29 +354,39 @@ async function main() {
       record(sScope, "reference comparison sheet", "INFO", `review ${rel(sheet)}`);
     }
 
-    const baseline = join(BASELINE_DIR, `${section.name}-${viewport.name}.png`);
-    if (existsSync(baseline)) {
+    // Approved baselines take priority; provisional references (D-049) are used only when no
+    // approved baseline exists, and are always labelled as not approved.
+    const fileName = `${section.name}-${viewport.name}.png`;
+    const approved = join(BASELINE_DIR, fileName);
+    const provisional = join(PROVISIONAL_DIR, fileName);
+    const reference = existsSync(approved)
+      ? { path: approved, check: "matches approved baseline" }
+      : existsSync(provisional)
+        ? { path: provisional, check: "matches provisional reference (NOT approved)" }
+        : null;
+    if (reference) {
       await renderScratch("<!doctype html><body></body>");
       const result = await cdp.evaluate(
-        pixelDiffExpression(`data:image/png;base64,${readFileSync(baseline).toString("base64")}`, implData, config.regression.pixelTolerance),
+        pixelDiffExpression(`data:image/png;base64,${readFileSync(reference.path).toString("base64")}`, implData, config.regression.pixelTolerance),
       );
       if (result.sizeMismatch) {
-        record(sScope, "matches approved baseline", "FAIL", `size changed ${result.baseline.join("×")} → ${result.current.join("×")}`);
+        record(sScope, reference.check, "FAIL", `size changed ${result.baseline.join("×")} → ${result.current.join("×")}`);
       } else {
         const pct = (result.ratio * 100).toFixed(2);
         const diffFile = join(RUN_DIR, "compare", `${section.name}-${viewport.name}-baseline-diff.png`);
         writeFileSync(diffFile, Buffer.from(result.image.split(",")[1], "base64"));
         const ok = result.ratio <= config.regression.maxDiffRatio;
-        record(sScope, "matches approved baseline", ok ? "PASS" : "FAIL", `${pct}% pixels differ${ok ? "" : `; see ${rel(diffFile)}`}`);
+        record(sScope, reference.check, ok ? "PASS" : "FAIL", `${pct}% pixels differ${ok ? "" : `; see ${rel(diffFile)}`}`);
       }
     } else {
-      record(sScope, "matches approved baseline", "INFO", "no approved baseline yet");
+      record(sScope, "matches approved baseline", "INFO", "no approved baseline or provisional reference yet");
     }
 
-    if (args.approve) {
-      mkdirSync(BASELINE_DIR, { recursive: true });
-      copyFileSync(file, baseline);
-      record(sScope, "baseline updated", "INFO", rel(baseline));
+    if (args.approve || args.provisional) {
+      const dir = args.approve ? BASELINE_DIR : PROVISIONAL_DIR;
+      mkdirSync(dir, { recursive: true });
+      copyFileSync(file, join(dir, fileName));
+      record(sScope, args.approve ? "approved baseline updated" : "provisional reference updated (NOT approved)", "INFO", rel(join(dir, fileName)));
     }
   }
 

@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-15 (after M2.4)_
+_Last updated: 2026-11-15 (after M2.5)_
 
-**Where we are:** M1–M2.3, M2.V accepted; M2.4 accepted as functionally complete (V-004/V-005 → M2.7; header baselines NOT approved, provisional references only, D-049). **M2.5 (Shop dropdown) briefing presented; awaiting approval.** D-048 defines the dropdown behaviour. The page below the header is still the create-next-app starter.
+**Where we are:** M1–M2.4 and M2.V accepted (M2.4 functionally; V-004/V-005 → M2.7). **M2.5 complete and committed: Shop stays pending until a child destination exists; a build guard forces `ShopMenu` (M2.5b, spec in `COMPONENT_ARCHITECTURE.md` §3) to be built in M5. Stopped for owner review before M2.6 (MobileNav).** Header has provisional (NOT approved) references in `docs/verification/provisional/`. The page below the header is still the create-next-app starter.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -19,8 +19,8 @@ _Last updated: 2026-11-15 (after M2.4)_
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.
 
-**Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-048–D-049 newest) → `docs/UI_BREAKDOWN.md` §02 + `docs/COMPONENT_ARCHITECTURE.md` §3 (`ShopMenu`) for M2.5; verification: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification". Visual verification method: `docs/DEVELOPMENT_GUIDELINES.md`.
+**Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-050–D-052 newest) → `docs/UI_BREAKDOWN.md` §02 + `docs/COMPONENT_ARCHITECTURE.md` §3 (`MobileNav`) for M2.6; verification: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification". Visual verification method: `docs/DEVELOPMENT_GUIDELINES.md`.
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Do not:** start M2.5 until the owner approves a briefing. Do not fix V-001–V-005 before M2.7.
+**Do not:** start M2.6 until the owner approves a briefing. Do not fix V-001–V-005 before M2.7.

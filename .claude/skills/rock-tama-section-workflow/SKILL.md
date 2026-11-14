@@ -26,9 +26,9 @@ The project docs are the source of truth. Reference them, don't restate them.
 
 ## Phase C: Build and verify (only after explicit approval)
 
-9. **Implement only the approved scope.** Use tokens and content modules. Links go through `resolveHref()`. If the task ships a homepage section or page, update its availability in `content/routes.ts` in the same change. If scope must change, stop and ask.
+9. **Implement only the approved scope.** Use tokens and content modules. Links go through `resolveHref()`. If the task ships a homepage section or page, update its availability in `content/routes.ts` in the same change. Making a Shop destination available requires `ShopMenu` (M2.5b) in the same change; the build guard enforces this. If scope must change, stop and ask.
 10. **Run checks:** `npm run lint`, `npx tsc --noEmit`, `npm run build`. Fix failures in scope; report any you can't fix, with output.
-11. **Visual verification:** add/update the section in `scripts/visual-check.config.mjs`, run `npm run verify:visual -- --section <name>`, then **look at** the reference comparison sheet in `.verification/<run>/compare/`. Judge tablet/mobile against the documented responsive behaviour, and check keyboard/accessibility basics. List deviations honestly, and never present passing automated checks as proof of pixel accuracy. Update baselines (`--approve`) only after the owner accepts the result.
+11. **Visual verification:** add/update the section in `scripts/visual-check.config.mjs`, run `npm run verify:visual -- --section <name>`, then **look at** the reference comparison sheet in `.verification/<run>/compare/`. Judge tablet/mobile against the documented responsive behaviour, and check keyboard/accessibility basics. List deviations honestly, and never present passing automated checks as proof of pixel accuracy. Update approved baselines (`--approve`) only after the owner accepts the result; use `--provisional` for regression protection while visual differences remain open.
 
 ## Phase D: Record and stop
 

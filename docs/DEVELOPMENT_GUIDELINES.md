@@ -58,7 +58,7 @@ One logical task at a time. No task starts without explicit owner approval. Each
 3. Waits for load, fonts and images, then checks: fonts loaded · no broken images · **no horizontal overflow** (names offending elements) · **no console errors** (console errors, uncaught exceptions, failed network requests) · each configured section present and visible.
 4. Screenshots: viewport + full page per page, plus one per section.
 5. At viewports with `compareWithReference` (desktop): a **reference comparison sheet** stacking the reference crop (scaled from the 1086px mock), the implementation, and a difference overlay.
-6. **Baseline regression:** pixel diff against the approved baseline (fails above 0.5% differing pixels), plus a red-highlighted diff image.
+6. **Regression:** pixel diff against the approved baseline, or, if none exists, the provisional reference (fails above 0.5% differing pixels), plus a red-highlighted diff image.
 7. Writes `report.md` + `report.json`. Exit 0 = pass, 1 = a check failed, 2 = incomplete/setup error.
 
 **Commands:**
@@ -67,7 +67,8 @@ npm run verify:visual                                   # everything
 npm run verify:visual -- --section announcement         # one section (repeatable / comma list)
 npm run verify:visual -- --viewport desktop,mobile
 npm run verify:visual -- --no-build                     # reuse the last build
-npm run verify:visual -- --approve                      # ONLY after a person reviewed the output: update baselines
+npm run verify:visual -- --approve                      # ONLY after owner acceptance: update APPROVED baselines
+npm run verify:visual -- --provisional                  # store PROVISIONAL references (regression only, not approved; D-049)
 npm run verify:visual -- --save m2.4                    # copy report + comparison images to docs/verification/m2.4/
 ```
 
@@ -78,6 +79,7 @@ npm run verify:visual -- --save m2.4                    # copy report + comparis
 | Reference (the design) | `docs/reference/homepage-reference.png` | committed | owner only |
 | Generated output | `.verification/<UTC timestamp>/` | **ignored** | every run |
 | Approved baselines | `docs/verification/baselines/<section>-<viewport>.png` | committed | `--approve`, only after owner-accepted visual review |
+| Provisional references | `docs/verification/provisional/<section>-<viewport>.png` | committed | `--provisional`, for regression protection while a section still has open visual differences; reported as "NOT approved". Ignored when an approved baseline exists |
 
 **Adding a section:** when a section ships, add `{ name, page, selector, reference: { x, y, width, height } }` to `sections` in the config (the rectangle is in reference-image pixels; see `UI_BREAKDOWN.md`). Run, review the sheet, report; after owner acceptance, run with `--approve` and commit the baselines.
 
