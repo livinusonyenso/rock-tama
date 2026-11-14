@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.2 Announcement Bar complete (2026-11-15)**; stopped for owner approval before M2.3.
+- **Current task:** M2.3 Logo. M2.2 **accepted by owner** (2026-11-15) with visual differences V-001–V-003 deferred to M2.7. **M2.3 briefing + verification-script proposal presented; awaiting approval.**
 
 ## Completed
 
@@ -41,6 +41,7 @@ _Last updated: 2026-11-14_
 4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
 5. Business confirmation of delivery coverage, wholesale fulfilment and export, to finalise announcement wording (D-030)
 6. Owner review of D-036 (wrap instead of truncate under enlarged text)
+7. Approval of the verification-script proposal (M2.V)
 
 ## Next proposed task
 

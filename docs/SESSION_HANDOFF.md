@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15 (after M2.2)_
 
-**Where we are:** M1, M2.1 approved. **M2.2 (Announcement Bar) complete, verified in headless Chrome, committed; stopped for owner approval before M2.3 (Logo placeholder).** The page below the bar is still the create-next-app starter (replaced in M3).
+**Where we are:** M1, M2.1, M2.2 accepted (M2.2 visual differences V-001–V-003 logged in `docs/verification/README.md`, to fix in M2.7). **M2.3 (Logo) briefing and M2.V (verification script) proposal presented; awaiting approval.** The page below the bar is still the create-next-app starter (replaced in M3).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -20,4 +20,4 @@ _Last updated: 2026-11-15 (after M2.2)_
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Do not:** start M2.3 until the owner approves it in chat.
+**Do not:** start M2.3 or M2.V until the owner approves them in chat. Do not fix V-001–V-003 before M2.7.

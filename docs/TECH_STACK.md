@@ -38,7 +38,21 @@
 
 ### `npm audit` (2026-11-15)
 
-7 moderate advisories, all **dev-only** and pre-existing: `minimatch` (ReDoS) via `typescript-eslint` / `@typescript-eslint/*`, pulled in by `eslint-config-next`. Not introduced by `lucide-react`. Not auto-fixed (would change unrelated tooling); revisit when `eslint-config-next` updates.
+**Production dependencies: 0 vulnerabilities** (`npm audit --omit=dev`). Nothing that ships to users is affected.
+
+**Development tooling: 7 moderate advisories**, pre-existing (present before `lucide-react` was added):
+
+| Package (all transitive, dev-only) | Severity | Root cause | Pulled in by |
+|---|---|---|---|
+| `minimatch` (3.1.5 and 10.2.6) | moderate | Potential ReDoS via glob-pattern amplification | `eslint`, `eslint-plugin-import`, `eslint-plugin-jsx-a11y`, `eslint-plugin-react`, `@typescript-eslint/typescript-estree` |
+| `@typescript-eslint/typescript-estree` | moderate | via `minimatch` | `typescript-eslint` |
+| `@typescript-eslint/utils` | moderate | via `typescript-estree` | `typescript-eslint` |
+| `@typescript-eslint/type-utils` | moderate | via `typescript-estree`, `utils` | `typescript-eslint` |
+| `@typescript-eslint/parser` | moderate | via `typescript-estree` | `typescript-eslint` |
+| `@typescript-eslint/eslint-plugin` | moderate | via `type-utils`, `utils` | `typescript-eslint` |
+| `typescript-eslint` | moderate | via the above | `eslint-config-next@16.4.6` |
+
+Exposure: these run only when linting this repository's own files, not on user input and not in the deployed site. **Not fixed now** (owner direction: no unrelated upgrades inside milestones). Scheduled as the separate **"Dependency maintenance"** task in `IMPLEMENTATION_PLAN.md`.
 
 ### Next.js 16 reference docs
 

@@ -16,6 +16,11 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 - **Acceptance:** matches reference at ≥1280; active state + `aria-current`; dropdown and drawer keyboard accessible (Tab, Escape, focus return); no horizontal scroll at 375 px.
 - **Verify:** lint, tsc, build, keyboard walk-through, 1280/768/375 visual check.
 
+### M2 follow-up tasks (added 2026-11-15)
+
+- **M2.V: Repeatable visual verification script.** Proposal awaiting approval (see the M2.3 briefing). Saves the headless-Chrome method as a project script.
+- **M2.7: Header visual refinement.** Fix the open differences V-001 (filled globe via licensed SVG), V-002 (local right-edge alignment, not a global `Container` change), V-003 (typography tuning within Source Sans 3), plus any header differences found in M2.4–2.6. Log: `docs/verification/README.md`.
+
 ## M3 — Hero
 
 - **Tasks:** 3.1 `HeroSection` content + CTAs · 3.2 `HeroWaves` SVG + glow · 3.3 bottle `MediaFrame` · 3.4 responsive layout.
@@ -51,6 +56,10 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 - **Tasks:** responsive pass (375/768/1024/1280/1440) · accessibility audit (axe/Lighthouse, keyboard, contrast) · side-by-side screenshot comparison · performance (LCP, CLS, JS size) · SEO (metadata, OG image, structured data `Organization`/`Product` without invented data) · remove starter assets.
 - **Acceptance:** Lighthouse a11y ≥ 95, CLS < 0.1, no console errors, documented deviations from the reference.
+
+## Maintenance (unscheduled, separate from milestones)
+
+- **Dependency maintenance:** review the 7 moderate dev-only advisories (`minimatch` via `eslint-config-next` / `typescript-eslint`, see `TECH_STACK.md`), upgrade tooling if fixes are available, re-run lint/tsc/build. Production deps currently have 0 advisories.
 
 ## M9 — Additional pages and backend
 
