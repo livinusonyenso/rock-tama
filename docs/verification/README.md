@@ -17,6 +17,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
 | M2.4 | `m2.4/header-desktop-reference.png`, `m2.4/report.md` | Header vs reference at 1440 (saved with `--save m2.4`). **Header baselines not yet approved** (awaiting owner review) |
 | M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states; V-008 sweep + 1359/1360 images. **Awaiting owner visual approval; baselines not promoted** |
+| M3.2 | `m3.2/` (`hero-desktop-reference.png`, `hero-responsive.png`, `sections/`) | Static hero vs reference @1440; 320/375/768/1024/1280 layouts |
 | M2.6 | `m2.6/` | Open drawer at 320 / 375 / 768, the 320px page with header, and the full run report (119 checks) |
 | M2.3 | `m2.3-logo-placeholders-1440-375.png` | Header (ivory) and footer (forest) logo placeholders, rendered in a temporary harness at 1440 and 375 |
 

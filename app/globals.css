@@ -54,10 +54,10 @@
   --color-line-dark-strong: #9cb4a7; /* trust strip dividers (use with opacity) */
 
   /* Type scale: estimates scaled from the reference to a 1440px viewport; tune during visual review */
-  --text-display: 5.25rem; /* hero "ROCK TAMA" ~84px */
+  --text-display: 5.5rem; /* hero "ROCK TAMA" 88px (measured M3: matches the ref 512px glyph width; Cormorant is wider than the ref face) */
   --text-display--line-height: 1;
-  --text-tagline: 2.125rem; /* hero tagline ~34px */
-  --text-tagline--line-height: 1.2;
+  --text-tagline: 2.5rem; /* hero tagline 40px (measured M3) */
+  --text-tagline--line-height: 1.1;
   --text-section: 2.25rem; /* section H2 ~36px */
   --text-section--line-height: 1.15;
   --text-card-title: 1.5rem; /* product card titles ~24px */
@@ -67,6 +67,9 @@
 
   --tracking-eyebrow: 0.2em;
   --tracking-nav: 0.04em; /* tuned in M2.4 to the reference nav word widths */
+  --tracking-hero-eyebrow: 0.12em; /* hero eyebrow: measured width 429px @1440 (M3) */
+  --text-hero-eyebrow: 1.3125rem; /* hero eyebrow 21px: ref cap height 14px @1440 (M3) */
+  --text-hero-eyebrow--line-height: 1.4;
 
   /* Spacing (Tailwind's 4px grid stays the default; these are named layout values) */
   --spacing-section: 5rem; /* desktop content-section padding (80px) */
@@ -75,13 +78,15 @@
   --spacing-announcement: 2.5rem; /* announcement bar min-height (40px); ref 31px @1086 ≈ 41px @1440 */
   --spacing-header: 5.25rem; /* desktop header height (84px) */
   --spacing-header-sm: 4rem; /* mobile header height (64px) */
+  --spacing-hero: 32.8125rem; /* hero min-height (525px = ref 396 @1440) */
+  --spacing-hero-media: 30.25rem; /* hero bottle height (484px = ref 365 @1440) */
   /* Fluid left padding of the header/bar rows (V-008): 32px at 1280 → the measured reference
      inset at 1440 (header 92px, bar 88px), then constant. Slope < 1, so the row always fits. */
   --spacing-header-inset: clamp(2rem, calc(2rem + (100vw - 80rem) * 0.375), 5.75rem);
   --spacing-bar-inset: clamp(2rem, calc(2rem + (100vw - 80rem) * 0.35), 5.5rem);
 
   /* Container max-widths -> max-w-content / max-w-wide */
-  --container-content: 75rem; /* 1200px: header, hero, origin */
+  --container-content: 75.75rem; /* 1212px: hero. Measured M3: hero text at x=146 @1440 (was 1200, an M1 estimate) */
   --container-wide: 90rem; /* 1440px: bar, header, product grid, banner, footer. Corrected M2.7 from 1320 to the measured reference frame (≈22px margins @1086 → content 32–1408 @1440) */
 
   /* Radii */
@@ -92,6 +97,11 @@
   /* Shadows */
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(60 40 10 / 0.05);
   --shadow-gold: 0 4px 14px rgb(224 173 95 / 0.25);
+  --shadow-gold-hover: 0 6px 20px rgb(224 173 95 / 0.38);
+
+  /* Motion (docs/ANIMATION_SYSTEM.md) */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /*
@@ -103,6 +113,14 @@
   --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-source-sans), system-ui, -apple-system, "Segoe UI",
     Roboto, sans-serif;
+}
+
+/* Hero background: dark at the top, lighter forest towards the bottom, soft glow lower-left (sampled) */
+@utility bg-hero {
+  background-color: var(--color-forest-900);
+  background-image:
+    radial-gradient(60% 55% at 18% 92%, rgb(30 74 59 / 0.55), transparent 70%),
+    linear-gradient(to bottom, #06271e, var(--color-forest-900) 45%, #0c2e25);
 }
 
 /* Primary button fill: gold vertical gradient sampled from the reference CTAs */

@@ -96,8 +96,9 @@ Fallbacks: serif → `Georgia, "Times New Roman", serif`; sans → `system-ui, -
 
 | Token / utility | Size | Line height | Use |
 |---|---|---|---|
-| `text-display` | 5.25rem (84px) | 1 | Hero "ROCK TAMA" (desktop) |
-| `text-tagline` | 2.125rem (34px) | 1.2 | Hero tagline (italic serif) |
+| `text-display` | **5.5rem (88px)** (M3) | 1 | Hero "ROCK TAMA" from `xl` (`text-5xl` → `sm:text-6xl` → `md:text-5xl` → `lg:text-7xl`) |
+| `text-tagline` | **2.5rem (40px)** (M3) | 1.1 | Hero tagline (semibold italic serif) from `xl` |
+| `text-hero-eyebrow` | 1.3125rem (21px) | 1.4 | Hero eyebrow from `lg` (with `tracking-hero-eyebrow` 0.12em) |
 | `text-section` | 2.25rem (36px) | 1.15 | Section H2 |
 | `text-card-title` | 1.5rem (24px) | 1.2 | Product card titles |
 | `text-eyebrow` | 0.8125rem (13px) | 1.4 | Eyebrows (pair with `tracking-eyebrow`, uppercase, semibold) |
@@ -116,7 +117,7 @@ Smaller-screen sizes are set per component with responsive classes (e.g. `text-5
 | `py-strip` | 2.5rem | Trust strip, quality strip |
 | `min-h-announcement` | 2.5rem (40px) | Announcement bar **min-height** (D-035; was 36px) |
 | `h-header` / `h-header-sm` | 5.25rem / 4rem | Header height, desktop / mobile |
-| `max-w-content` | 75rem (1200px) | Hero, origin |
+| `max-w-content` | **75.75rem (1212px)** (measured M3, D-070) | Hero |
 | `max-w-wide` | **90rem (1440px)** (corrected M2.7 from 1320, D-059) | Announcement bar, header (D-034), product grid, banner, footer. With 32px padding: content 32–1408 at 1440 = reference frame |
 | `pl-header-inset` / `pl-bar-inset` | `clamp()` tokens (D-064) | Fluid left padding of header / bar rows from `xl`: 32px at 1280 → 92 / 88px at 1440, constant above |
 | `rounded-button` / `rounded-card` / `rounded-banner` | 4px / 8px / 12px | Buttons / cards and media / wholesale banner |
@@ -140,6 +141,10 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 **Mobile drawer (M2.6):** `<dialog>` `bg-forest-850 text-on-dark`, `w-5/6 max-w-sm h-dvh`, right edge, `backdrop:bg-forest-950/60`, `translate-x` slide-in 200ms `ease-out` via `starting:` + `motion-reduce:transition-none`. Inner padding `px-6 pt-4 pb-8`. Eyebrow "MENU" `text-eyebrow tracking-eyebrow text-gold-500`; close button `size-11`, `x` icon `size-7`. Main rows `font-serif text-2xl font-semibold min-h-12 pl-4`, separators `divide-line-dark/40` + `border-y`, current page `before:w-0.75 bg-gold-500`, pending rows `text-on-dark-muted` with a "COMING SOON" tag (`font-sans text-xs font-semibold uppercase tracking-eyebrow`). Secondary rows `text-base` with `gold-500` icons `size-5`; group gap `mt-6`.
 
 **Focus indicators:** `focus-ring` (2px `gold-700`, 4px offset) on light surfaces; `focus-ring-dark` (2px `gold-500`, 6.97:1 on `forest-850`) on dark surfaces.
+
+**Hero (M3.2, measured @1440, all elements within ±3px of the reference):** `bg-hero` (vertical forest gradient + lower-left glow) + `HeroWaves` (2 static SVG layers, forest-600→800 gradients). `content` container, 2 columns from `md`, `min-h-hero` (525) from `lg`. Text column `lg:pt-11`: eyebrow `text-hero-eyebrow` semibold uppercase `gold-500`; rule `w-16 h-px gold-500`; h1 `font-serif font-bold` `xl:text-display`; tagline `font-serif font-semibold italic` `xl:text-tagline`; description `lg:text-xl leading-snug max-w-120`; CTA row `gap-5`, buttons `min-w-62 min-h-13 px-8 lg:text-lg` with 24px icons. Bottle `MediaFrame` 2:5, `lg:h-hero-media` (484), 20px above the hero bottom. Below `md`: single column, bottle below the CTAs (`h-72 sm:h-80`), CTAs stacked under `sm`.
+
+**Buttons (`ButtonLink`):** `primary` = `bg-gold-gradient text-ink-900 shadow-gold`, hover `shadow-gold-hover brightness-105 -translate-y-px`; `outline-dark` = `border-gold-500 text-on-dark`, hover `border-gold-400 bg-gold-500/10`; 150ms `ease-standard`; no lift with reduced motion; `focus-ring-dark`.
 
 ## 3b. Motion
 

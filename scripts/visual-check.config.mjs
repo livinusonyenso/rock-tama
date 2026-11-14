@@ -46,6 +46,13 @@ const config = {
       reference: { x: 0, y: 32, width: 1086, height: 64 },
     },
 
+    {
+      name: "hero",
+      page: "home",
+      selector: 'section[aria-labelledby="hero-heading"]',
+      reference: { x: 0, y: 96, width: 1086, height: 396 },
+    },
+
     // ---- Mobile navigation (M2.6): interactive states, each from a fresh page load ----
     {
       name: "mobile-nav-closed",

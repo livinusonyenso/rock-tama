@@ -27,8 +27,8 @@ M3 is complete only when the hero matches the reference **and both CTAs work**. 
 
 | Task | Scope | Status |
 |---|---|---|
-| **M3.1** | Page shell (`app/page.tsx` replaces the starter; starter SVGs removed), `ButtonLink`, `MediaFrame` (incl. generic bottle silhouette) | Approved |
-| **M3.2** | Static hero: `content/hero.ts`, `HeroSection`, `HeroWaves`, responsive layouts, measured against the reference. CTAs are wired through `resolveHref`, so they become live automatically when F1/F2 ship (transitional pending state in local development only, never shipped) | Approved |
+| **M3.1** | Page shell (`app/page.tsx` replaces the starter; starter SVGs removed), `ButtonLink`, `MediaFrame` (incl. generic bottle silhouette) | **Done 2026-11-15** |
+| **M3.2** | Static hero: `content/hero.ts`, `HeroSection`, `HeroWaves`, responsive layouts, measured against the reference. CTAs are wired through `resolveHref`, so they become live automatically when F1/F2 ship (transitional pending state in local development only, never shipped) | **Done 2026-11-15** (static; CTAs transitional) |
 | **M3.3** | CSS entrance animation + button microinteractions + deterministic animation checks in `verify:visual` | Approved (storyboard D-068) |
 | **F0** | Functional foundations: input validation library, `lib/server/` structure, typed env config, enquiry delivery adapter interface, functional (end-to-end) test harness in the verification tooling | **Needs approval** (dependencies, delivery choice) |
 | **F1** | `/wholesale`: wholesale + order enquiry form, Server Action, validation, spam protection, real delivery, success/error states, `?product=` prefill. Activates hero **Request Wholesale** + nav **WHOLESALE** | **Needs decisions** |

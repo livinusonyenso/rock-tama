@@ -22,7 +22,7 @@ export type RouteKey =
 /** Homepage sections that can serve as interim anchor destinations. The id is also the section's DOM id. */
 export type HomeSectionId = "products" | "origin" | "quality" | "wholesale";
 
-type AbsolutePath = `/${string}`;
+export type AbsolutePath = `/${string}`;
 
 /**
  * A route is either live (its page exists) or planned. A planned route may name
@@ -46,7 +46,9 @@ export type IconName =
   | "shopping-cart"
   | "chevron-down"
   | "menu"
-  | "x";
+  | "x"
+  | "warehouse"
+  | "image";
 
 export type NavLinkItem = {
   label: string;
@@ -109,4 +111,37 @@ export type SiteConfig = {
     stackedLight: LogoAsset;
   };
   announcements: readonly AnnouncementMessage[];
+};
+
+/** Visual style of a call-to-action button (see components/ui/ButtonLink). */
+export type ButtonVariant = "primary" | "outline-dark";
+
+/** A call to action whose destination is resolved through the route registry (never a raw href). */
+export type CallToAction = {
+  label: string;
+  route: RouteKey;
+  icon?: IconName;
+  variant: ButtonVariant;
+};
+
+/** An image slot. `src: null` renders a same-size placeholder (MediaFrame). */
+export type MediaAsset = {
+  /** Visible placeholder label, e.g. "Hero Product Image". */
+  label: string;
+  /** Alt text for the real image. */
+  alt: string;
+  src: AbsolutePath | null;
+  /** CSS aspect-ratio, width/height, e.g. "2/5". */
+  aspect: `${number}/${number}`;
+  /** Placeholder outline. "bottle" = generic bottle silhouette (D-068). */
+  shape?: "rect" | "bottle";
+};
+
+export type HeroContent = {
+  eyebrow: string;
+  heading: string;
+  tagline: string;
+  description: string;
+  actions: readonly CallToAction[];
+  media: MediaAsset;
 };

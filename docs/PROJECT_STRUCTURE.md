@@ -43,8 +43,8 @@ components/
 │   ├── SiteFooter.tsx
 │   └── NewsletterForm.tsx     # "use client"
 ├── home/                      # homepage-only sections
-│   ├── HeroSection.tsx
-│   ├── HeroWaves.tsx
+│   ├── HeroSection.tsx        # ✓ M3.2
+│   ├── HeroWaves.tsx          # ✓ M3.2
 │   ├── TrustStrip.tsx
 │   ├── ProductRangeSection.tsx
 │   ├── OriginSection.tsx
@@ -52,10 +52,10 @@ components/
 │   └── WholesaleBanner.tsx
 ├── ui/                        # shared, design-system level
 │   ├── Container.tsx          # ✓ M2.2
-│   ├── ButtonLink.tsx
+│   ├── ButtonLink.tsx         # ✓ M3.1
 │   ├── SectionHeading.tsx
 │   ├── IconFeature.tsx
-│   ├── MediaFrame.tsx
+│   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
 │   └── ProductCard.tsx
 ├── brand/
 │   ├── Logo.tsx               # ✓ M2.3
@@ -67,6 +67,7 @@ components/
 content/                       # typed static content (no React)
 ├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags
 ├── site.ts                    # ✓ M2.1 brand, logos, announcements
+├── hero.ts                    # ✓ M3.2 hero copy, CTAs, media
 ├── navigation.ts              # ✓ M2.1 main nav, Shop dropdown, header actions
 ├── products.ts                # M5
 └── highlights.ts              # M4/M6/M7
