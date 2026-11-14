@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 Foundation complete → awaiting approval to start **M2 Header**.
+M1 approved → **M2 Header** in progress, one task at a time (M2.1: typed site + navigation content). Navigation may only render valid destinations (D-026).
 
 ## Git
 

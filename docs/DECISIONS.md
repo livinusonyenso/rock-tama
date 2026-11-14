@@ -8,9 +8,9 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 |---|---|---|---|
 | D-001 | Keep the existing Next.js 16.4.6 / React 19.3 / TS 5.9 / Tailwind 4.3 project and **npm**; do not reinitialise | CONFIRMED 2026-11-14 | Project already scaffolded and running |
 | D-002 | `docs/reference/homepage-reference.png` is the primary design spec; no redesign without approval | CONFIRMED 2026-11-14 | |
-| D-003 | Server Components by default; client islands only for `NavLink`, `ShopMenu`, `MobileNav`, `NewsletterForm` | PROPOSED | Less JS; simpler data flow |
-| D-004 | Root-level `components/{layout,home,ui,brand,icons}`, `content/`, `types/`, no `src/` | PROPOSED | Matches alias `@/* → ./*` |
-| D-005 | Static content as typed TS modules in `content/` | PROPOSED | Type-safe, swappable for CMS/DB later |
+| D-003 | Server Components by default; Client Components only when state, effects, browser APIs or client interaction require them (expected: `NavLink`, `ShopMenu`, `MobileNav`, `NewsletterForm`) | **APPROVED 2026-11-14** | Less JS; simpler data flow |
+| D-004 | Root-level `components/{layout,home,ui,brand,icons}`, `content/`, `types/`, `lib/` (only when needed), no `src/` | **APPROVED 2026-11-14** (in principle: avoid unnecessary folders/abstractions) | Matches alias `@/* → ./*` |
+| D-005 | Static content as strongly typed TS modules in `content/`, separate from presentation components | **APPROVED 2026-11-14** | Type-safe, swappable for CMS/DB later |
 | D-006 | Design tokens in Tailwind v4 `@theme` (`app/globals.css`), values per `DESIGN_SYSTEM.md` | **APPROVED 2026-11-14** (implemented M1) | Single source of truth |
 | D-007 | Fonts: Cormorant Garamond (editorial/headings) + Source Sans 3 (interface/body) via `next/font`, exposed as CSS variables | **APPROVED 2026-11-14** (implemented M1) | |
 | D-008 | Icons: `lucide-react` for standard UI icons; custom SVG only for distinctive brand/decorative icons when no suitable Lucide icon exists | **APPROVED 2026-11-14** | Install in M2 when first used |
@@ -24,10 +24,11 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 | D-016 | Use git; baseline committed before app code changes; meaningful commit messages throughout | **APPROVED 2026-11-14** | Owner had already initialised the repo with remote `origin` (github.com/livinusonyenso/rock-tama). Baseline commits `7e3b5be` (scaffold) and `7b7f69e` (docs). Pushing is done only on request. |
 | D-017 | Official brand name is **ROCK-TAMA** (title, metadata, brand references, docs). The hero headline may show **ROCK TAMA** (no hyphen) as a visual treatment | **APPROVED 2026-11-14** | |
 | D-018 | `dark:` variant bound to `.dark` class (`@custom-variant`), never set | APPROVED 2026-11-14 as part of D-010 implementation | Prevents OS dark mode from triggering any `dark:` utility |
-| D-019 | Gold text on light surfaces uses `gold-700` `#885D1B` (darkened from `#9A6A1F`); placeholder ink `#5C5C57` (from `#64645F`) | APPROVED 2026-11-14 within the M1 token review (owner asked for tokens "reviewed for consistency") | WCAG AA 4.5:1. Same hue, visually near-identical. Owner may overrule. |
+| D-019 | Gold text on light surfaces uses `gold-700` `#885D1B` (darkened from `#9A6A1F`); placeholder ink `#5C5C57` (from `#64645F`) | **APPROVED 2026-11-14** (explicitly confirmed by owner after M1 review) | WCAG AA 4.5:1. Same hue, visually near-identical. |
 | D-020 | Logo: use placeholders with the reference's dimensions/proportions at descriptive paths until the official SVGs are supplied; never redraw the logo | **APPROVED 2026-11-14** | Paths in `ASSET_SPECIFICATIONS.md` |
 | D-021 | Africa map: licensed vector outline, preferably **Natural Earth** (public domain); source and licence recorded in `ASSET_SPECIFICATIONS.md` | **APPROVED 2026-11-14** | |
 | D-022 | NAFDAC registration **A1-2462L** to be displayed **only after verification** against registration documents | **APPROVED 2026-11-14** (pending verification) | |
 | D-023 | Social links: layout ready, no invented or placeholder URLs; links render only when real URLs are supplied | **APPROVED 2026-11-14** | |
 | D-024 | Product direction: a **real e-commerce site** with two purchasing experiences (retail checkout; wholesale enquiry). Backend is **not** implemented until the homepage, architecture and requirements are approved. Payment provider, pricing, delivery rules and payment flow need later approval. | **APPROVED 2026-11-14** (direction only) | Details in `ECOMMERCE_REQUIREMENTS.md` |
-| D-025 | Shared primitives (`Container`, `ButtonLink`, `MediaFrame`) are built in the milestone that first uses them (M2/M3), not up front | PROPOSED | Avoids components without a consumer; replaces plan tasks 1.4–1.5 |
+| D-025 | Shared primitives (`Container`, `ButtonLink`, `MediaFrame`) are built when first needed, not up front | **APPROVED 2026-11-14** | Avoids components without a consumer; replaces plan tasks 1.4–1.5 |
+| D-026 | **Refinement of D-015:** rendered navigation points only to valid destinations. A homepage anchor (e.g. `/#products`) may be used as an interim destination **only after that section is implemented**. Planned routes are documented separately from currently available destinations. | **APPROVED 2026-11-14** (owner M2 instructions) | No broken links or dead anchors at any point |

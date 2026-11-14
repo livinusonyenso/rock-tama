@@ -5,8 +5,8 @@ _Last updated: 2026-11-14_
 ## Current state
 
 - **Phase:** Implementation (homepage, Scope A)
-- **Milestone:** M1 Foundation **complete** (approved scope). Awaiting approval for M2.
-- **Current task:** none. Stopped for owner review of M1.
+- **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
+- **Current task:** M2.1, typed site and navigation content. **Briefing presented; awaiting approval to implement.**
 
 ## Completed
 
@@ -26,7 +26,7 @@ _Last updated: 2026-11-14_
 ## Pending
 
 - M2 – M8 (see `IMPLEMENTATION_PLAN.md`)
-- PROPOSED decisions awaiting approval: D-003, D-004, D-005, D-009, D-011, D-012, D-014, D-025
+- PROPOSED decisions awaiting approval: D-009, D-011, D-012, D-014 (D-003, D-004, D-005, D-019, D-025 approved 2026-11-14; D-026 added)
 - Scope B requirements session (after homepage)
 
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
@@ -35,7 +35,7 @@ _Last updated: 2026-11-14_
 2. Lab reports, ISO 22000 certificate, NAFDAC A1-2462L documents
 3. Social URLs
 4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
-5. **Needed for M2:** approval of D-003 (Server/Client boundaries), D-004 (folder structure), D-005 (content modules)
+5. **Open M2.1 questions** (see the briefing): pending-link rendering, Shop dropdown items, empty-cart badge, confirmation of announcement-bar service claims, product URL slugs
 
 ## Next proposed task
 

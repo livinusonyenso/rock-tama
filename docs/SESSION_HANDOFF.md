@@ -2,7 +2,9 @@
 
 _Last updated: 2026-11-14_
 
-**Where we are:** M1 Foundation is complete and verified (git baseline, design tokens, fonts, light-only). **Stopped for owner approval before M2 (Header).** `app/page.tsx` is still the create-next-app starter (replaced in M3).
+**Where we are:** M1 Foundation is complete and **approved**. M2 (Header) is approved to proceed task by task. **M2.1 (typed site and navigation content) briefing has been presented; waiting for approval to implement.** `app/page.tsx` is still the create-next-app starter (replaced in M3).
+
+**M2.1 design in brief:** route registry with `live`/`planned` status + homepage section registry → `resolveHref()` returns a valid href or `null`; nav items reference route keys, never raw strings; icons as string keys (serialisable across the Server→Client boundary).
 
 **Code changed so far:** only `app/globals.css` (tokens; source of truth `docs/DESIGN_SYSTEM.md`), `app/layout.tsx` (fonts + ROCK-TAMA metadata), `.gitignore` (+ `.claude/settings.local.json`).
 
