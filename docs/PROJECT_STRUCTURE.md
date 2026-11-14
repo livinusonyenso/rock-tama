@@ -63,15 +63,17 @@ components/
     └── index.tsx              # inline SVG icons (named exports)
 
 content/                       # typed static content (no React)
-├── site.ts
-├── navigation.ts
-├── products.ts
-└── highlights.ts
+├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags
+├── site.ts                    # ✓ M2.1 brand, logos, announcements
+├── navigation.ts              # ✓ M2.1 main nav, Shop dropdown, header actions
+├── products.ts                # M5
+└── highlights.ts              # M4/M6/M7
 
 types/
-└── content.ts                 # Product, NavItem, Highlight … shared types
+└── content.ts                 # ✓ M2.1 shared content types
 
-lib/                           # created only when a real utility appears (e.g. cn())
+lib/
+└── navigation.ts              # ✓ M2.1 resolveHref() (only logic; content stays data-only)
 
 public/
 ├── brand/                     # logo SVGs (to be supplied)

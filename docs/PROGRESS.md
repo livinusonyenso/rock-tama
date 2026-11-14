@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** M2.1, typed site and navigation content. **Briefing presented; awaiting approval to implement.**
+- **Current task:** none. **M2.1 complete (2026-11-15)**; stopped for owner approval before M2.2.
 
 ## Completed
 
@@ -21,7 +21,9 @@ _Last updated: 2026-11-14_
 | 2026-11-14 | **M1.3** Fonts: Cormorant Garamond + Source Sans 3 via `next/font/google` (`--font-cormorant`, `--font-source-sans` → `font-serif`, `font-sans`); metadata title "ROCK-TAMA Natural Spring Water" | Build ✓; fonts self-hosted (17 `woff2` files in `.next/static/media`, both families in built CSS) |
 | 2026-11-14 | **M1.4** Starter dark mode removed: `prefers-color-scheme` block deleted, `color-scheme: light`, `dark:` re-bound to the `.dark` class | Compiled output shows `dark:` utilities scoped to `.dark` only |
 
-**Not verified:** visual check in a browser. The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
+| 2026-11-15 | **M2.1** Typed site + navigation content: `types/content.ts`, `content/routes.ts` (route plan + availability, homepage section flags), `content/site.ts` (brand, logo refs, interim announcement wording), `content/navigation.ts` (main nav, Shop dropdown, header actions, "Coming soon" copy), `lib/navigation.ts` (`resolveHref`); `app/layout.tsx` metadata now reads `site` | `npm run lint` ✓ · `npx tsc --noEmit` ✓ · `npm run build` ✓ (built `<title>` = "ROCK-TAMA Natural Spring Water", description from `site.ts`) · resolver script: only `home` resolves today, 12 others `null`; simulated built `products` section → Shop + 3 product items resolve to `/#products`; no `#` hrefs among 13 items · negative test: misspelled route key rejected by `tsc` (TS2820) |
+
+**Not verified (M1):** visual check in a browser. The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
 
@@ -35,8 +37,8 @@ _Last updated: 2026-11-14_
 2. Lab reports, ISO 22000 certificate, NAFDAC A1-2462L documents
 3. Social URLs
 4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
-5. **Open M2.1 questions** (see the briefing): pending-link rendering, Shop dropdown items, empty-cart badge, confirmation of announcement-bar service claims, product URL slugs
+5. Business confirmation of delivery coverage, wholesale fulfilment and export, to finalise announcement wording (D-030)
 
 ## Next proposed task
 
-**M2 Header, starting with task 2.1:** `content/site.ts` and `content/navigation.ts` (+ types), including a destination table for every nav link per D-015. Then 2.2: install `lucide-react` and build `Container`. Requires the M2 briefing and approval first.
+**M2.2:** install `lucide-react`, create `Container`, and build `AnnouncementBar` (the first consumer of both), rendered from `app/layout.tsx`. Needs a briefing and approval first.

@@ -31,6 +31,16 @@ Source: [`reference/homepage-reference.png`](reference/homepage-reference.png) �
 - Text: cream/white sans-serif, regular weight, ≈ 12 ref px. Single line, vertically centred.
 - Left edge aligns with the header logo, right edge with the header icons, so it uses the same content container.
 
+**Reference copy (preserved verbatim; claims pending business verification, D-030):**
+
+| Message | Reference wording | Interim published wording (`content/site.ts`) | Verification needed |
+|---|---|---|---|
+| Delivery | "Nationwide Delivery" | "Ask About Delivery to Your Area" | Confirm delivery coverage |
+| Wholesale | "Wholesale & Bulk Supply for Hotels, Offices, Retailers & Export" | "Wholesale & Bulk Supply Enquiries for Hotels, Offices & Retailers" | Confirm wholesale fulfilment and export operations |
+| International | "International Enquiries Welcome" | unchanged (already enquiry-oriented) | — |
+
+When the business confirms a service, update the wording in `content/site.ts` and this table together.
+
 **[PROPOSED]**
 - Component: `AnnouncementBar` (Server Component). It is a single-instance layout part, not "reusable" across sections, but it earns its own file as a distinct layout responsibility rendered from the root layout. Messages come from `content/site.ts`, not hard-coded JSX.
 - Semantics: `<div role="region" aria-label="Store announcements">` containing a `<ul>` of messages. Icons are `aria-hidden`. Dividers are CSS borders, not text characters, so screen readers don't announce "|".

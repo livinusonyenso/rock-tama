@@ -59,10 +59,26 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 
 ## 6. Data-driven content (`content/`, plain typed TS modules)
 
+Types live in `types/content.ts`. Content is plain, serialisable data: icons are string names (`IconName`), never component references, so the same data can be passed into Client Components (`MobileNav`, `ShopMenu`).
+
+| Module | Exports | Consumed by | Status |
+|---|---|---|---|
+| `routes.ts` | `routes` (route plan: `live`/`planned`, path, optional interim homepage section), `homeSections` (`built` flags) | `lib/navigation.ts` | **Implemented M2.1** |
+| `site.ts` | `site`: name `ROCK-TAMA`, `heroDisplayName`, title, description, location, logo references (planned paths, placeholder sizes, `available: false`), announcement messages | `app/layout.tsx` metadata ✓, `AnnouncementBar`, `Logo`, `SiteFooter` | **Implemented M2.1** |
+| `navigation.ts` | `mainNav` (Shop has `children`), `headerActions` (search/account/cart), `navigationCopy.comingSoon`. `footerNav`, `socialLinks` are added in M7. | `SiteHeader`, `ShopMenu`, `MobileNav` | **Implemented M2.1** (header parts) |
+
+### Navigation resolution (`lib/navigation.ts`), implemented in M2.1
+
+`resolveHref(key: RouteKey): string | null`: live route → path; planned route whose interim section is built → `/#<section>`; otherwise `null`. Components **must** render `null` as non-interactive text with "Coming soon" accessible text (D-027), never `href="#"`. Nav items reference `RouteKey`s, so a misspelled destination is a compile error.
+
+**Maintenance rule:** when a page ships, set its route to `"live"`; when a homepage section ships, set `homeSections.<id>.built = true` and render it with `id="<id>"`, both in the same commit.
+
+**Cart count (D-029):** runtime data, not content. `SiteHeader` will accept `cartCount: number` (default supplied by the page/layout, `0` until the cart exists).
+
+Planned content modules (not yet created):
+
 | Module | Exports | Consumed by |
 |---|---|---|
-| `site.ts` | brand name/tagline, announcement messages, location, copyright holder | `AnnouncementBar`, `SiteFooter`, metadata |
-| `navigation.ts` | `mainNav` (with Shop children), `footerNav` columns, `socialLinks` | `SiteHeader`, `MobileNav`, `SiteFooter` |
 | `products.ts` | `Product[]` (4 homepage offers) | `ProductRangeSection` |
 | `highlights.ts` | `purityHighlights`, `originFeatures`, `qualityIndicators`, `businessSegments`, `certification` flag | `TrustStrip`, `OriginSection`, `QualitySection`, `WholesaleBanner` |
 

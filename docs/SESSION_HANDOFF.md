@@ -1,17 +1,22 @@
 # Session Handoff
 
-_Last updated: 2026-11-14_
+_Last updated: 2026-11-15_
 
-**Where we are:** M1 Foundation is complete and **approved**. M2 (Header) is approved to proceed task by task. **M2.1 (typed site and navigation content) briefing has been presented; waiting for approval to implement.** `app/page.tsx` is still the create-next-app starter (replaced in M3).
+**Where we are:** M1 is approved. **M2.1 (typed site and navigation content) is complete and committed; stopped for owner approval before M2.2.** Nothing new is visible on the page yet; `app/page.tsx` is still the create-next-app starter (replaced in M3).
 
-**M2.1 design in brief:** route registry with `live`/`planned` status + homepage section registry → `resolveHref()` returns a valid href or `null`; nav items reference route keys, never raw strings; icons as string keys (serialisable across the Server→Client boundary).
+**Code so far:**
+- `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
+- `app/layout.tsx`: fonts; metadata from `content/site.ts`
+- `types/content.ts`: content types
+- `content/routes.ts`: route plan + `live`/`planned` status + `homeSections.built` flags
+- `content/site.ts`: brand ROCK-TAMA, logo refs (placeholders, `available: false`), interim announcement wording
+- `content/navigation.ts`: `mainNav` (Shop dropdown), `headerActions`, "Coming soon" copy
+- `lib/navigation.ts`: `resolveHref(key)` → valid href or `null`
 
-**Code changed so far:** only `app/globals.css` (tokens; source of truth `docs/DESIGN_SYSTEM.md`), `app/layout.tsx` (fonts + ROCK-TAMA metadata), `.gitignore` (+ `.claude/settings.local.json`).
+**Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.
 
-**Read next:** `docs/PROGRESS.md` (next task + blockers) → `docs/DECISIONS.md` (approved vs proposed) → `docs/UI_BREAKDOWN.md` §01–02 and `docs/COMPONENT_ARCHITECTURE.md` for M2.
+**Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-026–D-032 are the newest) → `docs/UI_BREAKDOWN.md` §01–02 and `docs/COMPONENT_ARCHITECTURE.md` §2–3, 6 for M2.2.
 
-**Key approved facts:** brand = ROCK-TAMA (hero may show "ROCK TAMA") · fonts Cormorant Garamond + Source Sans 3 · `lucide-react` for UI icons (not yet installed) · no broken links in production; no placeholder pages · no unverified claims (lab, ISO, NAFDAC A1-2462L) · no invented social URLs · logo placeholders only · real e-commerce later, no backend yet.
+**Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Git:** branch `main`, remote `origin`. Commit after each verified task with a meaningful message; **do not push** unless asked. M1 code changes are committed as `feat: add design tokens, brand fonts and light-only theme (M1)`.
-
-**Do not:** start M2 until the owner approves it in chat. Approval of one task does not approve the next.
+**Do not:** start M2.2 until the owner approves it in chat.

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
+import { site } from "@/content/site";
 import "./globals.css";
 
 // Editorial serif: hero headline, section headings, card titles.
@@ -20,9 +21,8 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "ROCK-TAMA Natural Spring Water",
-  description:
-    "ROCK-TAMA natural spring water from Nanka, Anambra State, Nigeria.",
+  title: site.title,
+  description: site.description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

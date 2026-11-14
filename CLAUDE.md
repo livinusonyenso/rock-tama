@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time (M2.1: typed site + navigation content). Navigation may only render valid destinations (D-026).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) done; next M2.2. Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 
