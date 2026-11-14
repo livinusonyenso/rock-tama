@@ -11,7 +11,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 ## M2 — Header
 
-- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (first consumer of both) · 2.3 `Logo` placeholder (D-020) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
+- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (**done 2026-11-15**) · 2.3 `Logo` placeholder (D-020) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
 - **Depends on:** M1 ✓; D-008 ✓; D-015 ✓; D-020 ✓; D-003/D-004/D-005 approval.
 - **Acceptance:** matches reference at ≥1280; active state + `aria-current`; dropdown and drawer keyboard accessible (Tab, Escape, focus return); no horizontal scroll at 375 px.
 - **Verify:** lint, tsc, build, keyboard walk-through, 1280/768/375 visual check.

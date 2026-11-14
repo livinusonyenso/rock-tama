@@ -114,10 +114,10 @@ Smaller-screen sizes are set per component with responsive classes (e.g. `text-5
 | Spacing grid | Tailwind default (4px steps) | Everything not listed below |
 | `py-section` / `py-section-sm` | 5rem / 3rem | Content-section padding, desktop / mobile |
 | `py-strip` | 2.5rem | Trust strip, quality strip |
-| `h-announcement` | 2.25rem (36px) | Announcement bar |
+| `min-h-announcement` | 2.5rem (40px) | Announcement bar **min-height** (D-035; was 36px) |
 | `h-header` / `h-header-sm` | 5.25rem / 4rem | Header height, desktop / mobile |
-| `max-w-content` | 75rem (1200px) | Header, hero, origin |
-| `max-w-wide` | 82.5rem (1320px) | Product grid, banner, footer |
+| `max-w-content` | 75rem (1200px) | Hero, origin |
+| `max-w-wide` | 82.5rem (1320px) | Announcement bar, header (D-034), product grid, banner, footer |
 | `rounded-button` / `rounded-card` / `rounded-banner` | 4px / 8px / 12px | Buttons / cards and media / wholesale banner |
 | `shadow-card` / `shadow-gold` | see `globals.css` | Product cards / primary CTA |
 
@@ -128,12 +128,16 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 - Product grid: 4 / 2 / 1 columns, 12–16px gaps.
 - Buttons: `md` 48–52px tall, `sm` 34–36px.
 
+## 3a. Component specs (implemented)
+
+**Announcement bar (M2.2, tuned against the reference at 1440px):** `bg-forest-950`, `text-on-dark`, Source Sans 3 400; `text-sm` (14px) below `lg`, `text-base` (16px) from `lg`. Icons `gold-500`, stroke 1.75, `size-4` → `lg:size-5`. Dividers 1px × `h-3` → `lg:h-4`, `line-dark-strong` (full opacity). Gaps: icon–text `gap-2.5` → `lg:gap-3`; between items `gap-x-3.5` → `lg:gap-x-4`. Min-height 40px, `py-2`.
+
 ## 4. Images and placeholders
 
 Every image renders through `MediaFrame` with a fixed aspect ratio, so missing images never collapse the layout. Per-slot specs: [`ASSET_SPECIFICATIONS.md`](ASSET_SPECIFICATIONS.md).
 
 ## 5. Iconography — [APPROVED, D-008]
 
-- **`lucide-react`** for standard interface icons (search, user, cart, truck, globe, chevrons, arrows, and similar). Default stroke width 1.5, size set via `size-*` classes, colour via `currentColor`. Not installed yet; it's installed in M2 when first used.
+- **`lucide-react`** (installed 1.73.0, M2.2) for standard interface icons, rendered through `components/icons/Icon.tsx` (an `IconName` → Lucide map). Default stroke 1.5 (the announcement bar uses 1.75 to match the reference weight), size via `size-*`, colour via `currentColor`. Known deviation: the reference globe looks filled/solid; Lucide's `Globe` is outline.
 - **Custom inline SVG** only for distinctive brand/decorative icons with no suitable Lucide equivalent (likely: crossed-out microbe, laurel badge, Africa map). Decide case by case; avoid custom work when a Lucide icon fits.
 - Tone: gold on dark backgrounds (`gold-500`); dark green/ink on light backgrounds; `gold-600` for decorative gold on light.

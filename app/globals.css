@@ -72,7 +72,7 @@
   --spacing-section: 5rem; /* desktop content-section padding (80px) */
   --spacing-section-sm: 3rem; /* mobile content-section padding (48px) */
   --spacing-strip: 2.5rem; /* trust/quality strip padding (40px) */
-  --spacing-announcement: 2.25rem; /* announcement bar height (36px) */
+  --spacing-announcement: 2.5rem; /* announcement bar min-height (40px); ref 31px @1086 ≈ 41px @1440 */
   --spacing-header: 5.25rem; /* desktop header height (84px) */
   --spacing-header-sm: 4rem; /* mobile header height (64px) */
 

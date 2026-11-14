@@ -41,6 +41,10 @@ Source: [`reference/homepage-reference.png`](reference/homepage-reference.png) �
 
 When the business confirms a service, update the wording in `content/site.ts` and this table together.
 
+**[VERIFIED] Implemented M2.2 (2026-11-15):** `<aside aria-label="Store information">` › `<ul>` of 3 items. Under 640px: delivery only, centred. 640–1279px: delivery left, international right. 1280px and up: the reference layout with all three. One line at normal text sizes; wraps (never truncates) under enlarged text. Evidence: `docs/verification/m2.2-*.png`.
+
+Known deviations from the reference: the globe icon is outline (Lucide), not filled. The right group sits ~60px further from the edge at 1440px because the container is symmetric, while the mock's right margin is narrower than its left. The reference typeface for this bar looks slightly wider/heavier than Source Sans 3.
+
 **[PROPOSED]**
 - Component: `AnnouncementBar` (Server Component). It is a single-instance layout part, not "reusable" across sections, but it earns its own file as a distinct layout responsibility rendered from the root layout. Messages come from `content/site.ts`, not hard-coded JSX.
 - Semantics: `<div role="region" aria-label="Store announcements">` containing a `<ul>` of messages. Icons are `aria-hidden`. Dividers are CSS borders, not text characters, so screen readers don't announce "|".

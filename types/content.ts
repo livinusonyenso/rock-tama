@@ -60,10 +60,16 @@ export type HeaderAction = {
   route: RouteKey;
 };
 
+/** 1 = shown at every screen size; higher numbers are dropped first on narrow screens. */
+export type AnnouncementPriority = 1 | 2 | 3;
+
 export type AnnouncementMessage = {
   id: string;
   text: string;
   icon?: IconName;
+  /** Side of the bar on wider screens, as in the reference. */
+  placement: "start" | "end";
+  priority: AnnouncementPriority;
 };
 
 export type LogoAsset = {

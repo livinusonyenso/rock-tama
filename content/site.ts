@@ -34,8 +34,25 @@ export const site: SiteConfig = {
   // export are pending business verification; the reference copy is preserved in
   // docs/UI_BREAKDOWN.md §01 (D-030).
   announcements: [
-    { id: "delivery", icon: "truck", text: "Ask About Delivery to Your Area" },
-    { id: "wholesale", text: "Wholesale & Bulk Supply Enquiries for Hotels, Offices & Retailers" },
-    { id: "international", icon: "globe", text: "International Enquiries Welcome" },
+    {
+      id: "delivery",
+      icon: "truck",
+      text: "Ask About Delivery to Your Area",
+      placement: "start",
+      priority: 1,
+    },
+    {
+      id: "wholesale",
+      text: "Wholesale & Bulk Supply Enquiries for Hotels, Offices & Retailers",
+      placement: "start",
+      priority: 3,
+    },
+    {
+      id: "international",
+      icon: "globe",
+      text: "International Enquiries Welcome",
+      placement: "end",
+      priority: 2,
+    },
   ],
 };

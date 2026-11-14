@@ -34,7 +34,7 @@ app/
 
 components/
 ├── layout/
-│   ├── AnnouncementBar.tsx
+│   ├── AnnouncementBar.tsx    # ✓ M2.2
 │   ├── SiteHeader.tsx
 │   ├── NavLink.tsx            # "use client"
 │   ├── ShopMenu.tsx           # "use client"
@@ -50,7 +50,7 @@ components/
 │   ├── QualitySection.tsx
 │   └── WholesaleBanner.tsx
 ├── ui/                        # shared, design-system level
-│   ├── Container.tsx
+│   ├── Container.tsx          # ✓ M2.2
 │   ├── ButtonLink.tsx
 │   ├── SectionHeading.tsx
 │   ├── IconFeature.tsx
@@ -60,7 +60,7 @@ components/
 │   ├── Logo.tsx
 │   └── AfricaMap.tsx
 └── icons/
-    └── index.tsx              # inline SVG icons (named exports)
+    └── Icon.tsx               # ✓ M2.2 IconName → lucide-react map (custom SVGs added here when needed)
 
 content/                       # typed static content (no React)
 ├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags

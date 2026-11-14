@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) done; next M2.2. Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) and M2.2 (AnnouncementBar, `Container`, `Icon`) done; next M2.3 (Logo placeholder). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 
@@ -59,6 +59,10 @@ Update `docs/PROGRESS.md` (state, completed + how verified, blockers, next task)
 | Scope B (cart, checkout, backend) | `docs/ECOMMERCE_REQUIREMENTS.md` |
 | Workflow, briefing format, Definition of Done, gotchas | `docs/DEVELOPMENT_GUIDELINES.md` |
 | Milestones and acceptance criteria | `docs/IMPLEMENTATION_PLAN.md` |
+
+## Visual verification
+
+Headless Chrome (installed) + DevTools Protocol against `next start -p 3100`; method in `docs/DEVELOPMENT_GUIDELINES.md`. Evidence images go in `docs/verification/`.
 
 ## Commands
 

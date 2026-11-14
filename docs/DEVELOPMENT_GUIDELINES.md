@@ -48,6 +48,18 @@ One logical task at a time. No task starts without explicit owner approval. Each
 - [ ] Results reported honestly, including anything not verified.
 - [ ] Committed (code + docs) with a meaningful conventional message; not pushed unless requested.
 
+## Visual verification method (used since M2.2)
+
+No extra dependencies. Build, then run `npx next start -p 3100`, which avoids the owner's dev server on 3000. Launch the installed Google Chrome headless with `--remote-debugging-port`, and drive it over the DevTools Protocol from a Node script (Node 26 has a global `WebSocket`):
+- set the viewport (375 / 768 / 1024 / 1280 / 1440, plus 1086 = the reference width);
+- measure with `Runtime.evaluate` (visibility, heights, line count, `scrollWidth` overflow, computed colours/fonts, focusable elements);
+- read the accessibility tree with `Accessibility.getFullAXTree`;
+- capture `Page.captureScreenshot`;
+- double the root font size for the 200% text check;
+- compare against the reference crop scaled to 1440 using `sharp`.
+
+Store comparison images in `docs/verification/`. Stop the server and Chrome afterwards.
+
 ## Known gotchas for this stack
 
 - **Cache Components is enabled.** `new Date()`, `Math.random()`, `cookies()`, `headers()` and uncached data in a Server Component will error at build/prerender unless wrapped in `<Suspense>` or a `"use cache"` scope. Example: the footer copyright year. Use `"use cache"` in a small `CurrentYear` helper, or compute it in a cached function. Check the bundled Next 16 docs.

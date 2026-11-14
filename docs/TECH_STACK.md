@@ -27,24 +27,29 @@
 - `npm run build`: passes after M1 (2026-11-14). `/` and `/_not-found` are prerendered as static.
 - Dev server: owner reports it runs [CONFIRMED by owner].
 
-### Existing app files
+### App files (as of M2.2, 2026-11-15)
 
-- `app/layout.tsx`: starter. Geist fonts, "Create Next App" metadata, uses the global `LayoutProps<"/">` type helper (Next 16).
-- `app/page.tsx`: starter demo page. To be replaced in M3.
-- `app/globals.css`: starter tokens + dark-mode media query.
-- `app/favicon.ico`, `public/*.svg`: starter assets.
-- No components, no content modules, no tests, no env files.
+- `app/layout.tsx`: brand fonts, metadata from `content/site.ts`, renders `AnnouncementBar`; uses the global `LayoutProps<"/">` type helper (Next 16).
+- `app/page.tsx`: **still the starter demo page** (replaced in M3).
+- `app/globals.css`: design tokens (see `DESIGN_SYSTEM.md`), light-only.
+- `components/`, `content/`, `lib/`, `types/`: see `PROJECT_STRUCTURE.md`.
+- `app/favicon.ico`, `public/*.svg`: starter assets (removal planned in M8).
+- No tests, no env files.
+
+### `npm audit` (2026-11-15)
+
+7 moderate advisories, all **dev-only** and pre-existing: `minimatch` (ReDoS) via `typescript-eslint` / `@typescript-eslint/*`, pulled in by `eslint-config-next`. Not introduced by `lucide-react`. Not auto-fixed (would change unrelated tooling); revisit when `eslint-config-next` updates.
 
 ### Next.js 16 reference docs
 
 Next.js 16 is newer than much of the public tutorial material. **Prefer the version-matched docs bundled at `node_modules/next/dist/docs/`** (App Router: `01-app/`) when unsure about an API.
 
-## Dependencies to add — [PROPOSED], none installed yet
+## Added and candidate dependencies
 
 | Package | Purpose | When | Status |
 |---|---|---|---|
 | (none required for M1–M8) | Fonts via `next/font` (built in), images via `next/image` (built in) | — | — |
-| `lucide-react` | Standard UI icons (search, user, cart, truck, globe, chevrons…). Tree-shaken per icon, Server-Component friendly, `currentColor` + stroke-width props | M2 (install when first used) | **Approved** (D-008). Not installed yet. |
+| `lucide-react` **1.73.0** | Standard UI icons. Tree-shaken per icon, Server-Component friendly, `currentColor` + stroke-width props; peer React ^19 ✓ | Installed M2.2 (2026-11-15) | **Approved** (D-008) |
 | `clsx` (optional) | Conditional class names in variant components | M1/M3 | Only if template strings get messy. |
 | `zod` | Server-side validation of form input (newsletter, wholesale enquiry) | Scope B | Pending. Currently present only as a transitive dependency. Don't import it until it's added directly. |
 | Test tooling (`vitest` + Testing Library, or Playwright for visual/e2e) | Automated checks | M8 or earlier on request | Pending decision |

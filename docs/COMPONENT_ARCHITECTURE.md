@@ -17,8 +17,8 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | Component | Section | Responsibility | Reusable | Boundary | Props | Dependencies | Responsive | Priority |
 |---|---|---|---|---|---|---|---|---|
 | `RootLayout` (`app/layout.tsx`, **exists**) | All | `<html>/<body>`, fonts, global metadata, renders bar + header + footer around `children` | — | Server | `children` | `AnnouncementBar`, `SiteHeader`, `SiteFooter`, fonts | — | M1 (fonts/metadata), M2 (header), M7 (footer) |
-| `Container` | All | Max-width + horizontal gutters; `size="default" \| "wide"` | Yes | Server | `size?`, `as?`, `className?`, `children` | — | Gutter grows with breakpoints | M1 |
-| `AnnouncementBar` | 01 | Renders announcement messages | No (single instance) | Server | `messages` from `content/site.ts` | `Container`, icons | Hides long message < `lg`; 1 line on mobile | M2 |
+| `Container` ✓ M2.2 | All | Max-width + horizontal gutters | Yes | Server | `size?: "content" \| "wide"` (default `content`), `className?`, `children` (no `as` prop, not needed yet) | — | Gutters 16/24/32px | **Implemented** `components/ui/Container.tsx` |
+| `AnnouncementBar` ✓ M2.2 | 01 | Renders `site.announcements` | No (single instance) | Server | none (reads `content/site.ts`) | `Container`, `Icon` | Priority 1 always, 2 from `sm`, 3 from `xl`; wraps only under enlarged text | **Implemented** `components/layout/AnnouncementBar.tsx`, rendered in `app/layout.tsx` |
 | `SiteHeader` | 02 | Logo, main nav, icon actions, mobile trigger | No | Server | none (reads `content/navigation.ts`) | `Logo`, `NavLink`, `ShopMenu`, `MobileNav`, icons | Text nav ≥ `lg`; hamburger below | M2 |
 | `SiteFooter` | 09 | Brand, link columns, newsletter, social, bottom bar | No | Server | none (reads content) | `Logo`, `NewsletterForm`, icons, `Container` | 2-col links + stacked on mobile | M7 |
 
@@ -55,7 +55,7 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | `ProductCard` | 05 (later: shop pages) | One product/offer card | Server | `product: Product` (title, description, image, cta, `layout`, `titleStyle?`) | `side` and `stacked` layouts | M5 |
 | `MediaFrame` | 03, 05, 06 | Fixed-aspect image slot: renders `next/image` if `src` exists, otherwise a labelled placeholder of identical size | Server | `aspect`, `label`, `src?`, `alt`, `fit: "cover" \| "contain"`, `sizes`, `priority?`, `shape?: "rect" \| "bottle"` | **Key to "no layout collapse"**: real and placeholder images share the same box. | M1/M3 |
 | `Logo` | 02, 09 | Brand mark + wordmark | Server | `variant: "header" \| "footer"` | **Blocked on logo asset** (see questions). Uses a text-only fallback until then. | M2 |
-| Icons (`components/icons`) | All | Inline SVG icon set (custom brand icons + UI icons) | Server | `className`, `aria-hidden` default | Library vs. custom is a pending decision. | M1 → as needed |
+| `Icon` ✓ M2.2 (`components/icons/Icon.tsx`) | All | Maps `IconName` → Lucide icon; always `aria-hidden` | Server | `name`, `className?`, `strokeWidth?` (default 1.5) | Exhaustive `Record<IconName, LucideIcon>`; custom SVGs join the same map later | **Implemented** |
 
 ## 6. Data-driven content (`content/`, plain typed TS modules)
 
