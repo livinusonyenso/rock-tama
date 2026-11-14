@@ -91,4 +91,6 @@ Static screenshots and animation behaviour are tested **separately and determini
 | Header / announcement bar | Link hover colour (existing) | Everything else | Existing |
 | Hero (M3) | Entrance: eyebrow + rule 0/450ms rise 8 · heading 80/600 rise 12 · bottle 120/750 rise 16 + scale 0.98 · tagline 200/450 fade · description 260/450 rise 8 · CTA group 340/450 rise 8 → all done at **870ms**. Buttons: hover colour/shadow + 1px lift (150ms) | Background, glow, waves, layout boxes | **APPROVED (D-068), implemented M3.3**; hover verified once CTAs are live (F1/F2) |
 
+| Hero Product Carousel (F2) | Auto-rotate 6s; 600ms slide (≈24px) + cross-fade, `ease-out-soft`; pause on hover/focus/hidden tab; manual selection stops auto-rotation until Play | Product frame box, labels row | **APPROVED (D-073)**, to be implemented in F2. Reduced motion: no auto-rotation, instant swap. Pause/Play button required (WCAG 2.2.2) |
+
 When planning any new visible section, add a row here and a storyboard to its briefing.
