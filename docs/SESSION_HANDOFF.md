@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-15 (after M3.3)_
+_Last updated: 2026-11-15 (after F1)_
 
-**Where we are:** Direction (D-066): real e-commerce; commercial CTAs must work. **M3.1–M3.3 done and committed** (hero matches the reference within ±3px @1440; CSS entrance animation verified). **Hero CTAs are still transitional (pending)**: M3 is complete only when F1 (`/wholesale`) and F2 (`/shop` + ShopMenu + mobile Shop list, which satisfies the build guard) ship. F0–F2 await owner decisions (see PROGRESS blockers). M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix).
+**Where we are:** Real e-commerce direction (D-066). M3.1–M3.3 hero done. **F0 + F1 done: `/wholesale` works end to end** (validation, spam protection, delivery via dev file locally / Resend in production, honest errors, no-JS support); Request Wholesale + nav/drawer Wholesale are live. **Next: F2** (`/shop`, product pages, ShopMenu + mobile Shop list replacing the build guard, Hero Product Carousel per D-073) → Shop Now live → M3 complete. M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix). Production needs Resend env vars (`.env.example`).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -18,6 +18,7 @@ _Last updated: 2026-11-15 (after M3.3)_
 - `components/layout/MobileNav.tsx` (Client, native `<dialog>`) + `MobileNavPanel.tsx` (Server children); `resolveNavItem` (with the temporary Shop guard) in `lib/navigation.ts`; `focus-ring-dark`
 - M2.7: `--container-wide` 90rem, fluid `--spacing-header-inset` / `--spacing-bar-inset` (D-064), `components/icons/GlobeFilled.tsx` (MIT notice inside)
 - M3: `components/home/HeroSection.tsx`, `HeroWaves.tsx`, `components/ui/ButtonLink.tsx`, `MediaFrame.tsx`, `content/hero.ts`; entrance animation utilities in `globals.css` (ANIMATION_SYSTEM)
+- F0/F1: `lib/enquiry.ts`, `lib/server/{env,rate-limit}.ts`, `lib/server/enquiries/{format,deliver}.ts`, `app/wholesale/{page,actions}.ts(x)`, `components/forms/EnquiryForm*.tsx`, `content/{products,wholesale}.ts`, deploy guard in `next.config.ts`
 - `components/brand/Logo.tsx`: `variant` header/footer; placeholder until `site.logos.*.available`; no link inside (header adds it via `resolveHref("home")` in M2.4). Swap steps: `docs/ASSET_SPECIFICATIONS.md`
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.

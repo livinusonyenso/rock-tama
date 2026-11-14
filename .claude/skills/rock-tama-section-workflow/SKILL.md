@@ -32,7 +32,7 @@ The project docs are the source of truth. Reference them, don't restate them.
 
 ## Phase D: Record and stop
 
-11b. **Functional verification** (anything interactive): every button/link performs its advertised action; forms validate, submit and report honest success/error; data is stored or delivered. Rendering or building is not completion (D-066).
+11b. **Functional verification** (anything interactive): add journeys to `functionalJourneys()` in `scripts/visual-check.config.mjs` and run `npm run verify:functional` (dev-file, resend-mock, unconfigured). Every button/link performs its advertised action; forms validate, submit and report honest success/error; data is stored or delivered (checked server-side). Rendering or building is not completion (D-066).
 12. **Record changes and unresolved issues:** update `docs/PROGRESS.md` (completed + how verified, blockers, next task), `docs/SESSION_HANDOFF.md`, `docs/DESIGN_SYSTEM.md` if tokens changed, and `docs/DECISIONS.md` if anything was decided. Mark work [VERIFIED] only for checks that actually ran.
 13. **Commit** code + docs together with a meaningful conventional message after reviewing the staged files for secrets. Do not push unless asked.
 14. **Stop and request approval** for the next task. Name it, but do not start it.

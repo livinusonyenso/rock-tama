@@ -26,7 +26,10 @@ The project has no `src/` directory and the alias already maps `@/*` to the root
 
 ```text
 app/
-├── layout.tsx                 # fonts, metadata, AnnouncementBar + SiteHeader + SiteFooter
+├── layout.tsx                 # fonts, metadata (title template), AnnouncementBar + SiteHeader + SiteFooter
+├── wholesale/                 # ✓ F1
+│   ├── page.tsx               #   /wholesale (Server)
+│   └── actions.ts             #   submitEnquiry Server Action
 ├── page.tsx                   # HomePage: composes sections only
 ├── globals.css                # Tailwind import + @theme design tokens
 ├── icon.svg                   # (later) from logo mark
@@ -53,10 +56,14 @@ components/
 ├── ui/                        # shared, design-system level
 │   ├── Container.tsx          # ✓ M2.2
 │   ├── ButtonLink.tsx         # ✓ M3.1
+│   ├── button-styles.ts       # ✓ F1 buttonClassName() shared by links and form buttons
 │   ├── SectionHeading.tsx
 │   ├── IconFeature.tsx
 │   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
 │   └── ProductCard.tsx
+├── forms/
+│   ├── EnquiryForm.tsx        # ✓ F1 "use client" (useActionState)
+│   └── EnquiryFormWithPrefill.tsx # ✓ F1 ?product= prefill
 ├── brand/
 │   ├── Logo.tsx               # ✓ M2.3
 │   └── AfricaMap.tsx
@@ -68,6 +75,8 @@ content/                       # typed static content (no React)
 ├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags
 ├── site.ts                    # ✓ M2.1 brand, logos, announcements
 ├── hero.ts                    # ✓ M3.2 hero copy, CTAs, media
+├── products.ts                # ✓ F1 product catalogue (price null = on request)
+├── wholesale.ts               # ✓ F1 /wholesale copy
 ├── navigation.ts              # ✓ M2.1 main nav, Shop dropdown, header actions
 ├── products.ts                # M5
 └── highlights.ts              # M4/M6/M7
@@ -80,6 +89,8 @@ scripts/
 └── visual-check.config.mjs    # viewports, pages, sections + reference rects
 
 lib/
+├── enquiry.ts                 # ✓ F1 shared enquiry schema (zod), options, form state
+├── server/                    # ✓ F0 server-only: env.ts (delivery config), rate-limit.ts, enquiries/ (format, deliver)
 └── navigation.ts              # ✓ M2.1 resolveHref(), ✓ M2.6 resolveNavItem() (+ temporary Shop guard)
 
 public/

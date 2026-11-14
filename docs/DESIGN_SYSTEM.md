@@ -77,6 +77,14 @@ Utility: `bg-gold-gradient` (custom `@utility`) = `linear-gradient(to bottom, go
 | `placeholder-ink` on `placeholder` | 4.57 | AA ✓ |
 | `gold-600` on `ivory-50` | 2.16 | **Decorative only.** Fine for icons that sit beside a text label and for button borders whose text identifies the control. Never for text. |
 
+### Feedback colour and form controls (F1)
+
+| Token | Hex | Role |
+|---|---|---|
+| `error` | `#A3261B` | Form error text and invalid borders on light surfaces: 7.37 (white), 6.80 (ivory), 6.30 (cream) |
+
+Form controls: white field, 1px `ink-500` border (6.78:1, meets the 3:1 non-text minimum), `rounded-button`, `px-4 py-3`, `focus-ring`; invalid = `border-error` + error text linked by `aria-describedby`; labels `font-semibold ink-900`, hints `text-sm ink-500`.
+
 ### Dark mode — [APPROVED, M1]
 
 The site is light-only (with dark-green sections). Implementation: the starter `prefers-color-scheme: dark` tokens were removed, `html { color-scheme: light }` keeps form controls and scrollbars light, and the `dark:` variant is re-bound to an explicit `.dark` class (`@custom-variant dark`) that is never set. So no `dark:` utility, including those left in the starter `page.tsx`, can respond to the OS setting.
