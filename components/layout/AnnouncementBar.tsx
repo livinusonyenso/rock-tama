@@ -23,7 +23,8 @@ export function AnnouncementBar() {
 
   return (
     <aside aria-label="Store information" className="bg-forest-950 text-on-dark">
-      <Container size="wide">
+      {/* hd:pl-22 (88px = 32px frame padding + 56px inset): reference bar content is inset on the left only (M2.7, measured) */}
+      <Container size="wide" className="hd:pl-22">
         <ul className="flex min-h-announcement flex-wrap items-center justify-center gap-x-3.5 gap-y-1 py-2 text-sm sm:justify-start lg:gap-x-4 lg:text-base">
           {messages.map((message, index) => (
             <li
@@ -41,7 +42,7 @@ export function AnnouncementBar() {
                 <Icon
                   name={message.icon}
                   strokeWidth={1.75}
-                  className="size-4 shrink-0 text-gold-500 lg:size-5"
+                  className="size-4 shrink-0 text-gold-500 lg:size-6"
                 />
               )}
               <span>{message.text}</span>

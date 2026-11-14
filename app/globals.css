@@ -76,9 +76,12 @@
   --spacing-header: 5.25rem; /* desktop header height (84px) */
   --spacing-header-sm: 4rem; /* mobile header height (64px) */
 
+  /* Named breakpoint: from 1360px the header row gets the reference's extra left inset (M2.7) -> hd: */
+  --breakpoint-hd: 85rem;
+
   /* Container max-widths -> max-w-content / max-w-wide */
   --container-content: 75rem; /* 1200px: header, hero, origin */
-  --container-wide: 82.5rem; /* 1320px: product grid, banner, footer */
+  --container-wide: 90rem; /* 1440px: bar, header, product grid, banner, footer. Corrected M2.7 from 1320 to the measured reference frame (≈22px margins @1086 → content 32–1408 @1440) */
 
   /* Radii */
   --radius-button: 0.25rem; /* 4px */

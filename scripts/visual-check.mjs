@@ -502,6 +502,8 @@ try {
     mkdirSync(dest, { recursive: true });
     copyFileSync(join(RUN_DIR, "report.md"), join(dest, "report.md"));
     for (const name of readdirSync(join(RUN_DIR, "compare"))) copyFileSync(join(RUN_DIR, "compare", name), join(dest, name));
+    mkdirSync(join(dest, "sections"), { recursive: true });
+    for (const name of readdirSync(join(RUN_DIR, "sections"))) copyFileSync(join(RUN_DIR, "sections", name), join(dest, "sections", name));
     console.log(`Saved report and comparison images to ${rel(dest)}`);
   }
   exitCode = summary.fail ? 1 : summary.incomplete ? 2 : 0;

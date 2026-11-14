@@ -33,7 +33,8 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
   return (
     <header className="border-b border-line-light bg-ivory-100">
-      <Container size="wide" className="flex h-header-sm items-center justify-between gap-6 lg:h-header">
+      {/* hd:pl-23 (92px = 32px frame padding + 60px inset): the reference header row is inset on the left only (M2.7, measured) */}
+      <Container size="wide" className="flex h-header-sm items-center justify-between gap-6 lg:h-header hd:pl-23">
         {homeHref ? (
           <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring shrink-0">
             {logo}
@@ -44,7 +45,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
         <div className="flex items-center">
           <nav aria-label="Main" className="hidden lg:block">
-            <ul className="flex items-center gap-8 xl:gap-11">
+            <ul className="flex items-center gap-8 xl:gap-12">
               {mainNav.map((item) => (
                 <li key={item.label}>
                   <NavLink href={resolveNavItem(item)} className={navItemClass}>
@@ -58,9 +59,9 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
             </ul>
           </nav>
 
-          <span aria-hidden="true" className="hidden h-7 w-px bg-gold-600 lg:ml-8 lg:mr-6 lg:block xl:ml-12 xl:mr-9" />
+          <span aria-hidden="true" className="hidden h-7 w-0.5 bg-gold-600 lg:ml-8 lg:mr-6 lg:block xl:ml-10 xl:mr-9" />
 
-          <ul className="flex items-center gap-5 xl:gap-8">
+          <ul className="flex items-center gap-5 xl:gap-8 hd:mr-2 hd:gap-7">
             {headerActions.map((action) => (
               // Search and account move into the mobile drawer below lg; the cart stays.
               <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:block"}>

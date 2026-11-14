@@ -35,6 +35,7 @@ Verified (M2.3) with temporary dummy SVGs: the real-image path renders at exactl
 
 | Asset | Source | Licence | Attribution | Status |
 |---|---|---|---|---|
+| Filled globe icon (announcement bar) | Heroicons v2.2.0, `24/solid/globe-alt.svg` (github.com/tailwindlabs/heroicons) | MIT, © Tailwind Labs, Inc. | Full MIT notice in `components/icons/GlobeFilled.tsx` header | **In use since M2.7** (D-061); path copied unmodified |
 | Africa outline | Natural Earth (naturalearthdata.com), Admin 0 – Countries, small scale (1:110m) is sufficient at ~200px | Public domain. Natural Earth states its data may be used for any purpose without permission. | Not required; optional "Made with Natural Earth" | To be downloaded and converted to an SVG path in M6. Record the exact dataset version and download date here when done. |
 
 ## Pending owner-supplied items

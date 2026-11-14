@@ -1,11 +1,16 @@
-import { ChevronDown, Globe, Menu, Search, ShoppingCart, Truck, User, X, type LucideIcon } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+import { ChevronDown, Menu, Search, ShoppingCart, Truck, User, X } from "lucide-react";
+import { GlobeFilled } from "@/components/icons/GlobeFilled";
 import type { IconName } from "@/types/content";
+
+// Lucide icons and custom SVG icons (e.g. GlobeFilled) share this shape.
+type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: number | string }>;
 
 // Record<IconName, …> makes the map exhaustive: adding a name to IconName
 // without an icon here is a compile error.
-const icons: Record<IconName, LucideIcon> = {
+const icons: Record<IconName, IconComponent> = {
   truck: Truck,
-  globe: Globe,
+  globe: GlobeFilled, // filled to match the reference (V-001; Heroicons, MIT)
   search: Search,
   user: User,
   "shopping-cart": ShoppingCart,

@@ -67,7 +67,7 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | `ProductCard` | 05 (later: shop pages) | One product/offer card | Server | `product: Product` (title, description, image, cta, `layout`, `titleStyle?`) | `side` and `stacked` layouts | M5 |
 | `MediaFrame` | 03, 05, 06 | Fixed-aspect image slot: renders `next/image` if `src` exists, otherwise a labelled placeholder of identical size | Server | `aspect`, `label`, `src?`, `alt`, `fit: "cover" \| "contain"`, `sizes`, `priority?`, `shape?: "rect" \| "bottle"` | **Key to "no layout collapse"**: real and placeholder images share the same box. | M1/M3 |
 | `Logo` ✓ M2.3 (`components/brand/Logo.tsx`) | 02, 09 | Official logo file, or a same-size labelled placeholder until `site.logos.*.available` | Server | `variant: "header" \| "footer"`, `className?` (replaces default height) | No link inside (callers wrap with `resolveHref`). Header `h-10 lg:h-16`, footer `h-20 lg:h-24`; width from aspect ratio. Footer uses a separate light SVG (D-038). | **Implemented** |
-| `Icon` ✓ M2.2 (`components/icons/Icon.tsx`) | All | Maps `IconName` → Lucide icon; always `aria-hidden` | Server | `name`, `className?`, `strokeWidth?` (default 1.5) | Exhaustive `Record<IconName, LucideIcon>`; custom SVGs join the same map later | **Implemented** |
+| `Icon` ✓ M2.2 (`components/icons/Icon.tsx`) | All | Maps `IconName` → Lucide icon or custom SVG (`GlobeFilled`, M2.7); always `aria-hidden` | Server | `name`, `className?`, `strokeWidth?` (default 1.5) | Exhaustive `Record<IconName, LucideIcon>`; custom SVGs join the same map later | **Implemented** |
 
 ## 6. Data-driven content (`content/`, plain typed TS modules)
 

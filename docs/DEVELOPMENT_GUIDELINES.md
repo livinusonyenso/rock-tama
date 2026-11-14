@@ -85,6 +85,8 @@ npm run verify:visual -- --save m2.4                    # copy report + comparis
 
 **Adding a section:** when a section ships, add `{ name, page, selector, reference: { x, y, width, height } }` to `sections` in the config (the rectangle is in reference-image pixels; see `UI_BREAKDOWN.md`). Run, review the sheet, report; after owner acceptance, run with `--approve` and commit the baselines.
 
+**Measured comparison (M2.7 method):** when tuning against the reference, measure instead of eyeballing. Find "ink runs" (columns containing glyph pixels) in the reference crop (scaled ×1.326 to 1440) and in a 1x screenshot at 1440, then compare left/right edges per element. For weight, compare stroke density (mean darkness inside the word box). Probe scripts and results are recorded in `docs/verification/m2.7-investigation/README.md`.
+
 **Interpreting results:** passing checks catch overflow, loading, console and regression problems. They are **not proof of pixel-perfect accuracy.** The reference sheet is indicative (scaled mock, different copy) and must be reviewed by a person for spacing, alignment, typography, container width, colour and positioning.
 
 **Limitations:**

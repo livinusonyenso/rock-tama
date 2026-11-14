@@ -61,7 +61,8 @@ components/
 │   ├── Logo.tsx               # ✓ M2.3
 │   └── AfricaMap.tsx
 └── icons/
-    └── Icon.tsx               # ✓ M2.2 IconName → lucide-react map (custom SVGs added here when needed)
+    ├── Icon.tsx               # ✓ M2.2 IconName → lucide-react / custom SVG map
+    └── GlobeFilled.tsx        # ✓ M2.7 Heroicons solid globe-alt (MIT notice inside)
 
 content/                       # typed static content (no React)
 ├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags

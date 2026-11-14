@@ -19,7 +19,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 ### M2 follow-up tasks (added 2026-11-15)
 
 - **M2.V: Repeatable visual verification script.** **Done 2026-11-15** (D-040, D-041, D-042): `npm run verify:visual`.
-- **M2.7: Header visual refinement.** Fix the open differences V-001 (filled globe via licensed SVG), V-002/V-004 (local right-edge alignment of bar + header, not a global `Container` change), V-003/V-005 (typography tuning within Source Sans 3), plus any differences found in M2.5–2.6. Approve header baselines after owner review. Log: `docs/verification/README.md`.
+- **M2.7: Header visual refinement.** **Implemented 2026-11-15; awaiting owner visual approval** (then promote header + drawer baselines). Fix the open differences V-001 (filled globe via licensed SVG), V-002/V-004 (local right-edge alignment of bar + header, not a global `Container` change), V-003/V-005 (typography tuning within Source Sans 3), plus any differences found in M2.5–2.6. Approve header baselines after owner review. Log: `docs/verification/README.md`.
 
 ## M3 — Hero
 
