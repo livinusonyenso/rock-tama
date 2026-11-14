@@ -13,12 +13,14 @@
  *   npm run verify:visual -- --approve               after owner acceptance: update APPROVED baselines
  *   npm run verify:visual -- --provisional           store PROVISIONAL references (not approved; D-049)
  *   npm run verify:visual -- --save m2.4             copy sheets + report to docs/verification/m2.4/
+ *   npm run verify:visual -- --kind functional --delivery resend-mock   functional journeys (see verify:functional)
  *
  * Exit codes: 0 all checks passed · 1 a check failed · 2 incomplete (setup error).
  * Automated checks find layout problems; they are not proof of pixel-perfect
  * accuracy. Comparison sheets must still be reviewed by a person.
  */
 import { spawn } from "node:child_process";
+import { createServer } from "node:http";
 import { copyFileSync, existsSync, mkdirSync, openSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,7 +31,9 @@ import config from "./visual-check.config.mjs";
  * @typedef {{ name: string, width: number, height: number, compareWithReference?: boolean }} Viewport
  * @typedef {{ click?: string, clickAt?: { x: number, y: number }, press?: string, times?: number, wait?: number, pauseAnimationsAt?: number }} Action
  * @typedef {{ name: string, page: string, selector?: string, reference?: { x: number, y: number, width: number, height: number },
- *   viewports?: string[], actions?: Action[], expect?: { name: string, js: string }[], media?: { name: string, value: string }[] }} Section
+ *   viewports?: string[], actions?: Action[], expect?: ({ name: string, js: string } | { name: string, server: (ctx: object) => Promise<unknown> })[],
+ *   media?: { name: string, value: string }[], kind?: "visual" | "functional", deliveries?: string[], path?: string,
+ *   headers?: Record<string, string>, javascript?: boolean }} Section
  * @typedef {{ port: number, cdpPort: number, reference: { path: string, width: number }, viewports: Viewport[],
  *   pages: { name: string, path: string }[], sections: Section[],
  *   regression: { pixelTolerance: number, maxDiffRatio: number }, ignoreConsole: (string|RegExp)[] }} VisualCheckConfig
@@ -59,6 +63,8 @@ const { values: args } = parseArgs({
     provisional: { type: "boolean", default: false },
     save: { type: "string" },
     "full-page": { type: "boolean", default: true },
+    kind: { type: "string", default: "all" }, // visual | functional | all
+    delivery: { type: "string", default: "dev-file" }, // dev-file | resend-mock | unconfigured
   },
 });
 const pick = (list, wanted, label) => {
@@ -69,9 +75,16 @@ const pick = (list, wanted, label) => {
   return list.filter((item) => names.includes(item.name));
 };
 if (args.approve && args.provisional) fatal("Use either --approve or --provisional, not both.");
-const sections = pick(config.sections, args.section, "section");
+const DELIVERY_MODES = ["dev-file", "resend-mock", "unconfigured"];
+if (!DELIVERY_MODES.includes(args.delivery)) fatal(`Unknown --delivery "${args.delivery}". Known: ${DELIVERY_MODES.join(", ")}`);
+if (!["visual", "functional", "all"].includes(args.kind)) fatal(`Unknown --kind "${args.kind}". Use visual, functional or all.`);
+// A section runs when its kind matches and it applies to the current delivery mode
+// (sections without `deliveries` run only in the default dev-file mode).
+const sections = pick(config.sections, args.section, "section").filter(
+  (s) => (args.kind === "all" || (s.kind ?? "visual") === args.kind) && (s.deliveries ?? ["dev-file"]).includes(args.delivery),
+);
 const viewports = pick(config.viewports, args.viewport, "viewport");
-const pages = config.pages.filter((p) => !args.section || sections.some((s) => s.page === p.name));
+const pages = config.pages.filter((p) => sections.some((s) => s.page === p.name));
 
 // ---------- output ----------
 const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
@@ -94,9 +107,9 @@ function fatal(message) {
 // ---------- processes ----------
 const children = [];
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-function start(cmd, cmdArgs, logFile) {
+function start(cmd, cmdArgs, logFile, env = process.env) {
   const log = openSync(logFile, "a");
-  const child = spawn(cmd, cmdArgs, { cwd: ROOT, detached: true, stdio: ["ignore", log, log] });
+  const child = spawn(cmd, cmdArgs, { cwd: ROOT, detached: true, stdio: ["ignore", log, log], env });
   children.push(child);
   return child;
 }
@@ -162,8 +175,15 @@ async function connect(cdpPort) {
       ws.send(JSON.stringify({ id: i, method, params }));
     });
   const on = (method, fn) => listeners.set(method, [...(listeners.get(method) ?? []), fn]);
-  const evaluate = async (expression) => {
-    const r = await send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true });
+  const evaluate = async (expression, timeoutMs = 30_000) => {
+    // A timeout turns a stuck evaluation (e.g. awaiting callbacks while page scripts are disabled)
+    // into a clear failure instead of a hang.
+    const r = await Promise.race([
+      send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true }),
+      wait(timeoutMs).then(() => {
+        throw new Error(`evaluate timed out after ${timeoutMs}ms`);
+      }),
+    ]);
     if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description ?? r.exceptionDetails.text);
     return r.result.value;
   };
@@ -228,12 +248,56 @@ function sheetHtml({ refData, refWidth, rect, scale, implData, implWidth, implHe
 }
 
 // ---------- main ----------
+/** Mock of the Resend email API (POST /emails) for the resend-mock delivery mode. */
+const mock = { requests: [] };
+function startResendMock(port) {
+  const server = createServer((req, res) => {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      let json = null;
+      try {
+        json = JSON.parse(body);
+      } catch {
+        /* recorded as null */
+      }
+      mock.requests.push({ method: req.method, url: req.url, authorization: req.headers.authorization, body: json });
+      const fail = JSON.stringify(json ?? "").includes("FAIL_DELIVERY");
+      res.writeHead(fail ? 500 : 200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(fail ? { message: "mock failure" } : { id: `mock-${mock.requests.length}` }));
+    });
+  });
+  server.listen(port, "127.0.0.1");
+  return server;
+}
+
+/** Environment for `next start` per delivery mode. */
+function serverEnv() {
+  const env = { ...process.env };
+  for (const key of ["ENQUIRY_DELIVERY", "RESEND_API_KEY", "RESEND_API_BASE_URL", "ENQUIRY_TO", "ENQUIRY_FROM", "VERCEL"]) delete env[key];
+  if (args.delivery === "resend-mock") {
+    Object.assign(env, {
+      ENQUIRY_DELIVERY: "resend",
+      RESEND_API_KEY: "test-key",
+      RESEND_API_BASE_URL: `http://127.0.0.1:${config.mockResendPort}`,
+      ENQUIRY_TO: "enquiries@example.com",
+      ENQUIRY_FROM: "ROCK-TAMA <noreply@example.com>",
+    });
+  }
+  if (args.delivery === "unconfigured") env.VERCEL = "1"; // hosted platform without delivery config
+  return env;
+}
+
 async function main() {
   const chrome = CHROME_CANDIDATES.find((p) => existsSync(p));
   if (!chrome) fatal("Chrome/Chromium not found. Set CHROME_PATH.");
   const baseUrl = args.url ?? `http://127.0.0.1:${config.port}`;
 
-  console.log(`visual-check → ${rel(RUN_DIR)}`);
+  console.log(`visual-check → ${rel(RUN_DIR)} (kind: ${args.kind}, delivery: ${args.delivery})`);
+  if (args.delivery === "resend-mock") {
+    const mockServer = startResendMock(config.mockResendPort);
+    process.on("exit", () => mockServer.close());
+  }
   if (!args.url) {
     if (await reachable(baseUrl)) fatal(`Port ${config.port} is already in use. Stop that server or pass --url.`);
     if (args.build) {
@@ -242,7 +306,7 @@ async function main() {
       const code = await new Promise((r) => build.on("exit", r));
       if (code !== 0) fatal(`next build failed (exit ${code}). See ${rel(join(RUN_DIR, "build.log"))}`);
     }
-    start(join(ROOT, "node_modules/.bin/next"), ["start", "-p", String(config.port)], join(RUN_DIR, "server.log"));
+    start(join(ROOT, "node_modules/.bin/next"), ["start", "-p", String(config.port)], join(RUN_DIR, "server.log"), serverEnv());
     await until(() => reachable(baseUrl), "the production server");
   }
 
@@ -262,7 +326,7 @@ async function main() {
   );
   await until(() => reachable(`http://127.0.0.1:${config.cdpPort}/json/version`), "headless Chrome");
   const cdp = await connect(config.cdpPort);
-  await Promise.all(["Page.enable", "Runtime.enable", "Log.enable"].map((m) => cdp.send(m)));
+  await Promise.all(["Page.enable", "Runtime.enable", "Log.enable", "Network.enable"].map((m) => cdp.send(m)));
 
   let consoleErrors = [];
   const ignored = (text) => config.ignoreConsole.some((p) => (p instanceof RegExp ? p.test(text) : text.includes(p)));
@@ -294,7 +358,8 @@ async function main() {
   const captured = []; // { section, viewport, file, png, rect }
 
   const appliesTo = (section, viewport) => !section.viewports || section.viewports.includes(viewport.name);
-  const isInteractive = (section) => Boolean(section.actions || section.expect || section.media);
+  const isInteractive = (section) =>
+    Boolean(section.actions || section.expect || section.media || section.path || section.headers || section.javascript === false);
 
   /** Screenshot one section (by selector) and queue it for reference/regression comparison. */
   async function captureSection(section, viewport) {
@@ -314,17 +379,36 @@ async function main() {
     captured.push({ section, viewport, file, png, rect });
   }
 
+  // With page scripts disabled, callbacks (rAF, load listeners) never fire, so SETTLE is skipped.
+  let scriptsEnabled = true;
   const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32 };
+  async function waitForCondition(js, timeout) {
+    const end = Date.now() + timeout;
+    for (;;) {
+      try {
+        if (await cdp.evaluate(`(() => Boolean(${js}))()`)) return;
+      } catch {
+        /* page may be navigating */
+      }
+      if (Date.now() > end) throw new Error(`waitFor timed out after ${timeout}ms: ${js}`);
+      await wait(100);
+    }
+  }
   async function mouseClick(x, y) {
     await cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y });
     await cdp.send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
     await cdp.send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
   }
-  /** Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms } | { pauseAnimationsAt: ms } */
+  /**
+   * Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms }
+   * | { pauseAnimationsAt: ms } | { type: { selector, text } } | { select: { selector, value } }
+   * | { check: selector } | { navigate: path } | { evaluate: js } | { waitFor: js, timeout? }
+   */
   async function runAction(action) {
     if (action.click) {
+      // Scroll the target into view first: input events use viewport coordinates.
       const point = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.click)});
-        if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+        if (!el) return null; el.scrollIntoView({ block: "center", behavior: "instant" }); const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       if (!point) throw new Error(`action target not found: ${action.click}`);
       await mouseClick(point.x, point.y);
     } else if (action.clickAt) {
@@ -339,6 +423,26 @@ async function main() {
       }
     } else if (action.wait) {
       await wait(action.wait);
+    } else if (action.type) {
+      // Focus, clear, then insert text as real keyboard input.
+      const found = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.type.selector)}); if (!el) return false; el.focus(); el.select?.(); return true; })()`);
+      if (!found) throw new Error(`action target not found: ${action.type.selector}`);
+      await cdp.send("Input.insertText", { text: String(action.type.text) });
+    } else if (action.select) {
+      const ok = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.select.selector)}); if (!el) return false; el.value = ${JSON.stringify(action.select.value)}; el.dispatchEvent(new Event("change", { bubbles: true })); return el.value === ${JSON.stringify(action.select.value)}; })()`);
+      if (!ok) throw new Error(`could not select "${action.select.value}" in ${action.select.selector}`);
+    } else if (action.check) {
+      const ok = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.check)}); if (!el) return false; el.checked = true; el.dispatchEvent(new Event("change", { bubbles: true })); return true; })()`);
+      if (!ok) throw new Error(`action target not found: ${action.check}`);
+    } else if (action.navigate) {
+      await cdp.send("Page.navigate", { url: new URL(action.navigate, baseUrl).href });
+      await waitForCondition("document.readyState === 'complete'", 15_000);
+      if (scriptsEnabled) await cdp.evaluate(SETTLE);
+    } else if (action.evaluate) {
+      await cdp.evaluate(action.evaluate);
+    } else if (action.waitFor) {
+      // Condition-based waiting (no fixed sleeps); survives page navigations.
+      await waitForCondition(action.waitFor, action.timeout ?? 15_000);
     } else if (action.pauseAnimationsAt !== undefined) {
       // Freeze every animation at a given time (0 = initial state) for deterministic inspection.
       await cdp.evaluate(`document.getAnimations().forEach(a => { a.pause(); a.currentTime = ${Number(action.pauseAnimationsAt)}; }); true`);
@@ -387,21 +491,39 @@ async function main() {
       for (const section of onPage.filter(isInteractive)) {
         const sScope = `${section.name} @${viewport.name} ${viewport.width}px`;
         consoleErrors = [];
+        const reset = async () => {
+          if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+          if (section.headers) await cdp.send("Network.setExtraHTTPHeaders", { headers: {} });
+          if (section.javascript === false) {
+            await cdp.send("Emulation.setScriptExecutionDisabled", { value: false });
+            scriptsEnabled = true;
+          }
+        };
         try {
           if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: section.media });
-          await cdp.send("Page.navigate", { url: new URL(page.path, baseUrl).href });
-          await cdp.evaluate(SETTLE);
+          if (section.headers) await cdp.send("Network.setExtraHTTPHeaders", { headers: section.headers });
+          if (section.javascript === false) {
+            await cdp.send("Emulation.setScriptExecutionDisabled", { value: true });
+            scriptsEnabled = false;
+          }
+          await cdp.send("Page.navigate", { url: new URL(section.path ?? page.path, baseUrl).href });
+          await waitForCondition("document.readyState === 'complete'", 15_000);
+          if (scriptsEnabled) await cdp.evaluate(SETTLE);
           for (const action of section.actions ?? []) await runAction(action);
           await wait(350); // let transitions finish (drawer: 200ms)
         } catch (error) {
-          record(sScope, "interaction", "INCOMPLETE", error.message);
-          if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+          record(sScope, "interaction", "FAIL", error.message);
+          await reset();
           continue;
         }
         for (const expectation of section.expect ?? []) {
           try {
-            const value = await cdp.evaluate(`(() => (${expectation.js}))()`);
-            record(sScope, expectation.name, value ? "PASS" : "FAIL", value ? "" : `got ${JSON.stringify(value)}`);
+            // `js` runs in the page; `server` runs in Node (e.g. to inspect delivered enquiries).
+            const value = expectation.server
+              ? await expectation.server({ evaluate: cdp.evaluate, root: ROOT, mock, delivery: args.delivery })
+              : await cdp.evaluate(`(() => (${expectation.js}))()`);
+            const pass = value === true;
+            record(sScope, expectation.name, pass ? "PASS" : "FAIL", pass ? "" : `got ${JSON.stringify(value)}`);
           } catch (error) {
             record(sScope, expectation.name, "INCOMPLETE", error.message);
           }
@@ -412,7 +534,7 @@ async function main() {
         else writeFileSync(join(RUN_DIR, "sections", `${section.name}-${viewport.name}.png`), await screenshot());
         await wait(100);
         record(sScope, "no console errors", consoleErrors.length ? "FAIL" : "PASS", consoleErrors.join(" | "));
-        if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+        await reset();
       }
     }
   }

@@ -11,7 +11,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   product750ml: { status: "planned", path: "/shop/750ml-glass-bottle", interimSection: "products" },
   product15l: { status: "planned", path: "/shop/1-5l-bottle", interimSection: "products" },
   productCartons: { status: "planned", path: "/shop/carton-packs", interimSection: "products" },
-  wholesale: { status: "planned", path: "/wholesale", interimSection: "wholesale" },
+  wholesale: { status: "live", path: "/wholesale" }, // F1: working enquiry flow
   ourStory: { status: "planned", path: "/our-story", interimSection: "origin" },
   quality: { status: "planned", path: "/quality", interimSection: "quality" },
   contact: { status: "planned", path: "/contact" },

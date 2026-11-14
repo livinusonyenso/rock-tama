@@ -23,7 +23,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: site.title,
+  title: { default: site.title, template: `%s | ${site.name}` },
   description: site.description,
 };
 

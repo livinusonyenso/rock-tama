@@ -10,12 +10,42 @@ const HERO = 'document.querySelector(\'section[aria-labelledby="hero-heading"]\'
 const HERO_ANIMATED = `[...${HERO}.querySelectorAll('[class*="animate-enter"]')]`;
 const ENTER_ANIMS = `document.getAnimations().filter(a => a.animationName === "enter")`;
 
+// ---- Functional journey helpers (F0/F1) ----
+const SUBMIT = 'form button[type="submit"]';
+const RESULT = "document.querySelector('[data-enquiry-reference]') || document.querySelector('form [role=\"alert\"]')";
+const REFERENCE = "document.querySelector('[data-enquiry-reference]')?.textContent";
+/** Actions that fill the enquiry form with valid data; `name` makes each submission identifiable. */
+const fillEnquiry = (name, overrides = {}) => [
+  { type: { selector: "#name", text: name } },
+  { type: { selector: "#email", text: overrides.email ?? "buyer@example.com" } },
+  { type: { selector: "#phone", text: "+234 803 123 4567" } },
+  { select: { selector: "#product", value: overrides.product ?? "750ml-glass-bottle" } },
+  { type: { selector: "#quantity", text: "120" } },
+  { select: { selector: "#unit", value: "cartons" } },
+  { type: { selector: "#location", text: "Lekki, Lagos, Nigeria" } },
+  { type: { selector: "#message", text: "Weekly delivery to our hotel." } },
+  { check: 'input[name="consent"]' },
+];
+const submitAndWait = [{ click: SUBMIT }, { waitFor: RESULT }];
+/** Reads the development enquiry store (one JSON object per line). */
+const storedEnquiries = async (root) => {
+  const { readFile } = await import("node:fs/promises");
+  try {
+    return (await readFile(`${root}/.data/enquiries.jsonl`, "utf8")).trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
+  } catch {
+    return [];
+  }
+};
+const uniqueName = (label) => `${label} ${Date.now()}`;
+
 /** @type {import("./visual-check.mjs").VisualCheckConfig} */
 const config = {
   // Production server started by the script (avoids the dev server on :3000).
   port: 3100,
   // Chrome DevTools Protocol port for the headless browser.
   cdpPort: 9333,
+  // Local mock of the Resend API used by `--delivery resend-mock`.
+  mockResendPort: 4010,
 
   // The approved design mock. All `reference` rectangles below are in its pixels.
   reference: {
@@ -33,7 +63,10 @@ const config = {
     { name: "desktop", width: 1440, height: 900, compareWithReference: true },
   ],
 
-  pages: [{ name: "home", path: "/" }],
+  pages: [
+    { name: "home", path: "/" },
+    { name: "wholesale", path: "/wholesale" },
+  ],
 
   sections: [
     {
@@ -91,6 +124,12 @@ const config = {
         { name: "all hero content fully visible", js: `${HERO_ANIMATED}.every(el => getComputedStyle(el).opacity === "1")` },
       ],
     },
+
+    // ---- /wholesale (F1) ----
+    { name: "wholesale-page", page: "wholesale", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
+
+    // ---- Functional journeys (F1): run with `npm run verify:functional` ----
+    ...functionalJourneys(),
 
     // ---- Mobile navigation (M2.6): interactive states, each from a fresh page load ----
     {
@@ -187,3 +226,161 @@ const config = {
 };
 
 export default config;
+
+/** Functional journeys for the wholesale enquiry flow (D-066, D-072). One viewport is enough for behaviour. */
+function functionalJourneys() {
+  const success = uniqueName("Journey Hotel");
+  const noJs = uniqueName("NoJS Hotel");
+  const honeypot = uniqueName("Honeypot Bot");
+  const viaResend = uniqueName("Resend Hotel");
+  const failing = uniqueName("FAIL_DELIVERY Hotel");
+  const base = { kind: "functional", viewports: ["mobile"] };
+  return [
+    // -- Navigation reaches the working page (dev-file mode) --
+    {
+      ...base,
+      name: "cta-request-wholesale",
+      page: "home",
+      actions: [{ click: 'section[aria-labelledby="hero-heading"] a[href="/wholesale"]' }, { waitFor: "location.pathname === '/wholesale' && document.querySelector('form')" }],
+      expect: [
+        { name: "hero Request Wholesale navigates to a working /wholesale form", js: "location.pathname === '/wholesale' && Boolean(document.querySelector('form button[type=submit]'))" },
+        { name: "nav Wholesale is a live link marked current", js: "document.querySelector('header nav a[href=\"/wholesale\"]')?.getAttribute('aria-current') === 'page'" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-labels",
+      page: "wholesale",
+      expect: [
+        { name: "every form control has a label", js: "[...document.querySelectorAll('form input:not([type=hidden]):not([tabindex=\"-1\"]), form select, form textarea')].every(el => el.labels?.length > 0)" },
+        { name: "honeypot hidden from people and assistive tech", js: "getComputedStyle(document.querySelector('input[name=website_url]').closest('[aria-hidden]')).display === 'none'" },
+      ],
+    },
+    // -- Validation --
+    {
+      ...base,
+      name: "wholesale-validation-empty",
+      page: "wholesale",
+      actions: submitAndWait,
+      expect: [
+        { name: "shows a summary alert", js: "document.querySelector('form [role=alert]')?.textContent.includes('correct')" },
+        { name: "required fields flagged (aria-invalid)", js: "document.querySelectorAll('form [aria-invalid=true]').length >= 7" },
+        { name: "errors linked via aria-describedby", js: "[...document.querySelectorAll('form [aria-invalid=true]')].every(el => (el.getAttribute('aria-describedby') || '').split(' ').some(id => document.getElementById(id)?.textContent.trim()))" },
+        { name: "focus moved to first invalid field", js: "document.activeElement?.id === 'name'" },
+        { name: "no success shown", js: "!document.querySelector('[data-enquiry-reference]')" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-validation-keeps-input",
+      page: "wholesale",
+      actions: [...fillEnquiry("Keep Me Hotel", { email: "not-an-email" }), ...submitAndWait],
+      expect: [
+        { name: "invalid email reported", js: "document.getElementById('email-error')?.textContent.includes('valid email')" },
+        { name: "typed values kept after server validation", js: "document.getElementById('name').value === 'Keep Me Hotel' && document.getElementById('location').value.includes('Lagos') && document.getElementById('quantity').value === '120'" },
+        { name: "focus moved to the invalid email field", js: "document.activeElement?.id === 'email'" },
+      ],
+    },
+    // -- Successful delivery (dev-file adapter) --
+    {
+      ...base,
+      name: "wholesale-success-dev",
+      page: "wholesale",
+      actions: [...fillEnquiry(success), ...submitAndWait],
+      expect: [
+        { name: "success shown with a reference", js: "/^RT-\\d{8}-[0-9A-F]{6}$/.test(document.querySelector('[data-enquiry-reference]')?.textContent ?? '')" },
+        { name: "success announced (role=status) and focused", js: "document.activeElement?.getAttribute('role') === 'status'" },
+        {
+          name: "enquiry actually stored with the shown reference and all fields",
+          server: async ({ evaluate, root }) => {
+            const reference = await evaluate(REFERENCE);
+            const record = (await storedEnquiries(root)).find((r) => r.reference === reference);
+            if (!record) return `no stored record for ${reference}`;
+            const ok = record.name === success && record.email === "buyer@example.com" && record.product === "750ml-glass-bottle" && record.quantity === 120 && record.unit === "cartons" && record.location.includes("Lagos") && record.consent === "yes";
+            return ok || record;
+          },
+        },
+      ],
+    },
+    // -- Progressive enhancement: works with JavaScript disabled --
+    {
+      ...base,
+      name: "wholesale-no-javascript",
+      page: "wholesale",
+      javascript: false,
+      actions: [...fillEnquiry(noJs), { click: SUBMIT }, { waitFor: RESULT }],
+      expect: [
+        { name: "success rendered by the server without JS", js: "Boolean(document.querySelector('[data-enquiry-reference]'))" },
+        {
+          name: "no-JS enquiry stored",
+          server: async ({ root }) => (await storedEnquiries(root)).some((r) => r.name === noJs) || "not stored",
+        },
+      ],
+    },
+    // -- Prefill from product pages --
+    { ...base, name: "wholesale-prefill", page: "wholesale", path: "/wholesale?product=1-5l-bottle", actions: [{ waitFor: "document.getElementById('product')?.value === '1-5l-bottle'", timeout: 5000 }], expect: [{ name: "?product= preselects the product", js: "document.getElementById('product').value === '1-5l-bottle'" }] },
+    { ...base, name: "wholesale-prefill-unknown", page: "wholesale", path: "/wholesale?product=not-a-product", expect: [{ name: "unknown ?product= is ignored", js: "document.getElementById('product').value === ''" }] },
+    // -- Spam protection --
+    {
+      ...base,
+      name: "wholesale-honeypot",
+      page: "wholesale",
+      actions: [...fillEnquiry(honeypot), { evaluate: "document.querySelector('input[name=website_url]').value = 'http://spam.example'" }, ...submitAndWait],
+      expect: [
+        { name: "bot submission rejected (no success)", js: "!document.querySelector('[data-enquiry-reference]') && Boolean(document.querySelector('form [role=alert]'))" },
+        { name: "bot submission not delivered", server: async ({ root }) => !(await storedEnquiries(root)).some((r) => r.name === honeypot) || "was stored" },
+      ],
+    },
+    // -- Production adapter against a local mock of the Resend API --
+    {
+      ...base,
+      name: "wholesale-resend-success",
+      page: "wholesale",
+      deliveries: ["resend-mock"],
+      actions: [...fillEnquiry(viaResend), ...submitAndWait],
+      expect: [
+        { name: "success shown", js: "Boolean(document.querySelector('[data-enquiry-reference]'))" },
+        {
+          name: "Resend API called correctly (auth, to, reply_to, subject with reference)",
+          server: async ({ evaluate, mock }) => {
+            const reference = await evaluate(REFERENCE);
+            const req = mock.requests.find((r) => r.body?.subject?.includes(reference));
+            if (!req) return `no request with ${reference}`;
+            const ok = req.method === "POST" && req.url === "/emails" && req.authorization === "Bearer test-key" && req.body.to?.[0] === "enquiries@example.com" && req.body.reply_to === "buyer@example.com" && req.body.text.includes(viaResend) && req.body.from.includes("ROCK-TAMA");
+            return ok || req;
+          },
+        },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-resend-failure",
+      page: "wholesale",
+      deliveries: ["resend-mock"],
+      actions: [...fillEnquiry(failing), ...submitAndWait],
+      expect: [
+        { name: "provider failure shows an honest error, not success", js: "!document.querySelector('[data-enquiry-reference]') && document.querySelector('form [role=alert]')?.textContent.includes('could not be sent')" },
+        { name: "typed values kept for retry", js: "document.getElementById('name').value.includes('FAIL_DELIVERY')" },
+        { name: "provider was actually called", server: async ({ mock }) => mock.requests.some((r) => r.body?.text?.includes(failing)) || "not called" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-rate-limit",
+      page: "wholesale",
+      deliveries: ["resend-mock"],
+      headers: { "x-forwarded-for": "203.0.113.77" },
+      actions: Array.from({ length: 6 }, (_, i) => [{ navigate: "/wholesale" }, ...fillEnquiry(`RateLimit ${i}`), ...submitAndWait]).flat(),
+      expect: [{ name: "6th submission within 10 minutes is refused", js: "document.querySelector('form [role=alert]')?.textContent.includes('Too many enquiries')" }],
+    },
+    // -- Hosted platform without delivery configuration --
+    {
+      ...base,
+      name: "wholesale-unconfigured",
+      page: "wholesale",
+      deliveries: ["unconfigured"],
+      actions: [...fillEnquiry(uniqueName("Unconfigured Hotel")), ...submitAndWait],
+      expect: [{ name: "unconfigured delivery shows an honest error, not success", js: "!document.querySelector('[data-enquiry-reference]') && document.querySelector('form [role=alert]')?.textContent.includes('could not be sent')" }],
+    },
+  ];
+}

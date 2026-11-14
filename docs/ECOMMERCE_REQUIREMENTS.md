@@ -18,6 +18,20 @@ The target is a **real e-commerce website**, not a brochure with contact forms. 
 
 **Still requires approval:** payment provider, pricing, currency, delivery rules/zones/fees, payment flow, guest vs. account checkout, order handling process, wholesale form fields and recipient, database choice.
 
+## Configuring enquiry delivery (F1, live since 2026-11-15)
+
+`/wholesale` works now. Locally, enquiries go to `.data/enquiries.jsonl` (git-ignored, contains personal data, development only). For production on Vercel, set these in the Vercel project (template: `.env.example`):
+
+| Variable | Value |
+|---|---|
+| `ENQUIRY_DELIVERY` | `resend` |
+| `RESEND_API_KEY` | API key from resend.com (secret) |
+| `ENQUIRY_TO` | Recipient address(es), comma-separated |
+| `ENQUIRY_FROM` | Sender on a domain verified in Resend, e.g. `ROCK-TAMA Enquiries <enquiries@your-domain>` |
+| `ENQUIRY_RATE_LIMIT` | Optional (default 5 per 10 minutes) |
+
+A Vercel **production** build fails if these are missing; preview deployments build, but their forms report an honest "could not be sent" error. **Still needed from the client:** recipient address(es), a sending domain to verify in Resend, the privacy notice (NDPA) before the form is public, and confirmation of the page copy in `content/wholesale.ts`.
+
 ## Business information and integrations required (launch dependencies, 2026-11-15)
 
 | Needed | Unblocks | Interim behaviour (honest, configurable) |

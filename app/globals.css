@@ -53,6 +53,9 @@
   --color-line-dark: #758579; /* dividers on green (use with opacity, e.g. /50) */
   --color-line-dark-strong: #9cb4a7; /* trust strip dividers (use with opacity) */
 
+  /* Feedback */
+  --color-error: #a3261b; /* form errors on light surfaces (≥4.5:1 on white / ivory / cream) */
+
   /* Type scale: estimates scaled from the reference to a 1440px viewport; tune during visual review */
   --text-display: 5.5rem; /* hero "ROCK TAMA" 88px (measured M3: matches the ref 512px glyph width; Cormorant is wider than the ref face) */
   --text-display--line-height: 1;

@@ -145,3 +145,19 @@ export type HeroContent = {
   actions: readonly CallToAction[];
   media: MediaAsset;
 };
+
+/** A price in minor-unit-free major currency units. `null` on a product = "Price on request" (D-066: never invent prices). */
+export type Price = { amount: number; currency: "NGN" };
+
+export type Product = {
+  /** URL segment under /shop, e.g. "750ml-glass-bottle". */
+  slug: string;
+  /** Route key for this product's page (content/routes.ts). */
+  route: RouteKey;
+  name: string;
+  /** Short label for compact controls, e.g. "750 ml". */
+  shortName: string;
+  summary: string;
+  price: Price | null;
+  media: MediaAsset;
+};
