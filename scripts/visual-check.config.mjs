@@ -6,6 +6,9 @@ const MENU_BUTTON_SELECTOR = 'button[aria-controls="mobile-nav"]';
 const MENU_BUTTON = `document.querySelector('${MENU_BUTTON_SELECTOR}')`;
 const DRAWER = 'document.getElementById("mobile-nav")';
 const MOBILE = ["small", "mobile", "tablet"];
+const HERO = 'document.querySelector(\'section[aria-labelledby="hero-heading"]\')';
+const HERO_ANIMATED = `[...${HERO}.querySelectorAll('[class*="animate-enter"]')]`;
+const ENTER_ANIMS = `document.getAnimations().filter(a => a.animationName === "enter")`;
 
 /** @type {import("./visual-check.mjs").VisualCheckConfig} */
 const config = {
@@ -51,6 +54,42 @@ const config = {
       page: "home",
       selector: 'section[aria-labelledby="hero-heading"]',
       reference: { x: 0, y: 96, width: 1086, height: 396 },
+    },
+
+    // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
+    {
+      name: "hero-animation-initial",
+      page: "home",
+      selector: 'section[aria-labelledby="hero-heading"]',
+      viewports: ["mobile", "desktop"],
+      actions: [{ pauseAnimationsAt: 0 }],
+      expect: [
+        { name: "6+ entrance animations present", js: `${ENTER_ANIMS}.length >= 6` },
+        { name: "animated elements start invisible", js: `${HERO_ANIMATED}.every(el => Number(getComputedStyle(el).opacity) < 0.05)` },
+        {
+          name: "first starts ≤100ms, all done ≤1000ms",
+          js: `(() => { const t = ${ENTER_ANIMS}.map(a => a.effect.getComputedTiming()); return Math.min(...t.map(x => x.delay)) <= 100 && Math.max(...t.map(x => x.endTime)) <= 1000; })()`,
+        },
+        {
+          name: "no layout shift (layout boxes identical at start and end)",
+          js: `(() => { const box = el => [el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight].join(","); const els = ${HERO_ANIMATED}; const start = els.map(box); ${ENTER_ANIMS}.forEach(a => a.finish()); const end = els.map(box); return start.every((b, i) => b === end[i]); })()`,
+        },
+        {
+          name: "CTAs hit-testable at t=0",
+          js: `(() => { ${ENTER_ANIMS}.forEach(a => { a.pause(); a.currentTime = 0; }); return [...${HERO}.querySelectorAll('a, [data-pending]')].filter(el => el.closest('[class*="animate-enter"]')?.matches('div')).every(el => { const r = el.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return el.contains(hit); }); })()`,
+        },
+      ],
+    },
+    {
+      name: "hero-reduced-motion",
+      page: "home",
+      selector: 'section[aria-labelledby="hero-heading"]',
+      viewports: ["mobile", "desktop"],
+      media: [{ name: "prefers-reduced-motion", value: "reduce" }],
+      expect: [
+        { name: "no entrance animations", js: `${ENTER_ANIMS}.length === 0` },
+        { name: "all hero content fully visible", js: `${HERO_ANIMATED}.every(el => getComputedStyle(el).opacity === "1")` },
+      ],
     },
 
     // ---- Mobile navigation (M2.6): interactive states, each from a fresh page load ----

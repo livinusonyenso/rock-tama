@@ -27,7 +27,7 @@ import config from "./visual-check.config.mjs";
 
 /**
  * @typedef {{ name: string, width: number, height: number, compareWithReference?: boolean }} Viewport
- * @typedef {{ click?: string, clickAt?: { x: number, y: number }, press?: string, times?: number, wait?: number }} Action
+ * @typedef {{ click?: string, clickAt?: { x: number, y: number }, press?: string, times?: number, wait?: number, pauseAnimationsAt?: number }} Action
  * @typedef {{ name: string, page: string, selector?: string, reference?: { x: number, y: number, width: number, height: number },
  *   viewports?: string[], actions?: Action[], expect?: { name: string, js: string }[], media?: { name: string, value: string }[] }} Section
  * @typedef {{ port: number, cdpPort: number, reference: { path: string, width: number }, viewports: Viewport[],
@@ -175,6 +175,8 @@ const SETTLE = `(async () => {
   if (document.readyState !== "complete") await new Promise(r => addEventListener("load", r, { once: true }));
   await document.fonts.ready;
   await Promise.all([...document.images].map(img => img.complete ? null : new Promise(r => { img.onload = img.onerror = r; })));
+  // Deterministic: wait until every finite animation (e.g. entrance sequences) has finished.
+  await Promise.all(document.getAnimations().filter(a => a.effect && a.effect.getComputedTiming().endTime !== Infinity).map(a => a.finished.catch(() => null)));
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
   return { fonts: document.fonts.status, brokenImages: [...document.images].filter(i => i.naturalWidth === 0).map(i => i.currentSrc || i.src) };
 })()`;
@@ -318,7 +320,7 @@ async function main() {
     await cdp.send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
     await cdp.send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
   }
-  /** Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms } */
+  /** Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms } | { pauseAnimationsAt: ms } */
   async function runAction(action) {
     if (action.click) {
       const point = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.click)});
@@ -337,6 +339,9 @@ async function main() {
       }
     } else if (action.wait) {
       await wait(action.wait);
+    } else if (action.pauseAnimationsAt !== undefined) {
+      // Freeze every animation at a given time (0 = initial state) for deterministic inspection.
+      await cdp.evaluate(`document.getAnimations().forEach(a => { a.pause(); a.currentTime = ${Number(action.pauseAnimationsAt)}; }); true`);
     } else {
       throw new Error(`unknown action: ${JSON.stringify(action)}`);
     }

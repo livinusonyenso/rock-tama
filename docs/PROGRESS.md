@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** **M3 (revised for real functionality, D-066–D-069).** M3.1–M3.3 (hero visuals + animation) approved and in progress; F0–F2 (functional foundations, `/wholesale`, `/shop`) planned and awaiting decisions. M2.7 baselines still await the owner's final visual approval (V-008 fix).
+- **Current task:** **M3.1–M3.3 done** (hero visuals + animation). **Next: F0–F2** (functional foundations, `/wholesale`, `/shop` + ShopMenu) — awaiting owner decisions. M3 completes when both CTAs are live. M2.7 baselines still await the owner's final visual approval (V-008 fix).
 
 ## Completed
 
@@ -40,6 +40,8 @@ _Last updated: 2026-11-14_
 | 2026-11-15 | **V-008** fluid header/bar inset tokens (`clamp()`), `--breakpoint-hd` removed, icon-group spacing `hd:`→`xl:` | lint ✓ · tsc ✓ · build ✓ · sweep 1270–1920px: max logo step **1px** (was 60), 0 overflow · 1440 + 1024 pixel-identical to reviewed M2.7 state, 1280 header 0.95% (icon spacing now from xl) · `verify:visual` 126 passed, same 5 pending-approval reference diffs, all interactive checks pass |
 
 | 2026-11-15 | **M3.1 + M3.2** page shell (starter page + SVGs removed), `ButtonLink`, `MediaFrame` (bottle silhouette), `content/hero.ts`, `HeroSection`, `HeroWaves`, hero tokens (D-070) | lint ✓ · tsc ✓ · build ✓ · hero @1440: height 525 = ref; all 8 elements within ±3px (widths: tagline −19, description −21, letter shapes) · responsive 320–1440: no clipping/overflow, heading one line everywhere (fixed a 1024px clipping bug found in review) · header/drawer at 320/375/768 still 0.00% · `verify:visual` 133 passed + the same 5 pending-approval M2.7 diffs · CTAs transitional (pending until F1/F2) |
+
+| 2026-11-15 | **M3.3** CSS entrance animation (`enter` keyframes, `animate-enter`, `enter-*` utilities, unlayered reduced-motion rule) applied per the approved storyboard; verification: settle waits for animations, `pauseAnimationsAt` action, `hero-animation-initial` + `hero-reduced-motion` checks | lint ✓ · tsc ✓ · build ✓ · `verify:visual` **159 passed**, same 5 pending M2.7 diffs · timings read from the browser match the storyboard exactly (ends 870ms) · t=0: content invisible, background/waves static · **layout boxes identical start vs end** · CTAs hit-testable at t=0 · reduced motion: 0 entrance animations, all opacity 1 · final state = static M3.2 hero (≤0.01%) at 6 widths · caught + fixed a var-scoping bug that would have collapsed the stagger · button hover not yet functionally testable (CTAs pending until F1/F2) |
 
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 

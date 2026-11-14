@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-15 (after M2.7)_
+_Last updated: 2026-11-15 (after M3.3)_
 
-**Where we are:** Direction changed (D-066): ROCK-TAMA is a real e-commerce site; commercial CTAs must work. M3 revised (see `IMPLEMENTATION_PLAN.md`): M3.1–M3.3 hero visuals/animation approved; F0–F2 (functional foundations, `/wholesale`, `/shop` + ShopMenu) need owner decisions. M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix).
+**Where we are:** Direction (D-066): real e-commerce; commercial CTAs must work. **M3.1–M3.3 done and committed** (hero matches the reference within ±3px @1440; CSS entrance animation verified). **Hero CTAs are still transitional (pending)**: M3 is complete only when F1 (`/wholesale`) and F2 (`/shop` + ShopMenu + mobile Shop list, which satisfies the build guard) ship. F0–F2 await owner decisions (see PROGRESS blockers). M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -17,6 +17,7 @@ _Last updated: 2026-11-15 (after M2.7)_
 - `components/layout/SiteHeader.tsx` (Server, `cartCount` prop) + `components/layout/NavLink.tsx` (Client; link or pending text via `resolveHref` output); `focus-ring` utility in `globals.css`
 - `components/layout/MobileNav.tsx` (Client, native `<dialog>`) + `MobileNavPanel.tsx` (Server children); `resolveNavItem` (with the temporary Shop guard) in `lib/navigation.ts`; `focus-ring-dark`
 - M2.7: `--container-wide` 90rem, fluid `--spacing-header-inset` / `--spacing-bar-inset` (D-064), `components/icons/GlobeFilled.tsx` (MIT notice inside)
+- M3: `components/home/HeroSection.tsx`, `HeroWaves.tsx`, `components/ui/ButtonLink.tsx`, `MediaFrame.tsx`, `content/hero.ts`; entrance animation utilities in `globals.css` (ANIMATION_SYSTEM)
 - `components/brand/Logo.tsx`: `variant` header/footer; placeholder until `site.logos.*.available`; no link inside (header adds it via `resolveHref("home")` in M2.4). Swap steps: `docs/ASSET_SPECIFICATIONS.md`
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.
