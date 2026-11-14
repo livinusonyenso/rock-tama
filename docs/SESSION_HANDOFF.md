@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15 (after M2.4)_
 
-**Where we are:** M1–M2.3 and M2.V accepted. **M2.4 (desktop header) complete, verified, committed; stopped for owner review before M2.5 (Shop dropdown).** Header baselines are not approved yet (approve with `npm run verify:visual -- --approve` only after the owner accepts). Open visual differences V-001–V-005 → M2.7. The page below the header is still the create-next-app starter (replaced in M3).
+**Where we are:** M1–M2.3, M2.V accepted; M2.4 accepted as functionally complete (V-004/V-005 → M2.7; header baselines NOT approved, provisional references only, D-049). **M2.5 (Shop dropdown) briefing presented; awaiting approval.** D-048 defines the dropdown behaviour. The page below the header is still the create-next-app starter.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -19,7 +19,7 @@ _Last updated: 2026-11-15 (after M2.4)_
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.
 
-**Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-043–D-047 newest; D-047 awaits owner review) → `docs/UI_BREAKDOWN.md` §02 + `docs/COMPONENT_ARCHITECTURE.md` §3 (`ShopMenu`) for M2.5; verification: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification". Visual verification method: `docs/DEVELOPMENT_GUIDELINES.md`.
+**Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-048–D-049 newest) → `docs/UI_BREAKDOWN.md` §02 + `docs/COMPONENT_ARCHITECTURE.md` §3 (`ShopMenu`) for M2.5; verification: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification". Visual verification method: `docs/DEVELOPMENT_GUIDELINES.md`.
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 

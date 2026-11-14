@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.4 desktop header complete (2026-11-15)**; stopped for owner review before M2.5 (Shop dropdown).
+- **Current task:** M2.5 Shop dropdown. M2.4 **accepted as functionally complete** (2026-11-15); visual refinements V-004/V-005 outstanding (M2.7); header baselines **not** approved (D-049). **M2.5 briefing presented; awaiting approval.**
 
 ## Completed
 
