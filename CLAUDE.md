@@ -24,6 +24,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 - One logical task at a time. Use `/rock-tama-section-workflow` for sections.
 - Server Components by default; client islands only when state or browser APIs require them.
 - Design values come from tokens, not repeated literals.
+- Motion: every visible section's briefing includes an animation storyboard per `docs/ANIMATION_SYSTEM.md` (opacity/transform only, reduced motion, no layout shift, no new animation library without approval).
 - Never invent product photos, prices, certifications or business facts. Quality/ISO claims need owner-confirmed evidence.
 - No new dependencies without explaining the purpose and getting approval.
 - Never claim a check passed unless it was run. Report failures with output.
@@ -53,6 +54,7 @@ Update `docs/PROGRESS.md` (state, completed + how verified, blockers, next task)
 | Section-by-section breakdown of the reference | `docs/UI_BREAKDOWN.md` |
 | Component inventory, Server/Client boundaries | `docs/COMPONENT_ARCHITECTURE.md` |
 | Colours, type, spacing, layout tokens | `docs/DESIGN_SYSTEM.md` |
+| Animation and microinteractions | `docs/ANIMATION_SYSTEM.md` |
 | Image slots, aspect ratios, paths | `docs/ASSET_SPECIFICATIONS.md` |
 | Versions, config, dependencies | `docs/TECH_STACK.md` |
 | Folder layout and conventions | `docs/PROJECT_STRUCTURE.md` |

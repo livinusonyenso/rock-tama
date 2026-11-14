@@ -14,13 +14,13 @@ The project docs are the source of truth. Reference them, don't restate them.
 
 1. **Read project instructions:** `CLAUDE.md`, `docs/SESSION_HANDOFF.md`, `docs/PROGRESS.md`, `docs/DECISIONS.md`.
 2. **Review the approved UI breakdown** for this section in `docs/UI_BREAKDOWN.md` and its components in `docs/COMPONENT_ARCHITECTURE.md`.
-3. **Review the design system:** `docs/DESIGN_SYSTEM.md`, the image slots in `docs/ASSET_SPECIFICATIONS.md`, and the reference image `docs/reference/homepage-reference.png` (view the relevant region).
+3. **Review the design system:** `docs/DESIGN_SYSTEM.md` and the motion rules in `docs/ANIMATION_SYSTEM.md`, the image slots in `docs/ASSET_SPECIFICATIONS.md`, and the reference image `docs/reference/homepage-reference.png` (view the relevant region).
 4. **Identify the next approved section/task.** Check its milestone dependencies in `docs/IMPLEMENTATION_PLAN.md` are complete and its decisions are APPROVED. If not, stop and list what's missing.
 5. **Inspect the current code** that the task touches.
 
 ## Phase B: Propose and get approval
 
-6. **Explain the proposed implementation** using the briefing format in `docs/DEVELOPMENT_GUIDELINES.md` (What / Why / Where / Concepts / What could go wrong / Verification / Next step).
+6. **Explain the proposed implementation** using the briefing format in `docs/DEVELOPMENT_GUIDELINES.md` (What / Why / Where / Concepts / What could go wrong / Verification / Next step), including an **animation storyboard** (what animates, what stays static, timing, reduced-motion behaviour) per `docs/ANIMATION_SYSTEM.md`.
 7. **Determine reusable components:** reuse existing `components/ui` pieces first; justify any new component (responsibility, reuse, or client boundary); state the Server/Client boundary for each.
 8. **Obtain approval before writing code.** End the message with a clear question and STOP. Do not proceed on silence or ambiguous replies.
 

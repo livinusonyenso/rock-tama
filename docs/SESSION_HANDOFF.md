@@ -21,8 +21,10 @@ _Last updated: 2026-11-15 (after M2.7)_
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.
 
+**Animation:** new requirement (D-065). Read `docs/ANIMATION_SYSTEM.md` before planning any visible section; its contents are PROPOSED until the owner approves each storyboard.
+
 **Read next:** `docs/PROGRESS.md` → `docs/DECISIONS.md` (D-058–D-063 newest) → `docs/verification/README.md` (V-log) and `docs/verification/m2.7-after/before-after-1440.png`; verification: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification". Visual verification method: `docs/DEVELOPMENT_GUIDELINES.md`.
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Do not:** promote baselines or start M3 until the owner approves. Do not fix V-001–V-005 before M2.7.
+**Do not:** promote baselines until the owner approves the final M2.7 screenshots (incl. V-008). Do not implement M3 until the owner approves its briefing. Do not fix V-001–V-005 before M2.7.

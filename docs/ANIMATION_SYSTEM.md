@@ -1,0 +1,92 @@
+# Animation System
+
+**Status: [PROPOSED]**, created 2026-11-15 at the owner's request. Nothing here is approved until the owner reviews each animation's behaviour (see `DECISIONS.md`). The one animation already approved and shipped is the mobile drawer slide-in (D-054).
+
+## 1. Principles [PROPOSED]
+
+1. **Motion serves content.** It guides attention (hero → product → action) or confirms an interaction. No decoration for its own sake.
+2. **Premium = restrained.** Short distances (8–16px), opacity + transform only, soft deceleration. No bounce, elastic, spin, perpetual float or parallax without explicit owner approval.
+3. **Never block reading or interaction.** Above-the-fold content is readable within ~1s; controls are clickable from the first frame.
+4. **Content never depends on animation.** Elements are visible with CSS animations disabled, with reduced motion, and without JavaScript.
+5. **No layout shift.** Animate `opacity` and `transform` only; never `width`, `height`, `top`/`left`, margins or anything that reflows.
+6. **One system, used consistently.** The same durations, easing and distances in every section, from the tokens below.
+
+## 2. Technology choice [PROPOSED]
+
+| Need | Technique | Why |
+|---|---|---|
+| Hover, focus, press, colour/shadow feedback | **CSS transitions** (Tailwind `transition-*`) | Zero JS; the browser's compositor |
+| On-load entrance sequences (hero) | **CSS `@keyframes` + per-element delays**, defined once in `globals.css` | Runs from the first paint of server-rendered HTML, so no hydration step, no flash, no JS; works without JavaScript; easy to disable with reduced motion |
+| Open/close of overlays (drawer, future dropdown) | **CSS transitions + `@starting-style`** (as in `MobileNav`) | Native; no library |
+| Scroll-triggered section reveals (from M4/M5) | **Decide at first use.** Candidates: (a) a tiny `Reveal` Client island using `IntersectionObserver` (~1 kB, adds a class); (b) CSS scroll-driven animations (`animation-timeline: view()`) as progressive enhancement; (c) `motion` | Not needed for the hero. Evaluated when the first below-the-fold section ships |
+| Complex orchestrated or gesture-driven sequences | **`motion` (Motion for React)**, only if a real requirement appears | See §8 |
+
+**Not used:** GSAP, Three.js, or more than one animation library, without owner approval.
+
+## 3. Tokens [PROPOSED; added to `globals.css` when M3 is approved]
+
+| Token | Value | Use |
+|---|---|---|
+| `--motion-fast` | 150ms | Hover/press feedback |
+| `--motion-base` | 250ms | UI state changes (colour, shadow, drawer = 200ms existing) |
+| `--motion-enter` | 450ms | Content entrance (eyebrow, text, buttons) |
+| `--motion-enter-slow` | 600ms | Headline entrance |
+| `--motion-media` | 750ms | Hero product image entrance |
+| `--ease-out-soft` | `cubic-bezier(0.22, 1, 0.36, 1)` | Entrances (fast start, long soft settle) |
+| `--ease-standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | UI state transitions |
+| Entrance distance | 8px (text, buttons), 12px (headline), 16px (media) | `translateY` only |
+| Scale | ≥ 0.98 → 1 | Media only; never above 1.03 on hover |
+| Stagger step | 60–100ms | Between related elements |
+| Sequence budget | ≤ ~1000ms to final state; first element starts at 0ms | Above-the-fold groups |
+
+## 4. Reusable patterns [PROPOSED]
+
+1. **`enter` (fade + rise):** keyframes from `opacity: 0; transform: translateY(var(--enter-distance))` to the natural state. `animation-fill-mode: both` + a `--enter-delay` custom property per element. Utility classes `animate-enter`, `animate-enter-fade` (no movement) and `animate-enter-media` (rise + 0.98 scale).
+2. **Interactive feedback:** buttons and links use `transition` on `background-color`, `border-color`, `color`, `box-shadow`, `transform` with `--motion-fast` and `--ease-standard`; hover lift at most `translateY(-1px)`; active state returns to 0.
+3. **Overlay open:** `@starting-style` + `transition-discrete` (existing drawer).
+4. **Scroll reveal (future):** one shared mechanism, once per element, small distance, never for essential content above the fold.
+
+## 5. Reduced motion (mandatory)
+
+- `@media (prefers-reduced-motion: reduce)`: all entrance animations are **removed** (`animation: none`, content at its final state immediately); transforms on hover are removed; colour/opacity feedback may stay (≤150ms).
+- Tailwind: `motion-reduce:animate-none motion-reduce:transition-none` (or the equivalent in the shared utilities, so components don't repeat it).
+- Verified automatically (see §7).
+
+## 6. Performance (mandatory)
+
+- Only `opacity` and `transform` are animated (compositor-friendly; no CLS).
+- **LCP:** the likely LCP element (hero heading now; the bottle once the photo exists) starts its entrance at 0–100ms. A real hero image should not start from `opacity: 0` (Chrome reports LCP only once it is painted visibly), so it uses transform/scale with a short, early fade (decided when the photo arrives).
+- No continuous animations (`infinite`) without approval; none on large surfaces such as the waves.
+- No JS animation runtime for the hero, so the bundle is unchanged.
+- `will-change` only if profiling shows a need; never left on permanently.
+
+## 7. Verification (extends `npm run verify:visual`) [PROPOSED]
+
+Static screenshots and animation behaviour are tested **separately and deterministically**, with no arbitrary sleeps:
+
+| Check | How |
+|---|---|
+| Stable screenshots | The settle step waits for `Promise.all(document.getAnimations().map(a => a.finished))` (finite animations), so screenshots show the final state |
+| Initial state | Pause all animations at `currentTime = 0`; assert animated elements start at opacity 0 / offset, and take an "initial" screenshot |
+| No layout shift | Compare each animated element's layout box (`offsetLeft/Top/Width/Height`, which ignores transforms) at t=0 and at the end; they must be identical |
+| Sequence budget | Read `getTiming()` (delay + duration) of every entrance animation; the maximum must be ≤ the budget (≈1000ms); the first must start ≤ 100ms |
+| Reduced motion | Emulate `prefers-reduced-motion: reduce`; assert `document.getAnimations()` has no entrance animations and all content is at opacity 1 on first paint |
+| Interactivity during animation | At t=0, the CTAs are hit-testable (`elementFromPoint`) and focusable |
+| No console errors / overflow | Existing checks, in initial and final states |
+
+## 8. `motion` (Motion for React): evaluation [PROPOSED]
+
+- **Compatibility:** `motion@14.14.0` declares peer `react ^18 || ^19`, MIT. Its animated components are Client Components (`"use client"`), so any section using them needs a client boundary. Keep them in small wrapper islands with server-rendered children.
+- **Cost:** adds a client-side animation runtime (tens of kB gzipped; the exact figure to be measured with a production build if it is ever adopted). Its `LazyMotion` + `m` pattern reduces this.
+- **Strengths:** orchestration (variants, staggerChildren), gestures, layout animations, exit animations, a built-in reduced-motion hook.
+- **Recommendation:** **not needed for M3**; CSS covers every hero effect with zero JS. Re-evaluate only if a later requirement needs exit/layout animations or complex gesture choreography. If adopted, pin a version at least two weeks old (14.14.0 was published 2026-11-13).
+
+## 9. Section decisions
+
+| Section | Animated | Static | Status |
+|---|---|---|---|
+| Mobile drawer | Slide-in 200ms (`ease-out`), none with reduced motion | Backdrop | **APPROVED** (D-054) |
+| Header / announcement bar | Link hover colour (existing) | Everything else | Existing |
+| Hero (M3) | See the storyboard in the M3 briefing / `DECISIONS.md` once approved | Waves, glow | **PROPOSED** |
+
+When planning any new visible section, add a row here and a storyboard to its briefing.

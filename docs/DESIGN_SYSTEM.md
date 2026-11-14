@@ -141,6 +141,10 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 
 **Focus indicators:** `focus-ring` (2px `gold-700`, 4px offset) on light surfaces; `focus-ring-dark` (2px `gold-500`, 6.97:1 on `forest-850`) on dark surfaces.
 
+## 3b. Motion
+
+Animation principles, technologies, duration/easing tokens, reduced-motion and performance rules, and verification live in **[`ANIMATION_SYSTEM.md`](ANIMATION_SYSTEM.md)** (proposed; approved per section). Don't add motion that isn't documented there.
+
 ## 4. Images and placeholders
 
 Every image renders through `MediaFrame` with a fixed aspect ratio, so missing images never collapse the layout. Per-slot specs: [`ASSET_SPECIFICATIONS.md`](ASSET_SPECIFICATIONS.md).
