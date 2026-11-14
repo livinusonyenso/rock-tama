@@ -23,8 +23,8 @@ export function AnnouncementBar() {
 
   return (
     <aside aria-label="Store information" className="bg-forest-950 text-on-dark">
-      {/* hd:pl-22 (88px = 32px frame padding + 56px inset): reference bar content is inset on the left only (M2.7, measured) */}
-      <Container size="wide" className="hd:pl-22">
+      {/* xl:pl-bar-inset: fluid left inset, 32px at 1280 → 88px at 1440 as measured in the reference (V-008) */}
+      <Container size="wide" className="xl:pl-bar-inset">
         <ul className="flex min-h-announcement flex-wrap items-center justify-center gap-x-3.5 gap-y-1 py-2 text-sm sm:justify-start lg:gap-x-4 lg:text-base">
           {messages.map((message, index) => (
             <li

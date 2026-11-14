@@ -33,8 +33,8 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
   return (
     <header className="border-b border-line-light bg-ivory-100">
-      {/* hd:pl-23 (92px = 32px frame padding + 60px inset): the reference header row is inset on the left only (M2.7, measured) */}
-      <Container size="wide" className="flex h-header-sm items-center justify-between gap-6 lg:h-header hd:pl-23">
+      {/* xl:pl-header-inset: fluid left inset, 32px at 1280 → 92px at 1440 as measured in the reference (V-008) */}
+      <Container size="wide" className="flex h-header-sm items-center justify-between gap-6 lg:h-header xl:pl-header-inset">
         {homeHref ? (
           <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring shrink-0">
             {logo}
@@ -61,7 +61,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
           <span aria-hidden="true" className="hidden h-7 w-0.5 bg-gold-600 lg:ml-8 lg:mr-6 lg:block xl:ml-10 xl:mr-9" />
 
-          <ul className="flex items-center gap-5 xl:gap-8 hd:mr-2 hd:gap-7">
+          <ul className="flex items-center gap-5 xl:mr-2 xl:gap-7">
             {headerActions.map((action) => (
               // Search and account move into the mobile drawer below lg; the cart stays.
               <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:block"}>

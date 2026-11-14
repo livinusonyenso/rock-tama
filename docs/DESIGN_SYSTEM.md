@@ -118,12 +118,12 @@ Smaller-screen sizes are set per component with responsive classes (e.g. `text-5
 | `h-header` / `h-header-sm` | 5.25rem / 4rem | Header height, desktop / mobile |
 | `max-w-content` | 75rem (1200px) | Hero, origin |
 | `max-w-wide` | **90rem (1440px)** (corrected M2.7 from 1320, D-059) | Announcement bar, header (D-034), product grid, banner, footer. With 32px padding: content 32–1408 at 1440 = reference frame |
-| `hd:` breakpoint | 85rem (1360px) (M2.7, D-060) | Header-row left inset (`hd:pl-23` header, `hd:pl-22` bar) |
+| `pl-header-inset` / `pl-bar-inset` | `clamp()` tokens (D-064) | Fluid left padding of header / bar rows from `xl`: 32px at 1280 → 92 / 88px at 1440, constant above |
 | `rounded-button` / `rounded-card` / `rounded-banner` | 4px / 8px / 12px | Buttons / cards and media / wholesale banner |
 | `shadow-card` / `shadow-gold` | see `globals.css` | Product cards / primary CTA |
 
 Still **proposed**, not tokens (they are component decisions for later milestones):
-- Breakpoints: Tailwind defaults (`sm 640`, `md 768`, `lg 1024`, `xl 1280`) + custom `hd` 1360 (M2.7); the reference desktop layout applies from `lg`, its exact header-row geometry from `hd`.
+- Breakpoints: Tailwind defaults (`sm 640`, `md 768`, `lg 1024`, `xl 1280`); the reference desktop layout applies from `lg`; the header-row inset is fluid between 1280 and 1440 (D-064).
 - Gutters: 16 → 24 → 32 px (inside `Container`).
 - Heading rhythm: eyebrow → heading 12px, heading → subtitle 8px, heading block → content 32–40px.
 - Product grid: 4 / 2 / 1 columns, 12–16px gaps.
@@ -131,9 +131,9 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 
 ## 3a. Component specs (implemented)
 
-**Announcement bar (M2.2; refined M2.7):** icons `lg:size-6`; `hd:pl-22`; globe = filled `GlobeFilled` (Heroicons, MIT). Original M2.2 spec: `bg-forest-950`, `text-on-dark`, Source Sans 3 400; `text-sm` (14px) below `lg`, `text-base` (16px) from `lg`. Icons `gold-500`, stroke 1.75, `size-4` → `lg:size-5`. Dividers 1px × `h-3` → `lg:h-4`, `line-dark-strong` (full opacity). Gaps: icon–text `gap-2.5` → `lg:gap-3`; between items `gap-x-3.5` → `lg:gap-x-4`. Min-height 40px, `py-2`.
+**Announcement bar (M2.2; refined M2.7):** icons `lg:size-6`; `xl:pl-bar-inset` (fluid); globe = filled `GlobeFilled` (Heroicons, MIT). Original M2.2 spec: `bg-forest-950`, `text-on-dark`, Source Sans 3 400; `text-sm` (14px) below `lg`, `text-base` (16px) from `lg`. Icons `gold-500`, stroke 1.75, `size-4` → `lg:size-5`. Dividers 1px × `h-3` → `lg:h-4`, `line-dark-strong` (full opacity). Gaps: icon–text `gap-2.5` → `lg:gap-3`; between items `gap-x-3.5` → `lg:gap-x-4`. Min-height 40px, `py-2`.
 
-**Header (M2.4; refined M2.7, D-059–D-063):** At `hd`: `pl-23`, nav `gap-12`, divider `w-0.5 h-7` `ml-10 mr-9`, icons `gap-7` + `mr-2`; positions at 1440 within ±2px of the reference for logo, divider, icons, badge. Original M2.4 spec: `bg-ivory-100`, `border-b border-line-light`, height `h-header-sm` (64) → `lg:h-header` (84), `wide` container. Logo `h-10` → `lg:h-12` → `xl:h-16`. Nav: uppercase Source Sans 3 500, `text-sm` → `xl:text-base`, `tracking-nav`, `text-ink-900`, gap `gap-8` → `xl:gap-11`; active underline `::after` `h-0.75` `bg-gold-700`, `bottom-1`; Shop chevron `size-3.5` stroke 2. Divider `w-px h-7 bg-gold-600`, `lg:ml-8 lg:mr-6` → `xl:ml-12 xl:mr-9`. Icons `forest-heading`, stroke 1.75, `size-6` → `xl:size-6.5`, gap `gap-5` → `xl:gap-8`. Cart badge `size-6` circle `bg-gold-700`, white `text-xs` semibold, `-top-3.5 -right-2.5`. Live links: `hover:text-gold-700` + `focus-ring`; pending items: no hover, default cursor.
+**Header (M2.4; refined M2.7, D-059–D-063):** From `xl`: `pl-header-inset` (fluid), nav `gap-12`, divider `w-0.5 h-7` `ml-10 mr-9`, icons `gap-7` + `mr-2`; positions at 1440 within ±2px of the reference for logo, divider, icons, badge. Original M2.4 spec: `bg-ivory-100`, `border-b border-line-light`, height `h-header-sm` (64) → `lg:h-header` (84), `wide` container. Logo `h-10` → `lg:h-12` → `xl:h-16`. Nav: uppercase Source Sans 3 500, `text-sm` → `xl:text-base`, `tracking-nav`, `text-ink-900`, gap `gap-8` → `xl:gap-11`; active underline `::after` `h-0.75` `bg-gold-700`, `bottom-1`; Shop chevron `size-3.5` stroke 2. Divider `w-px h-7 bg-gold-600`, `lg:ml-8 lg:mr-6` → `xl:ml-12 xl:mr-9`. Icons `forest-heading`, stroke 1.75, `size-6` → `xl:size-6.5`, gap `gap-5` → `xl:gap-8`. Cart badge `size-6` circle `bg-gold-700`, white `text-xs` semibold, `-top-3.5 -right-2.5`. Live links: `hover:text-gold-700` + `focus-ring`; pending items: no hover, default cursor.
 
 **Mobile header (M2.6, below `lg`):** logo `h-9` → `sm:h-10`; cart (badge as desktop); menu button `size-11` with `menu` icon `size-7`, stroke 1.75, `text-forest-heading`, `-mr-2` optical alignment. Search/account hidden (`hidden lg:block`).
 

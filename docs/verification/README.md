@@ -16,7 +16,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.2 | `m2.2-announcement-vs-reference-1440.png` | Reference bar (scaled to 1440) vs implementation, full width + 2× detail |
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
 | M2.4 | `m2.4/header-desktop-reference.png`, `m2.4/report.md` | Header vs reference at 1440 (saved with `--save m2.4`). **Header baselines not yet approved** (awaiting owner review) |
-| M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states. **Awaiting owner visual approval; baselines not promoted** |
+| M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states; V-008 sweep + 1359/1360 images. **Awaiting owner visual approval; baselines not promoted** |
 | M2.6 | `m2.6/` | Open drawer at 320 / 375 / 768, the 320px page with header, and the full run report (119 checks) |
 | M2.3 | `m2.3-logo-placeholders-1440-375.png` | Header (ivory) and footer (forest) logo placeholders, rendered in a temporary harness at 1440 and 375 |
 
@@ -31,7 +31,7 @@ V-001–V-005 were recorded at the M2.2/M2.4 reviews and handled in M2.7. Positi
 | V-003 / V-005 | **Closed, no change:** weights already match by stroke density (D-062) |
 | V-006 | **Open, accepted residual:** nav word centres −8/−5/0/+3/+5/+1 and bar globe/text start −6 px, caused by Source Sans 3 letter widths (CONTACT 12px narrower, "International…" 6px wider than the reference face). Only a font change would remove it, which is out of scope |
 | V-007 | **Open, minor:** bar truck ink 22px vs 26px; truck and globe share one icon size (globe matches at 20 vs 21) |
-| V-008 | **By design:** at 1359→1360px the logo shifts 60px right as the reference inset switches on (D-060) |
+| V-008 | **Resolved (D-064):** the 60px step at 1359→1360 is replaced by a fluid `clamp()` inset; max step between adjacent widths 1px. Evidence: `m2.7-after/v008-logo-position-sweep.png`, `m2.7-after/v008-1359-vs-1360.png` |
 | — | Deliberate: `gold-700` underline/badge (D-043); logo is a placeholder until the official SVG |
 
 Original entries:

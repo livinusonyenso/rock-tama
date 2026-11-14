@@ -26,7 +26,7 @@ const config = {
     { name: "tablet", width: 768, height: 1024 },
     { name: "laptop", width: 1024, height: 768 },
     { name: "large", width: 1280, height: 800 },
-    { name: "hd", width: 1366, height: 768 }, // common laptop width; first width with the header-row inset (≥1360)
+    { name: "hd", width: 1366, height: 768 }, // common laptop width; fluid header-row inset mid-range
     { name: "desktop", width: 1440, height: 900, compareWithReference: true },
   ],
 
