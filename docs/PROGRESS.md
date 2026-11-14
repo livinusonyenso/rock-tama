@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.6 MobileNav complete (2026-11-15)**; stopped before M2.7 (header visual refinement).
+- **Current task:** M2.7 Header visual refinement. M2.6 **accepted** (2026-11-15; D-053–D-057 approved). Investigation done (`docs/verification/m2.7-investigation/`); **M2.7 briefing presented; awaiting approval.**
 
 ## Completed
 

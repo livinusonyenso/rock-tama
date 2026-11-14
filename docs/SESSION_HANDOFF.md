@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15 (after M2.6)_
 
-**Where we are:** M1–M2.5 and M2.V accepted. **M2.6 (mobile navigation) complete, verified (119 checks), committed; stopped before M2.7 (header visual refinement).** Header and drawer have provisional (NOT approved) references; announcement has approved baselines. The page below the header is still the create-next-app starter (replaced in M3).
+**Where we are:** M1–M2.5 and M2.V accepted. M2.6 accepted. **M2.7 (header visual refinement): measured investigation in `docs/verification/m2.7-investigation/README.md`; briefing presented, awaiting approval. No code changed yet.** Header and drawer have provisional (NOT approved) references; announcement has approved baselines. The page below the header is still the create-next-app starter (replaced in M3).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
