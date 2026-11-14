@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { Icon } from "@/components/icons/Icon";
+import { MobileNav } from "@/components/layout/MobileNav";
+import { MobileNavPanel } from "@/components/layout/MobileNavPanel";
 import { NavLink } from "@/components/layout/NavLink";
 import { Container } from "@/components/ui/Container";
 import { headerActions, mainNav, navigationCopy } from "@/content/navigation";
 import { site } from "@/content/site";
-import { resolveHref } from "@/lib/navigation";
-import type { HeaderAction, NavItem } from "@/types/content";
+import { resolveHref, resolveNavItem } from "@/lib/navigation";
+import type { HeaderAction } from "@/types/content";
 
 type SiteHeaderProps = {
   /** Runtime cart size (D-029). Supplied by the caller; the cart feature will provide it later. */
@@ -22,34 +24,12 @@ const navItemClass = [
 ].join(" ");
 
 /**
- * Destination for a top-level nav item. An item with a dropdown (Shop) is
- * interactive only through its children's availability, never its own route
- * (D-048). While none are available it renders as pending text.
+ * Main site header (UI_BREAKDOWN §02). Server Component; NavLink and MobileNav
+ * are the only client islands. Below lg: logo · cart · menu button (D-053).
  */
-function resolveNavItem(item: NavItem): string | null {
-  if (!item.children) return resolveHref(item.route);
-
-  const available = item.children
-    .map((child) => resolveHref(child.route))
-    .filter((href): href is string => href !== null);
-
-  if (available.length > 0) {
-    // Guard (D-048): fails the build/prerender instead of shipping a link that
-    // shows a dropdown arrow but has no dropdown.
-    throw new Error(
-      `"${item.label}" now has an available destination (${available[0]}) but its dropdown (ShopMenu) ` +
-        "is not implemented. Build task M2.5b (docs/IMPLEMENTATION_PLAN.md, M5; D-048) in the same change " +
-        "that makes the destination available.",
-    );
-  }
-
-  return null;
-}
-
-/** Main site header (UI_BREAKDOWN §02). Server Component; only NavLink runs on the client. */
 export function SiteHeader({ cartCount }: SiteHeaderProps) {
   const homeHref = resolveHref("home");
-  const logo = <Logo variant="header" className="h-10 lg:h-12 xl:h-16" />;
+  const logo = <Logo variant="header" className="h-9 sm:h-10 lg:h-12 xl:h-16" />;
 
   return (
     <header className="border-b border-line-light bg-ivory-100">
@@ -82,11 +62,23 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
           <ul className="flex items-center gap-5 xl:gap-8">
             {headerActions.map((action) => (
-              <li key={action.id}>
+              // Search and account move into the mobile drawer below lg; the cart stays.
+              <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:block"}>
                 <HeaderActionItem action={action} href={resolveHref(action.route)} cartCount={cartCount} />
               </li>
             ))}
           </ul>
+
+          <div className="ml-4 lg:hidden">
+            <MobileNav
+              label={navigationCopy.menu}
+              closeLabel={navigationCopy.closeMenu}
+              openIcon={<Icon name="menu" strokeWidth={1.75} className="size-7" />}
+              closeIcon={<Icon name="x" strokeWidth={1.75} className="size-7" />}
+            >
+              <MobileNavPanel />
+            </MobileNav>
+          </div>
         </div>
       </Container>
     </header>

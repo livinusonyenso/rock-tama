@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) and M2.5 (Shop gating + build guard; `ShopMenu` deferred to M5 as M2.5b) done; next M2.6 (`MobileNav`). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) M2.5 (Shop gating + build guard; `ShopMenu` deferred to M5 as M2.5b) and M2.6 (`MobileNav` drawer) done; next M2.7 (header visual refinement). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 
@@ -62,7 +62,7 @@ Update `docs/PROGRESS.md` (state, completed + how verified, blockers, next task)
 
 ## Visual verification
 
-Run `npm run verify:visual` after every UI task (add the section to `scripts/visual-check.config.mjs` first). It checks overflow, loading, console errors and baseline regressions, and builds a reference comparison sheet that **a person must review**; passing is not proof of pixel accuracy. Output goes to git-ignored `.verification/`; approved baselines go to `docs/verification/baselines/` via `--approve`, only after owner acceptance; provisional (NOT approved) references go to `docs/verification/provisional/` via `--provisional`. Details: `docs/DEVELOPMENT_GUIDELINES.md`.
+Run `npm run verify:visual` after every UI task (add the section to `scripts/visual-check.config.mjs` first). It checks overflow, loading, console errors, baseline regressions and scripted interactive states (`actions`/`expect`), and builds a reference comparison sheet that **a person must review**; passing is not proof of pixel accuracy. Output goes to git-ignored `.verification/`; approved baselines go to `docs/verification/baselines/` via `--approve`, only after owner acceptance; provisional (NOT approved) references go to `docs/verification/provisional/` via `--provisional`. Details: `docs/DEVELOPMENT_GUIDELINES.md`.
 
 ## Commands
 

@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** M2.6 MobileNav. M2.5 **accepted** (2026-11-15). **M2.6 briefing presented; awaiting approval.**
+- **Current task:** none. **M2.6 MobileNav complete (2026-11-15)**; stopped before M2.7 (header visual refinement).
 
 ## Completed
 
@@ -33,6 +33,8 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **M2.5** `SiteHeader.resolveNavItem`: dropdown items are interactive only via children's availability; **build guard** throws if a child becomes available before `ShopMenu` (M2.5b, moved to M5). `visual-check.mjs`: `--provisional` + `docs/verification/provisional/` (header refs from the accepted M2.4 run) | lint ✓ · tsc ✓ · build ✓ · `verify:visual` **32 passed, 0 failed**; header **0.00%** vs the M2.4 screenshots at all 4 widths (no visual change), labelled "provisional reference (NOT approved)"; announcement approved baselines 0.00% · **guard test** (temporary `products.built = true`, reverted): `next build` exit 1 with the actionable message naming `/#products`, ShopMenu, M2.5b · `--approve --provisional` together → exit 2 · a11y re-check: SHOP still "Shop (Coming soon)", not focusable, 0 `#` links, Tab logo → Home |
 
+| 2026-11-15 | **M2.6** `MobileNav` (Client, native `<dialog>`), `MobileNavPanel` (Server), `NavLink` `tone`/`pendingLabel`, `resolveNavItem` moved to `lib/navigation.ts`, `menu`/`x` icons, `focus-ring-dark`, CSS scroll lock, mobile header (logo · cart · menu); verification tooling: `viewports`/`actions`/`expect`/`media` + 320px viewport | lint ✓ · tsc ✓ · build ✓ · `verify:visual` **119 passed, 0 failed** (exit 0). At 320/375/768: menu visible, search/account hidden, drawer modal (top layer, inert background), `aria-expanded` sync, focus moved in, focus contained after 7×Tab, Escape closes + focus returns to menu button + scroll restored, scroll locked while open, drawer not clipped, pending rows not focusable, 0 fake links, current page marked, backdrop tap closes, link tap closes, reduced motion → no transition; no overflow or console errors in any state. 1024/1440: no menu button, desktop nav visible, desktop header **0.00%** vs provisional refs (unchanged); announcement baselines 0.00% · drawer + 320px header screenshots reviewed · first run caught a test bug (reduced-motion check read duration, Tailwind sets property), fixed in the check · mobile/tablet header provisional refs refreshed (intended redesign) |
+
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
@@ -52,4 +54,4 @@ _Last updated: 2026-11-14_
 
 ## Next proposed task
 
-**M2.6 Mobile navigation (`MobileNav`, Client):** hamburger + drawer below `lg`, rendering `mainNav` via `resolveHref` (pending items as text, Shop children as an indented list once available), focus management, Escape, scroll lock, dark/light focus variant as needed. Needs a briefing.
+**M2.7 Header visual refinement:** V-001 (filled globe, licensed SVG), V-002/V-004 (local right-edge alignment of bar + header), V-003/V-005 (typography within Source Sans 3); then owner review and approved baselines for the header and drawer. Needs a briefing.

@@ -1,4 +1,4 @@
-import { ChevronDown, Globe, Search, ShoppingCart, Truck, User, type LucideIcon } from "lucide-react";
+import { ChevronDown, Globe, Menu, Search, ShoppingCart, Truck, User, X, type LucideIcon } from "lucide-react";
 import type { IconName } from "@/types/content";
 
 // Record<IconName, …> makes the map exhaustive: adding a name to IconName
@@ -10,6 +10,8 @@ const icons: Record<IconName, LucideIcon> = {
   user: User,
   "shopping-cart": ShoppingCart,
   "chevron-down": ChevronDown,
+  menu: Menu,
+  x: X,
 };
 
 type IconProps = {

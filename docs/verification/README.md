@@ -3,7 +3,7 @@
 Run `npm run verify:visual` (how and when: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification"). This folder holds **curated, committed** material only:
 
 - `baselines/`: **approved** section screenshots per viewport, used for regression checks. Updated only with `--approve` after review (D-042). Current: `announcement-{mobile,tablet,laptop,desktop}.png` (from the accepted M2.2 state, captured 2026-11-15 on macOS Chrome).
-- `provisional/`: **provisional, NOT approved** regression references (D-049). Current: `header-{mobile,tablet,laptop,desktop}.png`, copied from the accepted M2.4 run (`6132526`). Replace with approved baselines after V-004/V-005 are resolved in M2.7.
+- `provisional/`: **provisional, NOT approved** regression references (D-049). Current: `header-{laptop,desktop}.png` (from the accepted M2.4 run `6132526`); `header-{small,mobile,tablet}.png` and `mobile-nav-open-{small,mobile,tablet}.png` (from M2.6, pending owner review). Replace with approved baselines after owner acceptance (header: after V-004/V-005 in M2.7).
 - `<task>/`: optional evidence saved with `--save <task>`.
 - the earlier evidence images and the open-differences log below.
 
@@ -16,6 +16,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.2 | `m2.2-announcement-vs-reference-1440.png` | Reference bar (scaled to 1440) vs implementation, full width + 2× detail |
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
 | M2.4 | `m2.4/header-desktop-reference.png`, `m2.4/report.md` | Header vs reference at 1440 (saved with `--save m2.4`). **Header baselines not yet approved** (awaiting owner review) |
+| M2.6 | `m2.6/` | Open drawer at 320 / 375 / 768, the 320px page with header, and the full run report (119 checks) |
 | M2.3 | `m2.3-logo-placeholders-1440-375.png` | Header (ivory) and footer (forest) logo placeholders, rendered in a temporary harness at 1440 and 375 |
 
 ## Open visual differences (to fix in M2.7 "Header visual refinement")

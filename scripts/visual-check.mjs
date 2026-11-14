@@ -27,7 +27,9 @@ import config from "./visual-check.config.mjs";
 
 /**
  * @typedef {{ name: string, width: number, height: number, compareWithReference?: boolean }} Viewport
- * @typedef {{ name: string, page: string, selector: string, reference: { x: number, y: number, width: number, height: number } }} Section
+ * @typedef {{ click?: string, clickAt?: { x: number, y: number }, press?: string, times?: number, wait?: number }} Action
+ * @typedef {{ name: string, page: string, selector?: string, reference?: { x: number, y: number, width: number, height: number },
+ *   viewports?: string[], actions?: Action[], expect?: { name: string, js: string }[], media?: { name: string, value: string }[] }} Section
  * @typedef {{ port: number, cdpPort: number, reference: { path: string, width: number }, viewports: Viewport[],
  *   pages: { name: string, path: string }[], sections: Section[],
  *   regression: { pixelTolerance: number, maxDiffRatio: number }, ignoreConsole: (string|RegExp)[] }} VisualCheckConfig
@@ -289,6 +291,58 @@ async function main() {
 
   const captured = []; // { section, viewport, file, png, rect }
 
+  const appliesTo = (section, viewport) => !section.viewports || section.viewports.includes(viewport.name);
+  const isInteractive = (section) => Boolean(section.actions || section.expect || section.media);
+
+  /** Screenshot one section (by selector) and queue it for reference/regression comparison. */
+  async function captureSection(section, viewport) {
+    const sScope = `${section.name} @${viewport.name} ${viewport.width}px`;
+    const rect = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(section.selector)});
+      if (!el) return null; const r = el.getBoundingClientRect(); const cs = getComputedStyle(el);
+      return { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height, visible: r.width > 0 && r.height > 0 && cs.display !== "none" && cs.visibility !== "hidden" }; })()`);
+    if (!rect) {
+      record(sScope, "section present", "FAIL", `selector not found: ${section.selector}`);
+      return;
+    }
+    record(sScope, "section visible", rect.visible ? "PASS" : "FAIL", `${Math.round(rect.width)}×${Math.round(rect.height)}`);
+    if (!rect.visible) return;
+    const file = join(RUN_DIR, "sections", `${section.name}-${viewport.name}.png`);
+    const png = await screenshot({ x: rect.x, y: rect.y, width: rect.width, height: rect.height });
+    writeFileSync(file, png);
+    captured.push({ section, viewport, file, png, rect });
+  }
+
+  const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32 };
+  async function mouseClick(x, y) {
+    await cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x, y });
+    await cdp.send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+    await cdp.send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+  }
+  /** Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms } */
+  async function runAction(action) {
+    if (action.click) {
+      const point = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.click)});
+        if (!el) return null; const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+      if (!point) throw new Error(`action target not found: ${action.click}`);
+      await mouseClick(point.x, point.y);
+    } else if (action.clickAt) {
+      await mouseClick(action.clickAt.x, action.clickAt.y);
+    } else if (action.press) {
+      const code = KEYS[action.press];
+      if (!code) throw new Error(`unsupported key: ${action.press}`);
+      for (let i = 0; i < (action.times ?? 1); i++) {
+        const key = { key: action.press, code: action.press === " " ? "Space" : action.press, windowsVirtualKeyCode: code };
+        await cdp.send("Input.dispatchKeyEvent", { type: "keyDown", ...key });
+        await cdp.send("Input.dispatchKeyEvent", { type: "keyUp", ...key });
+      }
+    } else if (action.wait) {
+      await wait(action.wait);
+    } else {
+      throw new Error(`unknown action: ${JSON.stringify(action)}`);
+    }
+    await wait(150);
+  }
+
   for (const viewport of viewports) {
     await cdp.send("Emulation.setDeviceMetricsOverride", { width: viewport.width, height: viewport.height, deviceScaleFactor: 1, mobile: viewport.width < 640 });
     for (const page of pages) {
@@ -317,24 +371,44 @@ async function main() {
         writeFileSync(fullFile, await screenshot({ x: 0, y: 0, width: viewport.width, height: Math.ceil(size.height) }));
       }
 
-      for (const section of sections.filter((s) => s.page === page.name)) {
-        const sScope = `${section.name} @${viewport.name} ${viewport.width}px`;
-        const rect = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(section.selector)});
-          if (!el) return null; const r = el.getBoundingClientRect(); const cs = getComputedStyle(el);
-          return { x: r.left + scrollX, y: r.top + scrollY, width: r.width, height: r.height, visible: r.width > 0 && r.height > 0 && cs.display !== "none" && cs.visibility !== "hidden" }; })()`);
-        if (!rect) {
-          record(sScope, "section present", "FAIL", `selector not found: ${section.selector}`);
-          continue;
-        }
-        record(sScope, "section visible", rect.visible ? "PASS" : "FAIL", `${Math.round(rect.width)}×${Math.round(rect.height)}`);
-        if (!rect.visible) continue;
-        const file = join(RUN_DIR, "sections", `${section.name}-${viewport.name}.png`);
-        const png = await screenshot({ x: rect.x, y: rect.y, width: rect.width, height: rect.height });
-        writeFileSync(file, png);
-        captured.push({ section, viewport, file, png, rect });
+      const onPage = sections.filter((s) => s.page === page.name && appliesTo(s, viewport));
+      for (const section of onPage.filter((s) => !isInteractive(s))) {
+        await captureSection(section, viewport);
       }
 
       record(scope, "no console errors", consoleErrors.length ? "FAIL" : "PASS", consoleErrors.join(" | "));
+
+      // Interactive states: each gets a fresh page load so states never leak into each other.
+      for (const section of onPage.filter(isInteractive)) {
+        const sScope = `${section.name} @${viewport.name} ${viewport.width}px`;
+        consoleErrors = [];
+        try {
+          if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: section.media });
+          await cdp.send("Page.navigate", { url: new URL(page.path, baseUrl).href });
+          await cdp.evaluate(SETTLE);
+          for (const action of section.actions ?? []) await runAction(action);
+          await wait(350); // let transitions finish (drawer: 200ms)
+        } catch (error) {
+          record(sScope, "interaction", "INCOMPLETE", error.message);
+          if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+          continue;
+        }
+        for (const expectation of section.expect ?? []) {
+          try {
+            const value = await cdp.evaluate(`(() => (${expectation.js}))()`);
+            record(sScope, expectation.name, value ? "PASS" : "FAIL", value ? "" : `got ${JSON.stringify(value)}`);
+          } catch (error) {
+            record(sScope, expectation.name, "INCOMPLETE", error.message);
+          }
+        }
+        const { overflow: o, offenders: off } = await cdp.evaluate(OVERFLOW);
+        record(sScope, "no horizontal overflow", o > 0 ? "FAIL" : "PASS", o > 0 ? `+${o}px; ${off.join(", ")}` : "");
+        if (section.selector) await captureSection(section, viewport);
+        else writeFileSync(join(RUN_DIR, "sections", `${section.name}-${viewport.name}.png`), await screenshot());
+        await wait(100);
+        record(sScope, "no console errors", consoleErrors.length ? "FAIL" : "PASS", consoleErrors.join(" | "));
+        if (section.media) await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+      }
     }
   }
 
@@ -343,7 +417,7 @@ async function main() {
     const sScope = `${section.name} @${viewport.name} ${viewport.width}px`;
     const implData = `data:image/png;base64,${png.toString("base64")}`;
 
-    if (viewport.compareWithReference) {
+    if (viewport.compareWithReference && section.reference) {
       const scale = viewport.width / config.reference.width;
       await renderScratch(
         sheetHtml({ refData, refWidth: config.reference.width, rect: section.reference, scale, implData, implWidth: Math.round(rect.width), implHeight: Math.round(rect.height), title: sScope }),

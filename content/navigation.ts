@@ -30,4 +30,7 @@ export const headerActions: readonly HeaderAction[] = [
 export const navigationCopy = {
   /** Accessible suffix for items whose destination isn't available yet (D-027). */
   comingSoon: "Coming soon",
+  /** Mobile menu button and drawer name. */
+  menu: "Menu",
+  closeMenu: "Close menu",
 } as const;

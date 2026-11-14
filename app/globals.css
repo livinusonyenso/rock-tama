@@ -119,9 +119,23 @@
   }
 }
 
+/* Keyboard focus indicator on dark-green surfaces (gold-500: 6.97:1 on forest-850; D-047) */
+@utility focus-ring-dark {
+  border-radius: var(--radius-button);
+  &:focus-visible {
+    outline: 2px solid var(--color-gold-500);
+    outline-offset: 4px;
+  }
+}
+
 @layer base {
   html {
     color-scheme: light;
+  }
+
+  /* Lock background scrolling while the mobile drawer is open; restores automatically on close. */
+  html:has(#mobile-nav[open]) {
+    overflow: hidden;
   }
 
   body {

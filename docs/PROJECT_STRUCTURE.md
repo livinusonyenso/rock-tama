@@ -38,7 +38,8 @@ components/
 │   ├── SiteHeader.tsx         # ✓ M2.4 (desktop)
 │   ├── NavLink.tsx            # ✓ M2.4 "use client"
 │   ├── ShopMenu.tsx           # "use client"
-│   ├── MobileNav.tsx          # "use client"
+│   ├── MobileNav.tsx          # ✓ M2.6 "use client" (native <dialog>)
+│   ├── MobileNavPanel.tsx     # ✓ M2.6 Server, drawer contents
 │   ├── SiteFooter.tsx
 │   └── NewsletterForm.tsx     # "use client"
 ├── home/                      # homepage-only sections
@@ -77,7 +78,7 @@ scripts/
 └── visual-check.config.mjs    # viewports, pages, sections + reference rects
 
 lib/
-└── navigation.ts              # ✓ M2.1 resolveHref() (only logic; content stays data-only)
+└── navigation.ts              # ✓ M2.1 resolveHref(), ✓ M2.6 resolveNavItem() (+ temporary Shop guard)
 
 public/
 ├── brand/                     # logo SVGs (to be supplied)

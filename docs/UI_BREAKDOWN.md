@@ -75,11 +75,10 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 | Cart badge | Server with static `0` for now. Becomes dynamic only when the cart (Scope B) is approved. | |
 
 - Semantics: `<header>` › logo link (`aria-label="Rock Tama home"`) › `<nav aria-label="Main">` › `<ul>`. Icon-only controls get accessible names ("Search", "Account", "Cart, 0 items").
-- **Tablet (768–1023):** logo left, icons right, hamburger replaces the text nav and opens a drawer.
-- **Mobile (<768):** logo left; search, cart and hamburger right. Account moves into the drawer.
+- **[VERIFIED] Below 1024 (M2.6):** logo · cart (0) · menu button; search and account live in the drawer (D-053). Drawer per D-054–D-056; all interactive states verified at 320/375/768 (`docs/verification/m2.6/`).
 - Sticky header is **not shown** in the reference. Proposed: not sticky for v1 (decision pending).
 
-**[VERIFIED] Desktop header implemented M2.4 (2026-11-15):** matches the reference layout at 1440 for nav word widths, item spacing, icon size and underline weight (sheet: `docs/verification/m2.4/header-desktop-reference.png`). Deliberate deviations: `gold-700` underline/badge (D-043). Open: right cluster ~55px left of the reference (same cause as V-002), nav text slightly lighter than the reference (V-003); both for M2.7. Shop dropdown (M2.5) and mobile menu (M2.6) not yet built.
+**[VERIFIED] Desktop header implemented M2.4 (2026-11-15):** matches the reference layout at 1440 for nav word widths, item spacing, icon size and underline weight (sheet: `docs/verification/m2.4/header-desktop-reference.png`). Deliberate deviations: `gold-700` underline/badge (D-043). Open: right cluster ~55px left of the reference (same cause as V-002), nav text slightly lighter than the reference (V-003); both for M2.7. Shop dropdown deferred to M2.5b (M5).
 
 ## 03 — Hero
 

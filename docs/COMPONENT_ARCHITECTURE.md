@@ -26,14 +26,16 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 
 | Component | Section | Responsibility | Reusable | Boundary | Props | Dependencies | Responsive | Priority |
 |---|---|---|---|---|---|---|---|---|
-| `NavLink` ✓ M2.4 | 02 (dropdown M2.5, mobile M2.6) | `href` string → link with `aria-current` on exact path match (never for `#` anchors), hover + `focus-ring`; `href` null → non-interactive text + sr-only "(Coming soon)" (D-027) | Yes | **Client** (`usePathname`) | `href: string \| null`, `children`, `className?` | `next/link`, `navigationCopy` | — | **Implemented** |
+| `NavLink` ✓ M2.4 | 02 (dropdown M2.5, mobile M2.6) | `href` string → link with `aria-current` on exact path match (never for `#` anchors), hover + `focus-ring`; `href` null → non-interactive text + sr-only "(Coming soon)" (D-027) | Yes | **Client** (`usePathname`) | `href: string \| null`, `children`, `className?`, `tone?: "light" \| "dark"`, `pendingLabel?: "hidden" \| "visible"`; pending items carry `data-pending` | `next/link`, `navigationCopy` | — | **Implemented** (M2.4; extended M2.6) |
 | `ShopMenu` | 02 | "Shop" disclosure dropdown | No | **Client** | `label`, `items: { label, href }[]` (available children only) | `NavLink`, `Icon` | Desktop only; inside `MobileNav` it is a simple list | **Deferred to M2.5b (built in M5)**; spec below |
-| `MobileNav` | 02 | Hamburger button + drawer with nav, account, focus handling, scroll lock | No | **Client** | `items` | `NavLink` | Visible < `lg` | M2 |
+| `MobileNav` ✓ M2.6 | 02 | Menu button + native modal `<dialog>` drawer; `aria-expanded` sync, focus return, backdrop/link close, close at `lg` | No | **Client** | `label`, `closeLabel`, `openIcon`, `closeIcon` (server-rendered elements), `children` (drawer contents) | — | Rendered < `lg` only | **Implemented** `components/layout/MobileNav.tsx` |
+| `MobileNavPanel` ✓ M2.6 | 02 | Drawer contents: `mainNav` via `resolveNavItem`, Search/Account via `resolveHref` | No | **Server** (passed as `children`, so no extra client JS) | none | `NavLink`, `Icon` | — | **Implemented** `components/layout/MobileNavPanel.tsx` |
 | `NewsletterForm` | 09 | Email form UI with validation and pending/success/error states | No | **Client** (`useActionState`) | `action?` (wired after Scope B) | — | Full width on mobile | M7 (UI only) |
 | `SearchTrigger` | 02 | **Pending decision:** link vs. overlay. If it's a link, it isn't a component | — | — | — | — | — | Decide in M2 |
 
 ### `ShopMenu` specification (M2.5b; approved D-048, D-050–D-052)
 
+- **Shared resolver:** `resolveNavItem` (with the temporary guard) lives in `lib/navigation.ts` and is used by both `SiteHeader` and `MobileNavPanel` (M2.6). M2.5b must update **both**: `ShopMenu` on desktop and an indented list of available children under Shop in `MobileNavPanel`.
 - **When it renders:** `SiteHeader` resolves each child of a nav item with `children` via `resolveHref`. No available child → pending text with arrow and "Coming soon" (current behaviour). One or more → `<ShopMenu>` with only the available children (unavailable ones omitted). Until `ShopMenu` exists, the second case **throws at build** (guard in `SiteHeader.resolveNavItem`). Replace the throw with `<ShopMenu>` in M2.5b.
 - **Pattern:** disclosure navigation. `<button type="button" aria-expanded aria-controls="shop-menu">SHOP <chevron/></button>` + `<ul id="shop-menu">` of `NavLink`s. Not `role="menu"`.
 - **Interaction:** click/tap/Enter/Space toggles. **Escape** closes and returns focus to the button. Outside pointer-down and focus leaving the component close it, as does following a link. **No hover-to-open** (touch parity). Optional Down-arrow moves focus into the list.

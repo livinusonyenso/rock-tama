@@ -134,7 +134,11 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 
 **Header (M2.4, tuned against the reference at 1440px):** `bg-ivory-100`, `border-b border-line-light`, height `h-header-sm` (64) → `lg:h-header` (84), `wide` container. Logo `h-10` → `lg:h-12` → `xl:h-16`. Nav: uppercase Source Sans 3 500, `text-sm` → `xl:text-base`, `tracking-nav`, `text-ink-900`, gap `gap-8` → `xl:gap-11`; active underline `::after` `h-0.75` `bg-gold-700`, `bottom-1`; Shop chevron `size-3.5` stroke 2. Divider `w-px h-7 bg-gold-600`, `lg:ml-8 lg:mr-6` → `xl:ml-12 xl:mr-9`. Icons `forest-heading`, stroke 1.75, `size-6` → `xl:size-6.5`, gap `gap-5` → `xl:gap-8`. Cart badge `size-6` circle `bg-gold-700`, white `text-xs` semibold, `-top-3.5 -right-2.5`. Live links: `hover:text-gold-700` + `focus-ring`; pending items: no hover, default cursor.
 
-**Focus indicator:** `focus-ring` utility (2px `gold-700` outline, 4px offset) on light surfaces.
+**Mobile header (M2.6, below `lg`):** logo `h-9` → `sm:h-10`; cart (badge as desktop); menu button `size-11` with `menu` icon `size-7`, stroke 1.75, `text-forest-heading`, `-mr-2` optical alignment. Search/account hidden (`hidden lg:block`).
+
+**Mobile drawer (M2.6):** `<dialog>` `bg-forest-850 text-on-dark`, `w-5/6 max-w-sm h-dvh`, right edge, `backdrop:bg-forest-950/60`, `translate-x` slide-in 200ms `ease-out` via `starting:` + `motion-reduce:transition-none`. Inner padding `px-6 pt-4 pb-8`. Eyebrow "MENU" `text-eyebrow tracking-eyebrow text-gold-500`; close button `size-11`, `x` icon `size-7`. Main rows `font-serif text-2xl font-semibold min-h-12 pl-4`, separators `divide-line-dark/40` + `border-y`, current page `before:w-0.75 bg-gold-500`, pending rows `text-on-dark-muted` with a "COMING SOON" tag (`font-sans text-xs font-semibold uppercase tracking-eyebrow`). Secondary rows `text-base` with `gold-500` icons `size-5`; group gap `mt-6`.
+
+**Focus indicators:** `focus-ring` (2px `gold-700`, 4px offset) on light surfaces; `focus-ring-dark` (2px `gold-500`, 6.97:1 on `forest-850`) on dark surfaces.
 
 ## 4. Images and placeholders
 
