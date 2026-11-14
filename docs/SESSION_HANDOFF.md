@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15_
 
-**Where we are:** M1 is approved. **M2.1 (typed site and navigation content) is complete and committed; stopped for owner approval before M2.2.** Nothing new is visible on the page yet; `app/page.tsx` is still the create-next-app starter (replaced in M3).
+**Where we are:** M1 and M2.1 are approved. **M2.2 (lucide-react + `Container` + `AnnouncementBar`) briefing presented; awaiting approval to implement.** Briefing proposals awaiting answers: `placement`/`priority` fields on announcements, `h-announcement` token 36→40px as a min-height, header/bar use the `wide` container, `components/icons/Icon.tsx` name→Lucide map. Nothing new is visible on the page yet; `app/page.tsx` is still the create-next-app starter (replaced in M3).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)

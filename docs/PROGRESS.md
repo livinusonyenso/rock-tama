@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.1 complete (2026-11-15)**; stopped for owner approval before M2.2.
+- **Current task:** M2.2, Announcement Bar. M2.1 accepted by owner (2026-11-15). **M2.2 briefing presented; awaiting approval to implement.**
 
 ## Completed
 
