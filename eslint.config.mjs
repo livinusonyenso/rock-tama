@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated visual-verification output (screenshots, reports, headless Chrome profile).
+    ".verification/**",
   ]),
 ]);
 
