@@ -35,8 +35,8 @@ app/
 components/
 ├── layout/
 │   ├── AnnouncementBar.tsx    # ✓ M2.2
-│   ├── SiteHeader.tsx
-│   ├── NavLink.tsx            # "use client"
+│   ├── SiteHeader.tsx         # ✓ M2.4 (desktop)
+│   ├── NavLink.tsx            # ✓ M2.4 "use client"
 │   ├── ShopMenu.tsx           # "use client"
 │   ├── MobileNav.tsx          # "use client"
 │   ├── SiteFooter.tsx

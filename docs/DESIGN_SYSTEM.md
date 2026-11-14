@@ -103,7 +103,7 @@ Fallbacks: serif → `Georgia, "Times New Roman", serif`; sans → `system-ui, -
 | `text-eyebrow` | 0.8125rem (13px) | 1.4 | Eyebrows (pair with `tracking-eyebrow`, uppercase, semibold) |
 | Tailwind defaults (`text-sm`, `text-base`, `text-lg`) | — | — | Body, nav, buttons, footer |
 
-Tracking: `tracking-eyebrow` (0.2em), `tracking-nav` (0.06em).
+Tracking: `tracking-eyebrow` (0.2em), `tracking-nav` (0.04em; tuned in M2.4, was 0.06em).
 
 Smaller-screen sizes are set per component with responsive classes (e.g. `text-5xl lg:text-display`).
 
@@ -131,6 +131,10 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 ## 3a. Component specs (implemented)
 
 **Announcement bar (M2.2, tuned against the reference at 1440px):** `bg-forest-950`, `text-on-dark`, Source Sans 3 400; `text-sm` (14px) below `lg`, `text-base` (16px) from `lg`. Icons `gold-500`, stroke 1.75, `size-4` → `lg:size-5`. Dividers 1px × `h-3` → `lg:h-4`, `line-dark-strong` (full opacity). Gaps: icon–text `gap-2.5` → `lg:gap-3`; between items `gap-x-3.5` → `lg:gap-x-4`. Min-height 40px, `py-2`.
+
+**Header (M2.4, tuned against the reference at 1440px):** `bg-ivory-100`, `border-b border-line-light`, height `h-header-sm` (64) → `lg:h-header` (84), `wide` container. Logo `h-10` → `lg:h-12` → `xl:h-16`. Nav: uppercase Source Sans 3 500, `text-sm` → `xl:text-base`, `tracking-nav`, `text-ink-900`, gap `gap-8` → `xl:gap-11`; active underline `::after` `h-0.75` `bg-gold-700`, `bottom-1`; Shop chevron `size-3.5` stroke 2. Divider `w-px h-7 bg-gold-600`, `lg:ml-8 lg:mr-6` → `xl:ml-12 xl:mr-9`. Icons `forest-heading`, stroke 1.75, `size-6` → `xl:size-6.5`, gap `gap-5` → `xl:gap-8`. Cart badge `size-6` circle `bg-gold-700`, white `text-xs` semibold, `-top-3.5 -right-2.5`. Live links: `hover:text-gold-700` + `focus-ring`; pending items: no hover, default cursor.
+
+**Focus indicator:** `focus-ring` utility (2px `gold-700` outline, 4px offset) on light surfaces.
 
 ## 4. Images and placeholders
 

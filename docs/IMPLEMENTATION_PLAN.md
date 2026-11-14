@@ -11,7 +11,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 ## M2 — Header
 
-- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (**done 2026-11-15**) · 2.3 `Logo` placeholder (D-020) (**done 2026-11-15**) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
+- **Tasks:** 2.1 typed site + navigation content, route availability, `resolveHref` (**done 2026-11-15**) · 2.2 install `lucide-react` + `Container` + `AnnouncementBar` (**done 2026-11-15**) · 2.3 `Logo` placeholder (D-020) (**done 2026-11-15**) · 2.4 `SiteHeader` + `NavLink` (desktop, pending-item rendering per D-027, cart count prop per D-029) (**done 2026-11-15**) · 2.5 `ShopMenu` · 2.6 `MobileNav`.
 - **Depends on:** M1 ✓; D-008 ✓; D-015 ✓; D-020 ✓; D-003/D-004/D-005 approval.
 - **Acceptance:** matches reference at ≥1280; active state + `aria-current`; dropdown and drawer keyboard accessible (Tab, Escape, focus return); no horizontal scroll at 375 px.
 - **Verify:** lint, tsc, build, keyboard walk-through, 1280/768/375 visual check.
@@ -19,7 +19,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 ### M2 follow-up tasks (added 2026-11-15)
 
 - **M2.V: Repeatable visual verification script.** **Done 2026-11-15** (D-040, D-041, D-042): `npm run verify:visual`.
-- **M2.7: Header visual refinement.** Fix the open differences V-001 (filled globe via licensed SVG), V-002 (local right-edge alignment, not a global `Container` change), V-003 (typography tuning within Source Sans 3), plus any header differences found in M2.4–2.6. Log: `docs/verification/README.md`.
+- **M2.7: Header visual refinement.** Fix the open differences V-001 (filled globe via licensed SVG), V-002/V-004 (local right-edge alignment of bar + header, not a global `Container` change), V-003/V-005 (typography tuning within Source Sans 3), plus any differences found in M2.5–2.6. Approve header baselines after owner review. Log: `docs/verification/README.md`.
 
 ## M3 — Hero
 

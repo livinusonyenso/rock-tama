@@ -79,6 +79,8 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 - **Mobile (<768):** logo left; search, cart and hamburger right. Account moves into the drawer.
 - Sticky header is **not shown** in the reference. Proposed: not sticky for v1 (decision pending).
 
+**[VERIFIED] Desktop header implemented M2.4 (2026-11-15):** matches the reference layout at 1440 for nav word widths, item spacing, icon size and underline weight (sheet: `docs/verification/m2.4/header-desktop-reference.png`). Deliberate deviations: `gold-700` underline/badge (D-043). Open: right cluster ~55px left of the reference (same cause as V-002), nav text slightly lighter than the reference (V-003); both for M2.7. Shop dropdown (M2.5) and mobile menu (M2.6) not yet built.
+
 ## 03 — Hero
 
 **[OBSERVED]**

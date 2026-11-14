@@ -35,7 +35,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`) and M2.V (`npm run verify:visual`) done; next M2.4 (desktop header). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) and M2.4 (desktop `SiteHeader` + `NavLink`) done; next M2.5 (Shop dropdown). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 

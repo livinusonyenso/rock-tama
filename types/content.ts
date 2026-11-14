@@ -38,7 +38,7 @@ export type HomeSection = {
 };
 
 /** Icon names map to `lucide-react` icons in the presentation layer (D-008). Strings keep content serialisable. */
-export type IconName = "truck" | "globe" | "search" | "user" | "shopping-cart";
+export type IconName = "truck" | "globe" | "search" | "user" | "shopping-cart" | "chevron-down";
 
 export type NavLinkItem = {
   label: string;

@@ -19,14 +19,14 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | `RootLayout` (`app/layout.tsx`, **exists**) | All | `<html>/<body>`, fonts, global metadata, renders bar + header + footer around `children` | — | Server | `children` | `AnnouncementBar`, `SiteHeader`, `SiteFooter`, fonts | — | M1 (fonts/metadata), M2 (header), M7 (footer) |
 | `Container` ✓ M2.2 | All | Max-width + horizontal gutters | Yes | Server | `size?: "content" \| "wide"` (default `content`), `className?`, `children` (no `as` prop, not needed yet) | — | Gutters 16/24/32px | **Implemented** `components/ui/Container.tsx` |
 | `AnnouncementBar` ✓ M2.2 | 01 | Renders `site.announcements` | No (single instance) | Server | none (reads `content/site.ts`) | `Container`, `Icon` | Priority 1 always, 2 from `sm`, 3 from `xl`; wraps only under enlarged text | **Implemented** `components/layout/AnnouncementBar.tsx`, rendered in `app/layout.tsx` |
-| `SiteHeader` | 02 | Logo, main nav, icon actions, mobile trigger | No | Server | none (reads `content/navigation.ts`) | `Logo`, `NavLink`, `ShopMenu`, `MobileNav`, icons | Text nav ≥ `lg`; hamburger below | M2 |
+| `SiteHeader` ✓ M2.4 (desktop) | 02 | Logo link, main nav, divider, icon actions with cart badge | No | Server | `cartCount: number` (D-029; layout passes 0) | `Logo`, `NavLink`, `Icon`, `Container`, `resolveHref` | Text nav from `lg` (compact) / `xl` (reference); below `lg` logo + icons until M2.6 | **Implemented** `components/layout/SiteHeader.tsx` (private `HeaderActionItem` inside) |
 | `SiteFooter` | 09 | Brand, link columns, newsletter, social, bottom bar | No | Server | none (reads content) | `Logo`, `NewsletterForm`, icons, `Container` | 2-col links + stacked on mobile | M7 |
 
 ## 3. Interactive (Client islands)
 
 | Component | Section | Responsibility | Reusable | Boundary | Props | Dependencies | Responsive | Priority |
 |---|---|---|---|---|---|---|---|---|
-| `NavLink` | 02 (and possibly footer) | Link that sets `aria-current="page"` + gold underline when active | Yes | **Client** (`usePathname`) | `href`, `children`, `exact?` | `next/link` | — | M2 |
+| `NavLink` ✓ M2.4 | 02 (dropdown M2.5, mobile M2.6) | `href` string → link with `aria-current` on exact path match (never for `#` anchors), hover + `focus-ring`; `href` null → non-interactive text + sr-only "(Coming soon)" (D-027) | Yes | **Client** (`usePathname`) | `href: string \| null`, `children`, `className?` | `next/link`, `navigationCopy` | — | **Implemented** |
 | `ShopMenu` | 02 | "Shop" disclosure dropdown (keyboard, Escape, outside click) | No | **Client** | `items` | `NavLink` | Desktop only; inside `MobileNav` it is a simple list | M2 |
 | `MobileNav` | 02 | Hamburger button + drawer with nav, account, focus handling, scroll lock | No | **Client** | `items` | `NavLink` | Visible < `lg` | M2 |
 | `NewsletterForm` | 09 | Email form UI with validation and pending/success/error states | No | **Client** (`useActionState`) | `action?` (wired after Scope B) | — | Full width on mobile | M7 (UI only) |

@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. M2.3 accepted. **M2.V complete (2026-11-15)**; stopped. M2.4 briefing presented for review.
+- **Current task:** none. **M2.4 desktop header complete (2026-11-15)**; stopped for owner review before M2.5 (Shop dropdown).
 
 ## Completed
 
@@ -29,6 +29,8 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **M2.V** `scripts/visual-check.mjs` + `scripts/visual-check.config.mjs`, `npm run verify:visual`, `.verification/` git-ignored, approved baselines in `docs/verification/baselines/` (announcement ×4 from the accepted M2.2 state); **no new dependencies** (D-041) | lint ✓ · tsc ✓ · build ✓ · clean run: **24 passed, 0 failed**, exit 0, all 4 baselines 0.00% · **negative tests** (temporary, reverted): wide element → overflow FAIL naming the element; missing image → broken-image FAIL + 404 console-error FAIL; changed announcement copy → baseline FAIL (9.99% / 7.08%) with red diff image; wrong baseline → size-mismatch FAIL with **exit 1**; unknown section → exit 2 · outputs confirmed (viewport + full-page shots, section shots, reference sheet, report.md/json) · no server/Chrome processes left running |
 
+| 2026-11-15 | **M2.4** `components/layout/SiteHeader.tsx` (Server) + `components/layout/NavLink.tsx` (Client, `usePathname`); `chevron-down` icon; `focus-ring` utility; `tracking-nav` 0.06→0.04em; `<SiteHeader cartCount={0} />` in layout; `header` section added to the verification config | lint ✓ · tsc ✓ · build ✓ · `verify:visual`: **28 passed, 0 failed**, no overflow at 375/768/1024/1440, no console errors, announcement baselines still 0.00% · reference sheet reviewed and tuned in 2 passes (text size/tracking, icon size, underline) · scripted a11y: 0 `href="#"`; header links = logo ("ROCK-TAMA home") + Home (`aria-current=page`); 8 pending items non-focusable, default cursor, no hover colour change, sr text "(Coming soon)" in normal case; Tab order logo → Home with 2px gold focus outline; banner + navigation "Main" landmarks · evidence `docs/verification/m2.4/` · header baselines **not** approved yet |
+
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending
@@ -48,4 +50,4 @@ _Last updated: 2026-11-14_
 
 ## Next proposed task
 
-**M2.4 Desktop header:** `SiteHeader` + `NavLink` (desktop layout, pending-item rendering per D-027, cart count prop per D-029). Briefing presented; awaiting approval.
+**M2.5 Shop dropdown (`ShopMenu`, Client):** disclosure for the Shop item with the 4 children (all pending today), keyboard (Enter/Space/Escape, focus return), click-outside. Includes a decision on how a dropdown of only-pending items should behave. Needs a briefing.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -34,6 +35,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <AnnouncementBar />
+        {/* Cart count is 0 until the cart feature supplies it (D-029). */}
+        <SiteHeader cartCount={0} />
         {children}
       </body>
     </html>

@@ -30,6 +30,12 @@ const config = {
       selector: 'aside[aria-label="Store information"]',
       reference: { x: 0, y: 0, width: 1086, height: 32 },
     },
+    {
+      name: "header",
+      page: "home",
+      selector: "body > header",
+      reference: { x: 0, y: 32, width: 1086, height: 64 },
+    },
   ],
 
   // Baseline regression: a pixel "differs" when any RGB channel differs by more than
