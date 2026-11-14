@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-15 (after M2.5)_
 
-**Where we are:** M1–M2.4 and M2.V accepted (M2.4 functionally; V-004/V-005 → M2.7). **M2.5 complete and committed: Shop stays pending until a child destination exists; a build guard forces `ShopMenu` (M2.5b, spec in `COMPONENT_ARCHITECTURE.md` §3) to be built in M5. Stopped for owner review before M2.6 (MobileNav).** Header has provisional (NOT approved) references in `docs/verification/provisional/`. The page below the header is still the create-next-app starter.
+**Where we are:** M1–M2.4 and M2.V accepted (M2.4 functionally; V-004/V-005 → M2.7). **M2.5 complete and committed: Shop stays pending until a child destination exists; a build guard forces `ShopMenu` (M2.5b, spec in `COMPONENT_ARCHITECTURE.md` §3) to be built in M5. M2.5 accepted. M2.6 (MobileNav) briefing presented; awaiting approval.** Header has provisional (NOT approved) references in `docs/verification/provisional/`. The page below the header is still the create-next-app starter.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)

@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **M2.5 (Shop dropdown gating + build guard + provisional references) complete (2026-11-15)**; stopped for owner review before M2.6 (MobileNav).
+- **Current task:** M2.6 MobileNav. M2.5 **accepted** (2026-11-15). **M2.6 briefing presented; awaiting approval.**
 
 ## Completed
 

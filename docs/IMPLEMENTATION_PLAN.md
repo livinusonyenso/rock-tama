@@ -36,7 +36,7 @@ Universal verification for every task: `npm run lint`, `npx tsc --noEmit`, plus 
 
 ## M5 — Products
 
-- **Includes M2.5b `ShopMenu` (D-048, D-050–D-052):** setting `homeSections.products.built = true` makes Shop's children resolve to `/#products`. The build guard in `SiteHeader` then fails until `ShopMenu` is implemented in the same change. Spec: `COMPONENT_ARCHITECTURE.md` §3.
+- **Includes M2.5b `ShopMenu` (D-048, D-050–D-052):** setting `homeSections.products.built = true` makes Shop's children resolve to `/#products`. The build guard in `SiteHeader` then fails until `ShopMenu` is implemented in the same change. **M2.5b must remove the guard's `throw`** (replace it with `<ShopMenu>`); the guard must not outlive that change. Spec: `COMPONENT_ARCHITECTURE.md` §3.
 - **Tasks:** 5.1 `Product` type + `content/products.ts` · 5.2 `SectionHeading` · 5.3 `ProductCard` (`side`, `stacked`) · 5.4 `ProductRangeSection`.
 - **Depends on:** M1 (`MediaFrame`, `ButtonLink`), M4 (pattern for data-driven content).
 - **Acceptance:** 4 / 2 / 1 columns; equal-height cards; no prices; CTA destinations per D-015.
