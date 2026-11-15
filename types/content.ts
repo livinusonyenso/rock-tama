@@ -56,7 +56,13 @@ export type IconName =
   | "package-search"
   | "file-text"
   | "handshake"
-  | "arrow-right";
+  | "arrow-right"
+  | "droplet"
+  | "mountain-snow"
+  | "waves"
+  | "flask-conical"
+  | "bug-off"
+  | "clipboard-check";
 
 export type NavLinkItem = {
   label: string;
@@ -152,6 +158,14 @@ export type HeroContent = {
   description: string;
   actions: readonly CallToAction[];
   media: MediaAsset;
+};
+
+/** A short highlight (icon + label) backed by an entry in content/claims.ts. */
+export type Highlight = {
+  icon: IconName;
+  /** Visible label; "\n" marks the reference's line break on wide screens. */
+  label: string;
+  claim: import("@/content/claims").ClaimId;
 };
 
 /** A price in minor-unit-free major currency units. `null` on a product = "Price on request" (D-066: never invent prices). */

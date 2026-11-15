@@ -7,9 +7,8 @@ export const hero: HeroContent = {
   heading: site.heroDisplayName,
   tagline: "Pure by Nature. African at Heart.",
   // Development copy from the reference, grammar corrected ("Nigeria. Naturally…").
-  // The process claims "naturally filtered through ancient rock formations" and
-  // "bottled at the source" must be confirmed before publication (D-068,
-  // PROJECT_OVERVIEW evidence table).
+  // Contains registered claims (content/claims.ts): rockFiltered, bottledAtSource. They must be
+  // verified before a production deployment (D-068, D-078).
   description:
     "A premium natural spring water from Nanka, Anambra State, Nigeria. Naturally filtered through ancient rock formations, preserved in its pure, natural state and bottled at the source to deliver exceptional purity, freshness and balance.",
   actions: [

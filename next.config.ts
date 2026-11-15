@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
+import { unverifiedClaims } from "./content/claims";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -35,7 +36,26 @@ function assertProductionDeliveryConfig() {
   }
 }
 
+/**
+ * Claims guard (D-013, D-078): a production deployment must not publish product, process or quality
+ * claims without evidence. Lists every unverified claim in content/claims.ts.
+ */
+function assertNoUnverifiedClaims() {
+  if (process.env.VERCEL_ENV !== "production") return;
+  const pending = unverifiedClaims();
+  if (pending.length > 0) {
+    throw new Error(
+      `Production deployment blocked: ${pending.length} claim(s) lack evidence: ` +
+        pending.map(({ id, claim }) => `${id} ("${claim.text}": needs ${claim.evidence})`).join("; ") +
+        ". Verify them in content/claims.ts or remove them from the content.",
+    );
+  }
+}
+
 export default function config(phase: string): NextConfig {
-  if (phase === PHASE_PRODUCTION_BUILD) assertProductionDeliveryConfig();
+  if (phase === PHASE_PRODUCTION_BUILD) {
+    assertProductionDeliveryConfig();
+    assertNoUnverifiedClaims();
+  }
   return nextConfig;
 }

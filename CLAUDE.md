@@ -25,7 +25,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 - Server Components by default; client islands only when state or browser APIs require them.
 - Design values come from tokens, not repeated literals.
 - Motion: every visible section's briefing includes an animation storyboard per `docs/ANIMATION_SYSTEM.md` (opacity/transform only, reduced motion, no layout shift, no new animation library without approval).
-- Never invent product photos, prices, certifications or business facts. Quality/ISO claims need owner-confirmed evidence.
+- Never invent product photos, prices, certifications or business facts. Every product/process/quality claim shown must be registered in `content/claims.ts` (production deploys are blocked while any is unverified, D-078).
 - No new dependencies without explaining the purpose and getting approval.
 - Never claim a check passed unless it was run. Report failures with output.
 - Verify **visually and functionally**: a feature isn't done until its actions/forms/data paths are tested end to end.
@@ -62,6 +62,7 @@ Update `docs/PROGRESS.md` (state, completed + how verified, blockers, next task)
 | Scope B (cart, checkout, backend) | `docs/ECOMMERCE_REQUIREMENTS.md` |
 | Workflow, briefing format, Definition of Done, gotchas | `docs/DEVELOPMENT_GUIDELINES.md` |
 | Milestones and acceptance criteria | `docs/IMPLEMENTATION_PLAN.md` |
+| Homepage status per section | `docs/HOMEPAGE_CHECKLIST.md` |
 
 ## Visual verification
 

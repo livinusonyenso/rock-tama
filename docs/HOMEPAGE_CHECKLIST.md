@@ -1,0 +1,31 @@
+# Homepage Checklist
+
+_Audited from the repository on 2026-11-15 (not from memory). Update this file as each section ships._
+
+Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-reference.png`.
+
+## Status by section
+
+| # | Section | Status | Visual | Functional | Open items |
+|---|---|---|---|---|---|
+| 1 | Announcement bar | **Done + verified** (M2.2, refined M2.7) | Approved baselines exist, but M2.7 updates **await owner approval** | Informational only, no actions | Service wording pending verification (D-030); V-006/V-007 minor |
+| 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | Provisional references (header + drawer); **final approval pending** (V-008 fix) | Links via `resolveHref`; Wholesale live; Shop/Our Story/Quality/Contact/Search/Account/Cart pending | ShopMenu + mobile Shop list ship with F2 (build guard); logo SVGs pending |
+| 3 | Hero | **Done + verified** (M3.1–M3.3) | Measured within ±3px @1440; animation verified | **Request Wholesale → /wholesale (works)**; **Shop Now still pending (needs F2 `/shop`)** | **Hero Product Carousel (D-073) ships with F2**; hero claims flagged (D-068); bottle photo pending |
+| 4 | Purity / trust indicators | **Done + verified** (2026-11-15, D-079) | Measured vs reference @1440 (height ±2, labels ±6, centres −7…+5); no baselines yet | Informational only | Six claims registered and **blocking production deploys until evidenced** (D-078); V-010 pathogen icon |
+| 5 | Our Products | **Not implemented** | — | **Cards must link to product pages → depends on F2** | Product photos; prices intentionally absent |
+| 6 | Our Origin | **Not implemented** | — | Optional link to Our Story (planned page) | Landscape photo; Africa map (Natural Earth, D-021); origin claims |
+| 7 | Quality & Safety | **Not implemented** | — | Informational | Lab report, ISO 22000 certificate (badge hidden until verified, D-013), "Undistilled" spelling |
+| 8 | Business supply banner | **Not implemented** | — | **Request Wholesale → /wholesale (already works)** | Export claim pending (D-030) |
+| 9 | Footer | **Not implemented** | — | Many targets pending (Contact F5, policies F10, newsletter F6 needs a provider; social URLs) | Newsletter must not be enabled without real submission; copyright year with Cache Components |
+
+## Dependency-aware build order
+
+1. ~~§4 Purity / trust indicators~~ **done**.
+2. **F2 shop foundation**: `/shop`, `/shop/[slug]`, ShopMenu + mobile Shop list (replaces the guard), **Hero Product Carousel**. Unblocks Shop Now, §5 product links, and the carousel.
+3. **§5 Our Products**: reuses `ProductCard` + catalogue; links to product pages.
+4. **§6 Our Origin** → **§7 Quality & Safety** → **§8 Supply banner** → **§9 Footer**.
+5. Then the homepage verification pass (M8): full responsive, accessibility, performance, SEO.
+
+## Missing images or business information (consolidated)
+
+Logo SVGs (header + footer light) · hero/product photography (750 ml, 1.5 L, carton) · origin landscape photo · lab reports (TDS, heavy metals, pathogens) · ISO 22000 certificate · NAFDAC A1-2462L documents · evidence for process claims (rock filtration, bottled at source, naturally protected source) · prices, pack sizes, delivery rules, payment provider · enquiry recipient + sending domain · contact details · social URLs · newsletter provider · privacy notice and other policy pages.

@@ -90,6 +90,18 @@ const config = {
       reference: { x: 0, y: 96, width: 1086, height: 396 },
     },
 
+    {
+      name: "trust",
+      page: "home",
+      selector: 'section[aria-label="Purity highlights"]',
+      reference: { x: 0, y: 492, width: 1086, height: 88 },
+      expect: [
+        { name: "6 highlights in a list", js: "document.querySelectorAll('section[aria-label=\"Purity highlights\"] ul > li').length === 6" },
+        { name: "every highlight references a registered claim", js: "[...document.querySelectorAll('section[aria-label=\"Purity highlights\"] li')].every(li => Boolean(li.dataset.claim))" },
+        { name: "icons hidden from assistive technology", js: "[...document.querySelectorAll('section[aria-label=\"Purity highlights\"] svg')].every(svg => svg.getAttribute('aria-hidden') === 'true')" },
+      ],
+    },
+
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",

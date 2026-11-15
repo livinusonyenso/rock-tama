@@ -40,6 +40,8 @@ Individual retail buyers · hotels and hospitality · offices and workplaces · 
 
 ## Content that needs business evidence before publication [ASSUMPTION]
 
+**Enforced (D-078):** claims rendered on the site are registered in `content/claims.ts`; Vercel production builds fail while any is unverified.
+
 The reference contains product and quality claims. They are **supplied visual content, not verified facts**. Each must be backed by documentation held by the business before the site goes live:
 
 | Claim (as shown in the reference) | Evidence needed |

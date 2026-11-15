@@ -49,7 +49,7 @@ components/
 ├── home/                      # homepage-only sections
 │   ├── HeroSection.tsx        # ✓ M3.2
 │   ├── HeroWaves.tsx          # ✓ M3.2
-│   ├── TrustStrip.tsx
+│   ├── TrustStrip.tsx         # ✓ §4
 │   ├── ProductRangeSection.tsx
 │   ├── OriginSection.tsx
 │   ├── QualitySection.tsx
@@ -59,7 +59,7 @@ components/
 │   ├── ButtonLink.tsx         # ✓ M3.1
 │   ├── button-styles.ts       # ✓ F1 buttonClassName() shared by links and form buttons
 │   ├── SectionHeading.tsx     # ✓ D-076
-│   ├── IconFeature.tsx
+│   ├── IconFeature.tsx        # ✓ §4
 │   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
 │   └── ProductCard.tsx        # ✓ D-076 shared (wholesale now; shop + homepage next)
 ├── wholesale/                 # ✓ D-076 WholesaleLanding (Server), SelectProductLink (Client)
@@ -81,7 +81,8 @@ content/                       # typed static content (no React)
 ├── wholesale.ts               # ✓ F1 /wholesale copy
 ├── navigation.ts              # ✓ M2.1 main nav, Shop dropdown, header actions
 ├── products.ts                # M5
-└── highlights.ts              # M4/M6/M7
+├── highlights.ts              # ✓ §4 purityHighlights (§6–§8 later)
+└── claims.ts                  # ✓ D-078 claims register (imported by next.config.ts deploy guard)
 
 types/
 └── content.ts                 # ✓ M2.1 shared content types

@@ -2,6 +2,12 @@ import type { ComponentType, SVGProps } from "react";
 import {
   ArrowRight,
   BedDouble,
+  BugOff,
+  ClipboardCheck,
+  Droplet,
+  FlaskConical,
+  MountainSnow,
+  Waves,
   Building2,
   CalendarDays,
   ChevronDown,
@@ -45,6 +51,12 @@ const icons: Record<IconName, IconComponent> = {
   "file-text": FileText,
   handshake: Handshake,
   "arrow-right": ArrowRight,
+  droplet: Droplet,
+  "mountain-snow": MountainSnow,
+  waves: Waves,
+  "flask-conical": FlaskConical,
+  "bug-off": BugOff, // approximation of the reference's crossed-out microbe
+  "clipboard-check": ClipboardCheck,
 };
 
 type IconProps = {

@@ -130,6 +130,8 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 - Tablet: 3 × 2 grid. Mobile: 2 × 3 grid. Dividers are hidden at both sizes and replaced by gaps.
 - These are **claims** (see the evidence table in [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md)).
 
+**[VERIFIED] Implemented 2026-11-15 (D-079):** see `docs/verification/home-4-trust/`. Every label is a registered claim (D-078).
+
 ## 05 — Our Products
 
 **[OBSERVED]**

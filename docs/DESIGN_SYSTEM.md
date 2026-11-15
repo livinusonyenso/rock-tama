@@ -154,6 +154,8 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 
 **Buttons (`ButtonLink`):** `primary` = `bg-gold-gradient text-ink-900 shadow-gold`, hover `shadow-gold-hover brightness-105 -translate-y-px`; `outline-dark` = `border-gold-500 text-on-dark`, hover `border-gold-400 bg-gold-500/10`; 150ms `ease-standard`; no lift with reduced motion; `focus-ring-dark`.
 
+**Trust strip (§4, D-079):** `bg-forest-800`, top `border-line-dark/60`; track `max-w-332` `lg:ml-auto lg:mr-2.5`; `IconFeature`: icon `size-9` → `lg:size-12` stroke 1.5 `gold-500`; label `font-medium` `text-base` → `lg:text-xl lg:leading-5`, two-line min-height; dividers `after:` `w-px h-15 bg-line-dark-strong/50` from `lg`; `lg:py-3`. Grid 2 → `sm` 3 → `lg` 6.
+
 ## 3b. Motion
 
 Animation principles, technologies, duration/easing tokens, reduced-motion and performance rules, and verification live in **[`ANIMATION_SYSTEM.md`](ANIMATION_SYSTEM.md)** (proposed; approved per section). Don't add motion that isn't documented there.

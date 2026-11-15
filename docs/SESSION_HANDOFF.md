@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-15 (after F1)_
+_Last updated: 2026-11-15 (after §4 trust strip)_
 
-**Where we are:** Real e-commerce direction (D-066). M3.1–M3.3 hero done. **F0 + F1 done: `/wholesale` works end to end** (validation, spam protection, delivery via dev file locally / Resend in production, honest errors, no-JS support); Request Wholesale + nav/drawer Wholesale are live. **Next: F2** (`/shop`, product pages, ShopMenu + mobile Shop list replacing the build guard, Hero Product Carousel per D-073) → Shop Now live → M3 complete. M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix). Production needs Resend env vars (`.env.example`).
+**Where we are:** **Homepage focus** (owner). Status per section: `docs/HOMEPAGE_CHECKLIST.md`. Done: announcement, header + drawer, hero (+ animation), **§4 trust strip**; `/wholesale` landing + enquiry flow work (redesign paused). **Next: F2** (`/shop`, product pages, ShopMenu + mobile Shop list replacing the guard, Hero Product Carousel D-073) → §5 Our Products → §6 → §7 → §8 → §9. All claims must be registered in `content/claims.ts` (production deploys blocked while unverified, D-078). M2.7 baselines NOT promoted (awaiting final approval of the V-008 fix).
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
