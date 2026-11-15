@@ -1,0 +1,9 @@
+# §5 height investigation — 2026-11-16
+
+**[OBSERVED]** Reviewed saved `products-vs-reference-1440.png` and source styles; no fresh browser measurement or UI change. Historical heights: 496px implementation vs ≈448 reference (V-011). Owner accepts functionality, retains italic Distributor Supply and withholds visual baseline approval.
+
+At desktop, ProductRangeSection uses 20px top + 16px bottom padding; heading-to-grid gap is 16px. Media-side cards use 20px padding, 16px horizontal gap, 24px text-column top inset, 12px paragraph gap and ≥16px action separation. Bottle frame is 256px high. Media-middle cards use 16px top / 20px bottom and 20px total vertical media padding. Cards share the tallest grid track. Small buttons retain min-height 44px.
+
+In the comparison, implementation card tops sit ≈18px lower relative to section top and card boxes are ≈28px taller (approximate manual image reading). Thus the difference is distributed across heading stack/top spacing and card sizing, not solely buttons. Reference buttons ≈36px vs 44px explain only ≈8px in isolation; font weight does not directly explain section height. Text wraps and landscape media intrinsic heights also affect the tallest track. Reference side-card buttons sit higher than middle-card buttons; current actions align near the bottom. Generic carton/pallet rectangles differ from reference dimensional placeholders; title line breaks and heading weight differ too.
+
+**[PROPOSED]** If later tuning is approved, obtain browser bounding boxes for section/heading/grid/card/media/action and compare to reference before editing. Inspect heading line-height/margins, top inset, media-middle padding and equal-row stretch first. Modest spacing changes may recover some height, but do not remove all breathing room or shrink text/buttons to chase 448px. No quantified savings promised without that measurement. Keep 48px residual open; no baseline promotion and no UI edits in this planning task.

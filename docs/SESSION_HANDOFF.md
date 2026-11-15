@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-16 (after §5 Our Products)_
+_Last updated: 2026-11-16 (origin briefing, implementation not approved)_
 
-**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **Stopped for owner review before §6 Our Origin** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
+**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 briefing ready at `docs/ORIGIN_SECTION_BRIEFING.md`, awaiting implementation approval** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -31,4 +31,4 @@ _Last updated: 2026-11-16 (after §5 Our Products)_
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Do not:** promote baselines until the owner approves the final M2.7 screenshots (incl. V-008). Do not implement M3 until the owner approves its briefing. Do not fix V-001–V-005 before M2.7.
+**Do not:** implement §6 before explicit briefing approval; promote §5 screenshots before actual comparison review; push or deploy. Distributor Supply stays italic (D-090). V-011 investigation: `docs/verification/home-5-products/height-review.md`. Two planned origin labels are registered unverified; exact map asset and town-coordinate source still to acquire during approved implementation.

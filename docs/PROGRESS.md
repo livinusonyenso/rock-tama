@@ -6,7 +6,7 @@ _Last updated: 2026-11-16_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **Homepage §5 Our Products complete**; stopped for owner review before §6 Our Origin. §5 visual baseline not promoted (awaiting review).
+- **Current task:** §6 briefing prepared (`ORIGIN_SECTION_BRIEFING.md`); implementation awaits explicit owner approval. §5 functionally accepted (D-090); visual comparisons await owner review, screenshots remain provisional.
 
 ## Completed
 
@@ -70,10 +70,12 @@ _Last updated: 2026-11-16_
 1. Official logo SVGs (placeholders used meanwhile, D-020)
 2. Lab reports, ISO 22000 certificate, NAFDAC A1-2462L documents
 3. Social URLs
-4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", card 4 italic title, copyright year
+4. Copy fixes awaiting confirmation: "Nigeria. Naturally…", "Undistilled", copyright year
 5. Business confirmation of delivery coverage, wholesale fulfilment and export, to finalise announcement wording (D-030)
 7. Official logo SVGs (header horizontal + footer stacked **light** colourway, D-038)
 
 ## Next proposed task
 
-**After owner review of §5:** promote the `products` baseline (`npm run verify:visual -- --approve --section products`) if accepted; then the **§6 Our Origin** briefing (landscape photo slot, Natural Earth map D-021, origin claims via `content/claims.ts`).
+**Await owner approval of `ORIGIN_SECTION_BRIEFING.md` before §6 implementation.** §5 baseline promotion remains explicitly unauthorised pending comparison review. V-011 investigation recorded; no UI changes.
+
+2026-11-16: prepared §6 briefing from original screenshot and current primitives; checked Natural Earth public-domain terms; registered two unverified planned origin claims. Updated project workflow/records. Documentation and registry only; no UI implementation, push or deployment. Validation: `npx tsc --noEmit` and `git diff --check` pass. No browser/build checks rerun for this planning task; prior UI checks remain historical.

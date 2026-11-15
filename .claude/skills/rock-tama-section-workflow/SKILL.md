@@ -36,3 +36,7 @@ The project docs are the source of truth. Reference them, don't restate them.
 12. **Record changes and unresolved issues:** update `docs/HOMEPAGE_CHECKLIST.md` (homepage sections), `docs/PROGRESS.md` (completed + how verified, blockers, next task), `docs/SESSION_HANDOFF.md`, `docs/DESIGN_SYSTEM.md` if tokens changed, and `docs/DECISIONS.md` if anything was decided. Mark work [VERIFIED] only for checks that actually ran.
 13. **Commit** code + docs together with a meaningful conventional message after reviewing the staged files for secrets. Do not push unless asked.
 14. **Stop and request approval** for the next task. Name it, but do not start it.
+
+## Current owner constraints (2026-11-16, D-090/D-091)
+
+§5 functional acceptance is separate from visual approval: keep comparisons provisional and Distributor Supply italic. Read `docs/ORIGIN_SECTION_BRIEFING.md` before §6; briefing preparation is authorised, implementation is not. Register required evidence-dependent copy as unverified, never infer verification from design approval. Record exact vector source/licence and a sourced approximate-town map coordinate using the same projection as the outline; never eyeball location. Do not push or deploy.

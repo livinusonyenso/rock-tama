@@ -60,3 +60,7 @@ Verified (M2.3) with temporary dummy SVGs: the real-image path renders at exactl
 ## Starter assets to remove (after approval)
 
 `public/file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, `window.svg` are create-next-app samples, unused by the design.
+
+## §6 planning update — 2026-11-16
+
+Natural Earth public-domain terms checked at https://www.naturalearthdata.com/about/terms-of-use/ . D-021 Admin 0 source remains selected; asset not acquired/converted yet. Exact archive/version/checksum, transformation and coordinate citation will be recorded during approved implementation. Pin denotes approximate Nanka town location, not a surveyed spring. Responsive crop proposal and photo replacement details: `ORIGIN_SECTION_BRIEFING.md`.

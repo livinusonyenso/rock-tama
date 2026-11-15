@@ -41,7 +41,7 @@ V-001–V-005 were recorded at the M2.2/M2.4 reviews and handled in M2.7. Positi
 | V-008 | **Resolved (D-064):** the 60px step at 1359→1360 is replaced by a fluid `clamp()` inset; max step between adjacent widths 1px. Evidence: `m2.7-after/v008-logo-position-sweep.png`, `m2.7-after/v008-1359-vs-1360.png` |
 | V-009 | **Open, minor (from M2.6):** at 320px "Our Story" wraps to two lines in the drawer next to its COMING SOON tag; disappears when the route goes live |
 | V-010 | **Open, minor:** trust strip "Pathogens Absent" uses Lucide `bug-off`; the reference shows a crossed-out microbe in a circle (custom artwork would be needed) |
-| V-011 | **Open (§5):** section 496px @1440 vs ≈448 in the scaled reference. Causes: 44px card buttons (touch target; reference ≈36), 16px card body text (reference ≈15), Cormorant 700 is the heaviest weight available (reference heading looks heavier). Card order, columns, frame placement, centring and copy match |
+| V-011 | **Open (§5), visual approval withheld (D-090):** historical 496px vs ≈448px reference. Spacing/card investigation and additional visual differences: `home-5-products/height-review.md`. Button size alone does not account for 48px; preserve 44px targets and readability. No UI change or baseline promotion. |
 | — | Deliberate: `gold-700` underline/badge (D-043); logo is a placeholder until the official SVG |
 
 Original entries:

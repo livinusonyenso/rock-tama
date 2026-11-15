@@ -12,8 +12,8 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 | 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | **Approved baselines** for header (7 widths) and drawer (D-080) | Links via `resolveHref`; **Shop dropdown + mobile Shop list live (F2)**; Wholesale live; Our Story/Quality/Contact/Search/Account/Cart pending | Drawer baselines need re-approval (Shop now lists products); logo SVGs pending |
 | 3 | Hero | **Done + verified** (M3.1–M3.3, carousel F2) — **M3 complete** | Measured within ±3px @1440; animation verified | **Shop Now → /shop and Request Wholesale → /wholesale both work**; **Hero Product Carousel live (D-085)** with links to product pages | Hero claims registered (D-078); product photography pending |
 | 4 | Purity / trust indicators | **Done + verified** (2026-11-15, D-079) | Measured vs reference @1440 (height ±2, labels ±6, centres −7…+5); no baselines yet | Informational only | Six claims registered and **blocking production deploys until evidenced** (D-078); V-010 pathogen icon |
-| 5 | Our Products | **Done + verified** (2026-11-16, D-087/D-088) | Compared @1440 (`docs/verification/home-5-products/`); **no baseline yet (awaiting owner review)** | 3 product cards → `/shop/<slug>`, Distributor Supply → `/wholesale`; keyboard, no-JS, reduced motion and reveal journeys pass | Product photos; prices intentionally absent; section 48px taller than reference (V-011) |
-| 6 | Our Origin | **Not implemented** | — | Optional link to Our Story (planned page) | Landscape photo; Africa map (Natural Earth, D-021); origin claims |
+| 5 | Our Products | **Done + verified** (2026-11-16, D-087/D-088) | Compared @1440 (`docs/verification/home-5-products/`); **provisional only; actual comparison review pending (D-090)** | 3 product cards → `/shop/<slug>`, Distributor Supply → `/wholesale`; keyboard, no-JS, reduced motion and reveal journeys pass | Product photos; prices intentionally absent; section 48px taller than reference (V-011) |
+| 6 | Our Origin | **Briefing prepared; implementation NOT approved** (D-091) | `ORIGIN_SECTION_BRIEFING.md` | Planned Our Story anchor via registry | Official landscape photo; map asset/coordinate sourcing; two planned labels registered unverified |
 | 7 | Quality & Safety | **Not implemented** | — | Informational | Lab report, ISO 22000 certificate (badge hidden until verified, D-013), "Undistilled" spelling |
 | 8 | Business supply banner | **Not implemented** | — | **Request Wholesale → /wholesale (already works)** | Export claim pending (D-030) |
 | 9 | Footer | **Not implemented** | — | Many targets pending (Contact F5, policies F10, newsletter F6 needs a provider; social URLs) | Newsletter must not be enabled without real submission; copyright year with Cache Components |
@@ -22,7 +22,7 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 
 1. ~~§4 Purity / trust indicators~~ **done**.
 2. ~~F2 shop foundation~~ **done** (`/shop`, product pages, Shop menu + mobile list, carousel; Shop Now works).
-3. ~~§5 Our Products~~ **done** (awaiting owner review).
+3. ~~§5 Our Products~~ **functionally accepted** (visual review pending).
 4. **§6 Our Origin** → **§7 Quality & Safety** → **§8 Supply banner** → **§9 Footer**.
 5. Then the homepage verification pass (M8): full responsive, accessibility, performance, SEO.
 
