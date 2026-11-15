@@ -112,6 +112,18 @@ const config = {
       reference: { x: 0, y: 580, width: 1086, height: 338 },
     },
 
+    {
+      name: "origin", page: "home", selector: "#origin",
+      reference: { x: 0, y: 918, width: 1086, height: 187 },
+      expect: [
+        { name: "origin heading, factual description and three indicators", js: "document.querySelector('#origin h2')?.textContent === 'From Nanka, Anambra State.' && document.querySelectorAll('#origin li').length === 3 && document.querySelector('#origin p.mt-2')?.textContent.includes('This is where our story begins.')" },
+        { name: "required claims registered and unverified", js: "[...document.querySelectorAll('#origin li[data-claim]')].map(x => x.dataset.claim).join(',') === 'naturallyProtectedSource,preservedNaturalPurity' && [...document.querySelectorAll('#origin li[data-claim]')].every(x => x.dataset.claimStatus === 'unverified')" },
+        { name: "landscape reserves the responsive aspect ratio", js: "(() => { const r=document.querySelector('#origin .media-frame-responsive').getBoundingClientRect(); return Math.abs(r.width/r.height-(innerWidth<768?16/9:3))<0.04; })()" },
+        { name: "map and icons decorative; no invented scientific copy", js: "[...document.querySelectorAll('#origin svg')].every(s => s.getAttribute('aria-hidden')==='true') && !/mineral|filtered|smooth taste|ancient/i.test(document.querySelector('#origin').innerText)" },
+        { name: "pin anchored to projected approximate Nanka coordinate", js: "document.querySelector('[data-origin-pin]').getAttribute('transform') === 'translate(27.08306 33.93958)'" },
+      ],
+    },
+
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",
@@ -630,6 +642,50 @@ function functionalJourneys() {
       page: "home",
       javascript: false,
       expect: [{ name: "without JS: all 4 cards visible with working links", js: "!document.querySelector('#products [data-reveal]') && document.querySelectorAll('#products article a[href]').length === 4" }],
+    },
+    // -- §6 Our Origin: motion, reading order, accessibility and actual navigation --
+    {
+      ...base, name: "origin-initial", page: "home", viewports: ["mobile", "desktop"],
+      expect: [{ name: "five below-fold groups hidden initially; map static", js: "document.querySelectorAll('#origin [data-reveal=hidden]').length === 5 && !document.querySelector('[data-africa-map]').closest('[data-reveal]')" }],
+    },
+    {
+      ...base, name: "origin-reveal", page: "home", viewports: ["mobile", "desktop"],
+      actions: [
+        { evaluate: "window.__originBoxes=[...document.querySelectorAll('#origin [data-reveal]')].map(x=>[x.offsetLeft,x.offsetTop,x.offsetWidth,x.offsetHeight].join(',')); document.querySelector('[data-africa-map]').scrollIntoView({block:'end',behavior:'instant'}); true" },
+        { waitFor: "document.querySelectorAll('#origin [data-reveal=shown]').length===5" },
+      ],
+      expect: [
+        { name: "all groups visible with approved stagger and no layout shifts", js: "[...document.querySelectorAll('#origin [data-reveal]')].every((x,i)=>getComputedStyle(x).opacity==='1' && [x.offsetLeft,x.offsetTop,x.offsetWidth,x.offsetHeight].join(',')===window.__originBoxes[i]) && getComputedStyle(document.querySelector('#origin li:last-child > div')).transitionDelay.includes('0.12s')" },
+        { name: "mobile reading order and map remain within section", js: "(() => {const s=document.querySelector('#origin').getBoundingClientRect();const m=document.querySelector('[data-africa-map]').getBoundingClientRect();const l=document.querySelector('#origin ul').getBoundingClientRect();return m.right<=s.right && m.bottom<=s.bottom && (innerWidth>=768 || m.top>=l.bottom);})()" },
+      ],
+    },
+    {
+      ...base, name: "origin-jump-past", page: "home", viewports: ["mobile", "desktop"],
+      actions: [{evaluate:"window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}); true"},{waitFor:"document.querySelectorAll('#origin [data-reveal=shown]').length===5"}],
+      expect: [{name:"no origin groups stranded hidden after End/anchor jump",js:"!document.querySelector('#origin [data-reveal=hidden]')"}],
+    },
+    {
+      ...base, name: "origin-reduced-motion", page: "home", viewports: ["mobile", "desktop"], media: [{name:"prefers-reduced-motion",value:"reduce"}],
+      expect: [{name:"origin immediately visible with reduced motion",js:"!document.querySelector('#origin [data-reveal]') && [...document.querySelectorAll('#origin li > div')].every(x=>getComputedStyle(x).opacity==='1')"}],
+    },
+    {
+      ...base, name: "origin-no-js", page: "home", viewports: ["mobile", "desktop"], javascript: false,
+      expect: [{name:"origin server-rendered and visible without JS; story link real",js:"!document.querySelector('#origin [data-reveal]') && document.querySelectorAll('#origin li').length===3 && !!document.querySelector('header a[href=\"/#origin\"]')"}],
+    },
+    {
+      ...base, name: "origin-desktop-navigation", page: "shop", viewports: ["desktop"],
+      actions: [{evaluate:"const a=document.querySelector('header nav a[href=\"/#origin\"]'); a.focus(); window.__originFocus=getComputedStyle(a).outlineStyle; true"},{press:"Enter"},{waitFor:"location.pathname==='/' && location.hash==='#origin' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
+      expect: [{name:"keyboard Our Story reaches built origin from shop; focus ring present",js:"window.__originFocus==='solid' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && document.querySelector('#origin').getBoundingClientRect().bottom>0"}],
+    },
+    {
+      ...base, name: "origin-mobile-navigation", page: "shop", viewports: ["mobile"],
+      actions: [{click:MENU_BUTTON_SELECTOR},{click:'#mobile-nav a[href="/#origin"]'},{waitFor:"location.pathname==='/' && location.hash==='#origin' && !document.getElementById('mobile-nav').open"}],
+      expect: [{name:"mobile Our Story reaches origin, closes drawer and releases scroll",js:"!document.getElementById('mobile-nav').open && getComputedStyle(document.documentElement).overflow!=='hidden' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
+    },
+    {
+      ...base, name: "origin-enlarged-text", page: "home", viewports: ["mobile","desktop"],
+      actions: [{evaluate:"document.documentElement.style.fontSize='200%'; document.querySelector('#origin').scrollIntoView({behavior:'instant'}); true"}],
+      expect: [{name:"200% text: origin text not clipped horizontally",js:"[...document.querySelectorAll('#origin h2,#origin p,#origin li')].every(x=>x.scrollWidth<=x.clientWidth+1)"}],
     },
     // -- Hero Product Carousel (D-073) --
     {

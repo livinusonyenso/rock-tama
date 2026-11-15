@@ -1,6 +1,9 @@
 import type { ComponentType, SVGProps } from "react";
 import {
   ArrowRight,
+  MapPin,
+  Leaf,
+  Layers,
   BedDouble,
   BugOff,
   ClipboardCheck,
@@ -36,6 +39,9 @@ type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: num
 // Record<IconName, …> makes the map exhaustive: adding a name to IconName
 // without an icon here is a compile error.
 const icons: Record<IconName, IconComponent> = {
+  "map-pin": MapPin,
+  leaf: Leaf,
+  layers: Layers,
   truck: Truck,
   globe: GlobeFilled, // filled to match the reference (V-001; Heroicons, MIT)
   search: Search,

@@ -64,3 +64,15 @@ Verified (M2.3) with temporary dummy SVGs: the real-image path renders at exactl
 ## §6 planning update — 2026-11-16
 
 Natural Earth public-domain terms checked at https://www.naturalearthdata.com/about/terms-of-use/ . D-021 Admin 0 source remains selected; asset not acquired/converted yet. Exact archive/version/checksum, transformation and coordinate citation will be recorded during approved implementation. Pin denotes approximate Nanka town location, not a surveyed spring. Responsive crop proposal and photo replacement details: `ORIGIN_SECTION_BRIEFING.md`.
+
+## Africa map acquired and derived — §6 / 2026-11-16
+
+- Dataset: Natural Earth **v5.1.2**, 1:110m Admin 0 Countries, upstream tagged GeoJSON: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_110m_admin_0_countries.geojson . Dataset page: https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/ . Retrieved 2026-11-16 (client date).
+- SHA-256 of downloaded bytes: `6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f`. Original stored temporarily outside repo, not served at runtime.
+- Public domain: https://www.naturalearthdata.com/about/terms-of-use/ . Commercial adaptations permitted; attribution optional. Provenance notice in `components/brand/AfricaMap.tsx`.
+- Reproduce: download tagged file, then `python3 scripts/generate-africa-map.py /path/to/ne_110m_admin_0_countries.geojson`. No packages needed. Select 51 features with `CONTINENT=“Africa”`, round shared coordinates to 6 decimals, cancel identical interior edges, stitch boundary graph into **two closed rings** (mainland and Madagascar). No hand tracing or political boundaries.
+- Projection: equirectangular with uniform axis scale, `x=longitude+20`, `y=40-latitude`; SVG viewBox `0 0 74 78`, preserved aspect. Derived path rounds to 0.001 viewBox units.
+- Approximate town coordinate: GeoNames **2329463**, Nanka, Orumba North, Anambra State; **6.06042°N, 7.08306°E**, as reported by https://mapcarta.com/17004604 (links to https://www.geonames.org/2329463/nanka.html ; direct GeoNames page unavailable to browser tool). Display precision is not a survey-accuracy claim. Retrieved 2026-11-16.
+- Independent published locality check: Anzaku et al., *Environmental Effects of Gully Erosion in Nigeria: Case Study of Nanka Community*, 2019, study-area location p.69: 6°03′N, 7°05′E; https://www.iiste.org/Journals/index.php/JEES/article/download/49963/51612 . Approximate town centres differ by ~1.2km, less than 0.01px at this map size. This source is used only for locality, not for product/environmental claims.
+- Generator verifies point-in-polygon against Nigeria in the same dataset. Pin tip projects to **(27.08306, 33.93958)**; rendered symbol extends upward from that anchor. Independent locality source places Nanka in Anambra, southeastern Nigeria. Actual spring coordinates remain client input. Browser appearance still unverified.
+- Landscape stays `src:null`. Source ratio 3:1 at md+, 16:9 below md; future official image uses cover/centre and must receive content-specific alt text and crop review. No stock/AI photography added.

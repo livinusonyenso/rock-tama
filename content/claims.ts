@@ -17,8 +17,8 @@ export type Claim = {
 };
 
 export const claims = {
-  naturallyProtectedSource: { text: "Naturally Protected Source", status: "unverified", evidence: "Site or hydrogeological evidence establishing natural protection of the Nanka source; proposed for homepage origin, not rendered yet" },
-  preservedNaturalPurity: { text: "Preserved Natural Purity", status: "unverified", evidence: "Documented handling/process and relevant current analyses supporting preservation of natural purity; proposed for homepage origin, not rendered yet" },
+  naturallyProtectedSource: { text: "Naturally Protected Source", status: "unverified", evidence: "Site or hydrogeological evidence establishing natural protection of the Nanka source; rendered in homepage origin, evidence pending" },
+  preservedNaturalPurity: { text: "Preserved Natural Purity", status: "unverified", evidence: "Documented handling/process and relevant current analyses supporting preservation of natural purity; rendered in homepage origin, evidence pending" },
   ultraPure: { text: "Ultra Pure", status: "unverified", evidence: "Lab analysis supporting a purity claim; owner approval of the marketing wording" },
   bottledAtSource: { text: "Bottled at Source", status: "unverified", evidence: "Confirmation that bottling takes place at the spring site" },
   lowTds: { text: "Low TDS (6–8 mg/L)", status: "unverified", evidence: "Current lab report showing total dissolved solids of 6–8 mg/L" },

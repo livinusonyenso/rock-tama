@@ -1,3 +1,4 @@
+import { OriginSection } from "@/components/home/OriginSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ProductRangeSection } from "@/components/home/ProductRangeSection";
 import { TrustStrip } from "@/components/home/TrustStrip";
@@ -9,6 +10,7 @@ export default function HomePage() {
       <HeroSection />
       <TrustStrip />
       <ProductRangeSection />
+      <OriginSection />
     </main>
   );
 }

@@ -1,6 +1,8 @@
 # Homepage §6 — Our Origin implementation briefing
 
-2026-11-16 · **[PROPOSED — implementation awaits explicit owner approval]**
+2026-11-16 · **[APPROVED 2026-11-16 — owner: “approve”]**
+
+Implementation status: source implemented; browser/build verification incomplete due local-port restrictions. See `verification/home-6-origin/implementation-report.md`. Proposal language below preserves the approved briefing.
 
 ## What / scope
 

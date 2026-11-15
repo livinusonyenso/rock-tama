@@ -53,3 +53,7 @@ Original entries:
 | V-004 | Header: right cluster position | Nav + divider + icons end at x≈1355 vs ≈1410 in the reference at 1440 (same symmetric-container cause as V-002; the bar and header right edges align with each other, as in the reference) | Same as V-002: local adjustment, not a global `Container` change | Resolve together with V-002 so the bar and header stay aligned |
 | V-005 | Header: nav text weight | Reference nav text looks slightly heavier than Source Sans 3 500 | Keep the font family | Compare 500 vs 600 at `xl:text-base` |
 | V-003 | Announcement bar: typography | Reference text looks slightly wider/heavier than Source Sans 3 | **Keep the approved font family.** Compare weight, letter spacing and size against the screenshot before changing anything | Measure glyph widths of the same words at 400/500 weight and small tracking values; adjust only within Source Sans 3 |
+
+## §6 verification incomplete — 2026-11-16
+
+Source implemented under D-092; `home-6-origin/report.md` records harness timeout (0 pass, 1 incomplete). `home-6-origin/implementation-report.md` distinguishes successful source/SSR checks from unrun browser checks. No screenshots or new baselines. Local Turbopack worker-port EPERM blocks normal build, so full browser/functional regression verification remains outstanding.

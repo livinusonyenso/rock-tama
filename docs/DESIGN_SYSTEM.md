@@ -176,3 +176,7 @@ Every image renders through `MediaFrame` with a fixed aspect ratio, so missing i
 - **`lucide-react`** (installed 1.73.0, M2.2) for standard interface icons, rendered through `components/icons/Icon.tsx` (an `IconName` → Lucide map). Default stroke 1.5 (the announcement bar uses 1.75 to match the reference weight), size via `size-*`, colour via `currentColor`. The `globe` icon is a custom filled SVG (`components/icons/GlobeFilled.tsx`, Heroicons v2.2.0 solid `globe-alt`, MIT; D-061), resolving V-001. The `Icon` map accepts Lucide and custom SVG components.
 - **Custom inline SVG** only for distinctive brand/decorative icons with no suitable Lucide equivalent (likely: crossed-out microbe, laurel badge, Africa map). Decide case by case; avoid custom work when a Lucide icon fits.
 - Tone: gold on dark backgrounds (`gold-500`); dark green/ink on light backgrounds; `gold-600` for decorative gold on light.
+
+## §6 origin application (D-092)
+
+Uses existing 30px `text-3xl` compact serif h2, 16px body, 14px inline indicators, ivory/sand/forest/gold palette and existing spacing/radii. No global token changes. MediaFrame's optional `media-frame-responsive` utility uses aspect custom properties (16:9 below md, content-specified ratio from md), reserving identical placeholder/photo geometry. Desktop visual measurements remain pending because build/browser checks could not run.

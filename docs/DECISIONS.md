@@ -100,3 +100,5 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 
 - **D-090 [APPROVED]:** §5 functionally accepted; screenshots remain provisional until owner reviews actual comparisons. Keep Distributor Supply italic. Investigate V-011 without reducing accessible button dimensions/readability. No visual-baseline promotion authorised.
 - **D-091 [APPROVED planning only]:** Prepare §6 briefing; do not implement until explicit approval. See `ORIGIN_SECTION_BRIEFING.md` (**PROPOSED** implementation/layout/storyboard). Register evidence-dependent origin labels unverified; no invented scientific or processing copy. No push or deployment.
+
+- **D-092 [APPROVED 2026-11-16]:** Owner approved the §6 briefing (“approve”). Implement its two-column desktop layout, responsive image/story/map, safe factual paragraph, registered unverified indicators, Natural Earth map and D-088 reveals. Implementation source is now present; build/browser acceptance is still pending due local worker-port EPERM. This does not approve §5/§6 visual baselines or §7 implementation.

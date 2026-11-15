@@ -97,6 +97,6 @@ Static screenshots and animation behaviour are tested **separately and determini
 
 When planning any new visible section, add a row here and a storyboard to its briefing.
 
-## §6 storyboard [PROPOSED, not implementation approval]
+## §6 storyboard [APPROVED D-092; source implemented, browser verification pending]
 
 See `ORIGIN_SECTION_BRIEFING.md`: reuse D-088 Reveal (600ms / 16px), image 0ms, text 80ms, indicators 0/60/120ms independently; map/background static, no nested reveals. Reduced motion/no-JS stay visible.

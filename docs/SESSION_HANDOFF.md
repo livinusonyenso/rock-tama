@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-16 (origin briefing, implementation not approved)_
+_Last updated: 2026-11-16 (§6 source implemented, runtime verification incomplete)_
 
-**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 briefing ready at `docs/ORIGIN_SECTION_BRIEFING.md`, awaiting implementation approval** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
+**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 briefing approved (D-092) and source implemented, runtime verification incomplete** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -31,4 +31,8 @@ _Last updated: 2026-11-16 (origin briefing, implementation not approved)_
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Do not:** implement §6 before explicit briefing approval; promote §5 screenshots before actual comparison review; push or deploy. Distributor Supply stays italic (D-090). V-011 investigation: `docs/verification/home-5-products/height-review.md`. Two planned origin labels are registered unverified; exact map asset and town-coordinate source still to acquire during approved implementation.
+**Current §6 files:** `components/home/OriginSection.tsx`, `components/brand/AfricaMap.tsx`, `homeOrigin` in `content/home.ts`, shared MediaFrame/SectionHeading/IconFeature extensions and map-pin/leaf/layers icons. `origin.built=true`; Our Story resolves to `/#origin`. No /our-story page created. Licensed geometry generator at `scripts/generate-africa-map.py`; exact source and coordinate provenance in ASSET_SPECIFICATIONS.
+
+**Verification blocker:** lint/tsc/whitespace, SSR/content/route/photo-branch assertions and map generator checks pass. Production guard rejects nine claims as intended. Normal build fails on Turbopack worker port (EPERM), including escalated retries. Origin harness times out without a production build (0 passed, 1 incomplete); no browser screenshots or end-to-end results. Full functional/regression, zoom, photo-crop and visual review still required. `docs/verification/home-6-origin/implementation-report.md` has commands and details. Finish verification before marking §6 complete or moving to §7.
+
+**Do not:** promote §5 or §6 baselines; implement §7; push or deploy. Distributor Supply remains italic (D-090). V-011 remains open. Both origin claims stay unverified; location marker represents the town, not a spring survey.

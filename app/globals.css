@@ -236,3 +236,9 @@
     transition: none;
   }
 }
+
+/* Origin photo art direction; identical reserved box with a placeholder or actual photo. */
+.media-frame-responsive { aspect-ratio: var(--media-mobile-aspect); }
+@media (min-width: 48rem) {
+  .media-frame-responsive { aspect-ratio: var(--media-aspect); }
+}

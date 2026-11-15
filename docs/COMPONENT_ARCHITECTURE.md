@@ -106,3 +106,7 @@ Why TS modules rather than a CMS or database now: the content is static and smal
 ## Not components (deliberately)
 
 Eyebrow lines, vertical dividers, the gold hero rule, badge counts, single headings, `<ul>` wrappers, section backgrounds. These are Tailwind utilities or markup inside their owning section.
+
+## §6 implemented source — 2026-11-16 (D-092)
+
+`OriginSection` is a Server Component composed in `app/page.tsx`. It reads typed `homeOrigin` from `content/home.ts`, reuses wide Container, compact left SectionHeading (trailing rule), MediaFrame, inline light IconFeature and once-only Reveal islands. `components/brand/AfricaMap.tsx` owns the licensed static outline and projected town pin; geometry generation is offline (`scripts/generate-africa-map.py`), with no runtime dependency. Icon adds map-pin/leaf/layers. MediaFrame adds optional cover/focal-position/mobileAspect/landscape-placeholder options; defaults preserve current product/hero behaviour. No new global type scale or animation library. Our Story now resolves through the built origin anchor; page remains planned. Build/browser verification pending; see origin implementation report.

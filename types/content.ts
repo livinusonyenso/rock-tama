@@ -65,7 +65,10 @@ export type IconName =
   | "clipboard-check"
   | "pause"
   | "play"
-  | "chevron-right";
+  | "chevron-right"
+  | "map-pin"
+  | "leaf"
+  | "layers";
 
 export type NavLinkItem = {
   label: string;
@@ -230,4 +233,14 @@ export type HomeProductsContent = {
   /** Catalogue products in reference order, with their card CTA label. */
   products: readonly { slug: string; ctaLabel: string }[];
   distributorOffer: ServiceOffer;
+};
+
+/** Homepage origin data; geographic coordinate denotes the town, not the spring site. */
+export type HomeOriginContent = {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  media: MediaAsset;
+  location: { latitude: number; longitude: number };
+  indicators: readonly { icon: IconName; label: string; claim?: import("@/content/claims").ClaimId }[];
 };
