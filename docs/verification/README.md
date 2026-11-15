@@ -2,7 +2,7 @@
 
 Run `npm run verify:visual` (how and when: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification"). This folder holds **curated, committed** material only:
 
-- `baselines/`: **approved** section screenshots per viewport (D-042). Current: `announcement-*` and `header-*` (all 7 widths), `mobile-nav-open-{small,mobile,tablet}` (approved 2026-11-15, D-080). **The drawer baselines are outdated since F2** (Shop now lists its products, 4.4–7.3% diff); re-approve after owner review.
+- `baselines/`: **approved** section screenshots per viewport (D-042). Current: `announcement-*` and `header-*` (all 7 widths), `mobile-nav-open-{small,mobile,tablet}` (approved 2026-11-15, D-080). Drawer baselines **re-approved 2026-11-16 after F2** (owner): differences confirmed to start at the Shop row (y=148 at all widths; header and Home rows identical) and all 69 drawer interaction/accessibility checks passed. Previous baselines kept in `baselines-history/mobile-nav-open-*.pre-f2.png`.
 - `provisional/`: none at present (header and drawer references were promoted).
 - `<task>/`: optional evidence saved with `--save <task>`.
 - the earlier evidence images and the open-differences log below.
