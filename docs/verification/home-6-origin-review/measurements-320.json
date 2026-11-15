@@ -1,0 +1,65 @@
+{
+  "viewport": 320,
+  "section": {
+    "x": 0,
+    "y": 3415.5625,
+    "width": 320,
+    "height": 721.09375
+  },
+  "image": {
+    "x": 16,
+    "y": 3448.5625,
+    "width": 288,
+    "height": 162
+  },
+  "heading": {
+    "x": 16,
+    "y": 3656.75,
+    "width": 288,
+    "height": 75
+  },
+  "paragraph": {
+    "x": 16,
+    "y": 3739.75,
+    "width": 288,
+    "height": 66
+  },
+  "indicators": {
+    "x": 16,
+    "y": 3829.75,
+    "width": 288,
+    "height": 116
+  },
+  "map": {
+    "x": 96,
+    "y": 3969.75,
+    "width": 128,
+    "height": 134.90625
+  },
+  "textContrast": [
+    {
+      "text": "Our Origin",
+      "ratio": 5.342282342878257
+    },
+    {
+      "text": "From Nanka, Anambra State.",
+      "ratio": 16.644511252864163
+    },
+    {
+      "text": "ROCK-TAMA natural spring water originates from Nanka, Anambra State, Nigeria. This is where our story begins.",
+      "ratio": 13.591042271341879
+    },
+    {
+      "text": "Nanka, Anambra State, Nigeria",
+      "ratio": 16.644511252864163
+    },
+    {
+      "text": "Naturally Protected Source",
+      "ratio": 16.644511252864163
+    },
+    {
+      "text": "Preserved Natural Purity",
+      "ratio": 16.644511252864163
+    }
+  ]
+}

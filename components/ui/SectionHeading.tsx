@@ -30,7 +30,7 @@ export function SectionHeading({ id, eyebrow, title, description, align = "cente
       </p>
       <h2
         id={id}
-        className={`${size === "compact" ? "mt-1 text-3xl leading-tight" : `${eyebrowLines ? "mt-1.5" : "mt-3"} text-4xl lg:text-section`} font-serif font-bold uppercase ${tone === "light" ? "text-ink-900" : "text-on-dark"}`}
+        className={`${size === "compact" ? "mt-1 text-3xl leading-tight wrap-anywhere" : `${eyebrowLines ? "mt-1.5" : "mt-3"} text-4xl lg:text-section`} font-serif font-bold uppercase ${tone === "light" ? "text-ink-900" : "text-on-dark"}`}
       >
         {title}
       </h2>

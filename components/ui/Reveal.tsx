@@ -6,6 +6,8 @@ type RevealProps = {
   children: ReactNode;
   /** Stagger delay in ms (e.g. 80 per card). */
   delay?: number;
+  /** Bottom inset percentage; 0 lets content at the document end reveal when first visible. */
+  viewportInset?: 0 | 10;
   className?: string;
 };
 
@@ -15,7 +17,7 @@ type RevealProps = {
  * it switches to "shown" when the element enters the viewport (once). Without JavaScript, with reduced
  * motion, or above the fold, nothing is hidden. No React state: a DOM attribute + CSS transition.
  */
-export function Reveal({ children, delay = 0, className = "" }: RevealProps) {
+export function Reveal({ children, delay = 0, viewportInset = 10, className = "" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,11 +36,11 @@ export function Reveal({ children, delay = 0, className = "" }: RevealProps) {
       },
       // The root extends far upward so an element that is jumped past (anchor link, End key, restored
       // scroll) also counts as reached; IntersectionObserver gives no callback when an element skips the viewport.
-      { rootMargin: "100000px 0px -10% 0px" },
+      { rootMargin: `100000px 0px -${viewportInset}% 0px` },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [viewportInset]);
 
   return (
     <div ref={ref} className={className} style={delay ? ({ "--reveal-delay": `${delay}ms` } as CSSProperties) : undefined}>

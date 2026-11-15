@@ -115,7 +115,28 @@ const config = {
     {
       name: "origin", page: "home", selector: "#origin",
       reference: { x: 0, y: 918, width: 1086, height: 187 },
+      // Assertions cause a fresh page load: reveal the actual section before static captures.
+      actions: [
+        { evaluate: "document.querySelector('#origin').scrollIntoView({block:'end',behavior:'instant'}); true" },
+        { waitFor: "document.querySelectorAll('#origin [data-reveal=shown]').length === 5" },
+      ],
       expect: [
+        { name: "all origin groups visible in comparison capture", js: "[...document.querySelectorAll('#origin [data-reveal]')].length === 5 && [...document.querySelectorAll('#origin [data-reveal]')].every(x => getComputedStyle(x).opacity === '1')" },
+        { name: "origin layout measurements and text contrast", server: async ({ evaluate, root }) => {
+          const data = await evaluate(`(() => {
+            const box = selector => {const e=document.querySelector(selector);const r=e.getBoundingClientRect();return {x:r.left,y:r.top+scrollY,width:r.width,height:r.height};};
+            const lum = color => {const a=color.match(/[\\d.]+/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4});return a[0]*0.2126+a[1]*0.7152+a[2]*0.0722;};
+            const bg=lum(getComputedStyle(document.querySelector('#origin')).backgroundColor);
+            const text=[...document.querySelectorAll('#origin h2,#origin p')].map(e=>{const fg=lum(getComputedStyle(e).color);return {text:e.textContent,ratio:(Math.max(bg,fg)+0.05)/(Math.min(bg,fg)+0.05)};});
+            return {viewport:innerWidth,section:box('#origin'),image:box('#origin .media-frame-responsive'),heading:box('#origin h2'),paragraph:box('#origin p.mt-2'),indicators:box('#origin ul'),map:box('#origin [data-africa-map]'),textContrast:text};
+          })()`);
+          const { mkdirSync, writeFileSync } = await import('node:fs');
+          const dir = `${root}/.verification/origin-measurements`;
+          mkdirSync(dir, { recursive: true });
+          writeFileSync(`${dir}/measurements-${data.viewport}.json`, JSON.stringify(data, null, 2));
+          return data.textContrast.every(item => item.ratio >= 4.5);
+        } },
+        { name: "Tailwind utilities active (not an unstyled diagnostic build)", js: "getComputedStyle(document.querySelector('#origin > div')).display === 'grid' && getComputedStyle(document.querySelector('#origin h2')).fontSize === '30px'" },
         { name: "origin heading, factual description and three indicators", js: "document.querySelector('#origin h2')?.textContent === 'From Nanka, Anambra State.' && document.querySelectorAll('#origin li').length === 3 && document.querySelector('#origin p.mt-2')?.textContent.includes('This is where our story begins.')" },
         { name: "required claims registered and unverified", js: "[...document.querySelectorAll('#origin li[data-claim]')].map(x => x.dataset.claim).join(',') === 'naturallyProtectedSource,preservedNaturalPurity' && [...document.querySelectorAll('#origin li[data-claim]')].every(x => x.dataset.claimStatus === 'unverified')" },
         { name: "landscape reserves the responsive aspect ratio", js: "(() => { const r=document.querySelector('#origin .media-frame-responsive').getBoundingClientRect(); return Math.abs(r.width/r.height-(innerWidth<768?16/9:3))<0.04; })()" },
@@ -674,8 +695,8 @@ function functionalJourneys() {
     },
     {
       ...base, name: "origin-desktop-navigation", page: "shop", viewports: ["desktop"],
-      actions: [{evaluate:"const a=document.querySelector('header nav a[href=\"/#origin\"]'); a.focus(); window.__originFocus=getComputedStyle(a).outlineStyle; true"},{press:"Enter"},{waitFor:"location.pathname==='/' && location.hash==='#origin' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
-      expect: [{name:"keyboard Our Story reaches built origin from shop; focus ring present",js:"window.__originFocus==='solid' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && document.querySelector('#origin').getBoundingClientRect().bottom>0"}],
+      actions: [{press:"Tab"},{evaluate:"const a=document.querySelector('header nav a[href=\"/#origin\"]'); a.focus(); sessionStorage.setItem('originFocus',getComputedStyle(a).outlineStyle); true"},{press:"Enter"},{waitFor:"location.pathname==='/' && location.hash==='#origin' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
+      expect: [{name:"keyboard Our Story reaches built origin from shop; focus ring present",js:"sessionStorage.getItem('originFocus')==='solid' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && document.querySelector('#origin').getBoundingClientRect().bottom>0"}],
     },
     {
       ...base, name: "origin-mobile-navigation", page: "shop", viewports: ["mobile"],
@@ -683,9 +704,12 @@ function functionalJourneys() {
       expect: [{name:"mobile Our Story reaches origin, closes drawer and releases scroll",js:"!document.getElementById('mobile-nav').open && getComputedStyle(document.documentElement).overflow!=='hidden' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
     },
     {
-      ...base, name: "origin-enlarged-text", page: "home", viewports: ["mobile","desktop"],
+      ...base, kind: "visual", name: "origin-enlarged-text", page: "home", viewports: ["mobile","desktop"],
       actions: [{evaluate:"document.documentElement.style.fontSize='200%'; document.querySelector('#origin').scrollIntoView({behavior:'instant'}); true"}],
-      expect: [{name:"200% text: origin text not clipped horizontally",js:"[...document.querySelectorAll('#origin h2,#origin p,#origin li')].every(x=>x.scrollWidth<=x.clientWidth+1)"}],
+      expect: [{name:"record enlarged-text diagnostics",server: async ({evaluate,root}) => {
+        const data=await evaluate(`(() => ({viewport:innerWidth,groups:[...document.querySelectorAll('#origin [data-reveal]')].map(e=>({state:e.dataset.reveal,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom})),overflow:[...document.querySelectorAll('#origin h2,#origin p,#origin li')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>({tag:e.tagName,text:e.textContent,width:e.clientWidth,scroll:e.scrollWidth})),origin:document.querySelector('#origin').getBoundingClientRect().toJSON()}))()`);
+        const {mkdirSync,writeFileSync}=await import('node:fs');const dir=`${root}/.verification/origin-measurements`;mkdirSync(dir,{recursive:true});writeFileSync(`${dir}/enlarged-${data.viewport}.json`,JSON.stringify(data,null,2));return true;
+      }},{name:"200% text: origin text not clipped horizontally",js:"[...document.querySelectorAll('#origin h2,#origin p,#origin li')].every(x=>x.scrollWidth<=x.clientWidth+1)"}],
     },
     // -- Hero Product Carousel (D-073) --
     {

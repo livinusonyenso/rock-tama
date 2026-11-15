@@ -1,0 +1,41 @@
+{
+  "viewport": 591,
+  "groups": [
+    {
+      "state": "shown",
+      "top": 533.34375,
+      "bottom": 708.28125
+    },
+    {
+      "state": "shown",
+      "top": 756.28125,
+      "bottom": 1380.671875
+    },
+    {
+      "state": "hidden",
+      "top": 1444.671875,
+      "bottom": 1521.671875
+    },
+    {
+      "state": "hidden",
+      "top": 1553.671875,
+      "bottom": 1630.671875
+    },
+    {
+      "state": "hidden",
+      "top": 1662.671875,
+      "bottom": 1739.671875
+    }
+  ],
+  "overflow": [],
+  "origin": {
+    "x": 0,
+    "y": 468.34375,
+    "width": 375,
+    "height": 1637.15625,
+    "top": 468.34375,
+    "right": 375,
+    "bottom": 2105.5,
+    "left": 0
+  }
+}
