@@ -6,7 +6,7 @@ _Last updated: 2026-11-16_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** Remaining homepage §7–§9 built in one authorised pass (D-095). All nine sections present; final evidence at `verification/home-7-9-completion/REPORT.md`. Claims/assets/providers and owner visual approval remain open; no new push/deployment.
+- **Current task:** Supplied storefront images integrated across home, carousel, shop/product/wholesale consumers (D-098). Original/optimized assets organized, inactive future artwork withheld. Image verification and narrow-desktop card fix: `verification/storefront-images/REPORT.md`.
 
 ## Completed
 
@@ -99,3 +99,11 @@ Local source/evidence commit: `627e42e` (two narrow fixes + verification evidenc
 Built QualitySection (registered claims, ISO hidden), WholesaleBanner (real quote destination, existing segments) and shared SiteFooter (route-driven links, cached year, disabled newsletter, no guessed socials). Reused existing components; no dependencies. Scope authorisation superseded per-section stop gates; supporting plan at `REMAINING_HOMEPAGE_IMPLEMENTATION.md`. Content/source evidence and precise test outcomes: `verification/home-7-9-completion/REPORT.md`. Default Turbopack environment limitation unchanged; styled diagnostic Webpack builds with config restored. Prior §5/§6 and new screenshots remain unapproved. Next: owner feedback, M8 wider audit and client assets/evidence/service inputs, not another homepage section.
 
 Verification outcome: lint/tsc + styled Webpack build pass; 8 certificate gates and production rejection of 13 claims pass. Full initial browser run 777 pass/4 known failures; final focused new-section run 200 pass/2 existing global-header failures. New-section own text reflow passes. Mock delivery 40/40, unconfigured 31/31. Actual responsive captures and differences committed under `docs/verification/home-7-9-completion/`; no approval/push/deployment.
+
+## Image asset integration — 2026-11-16
+
+Nine owner PNGs preserved under docs/assets/source; five live optimized WebP files in public/images/{products,services,origin}, four future/custom derivatives internal only. Shared typed media updates all catalogue consumers; same 750 ml image reused by hero. Descriptive alt, responsive sizes, transparent canvas trim, preserved alpha, fixed ratios and Origin focal point. No product availability/price/claim or staging config changes; official logos remain pending. Image review found/fixed narrow-desktop CTA overflow by keeping product grid at two columns below 1400px, four at 1440 reference. Final checks and captured views: `verification/storefront-images/REPORT.md`. No push/deploy/baseline promotion.
+
+Image verification: lint/tsc and styled diagnostic Webpack build pass; 9 source/output integrity checks pass; initial carousel/no-JS/enquiry run 307/307; final 7-width image/CTA run 283/283. Captures and limitations recorded in `verification/storefront-images/REPORT.md`. Original stage configuration untouched.
+
+Final homepage column-count/containment verification after rem breakpoint correction: **175/175**, all seven widths; 1440 is four columns, 1024–1366 two, mobile one. Final captures refreshed in storefront-images; prior cross-page 283/283 and carousel/enquiry 307/307 results retained separately.

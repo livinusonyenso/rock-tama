@@ -1,0 +1,123 @@
+{
+  "provenance": "Owner-supplied storefront artwork, integrated 2026-11-16. Not evidence of product availability, pack quantities, certification or actual spring-site photography.",
+  "processor": "sharp 0.35.5",
+  "assets": [
+    {
+      "name": "750ml-glass-bottle",
+      "source": "docs/assets/source/storefront/rock-tama-750ml-glass-bottle.png",
+      "destination": "public/images/products/750ml-glass-bottle.webp",
+      "published": true,
+      "sourceSha256": "b2df125bc4dac919e8ccd9cc161ae923b5505a050a90a1676636c01cbf9bd50a",
+      "sourceBytes": 1088565,
+      "width": 463,
+      "height": 1562,
+      "bytes": 108360,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "1-5l-bottle",
+      "source": "docs/assets/source/storefront/rock-tama-1-5l-bottle.png",
+      "destination": "public/images/products/1-5l-bottle.webp",
+      "published": true,
+      "sourceSha256": "ca8a4e99c89891ec7b319b5bcc41b111bc165123f8d9dfeb7a3004fa1732091b",
+      "sourceBytes": 1161168,
+      "width": 497,
+      "height": 1591,
+      "bytes": 111450,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "carton-packs",
+      "source": "docs/assets/source/storefront/rock-tama-carton-packs.png",
+      "destination": "public/images/products/carton-packs.webp",
+      "published": true,
+      "sourceSha256": "ed4fd0de212001c877cbbc0dd25fe8517f11d02066f926c9739bd47f6849963f",
+      "sourceBytes": 2358253,
+      "width": 1271,
+      "height": 1043,
+      "bytes": 297068,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "distributor-supply",
+      "source": "docs/assets/source/storefront/rock-tama-distributor-supply.png",
+      "destination": "public/images/services/distributor-supply.webp",
+      "published": true,
+      "sourceSha256": "28167c910276a0542c3f1fc1e3fe29c5ad5fac8de015bf579fc313d9cb0bf743",
+      "sourceBytes": 2719505,
+      "width": 1310,
+      "height": 1047,
+      "bytes": 401898,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "origin-landscape",
+      "source": "docs/assets/source/storefront/rock-tama-origin-landscape.png",
+      "destination": "public/images/origin/origin-landscape.webp",
+      "published": true,
+      "sourceSha256": "4f0fba6d318d5ddecd5cf9951733b2fb0d7c0acced7b23b8a7d456183b61f9d0",
+      "sourceBytes": 3081985,
+      "width": 1448,
+      "height": 1086,
+      "bytes": 483470,
+      "alpha": false,
+      "transparentCanvasTrimmed": false
+    },
+    {
+      "name": "sachet-water",
+      "source": "docs/assets/source/storefront/rock-tama-sachet-water.png",
+      "destination": "docs/assets/prepared/unconfirmed/sachet-water.webp",
+      "published": false,
+      "sourceSha256": "a0673d85d65ab285ad7ae0b28cb2f76b2215e7f729cc878188ab9bebe6c21854",
+      "sourceBytes": 2210908,
+      "width": 1317,
+      "height": 978,
+      "bytes": 296160,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "customised-corporate-water",
+      "source": "docs/assets/source/storefront/rock-tama-customised-corporate-water.png",
+      "destination": "docs/assets/prepared/unconfirmed/customised-corporate-water.webp",
+      "published": false,
+      "sourceSha256": "d3ac4b6a3b67ee712a285b504ec31f75623030427c7c7392d6137eb116b34261",
+      "sourceBytes": 2196891,
+      "width": 1301,
+      "height": 1063,
+      "bytes": 272680,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "wedding-event-water",
+      "source": "docs/assets/source/storefront/rock-tama-wedding-event-water.png",
+      "destination": "docs/assets/prepared/unconfirmed/wedding-event-water.webp",
+      "published": false,
+      "sourceSha256": "5a2ae6139adc45dc40f9de8894506a3747c30394b8a1f267b1c4e9dd0ffcb57c",
+      "sourceBytes": 2199321,
+      "width": 1346,
+      "height": 1054,
+      "bytes": 341098,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    },
+    {
+      "name": "traditional-marriage-water",
+      "source": "docs/assets/source/storefront/rock-tama-traditional-marriage-water.png",
+      "destination": "docs/assets/prepared/unconfirmed/traditional-marriage-water.webp",
+      "published": false,
+      "sourceSha256": "c6462402546560b031a14588b4cc019c97f58d2f200057541880a25d2fd979b7",
+      "sourceBytes": 2171308,
+      "width": 1357,
+      "height": 1046,
+      "bytes": 359648,
+      "alpha": true,
+      "transparentCanvasTrimmed": true
+    }
+  ]
+}

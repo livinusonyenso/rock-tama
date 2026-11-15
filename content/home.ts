@@ -1,3 +1,4 @@
+import { storefrontMedia } from "@/content/media";
 import { site } from "@/content/site";
 import type { HomeOriginContent, HomeProductsContent } from "@/types/content";
 
@@ -18,7 +19,7 @@ export const homeProducts: HomeProductsContent = {
   distributorOffer: {
     title: "Distributor Supply",
     text: "Bulk volumes for supermarkets, retailers, hotels and institutions.",
-    media: { label: "Distributor Supply Image", alt: `${site.name} distributor supply pallet`, src: null, aspect: "2/1", shape: "rect" },
+    media: storefrontMedia.distributor,
     cta: { label: "Request Supply", route: "wholesale" },
     titleStyle: "italic",
   },
@@ -29,7 +30,7 @@ export const homeOrigin: HomeOriginContent = {
   eyebrow: "Our Origin",
   heading: "From Nanka, Anambra State.",
   description: "ROCK-TAMA natural spring water originates from Nanka, Anambra State, Nigeria. This is where our story begins.",
-  media: { label: "Story Section Image (Landscape)", alt: "", src: null, aspect: "3/1", shape: "rect" },
+  media: storefrontMedia.origin,
   // GeoNames 2329463 via Mapcarta; provenance and independent check in ASSET_SPECIFICATIONS.
   location: { latitude: 6.06042, longitude: 7.08306 },
   indicators: [

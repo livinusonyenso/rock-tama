@@ -36,12 +36,13 @@ export function MediaFrame({ media, className = "", sizes, priority = false, com
   const box = (mobileAspect
     ? { "--media-aspect": media.aspect, "--media-mobile-aspect": mobileAspect }
     : { aspectRatio: media.aspect }) as CSSProperties;
+  const position = objectPosition ?? media.objectPosition;
   const frameClass = `relative ${mobileAspect ? "media-frame-responsive" : ""} ${className}`;
 
   if (media.src) {
     return (
       <div className={frameClass} style={box}>
-        <Image src={media.src} alt={media.alt} fill sizes={sizes} priority={priority} className={fit === "cover" ? "rounded-card object-cover" : "object-contain object-bottom"} style={objectPosition ? { objectPosition } : undefined} />
+        <Image src={media.src} alt={media.alt} fill sizes={sizes} preload={priority} className={fit === "cover" ? "rounded-card object-cover" : "object-contain object-bottom"} style={position ? { objectPosition: position } : undefined} />
       </div>
     );
   }

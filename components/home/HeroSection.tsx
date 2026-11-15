@@ -32,7 +32,7 @@ export function HeroSection() {
         key={product.slug}
         media={media}
         priority={i === 0}
-        sizes="(min-width: 1024px) 288px, 256px"
+        sizes={w > h ? "(min-width: 1024px) 288px, 256px" : `(min-width: 1024px) ${Math.ceil(480 * w / h)}px, (min-width: 768px) ${Math.ceil(352 * w / h)}px, (min-width: 640px) ${Math.ceil(320 * w / h)}px, ${Math.ceil(288 * w / h)}px`}
         className={w > h ? "w-full" : "h-full"}
       />
     );

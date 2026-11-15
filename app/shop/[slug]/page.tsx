@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
             <MediaFrame
               media={product.media}
               priority
-              sizes="(min-width: 1024px) 480px, 80vw"
+              sizes={w > h ? "(min-width: 1024px) 480px, calc(100vw - 96px)" : `(min-width: 1024px) ${Math.ceil(480 * w / h)}px, ${Math.ceil(320 * w / h)}px`}
               className={w > h ? "w-full max-w-120" : "h-80 lg:h-120"}
             />
           </div>

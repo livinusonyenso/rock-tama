@@ -13,7 +13,7 @@ export function OriginSection() {
     <section id="origin" aria-labelledby="origin-heading" className="border-t border-line-card/50 bg-ivory-50 py-8 lg:pt-6 lg:pb-4">
       <Container size="wide" className="grid items-start gap-6 lg:grid-cols-[46%_minmax(0,1fr)] lg:gap-10">
         <Reveal viewportInset={0} className="min-w-0">
-          <MediaFrame media={homeOrigin.media} mobileAspect="16/9" fit="cover" objectPosition="center" landscape sizes="(min-width: 1440px) 633px, (min-width: 1024px) 44vw, calc(100vw - 48px)" className="w-full rounded-card border border-line-card shadow-card" />
+          <MediaFrame media={homeOrigin.media} mobileAspect="16/9" fit="cover" landscape sizes="(min-width: 1440px) 633px, (min-width: 1024px) 44vw, calc(100vw - 48px)" className="w-full rounded-card border border-line-card shadow-card" />
         </Reveal>
         <div className="grid min-w-0 gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-x-4 md:gap-y-4">
           <Reveal viewportInset={0} delay={80} className="min-w-0 md:col-start-1 md:row-start-1">

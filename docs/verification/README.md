@@ -71,3 +71,9 @@ Source implemented under D-092; `home-6-origin/report.md` records harness timeou
 ## All homepage sections built — §7–§9 (D-095)
 
 Evidence: `home-7-9-completion/REPORT.md`, desktop/mobile full homepage and three original-reference comparison sheets. Full initial combined run 777 pass / 4 fail (two global header text-stress overflows + two intended drawer diffs). Final focused new-section run 200 pass / 2 existing global header failures; own new-section 200% text checks pass. Delivery regressions 40/40 mock and 31/31 unconfigured. Eight certificate gates and 13-claim production blocker verified. Styled diagnostic Webpack only; default Turbopack limitation persists. No baselines approved/promoted. V-014 now includes Quality live link: 3.79% @320, 0.60% @375. V-015: new section height/copy/certification/logo/service differences are recorded in the completion report for owner review.
+
+## Supplied storefront images — D-098/D-099
+
+`storefront-images/REPORT.md`: shared optimized product/service/Origin artwork across live consumers; original source bundle and four inactive derivatives organized internally. 307/307 carousel/no-JS/enquiry checks, final 283/283 image/layout/CTA checks across seven widths. Desktop/mobile home and shop/product/wholesale captures plus three original-reference comparisons. Product grid is now two columns below 1400px to prevent CTA overflow. No baseline approval or staging-config change.
+
+Final homepage column-count/containment verification after rem breakpoint correction: **175/175**, all seven widths; 1440 is four columns, 1024–1366 two, mobile one. Final captures refreshed in storefront-images; prior cross-page 283/283 and carousel/enquiry 307/307 results retained separately.

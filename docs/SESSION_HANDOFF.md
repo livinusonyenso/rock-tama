@@ -1,6 +1,6 @@
 # Session Handoff
 
-_Last updated: 2026-11-16 (all homepage sections built)_
+_Last updated: 2026-11-16 (supplied images integrated)_
 
 **Vercel (D-097):** production builds succeed only with the Vercel env var `DEPLOY_MODE=staging` (noindex, guards warn) until Resend is configured and claims are verified; remove it for launch.
 
@@ -48,3 +48,9 @@ _Last updated: 2026-11-16 (all homepage sections built)_
 **Next:** owner visual feedback and missing official assets/evidence, real newsletter/provider/contact/policy content; M8 broader audit. No additional homepage section remains to build. Do not promote baselines, push or deploy unless separately requested. Preserve existing commits and section defaults; do not bypass environment restrictions by weakening security or claims guards.
 
 **Completion results:** lint/tsc/styled Webpack pass; 8 certificate cases pass; guard rejects 13 claims. Full initial browser run 777 pass/4 known failures, final focused 200 pass/2 existing global header failures; new-section own reflow passes. Mock 40/40, unconfigured 31/31. Current captures/reference sheets at `home-7-9-completion`; all visual approval remains pending.
+
+**Latest image task (D-098/D-099):** Five live supplied images are centralized in `content/media.ts` and served from public/images/products, services, origin. Shared catalogue consumers update together; no duplicate hero file. Nine originals in docs/assets/source/storefront, four prepared future/custom files internal only. Reproduce with `node scripts/prepare-storefront-images.mjs`; manifest/README in docs/assets. Preserve unconfirmed catalogue status, logo placeholders, stage config D-097 and claim rules. Origin art is an illustration, not verified site photography. Product grid two columns below 1400px prevents button overflow; wide-desktop reference layout unchanged. Results/screenshots: `docs/verification/storefront-images/REPORT.md`. No push/deployment or baseline promotion.
+
+**Image results:** lint/tsc + styled diagnostic Webpack build pass; all 9 source/output hashes/dimensions/alpha/location checks pass. Initial carousel/no-JS/enquiry run 307/307, final 7-width image/card containment run 283/283. Full screenshots and source-reference comparisons in `docs/verification/storefront-images/`. Existing staging opt-in D-097 preserved; no push/deployment.
+
+Final homepage column-count/containment verification after rem breakpoint correction: **175/175**, all seven widths; 1440 is four columns, 1024–1366 two, mobile one. Final captures refreshed in storefront-images; prior cross-page 283/283 and carousel/enquiry 307/307 results retained separately.

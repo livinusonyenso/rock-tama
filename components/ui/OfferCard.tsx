@@ -37,7 +37,7 @@ const isLandscape = (media: MediaAsset) => {
 export function OfferCard({ title, text, media, action, layout = "media-top", headingLevel: Heading = "h3", titleStyle, eyebrow, meta, className = "" }: OfferCardProps) {
   const landscape = isLandscape(media);
   const frame = (sizeClass: string) => (
-    <MediaFrame media={media} compact sizes="(min-width: 1024px) 272px, 60vw" className={landscape ? "w-full max-w-68" : sizeClass} />
+    <MediaFrame media={media} compact sizes={landscape ? "(min-width: 1024px) 272px, (min-width: 768px) 320px, calc(100vw - 72px)" : "96px"} className={landscape ? "w-full max-w-68" : sizeClass} />
   );
   const titleClass = `font-serif text-card-title font-bold leading-tight text-ink-900 lining-nums ${titleStyle === "italic" ? "italic" : ""}`;
   const shell = `flex h-full rounded-card border border-line-card bg-cream-200 shadow-card transition-[box-shadow,translate] duration-150 ease-standard hover:-translate-y-0.5 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${className}`;

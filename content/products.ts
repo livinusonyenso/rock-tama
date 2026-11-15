@@ -1,3 +1,4 @@
+import { storefrontMedia } from "@/content/media";
 import { site } from "@/content/site";
 import type { Product } from "@/types/content";
 
@@ -9,7 +10,7 @@ import type { Product } from "@/types/content";
  * - Only `kind: "standard"` + `status: "available"` products are listed or offered (`listedProducts`).
  *   Customised/event offerings and future products stay recorded as "unconfirmed" until the client
  *   confirms them (D-081); they are never shown as available.
- * - Images: ASSET_SPECIFICATIONS slots 1–4 (placeholders until photography exists).
+ * - Images: shared owner-supplied artwork in content/media.ts; originals and provenance in docs/assets.
  */
 export const products: readonly Product[] = [
   {
@@ -22,9 +23,9 @@ export const products: readonly Product[] = [
     packaging: "Single bottle",
     summary: "A refined choice for premium drinking, hotels and personal use.",
     price: null,
-    media: { label: "750 ml Bottle Image", alt: `${site.name} 750 ml glass bottle`, src: null, aspect: "3/10", shape: "bottle" },
+    media: storefrontMedia.bottle750,
     // Hero carousel first slide keeps the reference's 2:5 hero bottle (D-073).
-    heroMedia: { label: "Hero Product Image", alt: `${site.name} 750 ml glass bottle`, src: null, aspect: "2/5", shape: "bottle" },
+    heroMedia: { ...storefrontMedia.bottle750, label: "Hero Product Image", aspect: "2/5" },
   },
   {
     slug: "1-5l-bottle",
@@ -36,7 +37,7 @@ export const products: readonly Product[] = [
     packaging: "Single bottle",
     summary: "Ideal for home, office and everyday hydration.",
     price: null,
-    media: { label: "1.5 L Bottle Image", alt: `${site.name} 1.5 litre bottle`, src: null, aspect: "3/8", shape: "bottle" },
+    media: storefrontMedia.bottle15,
   },
   {
     slug: "carton-packs",
@@ -49,7 +50,7 @@ export const products: readonly Product[] = [
     packaging: "Multi-bottle carton",
     summary: "Convenient multi-bottle packs for retail and events.",
     price: null,
-    media: { label: "Carton Pack Image", alt: `${site.name} carton pack`, src: null, aspect: "7/4", shape: "rect" },
+    media: storefrontMedia.cartons,
   },
   // ---- Recorded but NOT offered until the client confirms them (D-081) ----
   {

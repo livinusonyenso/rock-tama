@@ -171,6 +171,19 @@ const config = {
       ],
     },
 
+    {
+      name: "storefront-images", page: "home", viewports: ["small","mobile","tablet","laptop","large","hd","desktop"],
+      actions: [{evaluate:"document.querySelector('#origin').scrollIntoView({block:'center',behavior:'instant'}); true"}],
+      expect: [
+        { name: "product grid keeps reference four columns only when wide enough", js: "getComputedStyle(document.querySelector('#products ul')).gridTemplateColumns.split(' ').length === (innerWidth>=1400?4:innerWidth>=768?2:1)" },
+        { name: "product buttons remain inside their cards", js: "[...document.querySelectorAll('#products article a')].every(a=>{const r=a.getBoundingClientRect(),c=a.closest('article').getBoundingClientRect();return r.left>=c.left && r.right<=c.right+1 && r.bottom<=c.bottom+1;})" },
+        { name: "all five supplied live assets are referenced; no placeholders in product/origin slots", js: "['750ml-glass-bottle.webp','1-5l-bottle.webp','carton-packs.webp','distributor-supply.webp','origin-landscape.webp'].every(path => [...document.querySelectorAll('main img')].some(img => decodeURIComponent(img.getAttribute('src')).includes(path))) && document.querySelectorAll('#products img').length===4 && document.querySelectorAll('#origin img').length===1" },
+        { name: "real images use alt text, responsive sources and safe fit", js: "[...document.querySelectorAll('main img')].every(img=>img.alt.length>0 && !!img.sizes && !!img.srcset && ['contain','cover'].includes(getComputedStyle(img).objectFit))" },
+        { name: "origin remains lazy and uses its authored focal point", js: "document.querySelector('#origin img').loading==='lazy' && getComputedStyle(document.querySelector('#origin img')).objectPosition==='50% 60%'" },
+        { name: "unconfirmed artwork not promoted into the live catalogue", js: "![...document.querySelectorAll('main img')].some(img=>/sachet|wedding|corporate|traditional-marriage/.test(img.src))" },
+      ],
+    },
+
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",

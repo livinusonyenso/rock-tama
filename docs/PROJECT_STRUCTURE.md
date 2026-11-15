@@ -126,3 +126,7 @@ public/
 ## Remaining homepage files (D-095)
 
 `components/home/QualitySection.tsx`, `WholesaleBanner.tsx`; `components/layout/SiteFooter.tsx`; `content/footer.ts` plus home/highlights modules; `lib/certification.ts` (pure evidence/config/date gate), `lib/site-date.ts` (cached server date); `scripts/certification-check.mjs` (negative/positive gate fixtures). No new top-level folders or dependencies.
+
+## Supplied imagery — D-098
+
+`public/images/products/`, `services/`, `origin/` contain five optimized live WebP files. `docs/assets/source/storefront/` preserves nine original PNGs; `docs/assets/prepared/unconfirmed/` holds four inactive derivatives. `docs/assets/storefront-manifest.json` tracks provenance/dimensions/checksums; `content/media.ts` owns typed media references; `scripts/prepare-storefront-images.mjs` reproduces outputs. No duplicate images scattered across page folders.

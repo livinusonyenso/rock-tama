@@ -118,3 +118,7 @@ Reveal adds optional `viewportInset?: 0 | 10` (10 default), used as 0 by Origin 
 ## §7–§9 implemented (D-095/D-096)
 
 QualitySection and WholesaleBanner are Server sections composed in app/page; SiteFooter is an async Server Component in root layout. IconFeature gains compact/circled flags, preserving all prior defaults. Quality uses registered indicators plus safe origin copy; `lib/certification.ts` checks enablement/status/identity/scope/dates before conditional ISO markup. `lib/site-date.ts` uses daily cached server date for footer year (and certification only when enabled). Static footer content is `content/footer.ts`; resolver outputs null for unavailable pages, rendered as text. No newsletter Client island or fake submit action while provider is absent. No guessed social links. Reveal remains the only section animation Client island. Supply reuses wholesale.supply.segments and resolves wholesale CTA. No dependencies added.
+
+## Image integration — D-098/D-099
+
+`content/media.ts` supplies catalogue media for all existing product consumers plus home distributor/Origin slots. MediaAsset adds optional objectPosition; MediaFrame respects content focal point and uses supported Next 16 preload. Existing placeholder fallback, fixed ratios and fit defaults remain. Hero/cards/product detail supply narrower accurate sizes for portrait images. ProductRangeSection uses two columns below 1400px, four at wide desktop to contain CTA targets. No new Client boundary or image library.

@@ -194,11 +194,14 @@ async function connect(cdpPort) {
 const SETTLE = `(async () => {
   if (document.readyState !== "complete") await new Promise(r => addEventListener("load", r, { once: true }));
   await document.fonts.ready;
-  await Promise.all([...document.images].map(img => img.complete ? null : new Promise(r => { img.onload = img.onerror = r; })));
+  // Offscreen lazy images are intentionally unloaded. Await visible/eager images only here;
+  // revealPage scrolls and decodes each visible image before full-page captures.
+  const visible = img => { const r=img.getBoundingClientRect(); return r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight; };
+  await Promise.all([...document.images].filter(img => img.loading !== "lazy" || visible(img)).map(img => img.decode().catch(() => null)));
   // Deterministic: wait until every finite animation (e.g. entrance sequences) has finished.
   await Promise.all(document.getAnimations().filter(a => a.effect && a.effect.getComputedTiming().endTime !== Infinity).map(a => a.finished.catch(() => null)));
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-  return { fonts: document.fonts.status, brokenImages: [...document.images].filter(i => i.naturalWidth === 0).map(i => i.currentSrc || i.src) };
+  return { fonts: document.fonts.status, brokenImages: [...document.images].filter(i => i.complete && i.naturalWidth === 0).map(i => i.currentSrc || i.src) };
 })()`;
 
 const ANIMATIONS_DONE = `Promise.all(document.getAnimations()
@@ -401,6 +404,7 @@ async function main() {
       for (let y = 0; y <= document.documentElement.scrollHeight; y += step) {
         scrollTo({ top: y, behavior: "instant" });
         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+        await Promise.all([...document.images].filter(img => {const r=img.getBoundingClientRect();return r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight;}).map(img => img.decode().catch(() => null)));
       }
       scrollTo({ top: 0, behavior: "instant" });
       return true;
@@ -514,6 +518,7 @@ async function main() {
       }
       await wait(200); // let late console/network errors arrive
       await revealPage();
+      settled = await cdp.evaluate(SETTLE);
       record(scope, "fonts loaded", settled.fonts === "loaded" ? "PASS" : "FAIL", settled.fonts);
       record(scope, "images loaded", settled.brokenImages.length ? "FAIL" : "PASS", settled.brokenImages.join(", "));
 

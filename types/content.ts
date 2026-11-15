@@ -159,6 +159,8 @@ export type MediaAsset = {
   aspect: `${number}/${number}`;
   /** Placeholder outline. "bottle" = generic bottle silhouette (D-068). */
   shape?: "rect" | "bottle";
+  /** Optional crop focal point for photographic/illustrated landscape slots. */
+  objectPosition?: string;
 };
 
 export type HeroCarouselContent = {
