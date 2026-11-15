@@ -424,7 +424,7 @@ async function main() {
   /**
    * Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms }
    * | { pauseAnimationsAt: ms } | { type: { selector, text } } | { select: { selector, value } }
-   * | { check: selector } | { navigate: path } | { evaluate: js } | { waitFor: js, timeout? }
+   * | { check: selector } | { navigate: path } | { evaluate: js } | { waitFor: js, timeout? } | { moveTo: { x, y } }
    */
   async function runAction(action) {
     if (action.click) {
@@ -437,6 +437,8 @@ async function main() {
       const point = await cdp.evaluate(`(() => { const r = document.querySelector(${JSON.stringify(action.click)}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       if (!point) throw new Error(`action target not found: ${action.click}`);
       await mouseClick(point.x, point.y);
+    } else if (action.moveTo) {
+      await cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: action.moveTo.x, y: action.moveTo.y });
     } else if (action.clickAt) {
       await mouseClick(action.clickAt.x, action.clickAt.y);
     } else if (action.press) {

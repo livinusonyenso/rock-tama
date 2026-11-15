@@ -9,8 +9,8 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 | # | Section | Status | Visual | Functional | Open items |
 |---|---|---|---|---|---|
 | 1 | Announcement bar | **Done + verified** (M2.2, refined M2.7) | **Approved baselines** (D-080) | Informational only, no actions | Service wording pending verification (D-030); V-006/V-007 minor |
-| 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | **Approved baselines** for header (7 widths) and drawer (D-080) | Links via `resolveHref`; Wholesale live; Shop/Our Story/Quality/Contact/Search/Account/Cart pending | ShopMenu + mobile Shop list ship with F2 (build guard); logo SVGs pending |
-| 3 | Hero | **Done + verified** (M3.1–M3.3) | Measured within ±3px @1440; animation verified | **Request Wholesale → /wholesale (works)**; **Shop Now still pending (needs F2 `/shop`)** | **Hero Product Carousel (D-073) ships with F2**; hero claims flagged (D-068); bottle photo pending |
+| 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | **Approved baselines** for header (7 widths) and drawer (D-080) | Links via `resolveHref`; **Shop dropdown + mobile Shop list live (F2)**; Wholesale live; Our Story/Quality/Contact/Search/Account/Cart pending | Drawer baselines need re-approval (Shop now lists products); logo SVGs pending |
+| 3 | Hero | **Done + verified** (M3.1–M3.3, carousel F2) — **M3 complete** | Measured within ±3px @1440; animation verified | **Shop Now → /shop and Request Wholesale → /wholesale both work**; **Hero Product Carousel live (D-085)** with links to product pages | Hero claims registered (D-078); product photography pending |
 | 4 | Purity / trust indicators | **Done + verified** (2026-11-15, D-079) | Measured vs reference @1440 (height ±2, labels ±6, centres −7…+5); no baselines yet | Informational only | Six claims registered and **blocking production deploys until evidenced** (D-078); V-010 pathogen icon |
 | 5 | Our Products | **Not implemented** | — | **Cards must link to product pages → depends on F2** | Product photos; prices intentionally absent |
 | 6 | Our Origin | **Not implemented** | — | Optional link to Our Story (planned page) | Landscape photo; Africa map (Natural Earth, D-021); origin claims |
@@ -21,7 +21,7 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 ## Dependency-aware build order
 
 1. ~~§4 Purity / trust indicators~~ **done**.
-2. **F2 shop foundation**: `/shop`, `/shop/[slug]`, ShopMenu + mobile Shop list (replaces the guard), **Hero Product Carousel**. Unblocks Shop Now, §5 product links, and the carousel.
+2. ~~F2 shop foundation~~ **done** (`/shop`, product pages, Shop menu + mobile list, carousel; Shop Now works).
 3. **§5 Our Products**: reuses `ProductCard` + catalogue; links to product pages.
 4. **§6 Our Origin** → **§7 Quality & Safety** → **§8 Supply banner** → **§9 Footer**.
 5. Then the homepage verification pass (M8): full responsive, accessibility, performance, SEO.

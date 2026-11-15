@@ -2,7 +2,7 @@
 
 Run `npm run verify:visual` (how and when: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification"). This folder holds **curated, committed** material only:
 
-- `baselines/`: **approved** section screenshots per viewport (D-042). Current: `announcement-*` and `header-*` (all 7 widths), `mobile-nav-open-{small,mobile,tablet}` (approved 2026-11-15, D-080).
+- `baselines/`: **approved** section screenshots per viewport (D-042). Current: `announcement-*` and `header-*` (all 7 widths), `mobile-nav-open-{small,mobile,tablet}` (approved 2026-11-15, D-080). **The drawer baselines are outdated since F2** (Shop now lists its products, 4.4–7.3% diff); re-approve after owner review.
 - `provisional/`: none at present (header and drawer references were promoted).
 - `<task>/`: optional evidence saved with `--save <task>`.
 - the earlier evidence images and the open-differences log below.
@@ -17,6 +17,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
 | M2.4 | `m2.4/header-desktop-reference.png`, `m2.4/report.md` | Header vs reference at 1440 (saved with `--save m2.4`). **Header baselines not yet approved** (awaiting owner review) |
 | M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states; V-008 sweep + 1359/1360 images. **Awaiting owner visual approval; baselines not promoted** |
+| F2 | `f2/` | Shop, product page, Shop menu, mobile drawer with Shop list, hero carousel (desktop/mobile/carton slide), functional + visual reports |
 | §4 Trust strip | `home-4-trust/` | Reference vs implementation @1440, responsive 320/375/768, report |
 | Wholesale landing | `wholesale-landing/` | Desktop/tablet/mobile + functional reports (D-076) |
 | F1 | `f1/` (`wholesale-and-drawer.png`, `functional-*.md`) | /wholesale desktop + mobile, drawer with live Wholesale; functional reports for all 3 delivery modes |

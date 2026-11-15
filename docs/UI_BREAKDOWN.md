@@ -106,6 +106,8 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 
 **[VERIFIED] Implemented M3.1–M3.2 (2026-11-15):** static hero at all widths; @1440 every element within ±3px of the reference (eyebrow, rule, heading, tagline, description, both buttons, bottle); residual: tagline −19px / description −21px wide (letter shapes, as V-006). CTAs go through `resolveHref` and stay transitional until `/shop` (F2) and `/wholesale` (F1) work (D-067). Evidence `docs/verification/m3.2/`.
 
+**[VERIFIED] Hero Product Carousel (F2, D-085):** reference bottle position preserved within 4px @1440; controls beside the bottle on desktop. Shop Now → `/shop` works.
+
 ## 04 — Purity / Trust Indicators Strip
 
 **[OBSERVED]**

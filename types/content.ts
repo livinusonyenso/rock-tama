@@ -62,7 +62,9 @@ export type IconName =
   | "waves"
   | "flask-conical"
   | "bug-off"
-  | "clipboard-check";
+  | "clipboard-check"
+  | "pause"
+  | "play";
 
 export type NavLinkItem = {
   label: string;
@@ -151,13 +153,24 @@ export type MediaAsset = {
   shape?: "rect" | "bottle";
 };
 
+export type HeroCarouselContent = {
+  /** Product slugs in slide order; the first matches the reference (750 ml). */
+  products: readonly string[];
+  intervalMs: number;
+  label: string;
+  controlsLabel: string;
+  pauseLabel: string;
+  playLabel: string;
+  viewLabel: string;
+};
+
 export type HeroContent = {
   eyebrow: string;
   heading: string;
   tagline: string;
   description: string;
   actions: readonly CallToAction[];
-  media: MediaAsset;
+  carousel: HeroCarouselContent;
 };
 
 /** A short highlight (icon + label) backed by an entry in content/claims.ts. */

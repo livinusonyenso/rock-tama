@@ -6,7 +6,7 @@ _Last updated: 2026-11-14_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** **Homepage focus** (owner, 2026-11-15; checklist in `docs/HOMEPAGE_CHECKLIST.md`). §4 Trust strip done. **Next: F2 shop foundation** (needed by Shop Now, §5 product links and the hero carousel), then §5 → §9. Wholesale redesign paused (work committed). M2.7 baselines still await the owner's final visual approval (V-008 fix).
+- **Current task:** none. **F2 complete (M3 complete)**; stopped for owner review before homepage §5 Our Products. Drawer baselines need re-approval (Shop list).
 
 ## Completed
 
@@ -50,6 +50,8 @@ _Last updated: 2026-11-14_
 | 2026-11-15 | **Homepage §4 Trust strip** + **claims register/guard** (D-078, D-079); homepage checklist `docs/HOMEPAGE_CHECKLIST.md` | lint ✓ · tsc ✓ · build ✓ · claims guard: simulated Vercel production build blocked listing 7 unverified claims; normal builds pass · `verify:visual` trust at 7 widths: 6 items, all claims registered, icons aria-hidden, no overflow; @1440 measured: height 119/117, label widths ±6, centres −7…+5 after least-squares track fit · responsive 2/3/6 columns reviewed · evidence `docs/verification/home-4-trust/` |
 
 | 2026-11-15 | **M2.7 approved → baselines promoted** (D-080) | full visual 232 passed + exactly the 5 expected diffs; functional 131/131; after `--approve`: **242/242** |
+
+| 2026-11-15 | **F2 complete** (D-081–D-085): catalogue model (standard/custom/future, listed only), `/shop`, 3 static product pages, product enquiry integration, `ShopMenu` + mobile Shop list replacing the build guard, shop routes live (**Shop Now works**), **Hero Product Carousel**; tool fixes (D-084) | lint ✓ · tsc ✓ · build ✓ (all shop/wholesale pages static) · **functional dev-file 283/283, resend-mock 40/40, unconfigured 31/31** (shop listing: only confirmed products, Price on request, no ₦; product page → enquiry with product preselected → stored; 404 for unknown + unconfirmed slugs; hero Shop Now; Shop menu: disclosure, 4 links, Escape + focus return, outside click, tab-away, navigation, link without JS; mobile Shop list; carousel: initial state/ARIA, **real 6s rotation**, hover/focus/hidden-tab pauses, manual select stops rotation, Play resumes, View link, reduced motion, no-JS links, hero height stable with carton) · **visual 301 passed**; only the 3 drawer baselines differ (intended, owner re-approval needed); desktop header pixel-identical to approved baseline; hero bottle within 4px of the reference · evidence `docs/verification/f2/` |
 
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 

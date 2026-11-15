@@ -27,6 +27,9 @@ The project has no `src/` directory and the alias already maps `@/*` to the root
 ```text
 app/
 ├── layout.tsx                 # fonts, metadata (title template), AnnouncementBar + SiteHeader + SiteFooter
+├── shop/                      # ✓ F2
+│   ├── page.tsx               #   /shop listing
+│   └── [slug]/page.tsx        #   product pages (static)
 ├── wholesale/                 # ✓ F1 + landing (D-076)
 │   ├── page.tsx               #   /wholesale (Server)
 │   ├── [product]/page.tsx     #   pre-built product-selected pages
@@ -41,7 +44,7 @@ components/
 │   ├── AnnouncementBar.tsx    # ✓ M2.2
 │   ├── SiteHeader.tsx         # ✓ M2.4 (desktop)
 │   ├── NavLink.tsx            # ✓ M2.4 "use client"
-│   ├── ShopMenu.tsx           # "use client"
+│   ├── ShopMenu.tsx           # ✓ F2 "use client" (disclosure; link without JS)
 │   ├── MobileNav.tsx          # ✓ M2.6 "use client" (native <dialog>)
 │   ├── MobileNavPanel.tsx     # ✓ M2.6 Server, drawer contents
 │   ├── SiteFooter.tsx
@@ -49,6 +52,7 @@ components/
 ├── home/                      # homepage-only sections
 │   ├── HeroSection.tsx        # ✓ M3.2
 │   ├── HeroWaves.tsx          # ✓ M3.2
+│   ├── HeroProductCarousel.tsx # ✓ F2 "use client" (D-085)
 │   ├── TrustStrip.tsx         # ✓ §4
 │   ├── ProductRangeSection.tsx
 │   ├── OriginSection.tsx
@@ -62,6 +66,7 @@ components/
 │   ├── IconFeature.tsx        # ✓ §4
 │   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
 │   └── ProductCard.tsx        # ✓ D-076 shared (wholesale now; shop + homepage next)
+├── shop/                      # ✓ F2 ShopPageHeader
 ├── wholesale/                 # ✓ D-076 WholesaleLanding (Server), SelectProductLink (Client)
 ├── forms/
 │   ├── EnquiryForm.tsx        # ✓ F1 "use client" (useActionState)
@@ -77,7 +82,8 @@ content/                       # typed static content (no React)
 ├── routes.ts                  # ✓ M2.1 route plan + availability, homepage section flags
 ├── site.ts                    # ✓ M2.1 brand, logos, announcements
 ├── hero.ts                    # ✓ M3.2 hero copy, CTAs, media
-├── products.ts                # ✓ F1 product catalogue (price null = on request)
+├── products.ts                # ✓ catalogue: kind/status, listedProducts, heroMedia (D-081)
+├── shop.ts                    # ✓ F2 shop + product page copy
 ├── wholesale.ts               # ✓ F1 /wholesale copy
 ├── navigation.ts              # ✓ M2.1 main nav, Shop dropdown, header actions
 ├── products.ts                # M5
@@ -95,6 +101,7 @@ proxy.ts                       # ✓ D-076 real 404 for unknown /wholesale/<prod
 
 lib/
 ├── enquiry.ts                 # ✓ F1 shared enquiry schema (zod), options, form state
+├── price.ts                   # ✓ F2 formatPrice → "Price on request"
 ├── server/                    # ✓ F0 server-only: env.ts (delivery config), rate-limit.ts, enquiries/ (format, deliver)
 └── navigation.ts              # ✓ M2.1 resolveHref(), ✓ M2.6 resolveNavItem() (+ temporary Shop guard)
 

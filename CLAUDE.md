@@ -37,7 +37,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) M2.5 (Shop gating + build guard; `ShopMenu` deferred to M5 as M2.5b), M2.6 (`MobileNav` drawer) and M2.7 (header visual refinement) done; **M2.7 awaits owner visual approval before baselines are promoted**. M3.1–M3.3 (hero + animation) and F0–F1 (`/wholesale` enquiry flow, live) done; next F2 (`/shop`, product pages, ShopMenu, Hero Product Carousel) to make Shop Now live. Reference comparisons are at 1440 against the reference scaled ×1.326 (D-058). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) M2.5–M2.7 done (baselines approved, D-080). M3 complete (hero, animation, product carousel). F0–F2 done: `/wholesale` enquiry flow, `/shop` + product pages, Shop menu, Shop Now live. Homepage §4 done; **next: §5 Our Products** (status: `docs/HOMEPAGE_CHECKLIST.md`). Only `listedProducts` may be shown or offered (D-081). Reference comparisons are at 1440 against the reference scaled ×1.326 (D-058). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 

@@ -7,6 +7,8 @@ import {
   Droplet,
   FlaskConical,
   MountainSnow,
+  Pause,
+  Play,
   Waves,
   Building2,
   CalendarDays,
@@ -57,6 +59,8 @@ const icons: Record<IconName, IconComponent> = {
   "flask-conical": FlaskConical,
   "bug-off": BugOff, // approximation of the reference's crossed-out microbe
   "clipboard-check": ClipboardCheck,
+  pause: Pause,
+  play: Play,
 };
 
 type IconProps = {

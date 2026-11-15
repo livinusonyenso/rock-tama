@@ -156,6 +156,12 @@ Still **proposed**, not tokens (they are component decisions for later milestone
 
 **Trust strip (§4, D-079):** `bg-forest-800`, top `border-line-dark/60`; track `max-w-332` `lg:ml-auto lg:mr-2.5`; `IconFeature`: icon `size-9` → `lg:size-12` stroke 1.5 `gold-500`; label `font-medium` `text-base` → `lg:text-xl lg:leading-5`, two-line min-height; dividers `after:` `w-px h-15 bg-line-dark-strong/50` from `lg`; `lg:py-3`. Grid 2 → `sm` 3 → `lg` 6.
 
+**Shop (F2):** `ShopPageHeader` (compact `bg-hero` + waves), product grid `ProductCard` with a serif price line (`formatPrice` → "Price on request"); product page: cream media panel (`min-h-96 lg:min-h-136`), `font-serif text-5xl/6xl lining-nums` name, `dl` packaging/price, primary "Request this product" (`ButtonLink primary surface=light`) + outline "All products".
+
+**Shop menu (F2):** trigger = nav item style, `data-current` underline; panel `bg-ivory-100 rounded-card shadow-card-hover w-64`, links `px-4 py-3 text-base font-medium`, current = `bg-cream-200`; 150ms `enter` animation (rise 4). Mobile: Shop label row + indented `pl-8` list, 44px rows, gold bar for the current page.
+
+**Hero carousel controls (F2):** labels `min-h-11 px-4 text-sm uppercase tracking-nav rounded-button border`; active `border-gold-500 bg-gold-500/15 text-gold-200`, inactive `border-line-dark/70 text-on-dark-muted`; Pause/Play `size-11` round; "View …" link `text-gold-500`. Desktop: stacked to the right of the bottle (`lg:left-full lg:ml-6`); smaller screens: row below.
+
 ## 3b. Motion
 
 Animation principles, technologies, duration/easing tokens, reduced-motion and performance rules, and verification live in **[`ANIMATION_SYSTEM.md`](ANIMATION_SYSTEM.md)** (proposed; approved per section). Don't add motion that isn't documented there.

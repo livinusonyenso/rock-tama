@@ -32,7 +32,7 @@ M3 is complete only when the hero matches the reference **and both CTAs work**. 
 | **M3.3** | CSS entrance animation + button microinteractions + deterministic animation checks in `verify:visual` | **Done 2026-11-15** (hover to be functionally verified when CTAs are live) |
 | **F0** | Functional foundations: Zod, `lib/server/` structure, typed env config, enquiry delivery (dev adapter + Resend REST), production deploy guard, spam protection, functional (end-to-end) test harness | **Done 2026-11-15** (D-074, D-075) |
 | **F1** | `/wholesale`: wholesale + order enquiry form, Server Action, validation, spam protection, real delivery, success/error states, `?product=` prefill. Activates hero **Request Wholesale** + nav **WHOLESALE** | **Done 2026-11-15** (route live; production needs Resend config) |
-| **F2** | `/shop` listing + `/shop/[slug]` product pages from a typed catalogue (price/stock configurable, `null` = "Price on request"); interim purchase action = order request via F1 until pricing + payment are configured; **M2.5b** `ShopMenu` + mobile nested list in the same change (satisfies the build guard). Activates hero **Shop Now** + nav **SHOP**. **Includes the Hero Product Carousel (D-073)** | **Approved (D-072, D-073)**, after F1 |
+| **F2** | `/shop` listing + `/shop/[slug]` product pages from a typed catalogue (price/stock configurable, `null` = "Price on request"); interim purchase action = order request via F1 until pricing + payment are configured; **M2.5b** `ShopMenu` + mobile nested list in the same change (satisfies the build guard). Activates hero **Shop Now** + nav **SHOP**. **Includes the Hero Product Carousel (D-073)** | **Done 2026-11-15** (D-081–D-085). **M3 complete.** |
 
 ## Functional milestones after M3 (D-066)
 

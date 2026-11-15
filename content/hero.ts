@@ -15,11 +15,15 @@ export const hero: HeroContent = {
     { label: "Shop Now", route: "shop", icon: "shopping-cart", variant: "primary" },
     { label: "Request Wholesale", route: "wholesale", icon: "warehouse", variant: "outline-dark" },
   ],
-  media: {
-    label: "Hero Product Image",
-    alt: `${site.name} natural spring water bottle`,
-    src: null, // official photography pending (ASSET_SPECIFICATIONS slot 1)
-    aspect: "2/5",
-    shape: "bottle",
+  // Hero Product Carousel (D-073). Images come from each product's heroMedia/media in
+  // content/products.ts; the first slide keeps the reference's 2:5 hero bottle.
+  carousel: {
+    products: ["750ml-glass-bottle", "1-5l-bottle", "carton-packs"],
+    intervalMs: 6000,
+    label: `${site.name} products`,
+    controlsLabel: "Choose a product",
+    pauseLabel: "Stop automatic slide show",
+    playLabel: "Start automatic slide show",
+    viewLabel: "View",
   },
 };

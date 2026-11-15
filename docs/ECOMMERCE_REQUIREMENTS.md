@@ -18,6 +18,10 @@ The target is a **real e-commerce website**, not a brochure with contact forms. 
 
 **Still requires approval:** payment provider, pricing, currency, delivery rules/zones/fees, payment flow, guest vs. account checkout, order handling process, wholesale form fields and recipient, database choice.
 
+## Shopping status (F2, 2026-11-15)
+
+Working now: `/shop` listing → `/shop/<product>` → **Request this product** → enquiry form with the product preselected → delivered enquiry. Prices show "Price on request" (`price: null`). **Not yet:** cart (F3), checkout/payment/order confirmation (F4); these need prices, delivery rules and a payment provider. Sachet Water and Customised & Event Water are recorded in the catalogue as unconfirmed and are not offered (D-081).
+
 ## Configuring enquiry delivery (F1, live since 2026-11-15)
 
 `/wholesale` works now. Locally, enquiries go to `.data/enquiries.jsonl` (git-ignored, contains personal data, development only). For production on Vercel, set these in the Vercel project (template: `.env.example`):
