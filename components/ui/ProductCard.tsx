@@ -8,13 +8,15 @@ type ProductCardProps = {
   action: ReactNode;
   /** Heading level for the product name within the page outline. */
   headingLevel?: "h2" | "h3";
+  /** Optional line above the action, e.g. the price ("Price on request"). */
+  meta?: string;
 };
 
 /**
  * Shared product card (COMPONENT_ARCHITECTURE §5), driven by the typed catalogue. Server Component.
  * Only the action is interactive; the hover shadow is subtle and has no movement.
  */
-export function ProductCard({ product, action, headingLevel: Heading = "h3" }: ProductCardProps) {
+export function ProductCard({ product, action, headingLevel: Heading = "h3", meta }: ProductCardProps) {
   const [w, h] = product.media.aspect.split("/").map(Number);
   const landscape = w > h;
 
@@ -33,6 +35,7 @@ export function ProductCard({ product, action, headingLevel: Heading = "h3" }: P
       <Heading className="mt-6 font-serif text-card-title font-bold text-ink-900 lining-nums">{product.name}</Heading>
       <p className="mt-1 text-sm font-semibold uppercase tracking-eyebrow text-gold-700">{product.packaging}</p>
       <p className="mt-3 text-base text-ink-700">{product.summary}</p>
+      {meta && <p className="mt-4 font-serif text-xl font-semibold text-forest-heading lining-nums">{meta}</p>}
       <div className="mt-auto pt-6">{action}</div>
     </article>
   );

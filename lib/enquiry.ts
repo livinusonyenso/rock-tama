@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { products } from "@/content/products";
+import { listedProducts } from "@/content/products";
 
 /**
  * Wholesale / product enquiry contract, shared by the form (labels, limits, options) and the
@@ -9,7 +9,7 @@ export const enquiryUnits = ["cartons", "bottles"] as const;
 export const MIXED_PRODUCTS = "mixed";
 
 export const enquiryProductOptions = [
-  ...products.map((product) => ({ value: product.slug, label: product.name })),
+  ...listedProducts.map((product) => ({ value: product.slug, label: product.name })),
   { value: MIXED_PRODUCTS, label: "Several products" },
 ] as const;
 

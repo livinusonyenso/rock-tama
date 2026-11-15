@@ -201,6 +201,10 @@ const SETTLE = `(async () => {
   return { fonts: document.fonts.status, brokenImages: [...document.images].filter(i => i.naturalWidth === 0).map(i => i.currentSrc || i.src) };
 })()`;
 
+const ANIMATIONS_DONE = `Promise.all(document.getAnimations()
+  .filter(a => a.playState === "running" && a.effect && a.effect.getComputedTiming().endTime !== Infinity)
+  .map(a => a.finished.catch(() => null))).then(() => true)`;
+
 const OVERFLOW = `(() => {
   const vw = document.documentElement.clientWidth;
   const describe = el => el.tagName.toLowerCase() + (el.id ? "#" + el.id : "") + (typeof el.className === "string" && el.className ? "." + el.className.trim().split(/\\s+/).slice(0, 3).join(".") : "");
@@ -343,8 +347,12 @@ async function main() {
 
   const refPath = join(ROOT, config.reference.path);
   const refData = `data:image/png;base64,${readFileSync(refPath).toString("base64")}`;
+  // captureBeyondViewport briefly resizes the page, which restarts CSS animations on elements that just
+  // became visible (e.g. an opened menu). Only use it when the capture really extends past the viewport.
   const screenshot = async (clip) => {
-    const shot = await cdp.send("Page.captureScreenshot", { format: "png", captureBeyondViewport: true, ...(clip && { clip: { ...clip, scale: 1 } }) });
+    const viewport = await cdp.evaluate("({ w: innerWidth, h: innerHeight, x: scrollX, y: scrollY })");
+    const beyond = !clip ? false : clip.x < viewport.x || clip.y < viewport.y || clip.x + clip.width > viewport.x + viewport.w || clip.y + clip.height > viewport.y + viewport.h;
+    const shot = await cdp.send("Page.captureScreenshot", { format: "png", captureBeyondViewport: beyond, ...(clip && { clip: { ...clip, scale: 1 } }) });
     return Buffer.from(shot.data, "base64");
   };
   /** Pages for image work are written into about:blank, so no files are served. */
@@ -529,7 +537,10 @@ async function main() {
           await waitForCondition("document.readyState === 'complete'", 15_000);
           if (scriptsEnabled) await cdp.evaluate(SETTLE);
           for (const action of section.actions ?? []) await runAction(action);
-          await wait(350); // let transitions finish (drawer: 200ms)
+          await wait(350); // let CSS transitions finish (drawer: 200ms)
+          // Deterministic captures: wait for running (finite) animations, e.g. a menu's entrance; paused
+          // animations (initial-state checks) are left alone.
+          if (scriptsEnabled) await cdp.evaluate(ANIMATIONS_DONE, 10_000);
         } catch (error) {
           record(sScope, "interaction", "FAIL", error.message);
           await reset();

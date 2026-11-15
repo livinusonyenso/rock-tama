@@ -67,6 +67,8 @@ const config = {
   pages: [
     { name: "home", path: "/" },
     { name: "wholesale", path: "/wholesale" },
+    { name: "shop", path: "/shop" },
+    { name: "product", path: "/shop/750ml-glass-bottle" },
   ],
 
   sections: [
@@ -137,6 +139,10 @@ const config = {
         { name: "all hero content fully visible", js: `${HERO_ANIMATED}.every(el => getComputedStyle(el).opacity === "1")` },
       ],
     },
+
+    // ---- /shop (F2) ----
+    { name: "shop-page", page: "shop", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
+    { name: "product-page", page: "product", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
 
     // ---- /wholesale (F1) ----
     { name: "wholesale-page", page: "wholesale", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
@@ -248,6 +254,7 @@ function functionalJourneys() {
   const viaResend = uniqueName("Resend Hotel");
   const failing = uniqueName("FAIL_DELIVERY Hotel");
   const noJsSelect = uniqueName("NoJS Select Hotel");
+  const productJourney = uniqueName("Product Page Hotel");
   const base = { kind: "functional", viewports: ["mobile"] };
   // Each journey gets its own client address so the enquiry rate limit (5 per 10 min per client)
   // can't make journeys depend on each other; the rate-limit journey sets its own.
@@ -381,6 +388,149 @@ function functionalJourneys() {
             return true;
           },
         },
+      ],
+    },
+    // -- Shop (F2) --
+    {
+      ...base,
+      name: "hero-shop-now",
+      page: "home",
+      actions: [{ click: 'section[aria-labelledby="hero-heading"] a[href="/shop"]' }, { waitFor: "location.pathname === '/shop' && document.querySelector('main h1')" }],
+      expect: [{ name: "hero Shop Now opens the working /shop listing", js: "location.pathname === '/shop' && document.querySelectorAll('main ul > li article').length === 3" }],
+    },
+    {
+      ...base,
+      name: "shop-listing",
+      page: "shop",
+      expect: [
+        { name: "lists exactly the 3 confirmed standard products", js: "[...document.querySelectorAll('main article h2')].map(h => h.textContent).join('|') === '750 ml Glass Bottle|1.5 L Bottle|Carton Packs'" },
+        { name: "unconfirmed products (sachet, customised) are not shown", js: "!/Sachet|Customised/i.test(document.querySelector('main').innerText)" },
+        { name: "every product shows 'Price on request' (no invented prices)", js: "document.querySelectorAll('main article').length === 3 && [...document.querySelectorAll('main article')].every(a => a.innerText.includes('Price on request')) && !/₦|NGN/.test(document.querySelector('main').innerText)" },
+        { name: "View product links go to the product pages", js: "[...document.querySelectorAll('main article a')].map(a => a.getAttribute('href')).join() === '/shop/750ml-glass-bottle,/shop/1-5l-bottle,/shop/carton-packs'" },
+        { name: "nav Shop marked current", js: "document.querySelector('header nav [data-current]')?.textContent.trim().startsWith('Shop')" },
+      ],
+    },
+    {
+      ...base,
+      name: "product-enquiry-journey",
+      page: "product",
+      actions: [
+        { click: 'main article a[href="/wholesale/750ml-glass-bottle#enquiry"]' },
+        { waitFor: "location.pathname === '/wholesale/750ml-glass-bottle' && document.getElementById('product')?.value === '750ml-glass-bottle'" },
+        ...fillEnquiry(productJourney, { product: null }),
+        ...submitAndWait,
+      ],
+      expect: [
+        { name: "product page → enquiry form with the product preselected → success", js: "Boolean(document.querySelector('[data-enquiry-reference]'))" },
+        { name: "enquiry stored with the product", server: async ({ root }) => (await storedEnquiries(root)).find((r) => r.name === productJourney)?.product === "750ml-glass-bottle" || "not stored with the product" },
+      ],
+    },
+    {
+      ...base,
+      name: "product-page-content",
+      page: "product",
+      expect: [
+        { name: "h1 is the product name", js: "document.querySelector('main h1')?.textContent === '750 ml Glass Bottle'" },
+        { name: "price shown as 'Price on request' with an honest note (no checkout)", js: "document.querySelector('main dl').innerText.includes('Price on request') && document.querySelector('main').innerText.includes(\"Online checkout isn't available yet\") && !document.querySelector('main button')" },
+        { name: "breadcrumb links back to /shop", js: "document.querySelector('nav[aria-label=Breadcrumb] a')?.getAttribute('href') === '/shop'" },
+        { name: "other products link to their pages", js: "[...document.querySelectorAll('section[aria-labelledby=other-products-heading] a')].map(a => a.getAttribute('href')).join() === '/shop/1-5l-bottle,/shop/carton-packs'" },
+      ],
+    },
+    {
+      ...base,
+      name: "shop-404s",
+      page: "shop",
+      expect: [
+        {
+          name: "unknown and unconfirmed product URLs return HTTP 404",
+          server: async ({ baseUrl }) => {
+            for (const path of ["/shop/not-a-product", "/shop/sachet-water", "/shop/custom-event-water", "/wholesale/sachet-water"]) {
+              const status = (await fetch(`${baseUrl}${path}`)).status;
+              if (status !== 404) return `${path}: ${status}`;
+            }
+            return true;
+          },
+        },
+        {
+          name: "each product page returns 200",
+          server: async ({ baseUrl }) => {
+            for (const slug of ["750ml-glass-bottle", "1-5l-bottle", "carton-packs"]) {
+              const status = (await fetch(`${baseUrl}/shop/${slug}`)).status;
+              if (status !== 200) return `${slug}: ${status}`;
+            }
+            return true;
+          },
+        },
+      ],
+    },
+    // -- Desktop Shop dropdown (D-051) --
+    {
+      ...base,
+      name: "shop-menu-open",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }],
+      expect: [
+        { name: "disclosure button (not role=menu) toggles aria-expanded", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'true' && !document.querySelector('[role=menu]')" },
+        { name: "lists the 4 available Shop links", js: "(() => { const list = document.getElementById(document.querySelector('header nav button[aria-controls]').getAttribute('aria-controls')); return !list.hidden && [...list.querySelectorAll('a')].map(a => a.getAttribute('href')).join() === '/shop,/shop/750ml-glass-bottle,/shop/1-5l-bottle,/shop/carton-packs'; })()" },
+        { name: "panel within the viewport", js: "(() => { const r = document.getElementById(document.querySelector('header nav button[aria-controls]').getAttribute('aria-controls')).getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; })()" },
+      ],
+    },
+    {
+      ...base,
+      name: "shop-menu-escape",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }, { press: "Tab" }, { press: "Escape" }],
+      expect: [
+        { name: "Escape closes the menu", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'false'" },
+        { name: "focus returns to the Shop button", js: "document.activeElement === document.querySelector('header nav button[aria-controls]')" },
+      ],
+    },
+    {
+      ...base,
+      name: "shop-menu-outside-click",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }, { clickAt: { x: 700, y: 500 } }],
+      expect: [{ name: "click outside closes the menu", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'false'" }],
+    },
+    {
+      ...base,
+      name: "shop-menu-tab-away",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }, { press: "Tab", times: 5 }],
+      expect: [{ name: "tabbing past the last link closes the menu", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'false'" }],
+    },
+    {
+      ...base,
+      name: "shop-menu-navigate",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }, { click: 'header nav a[href="/shop/carton-packs"]' }, { waitFor: "location.pathname === '/shop/carton-packs'" }],
+      expect: [
+        { name: "choosing a product opens its page", js: "document.querySelector('main h1')?.textContent === 'Carton Packs'" },
+        { name: "menu closed after navigation", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'false'" },
+      ],
+    },
+    {
+      ...base,
+      name: "shop-menu-no-js",
+      page: "home",
+      viewports: ["desktop"],
+      javascript: false,
+      expect: [{ name: "without JS, Shop is a working link to /shop", js: "document.querySelector('header nav a[href=\"/shop\"]')?.textContent.trim().startsWith('Shop') === true" }],
+    },
+    // -- Mobile Shop list --
+    {
+      ...base,
+      name: "mobile-shop-list",
+      page: "home",
+      actions: [{ click: 'button[aria-controls="mobile-nav"]' }, { click: '#mobile-nav a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
+      expect: [
+        { name: "drawer lists Shop's 4 links in a labelled group", js: "[...document.querySelectorAll('#mobile-nav ul[aria-labelledby] a')].length === 4" },
+        { name: "tapping a product opens its page and closes the drawer", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle' && !document.getElementById('mobile-nav').open" },
       ],
     },
     // -- Validation --

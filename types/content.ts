@@ -171,11 +171,22 @@ export type Highlight = {
 /** A price in minor-unit-free major currency units. `null` on a product = "Price on request" (D-066: never invent prices). */
 export type Price = { amount: number; currency: "NGN" };
 
+/**
+ * standard = established ROCK-TAMA products; custom = customised/event water offerings;
+ * future = possible future products (e.g. sachet water).
+ */
+export type ProductKind = "standard" | "custom" | "future";
+
+/** Only "available" products are listed, sold or offered in forms (D-081). */
+export type ProductStatus = "available" | "unconfirmed";
+
 export type Product = {
   /** URL segment under /shop, e.g. "750ml-glass-bottle". */
   slug: string;
-  /** Route key for this product's page (content/routes.ts). */
-  route: RouteKey;
+  kind: ProductKind;
+  status: ProductStatus;
+  /** Route key for this product's page (content/routes.ts); null when the product has no page. */
+  route: RouteKey | null;
   name: string;
   /** Short label for compact controls, e.g. "750 ml". */
   shortName: string;
@@ -184,4 +195,6 @@ export type Product = {
   summary: string;
   price: Price | null;
   media: MediaAsset;
+  /** Optional image for the hero carousel frame (e.g. the reference's 2:5 hero bottle). */
+  heroMedia?: MediaAsset;
 };

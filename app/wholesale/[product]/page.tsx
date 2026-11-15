@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { WholesaleLanding } from "@/components/wholesale/WholesaleLanding";
-import { productBySlug, products } from "@/content/products";
+import { listedProducts, productBySlug } from "@/content/products";
 import { wholesale } from "@/content/wholesale";
 
 /**
@@ -11,7 +11,7 @@ import { wholesale } from "@/content/wholesale";
  */
 
 export function generateStaticParams() {
-  return products.map((product) => ({ product: product.slug }));
+  return listedProducts.map((product) => ({ product: product.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/wholesale/[product]">): Promise<Metadata> {

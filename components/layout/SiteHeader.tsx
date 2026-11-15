@@ -4,10 +4,11 @@ import { Icon } from "@/components/icons/Icon";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { MobileNavPanel } from "@/components/layout/MobileNavPanel";
 import { NavLink } from "@/components/layout/NavLink";
+import { ShopMenu } from "@/components/layout/ShopMenu";
 import { Container } from "@/components/ui/Container";
 import { headerActions, mainNav, navigationCopy } from "@/content/navigation";
 import { site } from "@/content/site";
-import { resolveHref, resolveNavItem } from "@/lib/navigation";
+import { resolveHref, resolveNavChildren, resolveNavItem } from "@/lib/navigation";
 import type { HeaderAction } from "@/types/content";
 
 type SiteHeaderProps = {
@@ -20,7 +21,7 @@ type SiteHeaderProps = {
 const navItemClass = [
   "relative inline-flex items-center gap-1 py-2 text-sm font-medium uppercase tracking-nav text-ink-900 xl:text-base",
   "after:absolute after:inset-x-0 after:bottom-1 after:h-0.75 after:bg-gold-700 after:opacity-0",
-  "aria-[current=page]:after:opacity-100",
+  "aria-[current=page]:after:opacity-100 data-current:after:opacity-100",
 ].join(" ");
 
 /**
@@ -46,16 +47,23 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
         <div className="flex items-center">
           <nav aria-label="Main" className="hidden lg:block">
             <ul className="flex items-center gap-8 xl:gap-12">
-              {mainNav.map((item) => (
-                <li key={item.label}>
-                  <NavLink href={resolveNavItem(item)} className={navItemClass}>
-                    {item.label}
-                    {item.children && (
-                      <Icon name="chevron-down" strokeWidth={2} className="size-3.5" />
+              {mainNav.map((item) => {
+                const children = resolveNavChildren(item);
+                const parentHref = resolveHref(item.route);
+                const chevron = <Icon name="chevron-down" strokeWidth={2} className="size-3.5" />;
+                return (
+                  <li key={item.label}>
+                    {item.children && children.length > 0 && parentHref ? (
+                      <ShopMenu label={item.label} parentHref={parentHref} items={children} triggerClassName={navItemClass} chevron={chevron} />
+                    ) : (
+                      <NavLink href={resolveNavItem(item)} className={navItemClass}>
+                        {item.label}
+                        {item.children && chevron}
+                      </NavLink>
                     )}
-                  </NavLink>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

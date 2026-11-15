@@ -9,7 +9,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { products } from "@/content/products";
+import { listedProducts } from "@/content/products";
 import { wholesale } from "@/content/wholesale";
 import { wholesaleQuoteHref } from "@/lib/navigation";
 import type { Product } from "@/types/content";
@@ -55,7 +55,7 @@ export function WholesaleLanding({ selectedProduct }: WholesaleLandingProps) {
         <Container size="wide">
           <SectionHeading id="products-heading" eyebrow={wholesale.products.eyebrow} title={wholesale.products.heading} description={wholesale.products.description} />
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
-            {products.map((product) => {
+            {listedProducts.map((product) => {
               const href = wholesaleQuoteHref(product.slug);
               return (
                 <li key={product.slug}>

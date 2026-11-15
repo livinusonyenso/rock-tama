@@ -2,13 +2,20 @@ import { site } from "@/content/site";
 import type { Product } from "@/types/content";
 
 /**
- * Product catalogue (single source for shop pages, product cards, the hero carousel and the
- * enquiry form). Edit products here. `price: null` renders "Price on request" until the client
- * supplies prices (docs/ECOMMERCE_REQUIREMENTS.md). Images: ASSET_SPECIFICATIONS slots 2–4.
+ * Product catalogue: the single source for /shop, product pages, the hero carousel, homepage and
+ * wholesale product cards, and the enquiry form. Edit products here.
+ *
+ * - `price: null` renders "Price on request" until the client supplies verified prices.
+ * - Only `kind: "standard"` + `status: "available"` products are listed or offered (`listedProducts`).
+ *   Customised/event offerings and future products stay recorded as "unconfirmed" until the client
+ *   confirms them (D-081); they are never shown as available.
+ * - Images: ASSET_SPECIFICATIONS slots 1–4 (placeholders until photography exists).
  */
 export const products: readonly Product[] = [
   {
     slug: "750ml-glass-bottle",
+    kind: "standard",
+    status: "available",
     route: "product750ml",
     name: "750 ml Glass Bottle",
     shortName: "750 ml",
@@ -16,9 +23,13 @@ export const products: readonly Product[] = [
     summary: "A refined choice for premium drinking, hotels and personal use.",
     price: null,
     media: { label: "750 ml Bottle Image", alt: `${site.name} 750 ml glass bottle`, src: null, aspect: "3/10", shape: "bottle" },
+    // Hero carousel first slide keeps the reference's 2:5 hero bottle (D-073).
+    heroMedia: { label: "Hero Product Image", alt: `${site.name} 750 ml glass bottle`, src: null, aspect: "2/5", shape: "bottle" },
   },
   {
     slug: "1-5l-bottle",
+    kind: "standard",
+    status: "available",
     route: "product15l",
     name: "1.5 L Bottle",
     shortName: "1.5 L",
@@ -29,6 +40,8 @@ export const products: readonly Product[] = [
   },
   {
     slug: "carton-packs",
+    kind: "standard",
+    status: "available",
     route: "productCartons",
     name: "Carton Packs",
     shortName: "Carton Packs",
@@ -38,6 +51,37 @@ export const products: readonly Product[] = [
     price: null,
     media: { label: "Carton Pack Image", alt: `${site.name} carton pack`, src: null, aspect: "7/4", shape: "rect" },
   },
+  // ---- Recorded but NOT offered until the client confirms them (D-081) ----
+  {
+    slug: "sachet-water",
+    kind: "future",
+    status: "unconfirmed",
+    route: null,
+    name: "Sachet Water",
+    shortName: "Sachet",
+    packaging: "To be confirmed",
+    summary: "Possible future product; details to be confirmed by the client.",
+    price: null,
+    media: { label: "Sachet Water Image", alt: `${site.name} sachet water`, src: null, aspect: "4/5", shape: "rect" },
+  },
+  {
+    slug: "custom-event-water",
+    kind: "custom",
+    status: "unconfirmed",
+    route: null,
+    name: "Customised & Event Water",
+    shortName: "Custom",
+    packaging: "To be confirmed",
+    summary: "Customised or event water offering; details to be confirmed by the client.",
+    price: null,
+    media: { label: "Custom Water Image", alt: `${site.name} customised event water`, src: null, aspect: "4/5", shape: "rect" },
+  },
 ];
 
-export const productBySlug = (slug: string) => products.find((product) => product.slug === slug);
+/** Products that may be listed, linked, sold or offered in forms. */
+export const listedProducts: readonly Product[] = products.filter(
+  (product) => product.kind === "standard" && product.status === "available",
+);
+
+/** Looks up a listed product only; unconfirmed products are never resolvable by URL. */
+export const productBySlug = (slug: string) => listedProducts.find((product) => product.slug === slug);

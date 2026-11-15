@@ -1,5 +1,5 @@
 import { homeSections, routes } from "@/content/routes";
-import type { NavItem, RouteKey } from "@/types/content";
+import type { NavItem, Product, RouteKey } from "@/types/content";
 
 /**
  * Returns a destination that exists right now, or `null` when the route isn't
@@ -22,6 +22,11 @@ export function resolveHref(key: RouteKey): string | null {
   return null;
 }
 
+/** A product's page, via the route registry (null for products without a live page). */
+export function productHref(product: Product): string | null {
+  return product.route ? resolveHref(product.route) : null;
+}
+
 /**
  * Product-specific wholesale quote URL: a pre-built page with the product preselected, jumping to the
  * enquiry form. Works without JavaScript (D-076). null while /wholesale is unavailable.
@@ -31,29 +36,25 @@ export function wholesaleQuoteHref(slug: string): string | null {
   return base ? `${base}/${slug}#enquiry` : null;
 }
 
+/** An available dropdown entry. */
+export type NavChild = { label: string; href: string };
+
 /**
- * Destination for a top-level nav item, shared by the desktop and mobile
- * headers. An item with a dropdown (Shop) is interactive only through its
- * children's availability, never its own route (D-048). While none are
- * available it resolves to `null`.
+ * Available children of a dropdown item (Shop), in data order; unavailable ones are omitted (D-052).
+ * Shared by the desktop ShopMenu and the mobile drawer. Replaced the temporary build guard (D-050)
+ * when ShopMenu shipped in F2.
+ */
+export function resolveNavChildren(item: NavItem): NavChild[] {
+  return (item.children ?? []).flatMap((child) => {
+    const href = resolveHref(child.route);
+    return href ? [{ label: child.label, href }] : [];
+  });
+}
+
+/**
+ * Destination for a top-level nav item without a dropdown. Items with a dropdown (Shop) render
+ * as ShopMenu when resolveNavChildren() has entries, otherwise as pending text (D-048).
  */
 export function resolveNavItem(item: NavItem): string | null {
-  if (!item.children) return resolveHref(item.route);
-
-  const available = item.children
-    .map((child) => resolveHref(child.route))
-    .filter((href): href is string => href !== null);
-
-  if (available.length > 0) {
-    // Temporary guard (D-050): fails the build/prerender instead of shipping a
-    // link that shows a dropdown arrow but has no dropdown. M2.5b replaces this
-    // throw with ShopMenu (desktop) and the nested list (mobile).
-    throw new Error(
-      `"${item.label}" now has an available destination (${available[0]}) but its dropdown (ShopMenu) ` +
-        "is not implemented. Build task M2.5b (docs/IMPLEMENTATION_PLAN.md, M5; D-048) in the same change " +
-        "that makes the destination available.",
-    );
-  }
-
-  return null;
+  return item.children ? null : resolveHref(item.route);
 }
