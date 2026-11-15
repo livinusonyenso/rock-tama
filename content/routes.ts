@@ -17,6 +17,10 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   contact: { status: "planned", path: "/contact" },
   search: { status: "planned", path: "/search" },
   account: { status: "planned", path: "/account" },
+  deliveryReturns: { status: "planned", path: "/delivery-returns" },
+  faqs: { status: "planned", path: "/faqs" },
+  terms: { status: "planned", path: "/terms" },
+  privacy: { status: "planned", path: "/privacy" },
   cart: { status: "planned", path: "/cart" },
 };
 
@@ -27,6 +31,6 @@ export const routes: Record<RouteKey, RouteDefinition> = {
 export const homeSections: Record<HomeSectionId, HomeSection> = {
   products: { built: true }, // §5 Our Products (id="products" on the homepage)
   origin: { built: true }, // §6 Our Origin
-  quality: { built: false }, // M6
-  wholesale: { built: false }, // M7
+  quality: { built: true }, // §7
+  wholesale: { built: true }, // §8
 };

@@ -17,6 +17,10 @@ export type Claim = {
 };
 
 export const claims = {
+  qualityPurityTrust: { text: "Purity You Can Trust", status: "unverified", evidence: "Owner-approved purity assurance wording supported by current analyses" },
+  undistilled: { text: "Undistilled (Natural State)", status: "unverified", evidence: "Documented process confirmation that the water is not distilled; reference typo corrected under the approved Quality briefing" },
+  odourlessTastelessAtSource: { text: "Odourless & Tasteless at Source", status: "unverified", evidence: "Current sensory and relevant laboratory evidence at the source" },
+  iso22000: { text: "ISO 22000 Food Safety Management", status: "unverified", evidence: "Valid applicable certificate with certifying body, certificate number, entity/site, scope and issue/expiry dates; badge hidden until verified" },
   naturallyProtectedSource: { text: "Naturally Protected Source", status: "unverified", evidence: "Site or hydrogeological evidence establishing natural protection of the Nanka source; rendered in homepage origin, evidence pending" },
   preservedNaturalPurity: { text: "Preserved Natural Purity", status: "unverified", evidence: "Documented handling/process and relevant current analyses supporting preservation of natural purity; rendered in homepage origin, evidence pending" },
   ultraPure: { text: "Ultra Pure", status: "unverified", evidence: "Lab analysis supporting a purity claim; owner approval of the marketing wording" },

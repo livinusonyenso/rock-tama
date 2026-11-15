@@ -7,6 +7,8 @@ type IconFeatureProps = {
   /** Surface: dark green (gold icon, light text) or light (gold icon, ink text). */
   tone?: "dark" | "light";
   layout?: "stacked" | "inline";
+  compact?: boolean;
+  circled?: boolean;
   className?: string;
 };
 
@@ -15,14 +17,18 @@ type IconFeatureProps = {
  * quality and supply sections. "\n" in the label is a line break on wide screens only, so short
  * columns on small screens wrap naturally. Server Component; icon is decorative.
  */
-export function IconFeature({ icon, label, tone = "dark", layout = "stacked", className = "" }: IconFeatureProps) {
+export function IconFeature({ icon, label, tone = "dark", layout = "stacked", compact = false, circled = false, className = "" }: IconFeatureProps) {
   const inline = layout === "inline";
   const [first, ...rest] = label.split("\n");
   return (
     <div className={`flex ${inline ? "items-start gap-2 text-left" : "flex-col items-center text-center"} ${className}`}>
-      <Icon name={icon} strokeWidth={1.5} className={inline ? "size-7 shrink-0 text-gold-600" : "size-9 shrink-0 text-gold-500 lg:size-12"} />
+      {circled ? (
+        <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full border border-forest-700 text-forest-heading">
+          <Icon name={icon} strokeWidth={1.5} className="size-7" />
+        </span>
+      ) : <Icon name={icon} strokeWidth={1.5} className={inline ? "size-7 shrink-0 text-gold-600" : compact ? "size-7 shrink-0 text-gold-500" : "size-9 shrink-0 text-gold-500 lg:size-12"} />}
       {/* min-h for two lines keeps single-line labels vertically centred against two-line ones */}
-      <p className={`${inline ? "text-sm leading-snug font-medium" : "mt-1.5 flex min-h-[2lh] items-center text-base leading-snug font-medium lg:text-xl lg:leading-5"} ${tone === "dark" ? "text-on-dark" : "text-ink-900"}`}>
+      <p className={`${inline ? "text-sm leading-snug font-medium" : compact ? "mt-1.5 max-w-full text-sm leading-snug font-medium wrap-anywhere" : "mt-1.5 flex min-h-[2lh] items-center text-base leading-snug font-medium lg:text-xl lg:leading-5"} ${tone === "dark" ? "text-on-dark" : "text-ink-900"}`}>
         <span>
           {first}
           {rest.length > 0 && (

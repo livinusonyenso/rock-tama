@@ -122,3 +122,7 @@ public/
 - `content/` holds data only: no JSX, no React imports.
 - No barrel `index.ts` files except `components/icons/index.tsx`.
 - Server-only modules (future DB/email code) go under `lib/server/` with `import "server-only"`.
+
+## Remaining homepage files (D-095)
+
+`components/home/QualitySection.tsx`, `WholesaleBanner.tsx`; `components/layout/SiteFooter.tsx`; `content/footer.ts` plus home/highlights modules; `lib/certification.ts` (pure evidence/config/date gate), `lib/site-date.ts` (cached server date); `scripts/certification-check.mjs` (negative/positive gate fixtures). No new top-level folders or dependencies.

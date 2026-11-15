@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-16 (§6 diagnostic browser recovery; §7 briefing only)_
+_Last updated: 2026-11-16 (all homepage sections built)_
 
-**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 checked in Chrome using styled Webpack diagnostic build; comparison awaits owner review; default Turbopack still environmentally blocked** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
+**Where we are:** All nine homepage sections are now present. Owner authorised combined §7–§9 implementation (D-095): QualitySection + WholesaleBanner + shared SiteFooter. `docs/verification/home-7-9-completion/REPORT.md` contains current results/screenshots and limitations. Existing shop, product pages, carousel and enquiry flow retained. No new push/deployment; earlier push ended at `32e826d`. Visual baselines (including §5/§6 and new sections) are not approved by the build instruction. Default Turbopack worker restriction remains; diagnostic styled Webpack used, config restored.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -39,6 +39,10 @@ _Last updated: 2026-11-16 (§6 diagnostic browser recovery; §7 briefing only)_
 
 **Evidence:** final seven-width Origin captures 105/105; inspected reference comparison + mobile/tablet/laptop/desktop. Full visual suite 393 pass / 3 fail: global header overflow at 200% root text (V-013) and intended 320px drawer baseline difference. Header/bar normal comparisons 0.00%. Functional journeys **361/361 dev-file, 40/40 resend-mock, 31/31 unconfigured** on the same diagnostic artifact; map checksum/containment passes. Recovery report has details. §6 visual approval pending; §5 remains provisional (V-011). Source/photo/claim evidence still pending; map denotes approximate town only.
 
-**Next:** owner review of `docs/verification/home-6-origin-review/origin-desktop-reference.png` and `docs/QUALITY_SECTION_BRIEFING.md`. §7 briefing only, not implementation. New §7 claims must be registered unverified before any rendering after approval; certificate output requires verified evidence + explicit enablement, never just a flag.
+**New source:** `components/home/{QualitySection,WholesaleBanner}.tsx`, `components/layout/SiteFooter.tsx`; `content/footer.ts`, homeQuality/homeSupply and qualityIndicators; `lib/{certification,site-date}.ts`; eight certificate gate checks at `scripts/certification-check.mjs`. IconFeature adds compact/circled variants with previous defaults unchanged. Supply heading uses new 26px token. Footer in root layout; quality/wholesale section flags true; policies remain planned text.
 
-**Do not:** promote §5/§6/drawer baselines, implement §7 without approval, push or deploy. Do not change working app code or machine security to bypass worker permissions. Preserve italic Distributor Supply and accessible targets.
+**Current constraints:** 13 unverified claims block production. ISO output disabled with no supplied certificate; requires verified claim + enabled complete current certificate. Newsletter input/button disabled, unknown social URLs omitted; contact/help/policy pages not fabricated. Product/logo/origin imagery still placeholders. `QUALITY_SECTION_BRIEFING.md` and `REMAINING_HOMEPAGE_IMPLEMENTATION.md` record scope/decisions.
+
+**Next:** owner visual feedback and missing official assets/evidence, real newsletter/provider/contact/policy content; M8 broader audit. No additional homepage section remains to build. Do not promote baselines, push or deploy unless separately requested. Preserve existing commits and section defaults; do not bypass environment restrictions by weakening security or claims guards.
+
+**Completion results:** lint/tsc/styled Webpack pass; 8 certificate cases pass; guard rejects 13 claims. Full initial browser run 777 pass/4 known failures, final focused 200 pass/2 existing global header failures; new-section own reflow passes. Mock 40/40, unconfigured 31/31. Current captures/reference sheets at `home-7-9-completion`; all visual approval remains pending.

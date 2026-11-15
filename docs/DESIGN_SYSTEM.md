@@ -180,3 +180,9 @@ Every image renders through `MediaFrame` with a fixed aspect ratio, so missing i
 ## §6 origin application (D-092)
 
 Uses existing 30px `text-3xl` compact serif h2, 16px body, 14px inline indicators, ivory/sand/forest/gold palette and existing spacing/radii. No global token changes. MediaFrame's optional `media-frame-responsive` utility uses aspect custom properties (16:9 below md, content-specified ratio from md), reserving identical placeholder/photo geometry. Desktop visual measurements remain pending because build/browser checks could not run.
+
+## Homepage §7–§9 application (D-095)
+
+New `text-supply` token: 26px / 1.15, matching the reference banner's ≈20px source heading scaled to 1440. Explicit two-line supply heading; existing colours/radii/container scales reused. Quality uses forest heading + circled outline icons on a sage gradient, with an 80px extra xl heading inset inside the wide container to approach reference alignment. Footer uses existing light logo placeholder and dark surface/focus styles. Compact labels and footer links wrap long words; supply segments auto-fit with a 6rem minimum so 200% text reflows instead of squeezing icons. No old token values changed.
+
+Quality eyebrow uses new `gold-800` (#704a16) because gold-700 falls below AA at the dark sage endpoint. Calculated contrast is 6.26:1 on sage-100 and 5.04:1 on sage-200. Existing gold token values stay unchanged.

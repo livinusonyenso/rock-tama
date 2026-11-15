@@ -99,3 +99,7 @@ Legend: **Visible** = a UI affordance appears in the reference · **Implied** = 
 **Recommendation [PROPOSED] (D-011):** Option 1. Use **Server Actions** for forms (wholesale enquiry, contact, newsletter) and **Route Handlers** for anything that must be a plain HTTP endpoint (payment webhooks, future public API). Keep business logic in `lib/server/*` modules, not inside actions or handlers, so it can move into a standalone service later if a mobile app or heavy background processing appears. Revisit when Scope B is approved.
 
 **Database:** decide only after Scope B. If needed: PostgreSQL (managed) with a typed query layer (Drizzle or Prisma), as a proposal only.
+
+## Homepage footer availability — D-095
+
+Footer UI exists; no newsletter data is collected while provider/consent configuration is missing. Input/button are disabled and honestly labelled. Contact, FAQs, delivery/returns and legal destinations remain planned non-links until actual content/pages are supplied; social links await official URLs. Shop, Origin, Quality and Wholesale navigation are live. This UI pass does not implement checkout/payments/accounts or a newsletter backend.

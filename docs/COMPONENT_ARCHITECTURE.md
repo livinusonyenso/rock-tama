@@ -114,3 +114,7 @@ Eyebrow lines, vertical dividers, the gold hero rule, badge counts, single headi
 ### §6 verification recovery (D-094)
 
 Reveal adds optional `viewportInset?: 0 | 10` (10 default), used as 0 by Origin only. Compact SectionHeading adds word wrapping for enlarged text; default heading variant unchanged. Origin geometry/content is preserved. Styled Webpack diagnostic enabled browser verification; normal Turbopack outside sandbox remains pending. §7 architecture is proposed only in `QUALITY_SECTION_BRIEFING.md`.
+
+## §7–§9 implemented (D-095/D-096)
+
+QualitySection and WholesaleBanner are Server sections composed in app/page; SiteFooter is an async Server Component in root layout. IconFeature gains compact/circled flags, preserving all prior defaults. Quality uses registered indicators plus safe origin copy; `lib/certification.ts` checks enablement/status/identity/scope/dates before conditional ISO markup. `lib/site-date.ts` uses daily cached server date for footer year (and certification only when enabled). Static footer content is `content/footer.ts`; resolver outputs null for unavailable pages, rendered as text. No newsletter Client island or fake submit action while provider is absent. No guessed social links. Reveal remains the only section animation Client island. Supply reuses wholesale.supply.segments and resolves wholesale CTA. No dependencies added.

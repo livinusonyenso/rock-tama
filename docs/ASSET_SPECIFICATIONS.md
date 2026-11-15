@@ -76,3 +76,7 @@ Natural Earth public-domain terms checked at https://www.naturalearthdata.com/ab
 - Independent published locality check: Anzaku et al., *Environmental Effects of Gully Erosion in Nigeria: Case Study of Nanka Community*, 2019, study-area location p.69: 6°03′N, 7°05′E; https://www.iiste.org/Journals/index.php/JEES/article/download/49963/51612 . Approximate town centres differ by ~1.2km, less than 0.01px at this map size. This source is used only for locality, not for product/environmental claims.
 - Generator verifies point-in-polygon against Nigeria in the same dataset. Pin tip projects to **(27.08306, 33.93958)**; rendered symbol extends upward from that anchor. Independent locality source places Nanka in Anambra, southeastern Nigeria. Actual spring coordinates remain client input. Browser appearance still unverified.
 - Landscape stays `src:null`. Source ratio 3:1 at md+, 16:9 below md; future official image uses cover/centre and must receive content-specific alt text and crop review. No stock/AI photography added.
+
+## §7–§9 asset status — 2026-11-16
+
+Quality uses a CSS sage gradient; no unlicensed droplet bitmap added. ISO seal is absent because certificate/evidence are missing. Footer reuses the approved same-size stacked-light Logo placeholder; official SVG still needed. No guessed social logos/URLs. Existing Lucide UI icons only; no new image licence or dependency. Final screenshots/reference comparisons: `verification/home-7-9-completion/`.

@@ -145,6 +145,32 @@ const config = {
       ],
     },
 
+    {
+      name: "quality", page: "home", selector: "#quality",
+      reference: { x: 0, y: 1105, width: 1086, height: 99 },
+      actions: [{ evaluate: "document.querySelector('#quality').scrollIntoView({block:'center',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#quality [data-reveal]')].every(e=>e.dataset.reveal==='shown')" }],
+      expect: [
+        { name: "four quality indicators, every scientific label registered", js: "document.querySelectorAll('#quality li[data-claim]').length===4 && document.querySelector('#quality [data-claim=qualityPurityTrust]')!==null" },
+        { name: "unsupported certification absent from visual and accessible DOM", js: "!document.querySelector('[data-certification]') && !/ISO|22000|international quality standards/i.test(document.querySelector('#quality').textContent)" },
+        { name: "quality text and icons visible without overflow", js: "[...document.querySelectorAll('#quality h2,#quality p')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#quality [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
+      ],
+    },
+    {
+      name: "supply", page: "home", selector: "#wholesale",
+      reference: { x: 0, y: 1204, width: 1086, height: 82 },
+      actions: [{evaluate:"document.querySelector('#wholesale').scrollIntoView({block:'center',behavior:'instant'}); true"},{waitFor:"document.querySelector('#wholesale [data-reveal]').dataset.reveal==='shown'"}],
+      expect:[{name:"four existing business segments and working wholesale destination",js:"document.querySelectorAll('#wholesale li').length===4 && document.querySelector('#wholesale a').getAttribute('href')==='/wholesale' && !/export supply|delivery within/i.test(document.querySelector('#wholesale').textContent)"}],
+    },
+    {
+      name: "footer", page: "home", selector: "body > footer",
+      reference: { x: 0, y: 1286, width: 1086, height: 162 },
+      expect: [
+        {name:"footer has three labelled navigation groups and no fake links",js:"document.querySelectorAll('footer nav[aria-labelledby]').length===3 && !document.querySelector('footer a[href=\"#\"],footer a[href=\"\"]')"},
+        {name:"newsletter honestly unavailable; no guessed social links",js:"document.querySelector('#footer-email').disabled && document.querySelector('footer button[aria-label=Subscribe]').disabled && !document.querySelector('footer form,footer ul[aria-label=\"Social media\"]')"},
+        {name:"footer brand, copyright and source location present",js:"document.querySelector('footer').textContent.includes('ROCK-TAMA') && document.querySelector('footer').textContent.includes('Nanka, Anambra State, Nigeria') && /© 20[0-9]{2}/.test(document.querySelector('footer').textContent)"},
+      ],
+    },
+
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",
@@ -706,10 +732,33 @@ function functionalJourneys() {
     {
       ...base, kind: "visual", name: "origin-enlarged-text", page: "home", viewports: ["mobile","desktop"],
       actions: [{evaluate:"document.documentElement.style.fontSize='200%'; document.querySelector('#origin').scrollIntoView({behavior:'instant'}); true"}],
-      expect: [{name:"record enlarged-text diagnostics",server: async ({evaluate,root}) => {
-        const data=await evaluate(`(() => ({viewport:innerWidth,groups:[...document.querySelectorAll('#origin [data-reveal]')].map(e=>({state:e.dataset.reveal,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom})),overflow:[...document.querySelectorAll('#origin h2,#origin p,#origin li')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>({tag:e.tagName,text:e.textContent,width:e.clientWidth,scroll:e.scrollWidth})),origin:document.querySelector('#origin').getBoundingClientRect().toJSON()}))()`);
+      expect: [{name:"remaining sections reflow at 200% text",js:"[...document.querySelectorAll('#quality h2,#quality p,#quality li,#wholesale h2,#wholesale p,#wholesale li,footer p,footer li')].every(e=>e.scrollWidth<=e.clientWidth+1)"},{name:"record enlarged-text diagnostics",server: async ({evaluate,root}) => {
+        const data=await evaluate(`(() => ({viewport:innerWidth,groups:[...document.querySelectorAll('#origin [data-reveal]')].map(e=>({state:e.dataset.reveal,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom})),overflow:[...document.querySelectorAll('#origin h2,#origin p,#origin li,#quality h2,#quality p,#quality li,#wholesale h2,#wholesale p,#wholesale li,#wholesale a,footer p,footer li')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>({tag:e.tagName,text:e.textContent,width:e.clientWidth,scroll:e.scrollWidth})),origin:document.querySelector('#origin').getBoundingClientRect().toJSON()}))()`);
         const {mkdirSync,writeFileSync}=await import('node:fs');const dir=`${root}/.verification/origin-measurements`;mkdirSync(dir,{recursive:true});writeFileSync(`${dir}/enlarged-${data.viewport}.json`,JSON.stringify(data,null,2));return true;
       }},{name:"200% text: origin text not clipped horizontally",js:"[...document.querySelectorAll('#origin h2,#origin p,#origin li')].every(x=>x.scrollWidth<=x.clientWidth+1)"}],
+    },
+    {
+      ...base,name:"supply-cta",page:"home",viewports:["mobile","desktop"],
+      actions:[{click:'#wholesale a[href="/wholesale"]'},{waitFor:"location.pathname==='/wholesale' && document.querySelector('#enquiry form')"}],
+      expect:[{name:"supply CTA opens real quote flow",js:"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#enquiry form'))"}],
+    },
+    {
+      ...base,name:"footer-product",page:"home",
+      actions:[{click:'footer a[href="/shop/750ml-glass-bottle"]'},{waitFor:"location.pathname==='/shop/750ml-glass-bottle'"}],
+      expect:[{name:"footer product link opens product page",js:"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('h1')?.textContent==='750 ml Glass Bottle')"}],
+    },
+    {
+      ...base,name:"quality-navigation",page:"shop",viewports:["desktop"],
+      actions:[{click:'header nav a[href="/#quality"]'},{waitFor:"location.hash==='#quality' && document.querySelector('#quality')"}],
+      expect:[{name:"Quality header link reaches actual section",js:"location.pathname==='/' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#quality'))"}],
+    },
+    {
+      ...base,name:"remaining-reduced-motion",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],
+      expect:[{name:"quality and banner never hidden with reduced motion",js:"!document.querySelector('#quality [data-reveal],#wholesale [data-reveal]') && !document.querySelector('[data-certification]')"}],
+    },
+    {
+      ...base,name:"remaining-no-js",page:"home",viewports:["mobile","desktop"],javascript:false,
+      expect:[{name:"quality, supply, footer and working links server-rendered without JS",js:"!document.querySelector('#quality [data-reveal],#wholesale [data-reveal]') && document.querySelectorAll('#quality li').length===4 && document.querySelector('#wholesale a').getAttribute('href')==='/wholesale' && document.querySelectorAll('footer nav').length===3"}],
     },
     // -- Hero Product Carousel (D-073) --
     {

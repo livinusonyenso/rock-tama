@@ -102,3 +102,7 @@ When planning any new visible section, add a row here and a storyboard to its br
 See `ORIGIN_SECTION_BRIEFING.md`: reuse D-088 Reveal (600ms / 16px), image 0ms, text 80ms, indicators 0/60/120ms independently; map/background static, no nested reveals. Reduced motion/no-JS stay visible.
 
 §6 recovery (D-094): `Reveal.viewportInset` accepts 0 or 10 percent (default 10). Origin alone uses 0 to reveal final-page content at the actual viewport edge; timing/easing/stagger remain unchanged. Scroll/End, stable layout boxes, reduced motion/no-JS verified in Chrome. For static snapshots with assertions, scroll the whole section to its end and assert opacity 1 before capture. Do not change default §5 behaviour to solve this section-specific issue.
+
+## Remaining homepage motion — D-095
+
+Quality: existing Reveal, 600ms/16px; title/description 0ms, indicators 0/50/100/150ms. Supply: one group reveal 600ms/16px. Both use zero viewport inset; footer entirely static. No new libraries/parallax/loops. Reduced motion and no-JS remain immediately visible; section snapshots scroll into actual view before capture.

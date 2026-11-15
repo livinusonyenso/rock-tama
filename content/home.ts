@@ -38,3 +38,17 @@ export const homeOrigin: HomeOriginContent = {
     { icon: "layers", label: "Preserved\nNatural Purity", claim: "preservedNaturalPurity" },
   ],
 };
+
+export const homeQuality = {
+  eyebrow: "Quality & Safety",
+  heading: "Purity You Can Trust",
+  headingClaim: "qualityPurityTrust",
+  description: "ROCK-TAMA natural spring water from Nanka, Anambra State, Nigeria.",
+  certification: { enabled: false, certificate: null } satisfies import("@/lib/certification").Certification,
+} as const;
+
+export const homeSupply = {
+  heading: ["Supply for", "Business & Institutions"],
+  description: "Discuss your water supply requirements for hotels, offices, retail and events.",
+  cta: { label: "Request Wholesale", route: "wholesale" },
+} as const;

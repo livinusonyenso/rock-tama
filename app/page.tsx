@@ -1,3 +1,5 @@
+import { QualitySection } from "@/components/home/QualitySection";
+import { WholesaleBanner } from "@/components/home/WholesaleBanner";
 import { OriginSection } from "@/components/home/OriginSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ProductRangeSection } from "@/components/home/ProductRangeSection";
@@ -11,6 +13,8 @@ export default function HomePage() {
       <TrustStrip />
       <ProductRangeSection />
       <OriginSection />
+      <QualitySection />
+      <WholesaleBanner />
     </main>
   );
 }

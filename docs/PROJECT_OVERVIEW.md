@@ -65,3 +65,5 @@ The reference contains product and quality claims. They are **supplied visual co
 ## §7 planning ledger — 2026-11-16
 
 `QUALITY_SECTION_BRIEFING.md` maps each reference label to existing `content/claims.ts` IDs or explicitly proposed unverified IDs. This expands no displayed quality/certification claims. “Undistilled” spelling, sensory wording and ISO scope still need confirmation/evidence. Register proposed IDs before rendering during approved implementation; no badge without applicable verified certification. The interim description uses only owner-supplied origin facts. §7 UI/content implementation remains unapproved.
+
+§7 implementation update (D-095): `qualityPurityTrust`, `undistilled`, `odourlessTastelessAtSource` and `iso22000` now registered **unverified**; total 13 production-blocking entries. ISO remains unrendered. Supply banner uses enquiry wording and Events & Institutions rather than unsupported export fulfilment claims. No new geological, mineral-profile or standards assertion in descriptive copy.

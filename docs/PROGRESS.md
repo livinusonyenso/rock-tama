@@ -6,7 +6,7 @@ _Last updated: 2026-11-16_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** §6 browser verification recovered on a styled Webpack diagnostic build; comparison ready for owner review. Default Turbopack still blocked by worker-port EPERM. §7 briefing prepared only. §5 functionally accepted (D-090); visual comparisons await owner review, screenshots remain provisional.
+- **Current task:** Remaining homepage §7–§9 built in one authorised pass (D-095). All nine sections present; final evidence at `verification/home-7-9-completion/REPORT.md`. Claims/assets/providers and owner visual approval remain open; no new push/deployment.
 
 ## Completed
 
@@ -91,3 +91,9 @@ Classified blocker as probable sandbox/Turbopack worker permission interaction: 
 Chrome found and verified fixes for page-end Origin reveals and enlarged compact-heading wrapping; default Reveal inset and normal headings unchanged. Final Origin captures: **105/105**, seven widths; geometry/AA contrast/map provenance checked and screenshots inspected. Full visual regression: **393 passed, 3 failed** (existing global header overflow under 200% root text ×2, expected drawer @320 baseline difference); header/announcement normal screenshots 0.00%. No baselines promoted. Functional journeys all pass on the same diagnostic artifact: **361/361 dev-file, 40/40 resend-mock, 31/31 unconfigured**, with `--no-build` because the default Turbopack worker remains blocked. Reports in the recovery folder. Original `0f8618e` retained. §7 briefing prepared with evidence/certification gates only; no §7 implementation. Details and outside-environment commands: `verification/home-6-origin-review/RECOVERY_REPORT.md`.
 
 Local source/evidence commit: `627e42e` (two narrow fixes + verification evidence), appended after retained `0f8618e`; no history rewrite. Documentation/§7 briefing recorded separately.
+
+## Homepage completion pass — 2026-11-16 (D-095/D-096)
+
+Built QualitySection (registered claims, ISO hidden), WholesaleBanner (real quote destination, existing segments) and shared SiteFooter (route-driven links, cached year, disabled newsletter, no guessed socials). Reused existing components; no dependencies. Scope authorisation superseded per-section stop gates; supporting plan at `REMAINING_HOMEPAGE_IMPLEMENTATION.md`. Content/source evidence and precise test outcomes: `verification/home-7-9-completion/REPORT.md`. Default Turbopack environment limitation unchanged; styled diagnostic Webpack builds with config restored. Prior §5/§6 and new screenshots remain unapproved. Next: owner feedback, M8 wider audit and client assets/evidence/service inputs, not another homepage section.
+
+Verification outcome: lint/tsc + styled Webpack build pass; 8 certificate gates and production rejection of 13 claims pass. Full initial browser run 777 pass/4 known failures; final focused new-section run 200 pass/2 existing global-header failures. New-section own text reflow passes. Mock delivery 40/40, unconfigured 31/31. Actual responsive captures and differences committed under `docs/verification/home-7-9-completion/`; no approval/push/deployment.

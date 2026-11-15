@@ -67,3 +67,7 @@ Source implemented under D-092; `home-6-origin/report.md` records harness timeou
 | V-012 | §6 visual differences pending owner review: section +4px, image +16px width, story +17px right, map −10px width @1440; safe copy shorter and icons/coastline differ. See measured report; no tuning without review |
 | V-013 | Existing global header overflow at 200% root text: +216px mobile / +950px desktop. Origin's own text now wraps safely. Header unchanged; broader page accessibility remains open |
 | V-014 | Drawer @320 differs 4.01% after Our Story becomes a real anchor; approved pre-Origin baseline retained for owner review |
+
+## All homepage sections built — §7–§9 (D-095)
+
+Evidence: `home-7-9-completion/REPORT.md`, desktop/mobile full homepage and three original-reference comparison sheets. Full initial combined run 777 pass / 4 fail (two global header text-stress overflows + two intended drawer diffs). Final focused new-section run 200 pass / 2 existing global header failures; own new-section 200% text checks pass. Delivery regressions 40/40 mock and 31/31 unconfigured. Eight certificate gates and 13-claim production blocker verified. Styled diagnostic Webpack only; default Turbopack limitation persists. No baselines approved/promoted. V-014 now includes Quality live link: 3.79% @320, 0.60% @375. V-015: new section height/copy/certification/logo/service differences are recorded in the completion report for owner review.

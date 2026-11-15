@@ -17,7 +17,11 @@ export type RouteKey =
   | "contact"
   | "search"
   | "account"
-  | "cart";
+  | "cart"
+  | "deliveryReturns"
+  | "faqs"
+  | "terms"
+  | "privacy";
 
 /** Homepage sections that can serve as interim anchor destinations. The id is also the section's DOM id. */
 export type HomeSectionId = "products" | "origin" | "quality" | "wholesale";

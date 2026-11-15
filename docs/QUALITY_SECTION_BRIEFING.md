@@ -1,6 +1,8 @@
 # Homepage §7 — Quality & Safety briefing
 
-2026-11-16 · **PROPOSED — no implementation approval**
+2026-11-16 · **APPROVED SCOPE — D-095, combined §7–§9 build**
+
+Source implemented under the owner’s instruction to build all remaining homepage sections. Wording below preserves the briefing; claims are still unverified and certification defaults hidden. Current results: `verification/home-7-9-completion/REPORT.md`.
 
 ## What / why
 
@@ -92,6 +94,6 @@ Key risks are overstated claims, a badge enabled by a bare flag, truncation of l
 
 Acceptance requires readable responsive composition, supported copy handling, strict certification gating, working Quality anchor navigation, safe motion, and honest verification evidence. Passing checks do not approve screenshots. No push or deployment.
 
-## Approval needed / next step
+## Approval record / current status
 
-Review the proposed interim sentence, evidence-gated indicator strategy, “Undistilled” spelling, hidden certification region and restrained motion. §7 implementation starts only after explicit approval. §6 comparison review remains separate; no §5 or §6 visual baseline promotion is authorised by this briefing.
+D-095 authorises this section and the remaining homepage build together. Implementation is present; evidence and limits are in `verification/home-7-9-completion/REPORT.md`. §5/§6/new screenshots remain unapproved. Client evidence, official assets and service configuration are still required before launch; no push/deployment authorised for this pass.

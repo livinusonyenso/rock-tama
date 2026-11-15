@@ -12,3 +12,11 @@ export const purityHighlights: readonly Highlight[] = [
   { icon: "bug-off", label: "Pathogens\nAbsent", claim: "pathogensAbsent" },
   { icon: "clipboard-check", label: "Lab Tested", claim: "labTested" },
 ];
+
+/** §7 reference wording remains evidence-dependent and production-blocking. */
+export const qualityIndicators: readonly Highlight[] = [
+  { icon: "droplet", label: "Low TDS\n6–8 mg/L", claim: "lowTds" },
+  { icon: "waves", label: "Undistilled\n(Natural State)", claim: "undistilled" },
+  { icon: "leaf", label: "Odourless & Tasteless\nat Source", claim: "odourlessTastelessAtSource" },
+  { icon: "clipboard-check", label: "Lab\nTested", claim: "labTested" },
+];
