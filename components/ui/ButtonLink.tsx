@@ -12,16 +12,19 @@ type ButtonLinkProps = {
   size?: keyof typeof buttonSizes;
   surface?: "dark" | "light";
   icon?: IconName;
+  /** Icon after the label (e.g. "chevron-right" on card CTAs). */
+  trailingIcon?: IconName;
   className?: string;
   children: ReactNode;
 };
 
 /** A link styled as a button (navigates; never performs an action). Server Component. */
-export function ButtonLink({ href, variant, size = "md", surface = "dark", icon, className = "", children }: ButtonLinkProps) {
+export function ButtonLink({ href, variant, size = "md", surface = "dark", icon, trailingIcon, className = "", children }: ButtonLinkProps) {
   const content = (
     <>
       {icon && <Icon name={icon} strokeWidth={1.75} className="size-5 shrink-0 lg:size-6" />}
       <span>{children}</span>
+      {trailingIcon && <Icon name={trailingIcon} strokeWidth={2} className="-ml-1.5 size-4 shrink-0" />}
     </>
   );
 

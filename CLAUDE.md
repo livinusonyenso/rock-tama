@@ -37,7 +37,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) M2.5–M2.7 done (baselines approved, D-080). M3 complete (hero, animation, product carousel). F0–F2 done: `/wholesale` enquiry flow, `/shop` + product pages, Shop menu, Shop Now live. Homepage §4 done; **next: §5 Our Products** (status: `docs/HOMEPAGE_CHECKLIST.md`). Only `listedProducts` may be shown or offered (D-081). Reference comparisons are at 1440 against the reference scaled ×1.326 (D-058). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
+M1 approved → **M2 Header** in progress, one task at a time. M2.1 (typed content, `resolveHref`) M2.2 (AnnouncementBar, `Container`, `Icon`), M2.3 (`Logo`), M2.V (`npm run verify:visual`) M2.4 (desktop `SiteHeader` + `NavLink`) M2.5–M2.7 done (baselines approved, D-080). M3 complete (hero, animation, product carousel). F0–F2 done: `/wholesale` enquiry flow, `/shop` + product pages, Shop menu, Shop Now live. Homepage §4–§5 done (§5 baseline awaiting owner review); **next: §6 Our Origin** (status: `docs/HOMEPAGE_CHECKLIST.md`). Below-the-fold reveals use the shared `Reveal` (D-088); cards use `OfferCard`/`ProductCard` (D-087). Only `listedProducts` may be shown or offered (D-081). Reference comparisons are at 1440 against the reference scaled ×1.326 (D-058). Links only via `resolveHref()`; navigation renders valid destinations only (D-026/D-027).
 
 ## Git
 

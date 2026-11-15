@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/home/HeroSection";
+import { ProductRangeSection } from "@/components/home/ProductRangeSection";
 import { TrustStrip } from "@/components/home/TrustStrip";
 
 /** Homepage: composes sections only (PROJECT_STRUCTURE). Sections are added per milestone. */
@@ -7,6 +8,7 @@ export default function HomePage() {
     <main id="main" className="flex-1">
       <HeroSection />
       <TrustStrip />
+      <ProductRangeSection />
     </main>
   );
 }

@@ -107,8 +107,9 @@ Fallbacks: serif → `Georgia, "Times New Roman", serif`; sans → `system-ui, -
 | `text-display` | **5.5rem (88px)** (M3) | 1 | Hero "ROCK TAMA" from `xl` (`text-5xl` → `sm:text-6xl` → `md:text-5xl` → `lg:text-7xl`) |
 | `text-tagline` | **2.5rem (40px)** (M3) | 1.1 | Hero tagline (semibold italic serif) from `xl` |
 | `text-hero-eyebrow` | 1.3125rem (21px) | 1.4 | Hero eyebrow from `lg` (with `tracking-hero-eyebrow` 0.12em) |
-| `text-section` | 2.25rem (36px) | 1.15 | Section H2 |
+| `text-section` | 2.375rem (38px) | 1.15 | Section H2 (measured §5, D-087; was 36px) |
 | `text-card-title` | 1.5rem (24px) | 1.2 | Product card titles |
+| `text-subtitle` | 1.375rem (22px) | 1.3 | Italic serif section subtitle (§5, D-087) |
 | `text-eyebrow` | 0.8125rem (13px) | 1.4 | Eyebrows (pair with `tracking-eyebrow`, uppercase, semibold) |
 | Tailwind defaults (`text-sm`, `text-base`, `text-lg`) | — | — | Body, nav, buttons, footer |
 

@@ -1,12 +1,12 @@
 # Progress
 
-_Last updated: 2026-11-14_
+_Last updated: 2026-11-16_
 
 ## Current state
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** none. **F2 complete (M3 complete)**; stopped for owner review before homepage §5 Our Products. Drawer baselines need re-approval (Shop list).
+- **Current task:** none. **Homepage §5 Our Products complete**; stopped for owner review before §6 Our Origin. §5 visual baseline not promoted (awaiting review).
 
 ## Completed
 
@@ -51,6 +51,10 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **M2.7 approved → baselines promoted** (D-080) | full visual 232 passed + exactly the 5 expected diffs; functional 131/131; after `--approve`: **242/242** |
 
+| 2026-11-16 | **Drawer baselines re-approved** (D-086) | differences start at the Shop row only; 69 drawer checks pass |
+
+| 2026-11-16 | **Homepage §5 Our Products** (D-087–D-089): `ProductRangeSection`, `OfferCard` (+ `ProductCard` adapter), `Reveal`, `SectionHeading`/`ButtonLink` options, `homeProducts` content, `--text-section` 38px + `--text-subtitle`; `products` section built; tool `revealPage()` before page captures | lint ✓ · tsc ✓ · build ✓ · **functional dev-file 323/323, resend-mock 40/40, unconfigured 31/31** (4 cards in order with exact hrefs/labels; no prices or unconfirmed products; keyboard Tab through 4 CTAs with visible focus; card + distributor links navigate; reveal starts hidden below the fold, shows on scroll with 0/80/160/240ms stagger, **cards jumped past are revealed** (bug found + fixed); reduced motion and no-JS: nothing hidden, links work) · **visual 522/522** (no overflow 320–1440, no console errors) · reviewed @1440 vs reference: fixed collapsed landscape placeholders, heading size/weight, centred stacked cards; remaining height difference V-011 · fixed test `hero-shop-now` counting hidden previous-route cards (D-089) · evidence `docs/verification/home-5-products/` |
+
 | 2026-11-15 | **F2 complete** (D-081–D-085): catalogue model (standard/custom/future, listed only), `/shop`, 3 static product pages, product enquiry integration, `ShopMenu` + mobile Shop list replacing the build guard, shop routes live (**Shop Now works**), **Hero Product Carousel**; tool fixes (D-084) | lint ✓ · tsc ✓ · build ✓ (all shop/wholesale pages static) · **functional dev-file 283/283, resend-mock 40/40, unconfigured 31/31** (shop listing: only confirmed products, Price on request, no ₦; product page → enquiry with product preselected → stored; 404 for unknown + unconfirmed slugs; hero Shop Now; Shop menu: disclosure, 4 links, Escape + focus return, outside click, tab-away, navigation, link without JS; mobile Shop list; carousel: initial state/ARIA, **real 6s rotation**, hover/focus/hidden-tab pauses, manual select stops rotation, Play resumes, View link, reduced motion, no-JS links, hero height stable with carton) · **visual 301 passed**; only the 3 drawer baselines differ (intended, owner re-approval needed); desktop header pixel-identical to approved baseline; hero bottle within 4px of the reference · evidence `docs/verification/f2/` |
 
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
@@ -72,4 +76,4 @@ _Last updated: 2026-11-14_
 
 ## Next proposed task
 
-**After owner visual approval of M2.7:** promote baselines with `npm run verify:visual -- --approve --section announcement,header,mobile-nav-open` (all viewports) and remove superseded provisional references; then **M3 Hero** briefing.
+**After owner review of §5:** promote the `products` baseline (`npm run verify:visual -- --approve --section products`) if accepted; then the **§6 Our Origin** briefing (landscape photo slot, Natural Earth map D-021, origin claims via `content/claims.ts`).

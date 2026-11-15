@@ -25,7 +25,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
  * change that renders it with the matching id (e.g. <section id="products">).
  */
 export const homeSections: Record<HomeSectionId, HomeSection> = {
-  products: { built: false }, // M5
+  products: { built: true }, // §5 Our Products (id="products" on the homepage)
   origin: { built: false }, // M6
   quality: { built: false }, // M6
   wholesale: { built: false }, // M7

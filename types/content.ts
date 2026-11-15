@@ -64,7 +64,8 @@ export type IconName =
   | "bug-off"
   | "clipboard-check"
   | "pause"
-  | "play";
+  | "play"
+  | "chevron-right";
 
 export type NavLinkItem = {
   label: string;
@@ -210,4 +211,23 @@ export type Product = {
   media: MediaAsset;
   /** Optional image for the hero carousel frame (e.g. the reference's 2:5 hero bottle). */
   heroMedia?: MediaAsset;
+};
+
+/** A non-product offer shown as a card (e.g. Distributor Supply, a wholesale service). */
+export type ServiceOffer = {
+  title: string;
+  text: string;
+  media: MediaAsset;
+  cta: { label: string; route: RouteKey };
+  /** The reference shows this card's title in italics. */
+  titleStyle?: "italic";
+};
+
+export type HomeProductsContent = {
+  eyebrow: string;
+  heading: string;
+  subtitle: string;
+  /** Catalogue products in reference order, with their card CTA label. */
+  products: readonly { slug: string; ctaLabel: string }[];
+  distributorOffer: ServiceOffer;
 };

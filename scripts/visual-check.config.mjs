@@ -105,6 +105,13 @@ const config = {
       ],
     },
 
+    {
+      name: "products",
+      page: "home",
+      selector: "#products",
+      reference: { x: 0, y: 580, width: 1086, height: 338 },
+    },
+
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",
@@ -397,7 +404,8 @@ function functionalJourneys() {
       name: "hero-shop-now",
       page: "home",
       actions: [{ click: 'section[aria-labelledby="hero-heading"] a[href="/shop"]' }, { waitFor: "location.pathname === '/shop' && document.querySelector('main h1')" }],
-      expect: [{ name: "hero Shop Now opens the working /shop listing", js: "location.pathname === '/shop' && document.querySelectorAll('main ul > li article').length === 3" }],
+      // Next keeps the previous route in the DOM (hidden) after client navigation, so scope to the visible <main>.
+      expect: [{ name: "hero Shop Now opens the working /shop listing (one visible main, 3 product cards)", js: "(() => { const visible = [...document.querySelectorAll('main')].filter(m => m.checkVisibility()); return location.pathname === '/shop' && visible.length === 1 && visible[0].querySelectorAll('ul > li article').length === 3; })()" }],
     },
     {
       ...base,
@@ -533,6 +541,95 @@ function functionalJourneys() {
         { name: "drawer lists Shop's 4 links in a labelled group", js: "[...document.querySelectorAll('#mobile-nav ul[aria-labelledby] a')].length === 4" },
         { name: "tapping a product opens its page and closes the drawer", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle' && !document.getElementById('mobile-nav').open" },
       ],
+    },
+    // -- Homepage §5 Our Products (D-087) --
+    {
+      ...base,
+      name: "products-section",
+      page: "home",
+      viewports: ["desktop", "mobile"],
+      expect: [
+        { name: "4 cards in reference order", js: "[...document.querySelectorAll('#products li article h3')].map(h => h.textContent).join('|') === '750 ml Glass Bottle|1.5 L Bottle|Carton Packs|Distributor Supply'" },
+        { name: "CTAs: 3 product pages + /wholesale (route registry)", js: "[...document.querySelectorAll('#products article a')].map(a => a.getAttribute('href') + ' ' + a.textContent.trim()).join('|') === '/shop/750ml-glass-bottle Shop 750 ml|/shop/1-5l-bottle Shop 1.5 L|/shop/carton-packs Shop Cartons|/wholesale Request Supply'" },
+        { name: "no prices and no unconfirmed products", js: "!/₦|NGN|Price on request|Sachet|Customised/i.test(document.getElementById('products').innerText)" },
+        { name: "Distributor Supply title in italics (reference)", js: "getComputedStyle([...document.querySelectorAll('#products h3')].at(-1)).fontStyle === 'italic'" },
+        { name: "section heading + eyebrow present", js: "document.getElementById('products-heading')?.textContent === 'The ROCK TAMA Range'" },
+        { name: "card hover feedback is a shadow/lift transition (no layout properties)", js: "getComputedStyle(document.querySelector('#products article')).transitionProperty.split(',').map(p => p.trim()).every(p => ['box-shadow', 'translate'].includes(p))" },
+      ],
+    },
+    {
+      ...base,
+      name: "products-keyboard",
+      page: "home",
+      viewports: ["desktop"],
+      actions: [
+        { evaluate: "const h = document.getElementById('products-heading'); h.setAttribute('tabindex', '-1'); h.focus(); true" },
+        ...Array.from({ length: 4 }, () => [{ press: "Tab" }, { evaluate: "window.__focusTrail = [...(window.__focusTrail || []), document.activeElement.getAttribute('href') + ' ' + getComputedStyle(document.activeElement).outlineStyle]; true" }]).flat(),
+      ],
+      expect: [
+        {
+          name: "Tab reaches the 4 CTAs in order, each with a visible focus outline",
+          js: "JSON.stringify(window.__focusTrail) === JSON.stringify(['/shop/750ml-glass-bottle solid', '/shop/1-5l-bottle solid', '/shop/carton-packs solid', '/wholesale solid'])",
+        },
+      ],
+    },
+    {
+      ...base,
+      name: "products-card-link",
+      page: "home",
+      actions: [{ click: '#products a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
+      expect: [{ name: "Shop 1.5 L opens the working product page", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle'" }],
+    },
+    {
+      ...base,
+      name: "products-distributor-link",
+      page: "home",
+      actions: [{ click: '#products a[href="/wholesale"]' }, { waitFor: "location.pathname === '/wholesale'" }],
+      expect: [{ name: "Request Supply opens the working wholesale page", js: "document.querySelector('h1')?.textContent === 'Wholesale and Distribution' && Boolean(document.querySelector('#enquiry form'))" }],
+    },
+    {
+      ...base,
+      name: "products-reveal",
+      page: "home",
+      expect: [
+        { name: "below-the-fold cards start hidden (after JS) …", js: "[...document.querySelectorAll('#products li > [data-reveal]')].length === 4 && [...document.querySelectorAll('#products li > [data-reveal]')].every(el => el.dataset.reveal === 'hidden')" },
+      ],
+    },
+    {
+      ...base,
+      name: "products-reveal-on-scroll",
+      page: "home",
+      actions: [
+        { evaluate: "document.querySelector('#products li:last-child').scrollIntoView({ block: 'end', behavior: 'instant' }); true" },
+        { waitFor: "[...document.querySelectorAll('#products li > [data-reveal]')].every(el => el.dataset.reveal === 'shown')" },
+      ],
+      expect: [
+        { name: "… and are revealed when scrolled into view (opacity 1, staggered)", js: "[...document.querySelectorAll('#products li > [data-reveal]')].every(el => getComputedStyle(el).opacity === '1') && getComputedStyle(document.querySelector('#products li:nth-child(4) > [data-reveal]')).transitionDelay.includes('0.24s')" },
+      ],
+    },
+    {
+      ...base,
+      name: "products-reveal-jump-past",
+      page: "home",
+      actions: [
+        { evaluate: "window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }); true" },
+        { waitFor: "[...document.querySelectorAll('#products li > [data-reveal]')].every(el => el.dataset.reveal === 'shown')" },
+      ],
+      expect: [{ name: "cards jumped past without entering the viewport are still revealed (never stuck hidden)", js: "[...document.querySelectorAll('#products li > [data-reveal]')].every(el => el.dataset.reveal === 'shown')" }],
+    },
+    {
+      ...base,
+      name: "products-reduced-motion",
+      page: "home",
+      media: [{ name: "prefers-reduced-motion", value: "reduce" }],
+      expect: [{ name: "reduced motion: nothing hidden, no reveal", js: "!document.querySelector('#products [data-reveal]') && [...document.querySelectorAll('#products article')].every(a => getComputedStyle(a.parentElement).opacity === '1')" }],
+    },
+    {
+      ...base,
+      name: "products-no-js",
+      page: "home",
+      javascript: false,
+      expect: [{ name: "without JS: all 4 cards visible with working links", js: "!document.querySelector('#products [data-reveal]') && document.querySelectorAll('#products article a[href]').length === 4" }],
     },
     // -- Hero Product Carousel (D-073) --
     {

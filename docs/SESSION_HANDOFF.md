@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-15 (after F2)_
+_Last updated: 2026-11-16 (after §5 Our Products)_
 
-**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list), hero (+ animation + **product carousel**), §4 trust strip; **F2: `/shop`, product pages, Shop Now works**; `/wholesale` landing + enquiry flow. **Stopped for owner review before §5 Our Products** (then §6 Origin → §7 Quality → §8 Supply banner → §9 Footer). Drawer baselines are outdated (Shop list, intended): re-approve after the owner reviews. All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
+**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **Stopped for owner review before §6 Our Origin** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -20,6 +20,7 @@ _Last updated: 2026-11-15 (after F2)_
 - M3: `components/home/HeroSection.tsx`, `HeroWaves.tsx`, `components/ui/ButtonLink.tsx`, `MediaFrame.tsx`, `content/hero.ts`; entrance animation utilities in `globals.css` (ANIMATION_SYSTEM)
 - F0/F1: `lib/enquiry.ts`, `lib/server/{env,rate-limit}.ts`, `lib/server/enquiries/{format,deliver}.ts`, `app/wholesale/{page,actions}.ts(x)`, `components/forms/EnquiryForm*.tsx`, `content/{products,wholesale}.ts`, deploy guard in `next.config.ts`
 - F2: `app/shop/{page,[slug]/page}.tsx`, `components/layout/ShopMenu.tsx`, `components/home/HeroProductCarousel.tsx`, `components/shop/ShopPageHeader.tsx`, `content/{products,shop}.ts` (catalogue kinds/status), `lib/price.ts`, `resolveNavChildren`/`productHref` in `lib/navigation.ts`
+- §5: `components/home/ProductRangeSection.tsx`, `components/ui/{OfferCard,Reveal}.tsx` (ProductCard now adapts to OfferCard), `content/home.ts` (`homeProducts`, Distributor Supply as a `ServiceOffer`), reveal CSS in `globals.css`. Below-the-fold sections reuse `Reveal`; post-navigation checks scope to the visible `<main>` (D-089)
 - `components/brand/Logo.tsx`: `variant` header/footer; placeholder until `site.logos.*.available`; no link inside (header adds it via `resolveHref("home")` in M2.4). Swap steps: `docs/ASSET_SPECIFICATIONS.md`
 
 **Rules to remember:** never hard-code internal hrefs; use `resolveHref`. `null` renders as non-interactive text with "Coming soon" (no `#`, no hover, no pointer). Update `content/routes.ts` when a page/section ships. The cart count is a prop (shows 0 now). Announcement wording is interim until services are verified. No unverified claims, no invented URLs, logo placeholders only.

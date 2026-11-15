@@ -19,6 +19,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states; V-008 sweep + 1359/1360 images. **Awaiting owner visual approval; baselines not promoted** |
 | F2 | `f2/` | Shop, product page, Shop menu, mobile drawer with Shop list, hero carousel (desktop/mobile/carton slide), functional + visual reports |
 | §4 Trust strip | `home-4-trust/` | Reference vs implementation @1440, responsive 320/375/768, report |
+| §5 Our Products | `home-5-products/` | Reference vs implementation @1440, sections at 320/375/768/1024/1440, functional + visual reports. **No baseline yet** (awaiting owner review) |
 | Wholesale landing | `wholesale-landing/` | Desktop/tablet/mobile + functional reports (D-076) |
 | F1 | `f1/` (`wholesale-and-drawer.png`, `functional-*.md`) | /wholesale desktop + mobile, drawer with live Wholesale; functional reports for all 3 delivery modes |
 | M3.3 | `m3.3/` (`hero-animation-initial-*.png` = frozen t=0, `hero-desktop.png` = final, `hero-reduced-motion-desktop.png`, `report.md`) | Entrance animation states; final = static hero (≤0.01%) |
@@ -40,6 +41,7 @@ V-001–V-005 were recorded at the M2.2/M2.4 reviews and handled in M2.7. Positi
 | V-008 | **Resolved (D-064):** the 60px step at 1359→1360 is replaced by a fluid `clamp()` inset; max step between adjacent widths 1px. Evidence: `m2.7-after/v008-logo-position-sweep.png`, `m2.7-after/v008-1359-vs-1360.png` |
 | V-009 | **Open, minor (from M2.6):** at 320px "Our Story" wraps to two lines in the drawer next to its COMING SOON tag; disappears when the route goes live |
 | V-010 | **Open, minor:** trust strip "Pathogens Absent" uses Lucide `bug-off`; the reference shows a crossed-out microbe in a circle (custom artwork would be needed) |
+| V-011 | **Open (§5):** section 496px @1440 vs ≈448 in the scaled reference. Causes: 44px card buttons (touch target; reference ≈36), 16px card body text (reference ≈15), Cormorant 700 is the heaviest weight available (reference heading looks heavier). Card order, columns, frame placement, centring and copy match |
 | — | Deliberate: `gold-700` underline/badge (D-043); logo is a placeholder until the official SVG |
 
 Original entries:

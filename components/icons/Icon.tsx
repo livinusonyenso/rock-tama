@@ -13,6 +13,7 @@ import {
   Building2,
   CalendarDays,
   ChevronDown,
+  ChevronRight,
   FileText,
   Handshake,
   ImageIcon,
@@ -61,6 +62,7 @@ const icons: Record<IconName, IconComponent> = {
   "clipboard-check": ClipboardCheck,
   pause: Pause,
   play: Play,
+  "chevron-right": ChevronRight,
 };
 
 type IconProps = {

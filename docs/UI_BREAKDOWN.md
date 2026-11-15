@@ -158,6 +158,8 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 - Desktop (≥ 1024): 4 columns. Tablet: 2 × 2. Mobile: 1 column; side cards keep their horizontal layout (it works well narrow), stacked cards stay stacked.
 - Cards should be equal height in a row (`grid` with `h-full` cards and the CTA pushed to the bottom via `mt-auto`).
 
+**[IMPLEMENTED 2026-11-16, D-087]** `ProductRangeSection` with the shared `OfferCard` (`media-side` for cards 1–2, `media-middle` for 3–4; `ProductCard` adapts products to it). Card 4 is a `ServiceOffer` in `content/home.ts`, not a product. Media-side cards stack below 640px (deviation from the proposal above: at 320px the side layout clipped the button). Italic card-4 title kept as a data flag, still pending owner confirmation.
+
 ## 06 — Our Origin
 
 **[OBSERVED]**

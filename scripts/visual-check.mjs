@@ -390,6 +390,24 @@ async function main() {
   // With page scripts disabled, callbacks (rAF, load listeners) never fire, so SETTLE is skipped.
   let scriptsEnabled = true;
   const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32 };
+  /**
+   * Scroll reveals (components/ui/Reveal.tsx) only show content once it has entered the viewport. Before
+   * static captures, step through the page so every observer fires, wait for the reveal transitions,
+   * then return to the top.
+   */
+  async function revealPage() {
+    await cdp.evaluate(`(async () => {
+      const step = innerHeight * 0.6;
+      for (let y = 0; y <= document.documentElement.scrollHeight; y += step) {
+        scrollTo({ top: y, behavior: "instant" });
+        await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+      }
+      scrollTo({ top: 0, behavior: "instant" });
+      return true;
+    })()`);
+    await cdp.evaluate(ANIMATIONS_DONE, 10_000);
+  }
+
   /** Resolves once the scroll position has been stable for ~150ms (smooth scrolling finished). */
   async function waitForScrollSettled(timeout = 3000) {
     const end = Date.now() + timeout;
@@ -495,6 +513,7 @@ async function main() {
         continue;
       }
       await wait(200); // let late console/network errors arrive
+      await revealPage();
       record(scope, "fonts loaded", settled.fonts === "loaded" ? "PASS" : "FAIL", settled.fonts);
       record(scope, "images loaded", settled.brokenImages.length ? "FAIL" : "PASS", settled.brokenImages.join(", "));
 

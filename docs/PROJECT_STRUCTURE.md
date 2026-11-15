@@ -65,7 +65,9 @@ components/
 │   ├── SectionHeading.tsx     # ✓ D-076
 │   ├── IconFeature.tsx        # ✓ §4
 │   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
-│   └── ProductCard.tsx        # ✓ D-076 shared (wholesale now; shop + homepage next)
+│   ├── OfferCard.tsx          # ✓ D-087 shared card (media-top / media-side / media-middle)
+│   ├── ProductCard.tsx        # ✓ D-076 adapter Product → OfferCard (homepage, shop, wholesale)
+│   └── Reveal.tsx             # ✓ D-088 "use client" scroll reveal
 ├── shop/                      # ✓ F2 ShopPageHeader
 ├── wholesale/                 # ✓ D-076 WholesaleLanding (Server), SelectProductLink (Client)
 ├── forms/
