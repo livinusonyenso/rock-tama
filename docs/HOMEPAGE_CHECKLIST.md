@@ -8,8 +8,8 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 
 | # | Section | Status | Visual | Functional | Open items |
 |---|---|---|---|---|---|
-| 1 | Announcement bar | **Done + verified** (M2.2, refined M2.7) | Approved baselines exist, but M2.7 updates **await owner approval** | Informational only, no actions | Service wording pending verification (D-030); V-006/V-007 minor |
-| 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | Provisional references (header + drawer); **final approval pending** (V-008 fix) | Links via `resolveHref`; Wholesale live; Shop/Our Story/Quality/Contact/Search/Account/Cart pending | ShopMenu + mobile Shop list ship with F2 (build guard); logo SVGs pending |
+| 1 | Announcement bar | **Done + verified** (M2.2, refined M2.7) | **Approved baselines** (D-080) | Informational only, no actions | Service wording pending verification (D-030); V-006/V-007 minor |
+| 2 | Header (desktop + mobile drawer) | **Done + verified** (M2.4–M2.7) | **Approved baselines** for header (7 widths) and drawer (D-080) | Links via `resolveHref`; Wholesale live; Shop/Our Story/Quality/Contact/Search/Account/Cart pending | ShopMenu + mobile Shop list ship with F2 (build guard); logo SVGs pending |
 | 3 | Hero | **Done + verified** (M3.1–M3.3) | Measured within ±3px @1440; animation verified | **Request Wholesale → /wholesale (works)**; **Shop Now still pending (needs F2 `/shop`)** | **Hero Product Carousel (D-073) ships with F2**; hero claims flagged (D-068); bottle photo pending |
 | 4 | Purity / trust indicators | **Done + verified** (2026-11-15, D-079) | Measured vs reference @1440 (height ±2, labels ±6, centres −7…+5); no baselines yet | Informational only | Six claims registered and **blocking production deploys until evidenced** (D-078); V-010 pathogen icon |
 | 5 | Our Products | **Not implemented** | — | **Cards must link to product pages → depends on F2** | Product photos; prices intentionally absent |

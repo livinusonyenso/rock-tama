@@ -49,6 +49,8 @@ _Last updated: 2026-11-14_
 
 | 2026-11-15 | **Homepage §4 Trust strip** + **claims register/guard** (D-078, D-079); homepage checklist `docs/HOMEPAGE_CHECKLIST.md` | lint ✓ · tsc ✓ · build ✓ · claims guard: simulated Vercel production build blocked listing 7 unverified claims; normal builds pass · `verify:visual` trust at 7 widths: 6 items, all claims registered, icons aria-hidden, no overflow; @1440 measured: height 119/117, label widths ±6, centres −7…+5 after least-squares track fit · responsive 2/3/6 columns reviewed · evidence `docs/verification/home-4-trust/` |
 
+| 2026-11-15 | **M2.7 approved → baselines promoted** (D-080) | full visual 232 passed + exactly the 5 expected diffs; functional 131/131; after `--approve`: **242/242** |
+
 **Not verified (M1):** visual check in a browser. (Superseded for the bar by M2.2; the rest of the page is still the starter.) The page still shows the create-next-app starter content (now in Source Sans 3 on ivory), so there is nothing design-specific to compare yet. The first visual comparison happens in M2.
 
 ## Pending

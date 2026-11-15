@@ -2,8 +2,8 @@
 
 Run `npm run verify:visual` (how and when: `docs/DEVELOPMENT_GUIDELINES.md` → "Visual verification"). This folder holds **curated, committed** material only:
 
-- `baselines/`: **approved** section screenshots per viewport, used for regression checks. Updated only with `--approve` after review (D-042). Current: `announcement-{mobile,tablet,laptop,desktop}.png` (from the accepted M2.2 state, captured 2026-11-15 on macOS Chrome).
-- `provisional/`: **provisional, NOT approved** regression references (D-049). Current: `header-{laptop,desktop}.png` (from the accepted M2.4 run `6132526`); `header-{small,mobile,tablet}.png` and `mobile-nav-open-{small,mobile,tablet}.png` (from M2.6, pending owner review). Replace with approved baselines after owner acceptance (header: after V-004/V-005 in M2.7).
+- `baselines/`: **approved** section screenshots per viewport (D-042). Current: `announcement-*` and `header-*` (all 7 widths), `mobile-nav-open-{small,mobile,tablet}` (approved 2026-11-15, D-080).
+- `provisional/`: none at present (header and drawer references were promoted).
 - `<task>/`: optional evidence saved with `--save <task>`.
 - the earlier evidence images and the open-differences log below.
 
