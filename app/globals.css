@@ -101,6 +101,7 @@
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(60 40 10 / 0.05);
   --shadow-gold: 0 4px 14px rgb(224 173 95 / 0.25);
   --shadow-gold-hover: 0 6px 20px rgb(224 173 95 / 0.38);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.05), 0 10px 28px rgb(60 40 10 / 0.1);
 
   /* Motion (docs/ANIMATION_SYSTEM.md) */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
@@ -186,6 +187,14 @@
 @layer base {
   html {
     color-scheme: light;
+  }
+
+  /* Smooth in-page anchor scrolling (e.g. Explore Products); Next.js keeps route changes instant
+     via data-scroll-behavior on <html>. Off with reduced motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   /* Lock background scrolling while the mobile drawer is open; restores automatically on close. */

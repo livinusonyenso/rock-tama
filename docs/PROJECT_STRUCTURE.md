@@ -27,8 +27,9 @@ The project has no `src/` directory and the alias already maps `@/*` to the root
 ```text
 app/
 ├── layout.tsx                 # fonts, metadata (title template), AnnouncementBar + SiteHeader + SiteFooter
-├── wholesale/                 # ✓ F1
+├── wholesale/                 # ✓ F1 + landing (D-076)
 │   ├── page.tsx               #   /wholesale (Server)
+│   ├── [product]/page.tsx     #   pre-built product-selected pages
 │   └── actions.ts             #   submitEnquiry Server Action
 ├── page.tsx                   # HomePage: composes sections only
 ├── globals.css                # Tailwind import + @theme design tokens
@@ -57,10 +58,11 @@ components/
 │   ├── Container.tsx          # ✓ M2.2
 │   ├── ButtonLink.tsx         # ✓ M3.1
 │   ├── button-styles.ts       # ✓ F1 buttonClassName() shared by links and form buttons
-│   ├── SectionHeading.tsx
+│   ├── SectionHeading.tsx     # ✓ D-076
 │   ├── IconFeature.tsx
 │   ├── MediaFrame.tsx         # ✓ M3.1 (generic bottle silhouette placeholder)
-│   └── ProductCard.tsx
+│   └── ProductCard.tsx        # ✓ D-076 shared (wholesale now; shop + homepage next)
+├── wholesale/                 # ✓ D-076 WholesaleLanding (Server), SelectProductLink (Client)
 ├── forms/
 │   ├── EnquiryForm.tsx        # ✓ F1 "use client" (useActionState)
 │   └── EnquiryFormWithPrefill.tsx # ✓ F1 ?product= prefill
@@ -87,6 +89,8 @@ types/
 scripts/
 ├── visual-check.mjs           # ✓ M2.V `npm run verify:visual`
 └── visual-check.config.mjs    # viewports, pages, sections + reference rects
+
+proxy.ts                       # ✓ D-076 real 404 for unknown /wholesale/<product>
 
 lib/
 ├── enquiry.ts                 # ✓ F1 shared enquiry schema (zod), options, form state

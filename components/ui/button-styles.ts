@@ -9,9 +9,11 @@ const interactive = "hover:-translate-y-px active:translate-y-0 motion-reduce:ho
 const variants: Record<ButtonVariant, { look: string; hover: string }> = {
   primary: { look: "bg-gold-gradient text-ink-900 shadow-gold", hover: "hover:shadow-gold-hover hover:brightness-105" },
   "outline-dark": { look: "border border-gold-500 text-on-dark", hover: "hover:border-gold-400 hover:bg-gold-500/10" },
+  // Reference product-card buttons: gold outline on cream; text in gold-700 for contrast.
+  "outline-light": { look: "border border-gold-600 bg-transparent text-gold-700", hover: "hover:border-gold-700 hover:bg-gold-600/10" },
 };
 
-export const buttonSizes = { md: "min-h-13 px-7 text-sm lg:px-8 lg:text-lg" } as const;
+export const buttonSizes = { md: "min-h-13 px-7 text-sm lg:px-8 lg:text-lg", sm: "min-h-11 px-5 text-sm" } as const;
 
 type Options = {
   size?: keyof typeof buttonSizes;

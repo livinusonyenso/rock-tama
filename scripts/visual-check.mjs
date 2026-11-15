@@ -382,6 +382,20 @@ async function main() {
   // With page scripts disabled, callbacks (rAF, load listeners) never fire, so SETTLE is skipped.
   let scriptsEnabled = true;
   const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32 };
+  /** Resolves once the scroll position has been stable for ~150ms (smooth scrolling finished). */
+  async function waitForScrollSettled(timeout = 3000) {
+    const end = Date.now() + timeout;
+    let last = await cdp.evaluate("scrollX + ',' + scrollY");
+    let stableSince = Date.now();
+    while (Date.now() < end) {
+      await wait(50);
+      const now = await cdp.evaluate("scrollX + ',' + scrollY");
+      if (now !== last) {
+        last = now;
+        stableSince = Date.now();
+      } else if (Date.now() - stableSince >= 150) return;
+    }
+  }
   async function waitForCondition(js, timeout) {
     const end = Date.now() + timeout;
     for (;;) {
@@ -406,9 +420,13 @@ async function main() {
    */
   async function runAction(action) {
     if (action.click) {
-      // Scroll the target into view first: input events use viewport coordinates.
-      const point = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.click)});
-        if (!el) return null; el.scrollIntoView({ block: "center", behavior: "instant" }); const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+      // Scroll the target into view first (input events use viewport coordinates), then wait until any
+      // smooth scrolling has settled so the click lands where it was measured.
+      const found = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.click)});
+        if (!el) return false; el.scrollIntoView({ block: "center", behavior: "instant" }); return true; })()`);
+      if (!found) throw new Error(`action target not found: ${action.click}`);
+      await waitForScrollSettled();
+      const point = await cdp.evaluate(`(() => { const r = document.querySelector(${JSON.stringify(action.click)}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       if (!point) throw new Error(`action target not found: ${action.click}`);
       await mouseClick(point.x, point.y);
     } else if (action.clickAt) {
@@ -425,7 +443,8 @@ async function main() {
       await wait(action.wait);
     } else if (action.type) {
       // Focus, clear, then insert text as real keyboard input.
-      const found = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.type.selector)}); if (!el) return false; el.focus(); el.select?.(); return true; })()`);
+      // Focus without triggering a (smooth) focus scroll, then bring the field into view instantly.
+      const found = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.type.selector)}); if (!el) return false; el.focus({ preventScroll: true }); el.scrollIntoView({ block: "center", behavior: "instant" }); el.select?.(); return true; })()`);
       if (!found) throw new Error(`action target not found: ${action.type.selector}`);
       await cdp.send("Input.insertText", { text: String(action.type.text) });
     } else if (action.select) {
@@ -520,7 +539,7 @@ async function main() {
           try {
             // `js` runs in the page; `server` runs in Node (e.g. to inspect delivered enquiries).
             const value = expectation.server
-              ? await expectation.server({ evaluate: cdp.evaluate, root: ROOT, mock, delivery: args.delivery })
+              ? await expectation.server({ evaluate: cdp.evaluate, root: ROOT, mock, delivery: args.delivery, baseUrl })
               : await cdp.evaluate(`(() => (${expectation.js}))()`);
             const pass = value === true;
             record(sScope, expectation.name, pass ? "PASS" : "FAIL", pass ? "" : `got ${JSON.stringify(value)}`);

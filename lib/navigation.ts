@@ -23,6 +23,15 @@ export function resolveHref(key: RouteKey): string | null {
 }
 
 /**
+ * Product-specific wholesale quote URL: a pre-built page with the product preselected, jumping to the
+ * enquiry form. Works without JavaScript (D-076). null while /wholesale is unavailable.
+ */
+export function wholesaleQuoteHref(slug: string): string | null {
+  const base = resolveHref("wholesale");
+  return base ? `${base}/${slug}#enquiry` : null;
+}
+
+/**
  * Destination for a top-level nav item, shared by the desktop and mobile
  * headers. An item with a dropdown (Shop) is interactive only through its
  * children's availability, never its own route (D-048). While none are

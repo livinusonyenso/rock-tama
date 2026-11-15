@@ -1,5 +1,23 @@
 import type { ComponentType, SVGProps } from "react";
-import { ChevronDown, ImageIcon, Menu, Search, ShoppingCart, Truck, User, Warehouse, X } from "lucide-react";
+import {
+  ArrowRight,
+  BedDouble,
+  Building2,
+  CalendarDays,
+  ChevronDown,
+  FileText,
+  Handshake,
+  ImageIcon,
+  Menu,
+  PackageSearch,
+  Search,
+  ShoppingCart,
+  Store,
+  Truck,
+  User,
+  Warehouse,
+  X,
+} from "lucide-react";
 import { GlobeFilled } from "@/components/icons/GlobeFilled";
 import type { IconName } from "@/types/content";
 
@@ -19,6 +37,14 @@ const icons: Record<IconName, IconComponent> = {
   x: X,
   warehouse: Warehouse,
   image: ImageIcon,
+  bed: BedDouble,
+  building: Building2,
+  store: Store,
+  calendar: CalendarDays,
+  "package-search": PackageSearch,
+  "file-text": FileText,
+  handshake: Handshake,
+  "arrow-right": ArrowRight,
 };
 
 type IconProps = {

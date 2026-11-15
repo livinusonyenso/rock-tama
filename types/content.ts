@@ -48,7 +48,15 @@ export type IconName =
   | "menu"
   | "x"
   | "warehouse"
-  | "image";
+  | "image"
+  | "bed"
+  | "building"
+  | "store"
+  | "calendar"
+  | "package-search"
+  | "file-text"
+  | "handshake"
+  | "arrow-right";
 
 export type NavLinkItem = {
   label: string;
@@ -114,7 +122,7 @@ export type SiteConfig = {
 };
 
 /** Visual style of a call-to-action button (see components/ui/ButtonLink). */
-export type ButtonVariant = "primary" | "outline-dark";
+export type ButtonVariant = "primary" | "outline-dark" | "outline-light";
 
 /** A call to action whose destination is resolved through the route registry (never a raw href). */
 export type CallToAction = {
@@ -157,6 +165,8 @@ export type Product = {
   name: string;
   /** Short label for compact controls, e.g. "750 ml". */
   shortName: string;
+  /** Packaging description; only confirmed facts (pack sizes pending from the client). */
+  packaging: string;
   summary: string;
   price: Price | null;
   media: MediaAsset;

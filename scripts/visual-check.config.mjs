@@ -19,7 +19,8 @@ const fillEnquiry = (name, overrides = {}) => [
   { type: { selector: "#name", text: name } },
   { type: { selector: "#email", text: overrides.email ?? "buyer@example.com" } },
   { type: { selector: "#phone", text: "+234 803 123 4567" } },
-  { select: { selector: "#product", value: overrides.product ?? "750ml-glass-bottle" } },
+  // product: null = keep the product already selected (e.g. on /wholesale/<product>)
+  ...(overrides.product === null ? [] : [{ select: { selector: "#product", value: overrides.product ?? "750ml-glass-bottle" } }]),
   { type: { selector: "#quantity", text: "120" } },
   { select: { selector: "#unit", value: "cartons" } },
   { type: { selector: "#location", text: "Lekki, Lagos, Nigeria" } },
@@ -234,8 +235,11 @@ function functionalJourneys() {
   const honeypot = uniqueName("Honeypot Bot");
   const viaResend = uniqueName("Resend Hotel");
   const failing = uniqueName("FAIL_DELIVERY Hotel");
+  const noJsSelect = uniqueName("NoJS Select Hotel");
   const base = { kind: "functional", viewports: ["mobile"] };
-  return [
+  // Each journey gets its own client address so the enquiry rate limit (5 per 10 min per client)
+  // can't make journeys depend on each other; the rate-limit journey sets its own.
+  return withOwnClient([
     // -- Navigation reaches the working page (dev-file mode) --
     {
       ...base,
@@ -243,7 +247,7 @@ function functionalJourneys() {
       page: "home",
       actions: [{ click: 'section[aria-labelledby="hero-heading"] a[href="/wholesale"]' }, { waitFor: "location.pathname === '/wholesale' && document.querySelector('form')" }],
       expect: [
-        { name: "hero Request Wholesale navigates to a working /wholesale form", js: "location.pathname === '/wholesale' && Boolean(document.querySelector('form button[type=submit]'))" },
+        { name: "hero Request Wholesale opens the wholesale landing (products first, then form)", js: "location.pathname === '/wholesale' && document.querySelector('h1')?.textContent === 'Wholesale and Distribution' && Boolean(document.querySelector('#products')) && Boolean(document.querySelector('#enquiry form button[type=submit]'))" },
         { name: "nav Wholesale is a live link marked current", js: "document.querySelector('header nav a[href=\"/wholesale\"]')?.getAttribute('aria-current') === 'page'" },
       ],
     },
@@ -254,6 +258,117 @@ function functionalJourneys() {
       expect: [
         { name: "every form control has a label", js: "[...document.querySelectorAll('form input:not([type=hidden]):not([tabindex=\"-1\"]), form select, form textarea')].every(el => el.labels?.length > 0)" },
         { name: "honeypot hidden from people and assistive tech", js: "getComputedStyle(document.querySelector('input[name=website_url]').closest('[aria-hidden]')).display === 'none'" },
+      ],
+    },
+    // -- Wholesale landing: structure, product selection (owner brief, D-076) --
+    {
+      ...base,
+      name: "wholesale-landing-structure",
+      page: "wholesale",
+      expect: [
+        {
+          name: "sections in order: hero → products → who we supply → how it works → enquiry",
+          js: "(() => { const ids = [...document.querySelectorAll('main > section')].map(s => s.getAttribute('aria-labelledby')); return JSON.stringify(ids) === JSON.stringify(['wholesale-heading','products-heading','supply-heading','process-heading','enquiry-heading']); })()",
+        },
+        { name: "hero CTAs: Explore Products → #products, Request Quote → #enquiry", js: "[...document.querySelectorAll('section[aria-labelledby=wholesale-heading] a')].map(a => a.getAttribute('href')).join() === '#products,#enquiry'" },
+        { name: "3 catalogue products, each with a Select product link to its pre-built page", js: "(() => { const links = [...document.querySelectorAll('#products a[data-select-product]')]; return links.length === 3 && links.every(a => a.getAttribute('href') === `/wholesale/${a.dataset.selectProduct}#enquiry`); })()" },
+        { name: "product names come from the catalogue", js: "[...document.querySelectorAll('#products h3')].map(h => h.textContent).join('|') === '750 ml Glass Bottle|1.5 L Bottle|Carton Packs'" },
+        { name: "no invented prices or delivery promises on the page", js: "!/₦|NGN|\\$\\d|per (bottle|carton)|minimum order|in stock|within \\d+ (hours|days)/i.test(document.querySelector('main').innerText)" },
+        { name: "3 process steps", js: "document.querySelectorAll('section[aria-labelledby=process-heading] ol > li').length === 3" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-explore-products",
+      page: "wholesale",
+      actions: [{ click: 'section[aria-labelledby=wholesale-heading] a[href="#products"]' }, { waitFor: "Math.abs(document.getElementById('products').getBoundingClientRect().top) < 4" }],
+      expect: [{ name: "Explore Products scrolls to the products", js: "Math.abs(document.getElementById('products').getBoundingClientRect().top) < 4" }],
+    },
+    {
+      ...base,
+      name: "wholesale-select-product-js",
+      page: "wholesale",
+      actions: [
+        { type: { selector: "#name", text: "Typed Before Selecting" } },
+        { click: '#products a[data-select-product="1-5l-bottle"]' },
+        { waitFor: "Math.abs(document.getElementById('enquiry').getBoundingClientRect().top) < 4" },
+      ],
+      expect: [
+        { name: "product field set to the selected product", js: "document.getElementById('product').value === '1-5l-bottle'" },
+        { name: "already-typed input kept", js: "document.getElementById('name').value === 'Typed Before Selecting'" },
+        { name: "URL updated to the product's quote URL", js: "location.pathname === '/wholesale/1-5l-bottle' && location.hash === '#enquiry'" },
+        { name: "scrolled to the enquiry section", js: "Math.abs(document.getElementById('enquiry').getBoundingClientRect().top) < 4" },
+        { name: "focus moved to the product field", js: "document.activeElement?.id === 'product'" },
+        { name: "selection announced to screen readers", js: "document.getElementById('product-selection-status').textContent.includes('1.5 L Bottle selected')" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-select-reduced-motion",
+      page: "wholesale",
+      media: [{ name: "prefers-reduced-motion", value: "reduce" }],
+      actions: [{ evaluate: "window.__scrollStart = performance.now(); true" }, { click: '#products a[data-select-product="carton-packs"]' }],
+      expect: [
+        { name: "with reduced motion the jump is instant (in place right after the click)", js: "Math.abs(document.getElementById('enquiry').getBoundingClientRect().top) < 4" },
+        { name: "product set", js: "document.getElementById('product').value === 'carton-packs'" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-select-product-no-js",
+      page: "wholesale",
+      javascript: false,
+      actions: [
+        { click: '#products a[data-select-product="carton-packs"]' },
+        { waitFor: "location.pathname === '/wholesale/carton-packs' && document.getElementById('product')?.value === 'carton-packs'" },
+        ...fillEnquiry(noJsSelect, { product: null }),
+        { click: SUBMIT },
+        { waitFor: RESULT },
+      ],
+      expect: [
+        { name: "without JS, Select product opens the pre-built page with the product selected", js: "true" },
+        { name: "and the enquiry submits successfully", js: "Boolean(document.querySelector('[data-enquiry-reference]'))" },
+        {
+          name: "stored with the selected product",
+          server: async ({ root }) => (await storedEnquiries(root)).find((r) => r.name === noJsSelect)?.product === "carton-packs" || "not stored with carton-packs",
+        },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-selected-kept-on-error",
+      page: "wholesale",
+      path: "/wholesale/750ml-glass-bottle",
+      actions: submitAndWait,
+      expect: [
+        { name: "validation errors shown", js: "document.querySelectorAll('form [aria-invalid=true]').length >= 5" },
+        { name: "chosen product preserved through validation", js: "document.getElementById('product').value === '750ml-glass-bottle'" },
+      ],
+    },
+    {
+      ...base,
+      name: "wholesale-unknown-product",
+      page: "wholesale",
+      expect: [
+        {
+          name: "unknown /wholesale/<product> returns HTTP 404 (noindex)",
+          server: async ({ baseUrl }) => {
+            const response = await fetch(`${baseUrl}/wholesale/not-a-product`);
+            const html = await response.text();
+            return (response.status === 404 && html.includes('content="noindex"')) || `status ${response.status}`;
+          },
+        },
+        {
+          name: "each known product page returns 200 with the product selected in server HTML",
+          server: async ({ baseUrl }) => {
+            for (const slug of ["750ml-glass-bottle", "1-5l-bottle", "carton-packs"]) {
+              const response = await fetch(`${baseUrl}/wholesale/${slug}`);
+              const html = await response.text();
+              if (response.status !== 200 || !html.includes(`<option value="${slug}" selected=""`)) return `${slug}: ${response.status}`;
+            }
+            return true;
+          },
+        },
       ],
     },
     // -- Validation --
@@ -382,5 +497,10 @@ function functionalJourneys() {
       actions: [...fillEnquiry(uniqueName("Unconfigured Hotel")), ...submitAndWait],
       expect: [{ name: "unconfigured delivery shows an honest error, not success", js: "!document.querySelector('[data-enquiry-reference]') && document.querySelector('form [role=alert]')?.textContent.includes('could not be sent')" }],
     },
-  ];
+  ]);
+}
+
+/** Assigns a unique documentation-range IP (RFC 5737) per journey unless the journey sets headers. */
+function withOwnClient(journeys) {
+  return journeys.map((journey, index) => (journey.headers ? journey : { ...journey, headers: { "x-forwarded-for": `198.51.100.${index + 1}` } }));
 }

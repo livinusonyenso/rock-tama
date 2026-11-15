@@ -15,6 +15,8 @@ type MediaFrameProps = {
   sizes?: string;
   /** Load eagerly as a likely LCP element. */
   priority?: boolean;
+  /** Smaller placeholder label for small frames (e.g. product cards). */
+  compact?: boolean;
 };
 
 /**
@@ -22,7 +24,7 @@ type MediaFrameProps = {
  * aligned); without it, a labelled placeholder of exactly the same box, so swapping in the
  * real photo never changes layout. The placeholder is decorative (aria-hidden).
  */
-export function MediaFrame({ media, className = "", sizes, priority = false }: MediaFrameProps) {
+export function MediaFrame({ media, className = "", sizes, priority = false, compact = false }: MediaFrameProps) {
   const box = { aspectRatio: media.aspect };
 
   if (media.src) {
@@ -43,8 +45,10 @@ export function MediaFrame({ media, className = "", sizes, priority = false }: M
         <div className="absolute inset-0 rounded-card bg-placeholder" />
       )}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-2 text-center text-placeholder-ink">
-        <Icon name="image" strokeWidth={1.25} className="h-auto w-2/5" />
-        <span className="max-w-[60%] text-lg leading-tight lg:text-2xl">{media.label}</span>
+        <Icon name="image" strokeWidth={1.25} className={compact ? "h-auto w-1/2 max-w-12" : "h-auto w-2/5"} />
+        <span className={compact ? "max-w-[85%] text-xs leading-tight" : "max-w-[60%] text-lg leading-tight lg:text-2xl"}>
+          {media.label}
+        </span>
       </div>
     </div>
   );

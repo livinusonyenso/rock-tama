@@ -17,6 +17,7 @@ Generated run output (`.verification/`) is git-ignored.
 | M2.2 | `m2.2-announcement-responsive.png` | Implementation at 375 / 768 / 1280 |
 | M2.4 | `m2.4/header-desktop-reference.png`, `m2.4/report.md` | Header vs reference at 1440 (saved with `--save m2.4`). **Header baselines not yet approved** (awaiting owner review) |
 | M2.7 | `m2.7-investigation/`, `m2.7-before/`, `m2.7-after/` (`before-after-1440.png`, `after-1366.png`, `after-1280.png`, `sections/`, `report.md`) | Measured investigation; full before/after sets at 320–1440 incl. drawer states; V-008 sweep + 1359/1360 images. **Awaiting owner visual approval; baselines not promoted** |
+| Wholesale landing | `wholesale-landing/` | Desktop/tablet/mobile + functional reports (D-076) |
 | F1 | `f1/` (`wholesale-and-drawer.png`, `functional-*.md`) | /wholesale desktop + mobile, drawer with live Wholesale; functional reports for all 3 delivery modes |
 | M3.3 | `m3.3/` (`hero-animation-initial-*.png` = frozen t=0, `hero-desktop.png` = final, `hero-reduced-motion-desktop.png`, `report.md`) | Entrance animation states; final = static hero (≤0.01%) |
 | M3.2 | `m3.2/` (`hero-desktop-reference.png`, `hero-responsive.png`, `sections/`) | Static hero vs reference @1440; 320/375/768/1024/1280 layouts |
