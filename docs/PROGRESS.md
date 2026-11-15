@@ -65,6 +65,8 @@ _Last updated: 2026-11-16_
 - PROPOSED decisions awaiting approval: D-009, D-011, D-012, D-014 (D-003, D-004, D-005, D-019, D-025 approved 2026-11-14; D-026 added)
 - Scope B requirements session (after homepage)
 
+| 2026-11-16 | **Vercel 404 fixed (D-097):** opt-in `DEPLOY_MODE=staging` so Vercel production builds succeed (guards warn, noindex) | lint ✓ · tsc ✓ · simulated Vercel production build: without staging exit 1 (guard), with staging exit 0 + 2 warnings · `next start`: 200 + `X-Robots-Tag: noindex, nofollow` |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)
