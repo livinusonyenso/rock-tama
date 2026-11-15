@@ -57,3 +57,13 @@ Original entries:
 ## §6 verification incomplete — 2026-11-16
 
 Source implemented under D-092; `home-6-origin/report.md` records harness timeout (0 pass, 1 incomplete). `home-6-origin/implementation-report.md` distinguishes successful source/SSR checks from unrun browser checks. No screenshots or new baselines. Local Turbopack worker-port EPERM blocks normal build, so full browser/functional regression verification remains outstanding.
+
+## §6 recovery evidence — 2026-11-16
+
+`home-6-origin-review/RECOVERY_REPORT.md` supersedes the earlier runtime-blocked status. Styled diagnostic Webpack build and Chrome execution work; default Turbopack still fails at loader-worker port EPERM here. Seven-width final Origin capture checks 105/105; actual comparison in `home-6-origin-review/origin-desktop-reference.png`. No baseline promotion. Final visual regression 393 pass / 3 fail (two global 200% root-text header overflows, expected 320px drawer change). Functional journeys pass: 361/361 dev-file, 40/40 resend-mock, 31/31 unconfigured, using the same diagnostic artifact with `--no-build`; reports in the recovery folder.
+
+| ID | Recovery disposition |
+|---|---|
+| V-012 | §6 visual differences pending owner review: section +4px, image +16px width, story +17px right, map −10px width @1440; safe copy shorter and icons/coastline differ. See measured report; no tuning without review |
+| V-013 | Existing global header overflow at 200% root text: +216px mobile / +950px desktop. Origin's own text now wraps safely. Header unchanged; broader page accessibility remains open |
+| V-014 | Drawer @320 differs 4.01% after Our Story becomes a real anchor; approved pre-Origin baseline retained for owner review |

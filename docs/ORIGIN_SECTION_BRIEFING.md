@@ -2,7 +2,7 @@
 
 2026-11-16 · **[APPROVED 2026-11-16 — owner: “approve”]**
 
-Implementation status: source implemented; browser/build verification incomplete due local-port restrictions. See `verification/home-6-origin/implementation-report.md`. Proposal language below preserves the approved briefing.
+Implementation status: Chrome verification recovered with styled diagnostic Webpack build; default Turbopack outside restricted environment remains pending. See `verification/home-6-origin-review/RECOVERY_REPORT.md`. Proposal language below preserves the approved briefing.
 
 ## What / scope
 

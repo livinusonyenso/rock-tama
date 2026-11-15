@@ -6,7 +6,7 @@ _Last updated: 2026-11-16_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** §6 approved (D-092), source implemented; build/browser verification incomplete due local worker-port EPERM. §5 functionally accepted (D-090); visual comparisons await owner review, screenshots remain provisional.
+- **Current task:** §6 browser verification recovered on a styled Webpack diagnostic build; comparison ready for owner review. Default Turbopack still blocked by worker-port EPERM. §7 briefing prepared only. §5 functionally accepted (D-090); visual comparisons await owner review, screenshots remain provisional.
 
 ## Completed
 
@@ -76,10 +76,18 @@ _Last updated: 2026-11-16_
 
 ## Next proposed task
 
-**§6 briefing approved; finish outstanding build/browser verification before owner visual review.** §5 baseline promotion remains explicitly unauthorised pending comparison review. V-011 investigation recorded; no UI changes.
+**Review §6 comparisons and §7 briefing (`QUALITY_SECTION_BRIEFING.md`); do not implement §7 yet.** Default Turbopack build still needs a normal-terminal check; global header enlarged-text issue is tracked separately. §5 baseline promotion remains explicitly unauthorised pending comparison review. V-011 investigation recorded; no UI changes.
 
 2026-11-16: prepared §6 briefing from original screenshot and current primitives; checked Natural Earth public-domain terms; registered two unverified planned origin claims. Updated project workflow/records. Documentation and registry only; no UI implementation, push or deployment. Validation: `npx tsc --noEmit` and `git diff --check` pass. No browser/build checks rerun for this planning task; prior UI checks remain historical.
 
 ## §6 implementation update — 2026-11-16
 
 Approved briefing implemented in source, including Natural Earth Africa geometry and town marker, placeholder art direction, responsive story/indicators and shared Reveal. Source-level checks pass: lint, TypeScript, diff whitespace, SSR semantics/claim references/route resolution and real-photo branch; generator checks checksum, closed dissolved rings and Nigeria containment. Simulated Vercel production build correctly rejects all nine unverified claims. Normal `npm run build` fails with Turbopack worker-port `Operation not permitted` even after escalation. Origin visual harness reports 0 passed / 0 failed / 1 incomplete (server unavailable); no screenshots generated. Full browser/functional suites not completed. Report: `verification/home-6-origin/implementation-report.md`. Do not call §6 verified or approve baselines. Next work is finishing §6 verification in an environment permitting local worker ports, not §7. Nothing pushed/deployed.
+
+## Verification recovery — 2026-11-16 (D-093/D-094)
+
+Classified blocker as probable sandbox/Turbopack worker permission interaction: minimal loopback bind fails sandboxed but passes escalated; Turbopack loader child still EPERM, no port conflict evidence. Supported plain Webpack compiles but lacks Tailwind compilation; rejected its unstyled captures. Temporary existing-loader hook produced a valid styled Webpack artifact, restored byte-for-byte afterward. No permanent config/dependency/security changes. Source lint/tsc/diff checks pass.
+
+Chrome found and verified fixes for page-end Origin reveals and enlarged compact-heading wrapping; default Reveal inset and normal headings unchanged. Final Origin captures: **105/105**, seven widths; geometry/AA contrast/map provenance checked and screenshots inspected. Full visual regression: **393 passed, 3 failed** (existing global header overflow under 200% root text ×2, expected drawer @320 baseline difference); header/announcement normal screenshots 0.00%. No baselines promoted. Functional journeys all pass on the same diagnostic artifact: **361/361 dev-file, 40/40 resend-mock, 31/31 unconfigured**, with `--no-build` because the default Turbopack worker remains blocked. Reports in the recovery folder. Original `0f8618e` retained. §7 briefing prepared with evidence/certification gates only; no §7 implementation. Details and outside-environment commands: `verification/home-6-origin-review/RECOVERY_REPORT.md`.
+
+Local source/evidence commit: `627e42e` (two narrow fixes + verification evidence), appended after retained `0f8618e`; no history rewrite. Documentation/§7 briefing recorded separately.

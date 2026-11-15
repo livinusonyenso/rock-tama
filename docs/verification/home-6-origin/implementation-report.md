@@ -1,6 +1,8 @@
 # §6 Our Origin — implementation and verification status
 
-2026-11-16 (client date) · **SOURCE IMPLEMENTED; BUILD/BROWSER VERIFICATION INCOMPLETE**
+2026-11-16 (client date) · **Historical report from original implementation**
+
+Superseded for current status by `../home-6-origin-review/RECOVERY_REPORT.md`: styled Webpack diagnostic enabled Chrome verification and exposed two narrow fixes. Default Turbopack remains environmentally blocked. Original results below are preserved as history.
 
 Owner approved briefing (D-092). Implemented: two-column desktop image/story with nested Africa map; tablet image above story/map; mobile image → label/heading/copy → three indicators → map. Source uses existing components/tokens, extends shared defaults conservatively, retains safe approved paragraph, once-only 600ms reveals and reduced-motion/no-JS fallbacks. Our Story resolves to real `/#origin`; page itself remains planned. No push/deploy or baseline promotion.
 

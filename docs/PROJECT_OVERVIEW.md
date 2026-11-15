@@ -61,3 +61,7 @@ The reference contains product and quality claims. They are **supplied visual co
 | NAFDAC registration **A1-2462L** (owner intends to display it) | Verification against the registration documents. **Do not publish until verified** (D-022). |
 
 **Owner direction (2026-11-14, D-013):** keep the visual layout of the quality section, but do not publish unsupported technical or scientific claims. The ISO 22000 badge must not appear as a verified claim until the certificate and its applicability are confirmed; its layout space may be reserved.
+
+## §7 planning ledger — 2026-11-16
+
+`QUALITY_SECTION_BRIEFING.md` maps each reference label to existing `content/claims.ts` IDs or explicitly proposed unverified IDs. This expands no displayed quality/certification claims. “Undistilled” spelling, sensory wording and ISO scope still need confirmation/evidence. Register proposed IDs before rendering during approved implementation; no badge without applicable verified certification. The interim description uses only owner-supplied origin facts. §7 UI/content implementation remains unapproved.

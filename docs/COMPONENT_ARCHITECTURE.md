@@ -110,3 +110,7 @@ Eyebrow lines, vertical dividers, the gold hero rule, badge counts, single headi
 ## §6 implemented source — 2026-11-16 (D-092)
 
 `OriginSection` is a Server Component composed in `app/page.tsx`. It reads typed `homeOrigin` from `content/home.ts`, reuses wide Container, compact left SectionHeading (trailing rule), MediaFrame, inline light IconFeature and once-only Reveal islands. `components/brand/AfricaMap.tsx` owns the licensed static outline and projected town pin; geometry generation is offline (`scripts/generate-africa-map.py`), with no runtime dependency. Icon adds map-pin/leaf/layers. MediaFrame adds optional cover/focal-position/mobileAspect/landscape-placeholder options; defaults preserve current product/hero behaviour. No new global type scale or animation library. Our Story now resolves through the built origin anchor; page remains planned. Build/browser verification pending; see origin implementation report.
+
+### §6 verification recovery (D-094)
+
+Reveal adds optional `viewportInset?: 0 | 10` (10 default), used as 0 by Origin only. Compact SectionHeading adds word wrapping for enlarged text; default heading variant unchanged. Origin geometry/content is preserved. Styled Webpack diagnostic enabled browser verification; normal Turbopack outside sandbox remains pending. §7 architecture is proposed only in `QUALITY_SECTION_BRIEFING.md`.

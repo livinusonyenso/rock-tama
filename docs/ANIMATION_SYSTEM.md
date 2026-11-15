@@ -97,6 +97,8 @@ Static screenshots and animation behaviour are tested **separately and determini
 
 When planning any new visible section, add a row here and a storyboard to its briefing.
 
-## §6 storyboard [APPROVED D-092; source implemented, browser verification pending]
+## §6 storyboard [APPROVED D-092; source implemented; Chrome checked using diagnostic Webpack]
 
 See `ORIGIN_SECTION_BRIEFING.md`: reuse D-088 Reveal (600ms / 16px), image 0ms, text 80ms, indicators 0/60/120ms independently; map/background static, no nested reveals. Reduced motion/no-JS stay visible.
+
+§6 recovery (D-094): `Reveal.viewportInset` accepts 0 or 10 percent (default 10). Origin alone uses 0 to reveal final-page content at the actual viewport edge; timing/easing/stagger remain unchanged. Scroll/End, stable layout boxes, reduced motion/no-JS verified in Chrome. For static snapshots with assertions, scroll the whole section to its end and assert opacity 1 before capture. Do not change default §5 behaviour to solve this section-specific issue.

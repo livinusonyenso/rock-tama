@@ -178,7 +178,7 @@ Known deviations from the reference: the globe icon is outline (Lucide), not fil
 - Tablet: image full width on top; text and map side by side below.
 - Mobile: image, then text, then features stacked vertically. The map is small and centred below, or hidden (decision pending).
 
-**[IMPLEMENTED SOURCE 2026-11-16, D-092]** Two main desktop columns; map nested beside story. Safe owner-approved factual paragraph replaces evidence-dependent reference prose. Indicators retain registered unverified claims. Mobile keeps map after indicators. Build/browser verification pending; see `verification/home-6-origin/implementation-report.md`.
+**[IMPLEMENTED SOURCE 2026-11-16, D-092]** Two main desktop columns; map nested beside story. Safe owner-approved factual paragraph replaces evidence-dependent reference prose. Indicators retain registered unverified claims. Mobile keeps map after indicators. Chrome checks recovered using styled diagnostic Webpack; default Turbopack remains environmentally blocked. See `verification/home-6-origin-review/RECOVERY_REPORT.md`; visual approval pending.
 
 ## 07 — Quality & Safety
 

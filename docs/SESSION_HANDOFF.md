@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-16 (§6 source implemented, runtime verification incomplete)_
+_Last updated: 2026-11-16 (§6 diagnostic browser recovery; §7 briefing only)_
 
-**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 briefing approved (D-092) and source implemented, runtime verification incomplete** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
+**Where we are:** Homepage focus. Done: announcement, header (Shop menu), mobile drawer (Shop list, baselines re-approved D-086), hero (+ animation + product carousel), §4 trust strip, **§5 Our Products** (D-087–D-089); F2 `/shop` + product pages; `/wholesale` landing + enquiry flow. **§5 functionally accepted; §6 checked in Chrome using styled Webpack diagnostic build; comparison awaits owner review; default Turbopack still environmentally blocked** (then §7 Quality → §8 Supply banner → §9 Footer). §5 baseline NOT promoted yet (awaiting review); open deviation V-011 (section 48px taller @1440). All claims go through `content/claims.ts` (production deploys blocked while unverified). Status per section: `docs/HOMEPAGE_CHECKLIST.md`.
 
 **Code so far:**
 - `app/globals.css`: design tokens (source of truth `docs/DESIGN_SYSTEM.md`)
@@ -33,6 +33,12 @@ _Last updated: 2026-11-16 (§6 source implemented, runtime verification incomple
 
 **Current §6 files:** `components/home/OriginSection.tsx`, `components/brand/AfricaMap.tsx`, `homeOrigin` in `content/home.ts`, shared MediaFrame/SectionHeading/IconFeature extensions and map-pin/leaf/layers icons. `origin.built=true`; Our Story resolves to `/#origin`. No /our-story page created. Licensed geometry generator at `scripts/generate-africa-map.py`; exact source and coordinate provenance in ASSET_SPECIFICATIONS.
 
-**Verification blocker:** lint/tsc/whitespace, SSR/content/route/photo-branch assertions and map generator checks pass. Production guard rejects nine claims as intended. Normal build fails on Turbopack worker port (EPERM), including escalated retries. Origin harness times out without a production build (0 passed, 1 incomplete); no browser screenshots or end-to-end results. Full functional/regression, zoom, photo-crop and visual review still required. `docs/verification/home-6-origin/implementation-report.md` has commands and details. Finish verification before marking §6 complete or moving to §7.
+**Verification recovery:** see `docs/verification/home-6-origin-review/RECOVERY_REPORT.md`. Minimal loopback bind passes escalated but Turbopack worker still EPERM. Plain Webpack output was unstyled and rejected. A temporary Webpack hook using the installed Tailwind loader enabled accurate Chrome checks; `next.config.ts`, package files and default scripts are unchanged. Default Turbopack must still be checked in normal Terminal; commands in report.
 
-**Do not:** promote §5 or §6 baselines; implement §7; push or deploy. Distributor Supply remains italic (D-090). V-011 remains open. Both origin claims stay unverified; location marker represents the town, not a spring survey.
+**Narrow fixes (D-094):** Origin alone uses `Reveal viewportInset={0}` so final-page indicators cannot remain hidden; default inset stays 10. Compact SectionHeading can wrap long words under 200% text. No changes to normal-size geometry, header, hero/carousel/products or enquiry code. Original `0f8618e` retained; fixes/evidence in new commit `627e42e`.
+
+**Evidence:** final seven-width Origin captures 105/105; inspected reference comparison + mobile/tablet/laptop/desktop. Full visual suite 393 pass / 3 fail: global header overflow at 200% root text (V-013) and intended 320px drawer baseline difference. Header/bar normal comparisons 0.00%. Functional journeys **361/361 dev-file, 40/40 resend-mock, 31/31 unconfigured** on the same diagnostic artifact; map checksum/containment passes. Recovery report has details. §6 visual approval pending; §5 remains provisional (V-011). Source/photo/claim evidence still pending; map denotes approximate town only.
+
+**Next:** owner review of `docs/verification/home-6-origin-review/origin-desktop-reference.png` and `docs/QUALITY_SECTION_BRIEFING.md`. §7 briefing only, not implementation. New §7 claims must be registered unverified before any rendering after approval; certificate output requires verified evidence + explicit enablement, never just a flag.
+
+**Do not:** promote §5/§6/drawer baselines, implement §7 without approval, push or deploy. Do not change working app code or machine security to bypass worker permissions. Preserve italic Distributor Supply and accessible targets.
