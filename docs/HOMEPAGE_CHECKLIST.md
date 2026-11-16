@@ -18,7 +18,7 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 | 8 | Business supply banner | **Built under D-095; on the shared water band (D-108)** | Responsive captures; pending owner review | **Request Wholesale → working /wholesale enquiry** | Events & Institutions replaces unsupported export promise |
 | 9 | Footer | **Built under D-095; shared across routes** | Responsive captures; pending owner review | Live catalogue/Origin/Quality/Wholesale links; pending pages are text | Newsletter disabled, provider/policies pending; **social icons live with `#` placeholders (D-111)**; official footer logo pending |
 
-| + | Testimonials (not in the reference; owner request) | **Built D-111** after §6 | Captured at 7 widths; pending owner review | Informational | **Sample quotes, visibly labelled; launch-blocked until real customer quotes** |
+| + | Testimonials (not in the reference; owner request) | **Built D-111; slider D-112 (6 samples)** after §6 | Captured at 7 widths; pending owner review | Informational | **Sample quotes, visibly labelled; launch-blocked until real customer quotes** |
 
 ## Dependency-aware build order
 

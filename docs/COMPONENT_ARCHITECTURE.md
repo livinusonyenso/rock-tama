@@ -62,7 +62,8 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 | `QualitySection` | 07 | Heading, statement, indicators, conditional ISO badge, texture | No | `showCertification` (content flag) | `SectionHeading`, `IconFeature` | Row → stacked; 4 → 2×2 | M6 |
 | `WholesaleBanner` | 08 | Business supply pitch, segments, CTA | No | none | `Container`, `IconFeature`, `ButtonLink` | Row → 2 rows → stacked | M7 |
 
-| `TestimonialsSection` ✓ D-111 | + | Sample-labelled customer quotes | No | none (`content/testimonials.ts`) | `SectionHeading`, `Reveal`, `Icon` | 3 → 1 columns | — |
+| `TestimonialsSection` ✓ D-111/D-112 | + | Sample-labelled customer quotes in a slider | No | none (`content/testimonials.ts`) | `SectionHeading`, `Reveal`, `Icon`, `TestimonialSlider` | 3 / 2 / 1 per view | — |
+| `TestimonialSlider` ✓ D-112 | + | Scroll-snap track + autoplay (no visible controls, D-113) | **Client** | `label`, `slideLabels`, `intervalMs?`, `children` (cards) | Native swipe; no-JS = scrollable row | — |
 | `ContactChannels` ✓ D-111 (`components/contact/`) | /contact | WhatsApp + email cards, wholesale pointer | No | none (`content/contact.ts`, `lib/contact.ts`) | `ButtonLink`, `Icon` | 2 → 1 columns | — |
 
 ## 5. Shared UI

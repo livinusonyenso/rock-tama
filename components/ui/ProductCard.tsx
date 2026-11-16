@@ -6,6 +6,7 @@ type ProductCardProps = {
   product: Product;
   mediaVariants?: readonly MediaAsset[];
   mediaNotice?: string;
+  compactMedia?: boolean;
   /** The card's single action (e.g. "Select product" on /wholesale, "View product" on /shop). */
   action: ReactNode;
   headingLevel?: "h2" | "h3";
@@ -17,7 +18,7 @@ type ProductCardProps = {
 };
 
 /** Catalogue product → OfferCard. All product facts come from content/products.ts. Server Component. */
-export function ProductCard({ product, mediaVariants, mediaNotice, action, headingLevel, meta, layout = "media-top", showPackaging = true }: ProductCardProps) {
+export function ProductCard({ product, mediaVariants, mediaNotice, compactMedia, action, headingLevel, meta, layout = "media-top", showPackaging = true }: ProductCardProps) {
   return (
     <OfferCard
       title={product.name}
@@ -25,6 +26,7 @@ export function ProductCard({ product, mediaVariants, mediaNotice, action, headi
       media={product.media}
       mediaVariants={mediaVariants}
       mediaNotice={mediaNotice}
+      compactMedia={compactMedia}
       action={action}
       layout={layout}
       headingLevel={headingLevel}

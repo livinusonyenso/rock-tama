@@ -394,7 +394,7 @@ async function main() {
 
   // With page scripts disabled, callbacks (rAF, load listeners) never fire, so SETTLE is skipped.
   let scriptsEnabled = true;
-  const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32 };
+  const KEYS = { Escape: 27, Tab: 9, Enter: 13, " ": 32, ArrowLeft: 37, ArrowRight: 39 };
   /**
    * Scroll reveals (components/ui/Reveal.tsx) only show content once it has entered the viewport. Before
    * static captures, step through the page so every observer fires, wait for the reveal transitions,

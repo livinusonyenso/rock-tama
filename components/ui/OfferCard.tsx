@@ -13,6 +13,7 @@ type OfferCardProps = {
   /** Optional image-only gallery; omit to preserve the static card. */
   mediaVariants?: readonly MediaAsset[];
   mediaNotice?: string;
+  compactMedia?: boolean;
   /** The card's single action. */
   action: ReactNode;
   /**
@@ -39,7 +40,7 @@ const isLandscape = (media: MediaAsset) => {
  * Server Component with an optional MediaCarousel client island. Hover = slightly deeper shadow + 2px lift
  * (no lift with reduced motion).
  */
-export function OfferCard({ title, text, media, mediaVariants, mediaNotice, action, layout = "media-top", headingLevel: Heading = "h3", titleStyle, eyebrow, meta, className = "" }: OfferCardProps) {
+export function OfferCard({ title, text, media, mediaVariants, mediaNotice, compactMedia = false, action, layout = "media-top", headingLevel: Heading = "h3", titleStyle, eyebrow, meta, className = "" }: OfferCardProps) {
   const landscape = isLandscape(media);
   const frame = (sizeClass: string) => {
     const sizing = landscape ? "w-full max-w-68" : sizeClass;
@@ -56,7 +57,7 @@ export function OfferCard({ title, text, media, mediaVariants, mediaNotice, acti
     return (
       <article className={`${shell} flex-col items-stretch gap-4 p-5 sm:flex-row`}>
         {/* Stacked below sm: a half-width image leaves too little room for the action at 320px. */}
-        <div className="flex shrink-0 items-end justify-center sm:w-1/2">{frame("h-52 sm:h-60 lg:h-64")}</div>
+        <div className="flex shrink-0 items-end justify-center sm:w-1/2">{frame(compactMedia ? "h-36 sm:h-40 lg:h-44" : "h-52 sm:h-60 lg:h-64")}</div>
         <div className="flex min-w-0 flex-1 flex-col sm:pt-6">
           <Heading className={titleClass}>{title}</Heading>
           {eyebrow && <p className="mt-1 text-sm font-semibold uppercase tracking-eyebrow text-gold-700">{eyebrow}</p>}

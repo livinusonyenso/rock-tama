@@ -71,6 +71,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-16 | **Contact Us, testimonials, footer socials (D-111)** | lint ✓ · tsc ✓ · build ✓ · new checks: visual/a11y 161/161 (contact, testimonials, footer at 7 widths), journeys 74/74 (header, footer and mobile-menu Contact links, Contact → wholesale, testimonials without JS and with reduced motion) · real-details path verified by a temporary flip (wa.me + mailto links, notice hidden) · simulated Vercel build warns about the placeholders · full functional run 640 passed, 2 failed = stale-CSS 404s from a concurrent rebuild by another session (not code); full visual run not finished at commit time (owner asked to commit + push) |
 
+| 2026-11-16 | **Testimonial slider (D-112):** 6 sample testimonials, scroll-snap slider with autoplay + controls | RESULTS_PLACEHOLDER |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

@@ -22,7 +22,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   faqs: { status: "planned", path: "/faqs" },
   terms: { status: "planned", path: "/terms" },
   privacy: { status: "planned", path: "/privacy" },
-  cart: { status: "planned", path: "/cart" },
+  cart: { status: "live", path: "/cart" },
 };
 
 /**

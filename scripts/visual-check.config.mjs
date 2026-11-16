@@ -194,12 +194,14 @@ const config = {
 
     {
       name: "testimonials", page: "home", selector: "#testimonials",
-      actions: [{ evaluate: "document.querySelector('#testimonials li:last-child').scrollIntoView({block:'end',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>e.dataset.reveal!=='hidden')" }],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>e.dataset.reveal!=='hidden')" }, { moveTo: { x: 2, y: 2 } }],
       expect: [
-        { name: "three testimonials with quote and attribution", js: "document.querySelectorAll('#testimonials figure blockquote').length===3 && [...document.querySelectorAll('#testimonials figcaption')].every(c=>c.textContent.trim().length>0)" },
+        { name: "six testimonials with quote and attribution, each a labelled slide", js: "document.querySelectorAll('#testimonials figure blockquote').length===6 && [...document.querySelectorAll('#testimonials li[aria-roledescription=slide]')].every((li,i)=>li.getAttribute('aria-label').startsWith((i+1)+' of 6: ')) && [...document.querySelectorAll('#testimonials figcaption')].every(c=>c.textContent.trim().length>0)" },
         { name: "sample content is visibly labelled (D-111)", js: "!!document.querySelector('#testimonials [data-sample-notice]')?.checkVisibility() && /Sample testimonials/.test(document.querySelector('#testimonials').textContent)" },
         { name: "quotes make no product, quality or certification claims", js: "!/pure|lab|tested|TDS|certif|NAFDAC|ISO|mineral|filtered/i.test([...document.querySelectorAll('#testimonials blockquote')].map(b=>b.textContent).join(' '))" },
-        { name: "testimonial text visible without overflow", js: "[...document.querySelectorAll('#testimonials h2,#testimonials p,#testimonials figcaption')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
+        { name: "testimonial text visible without overflow", js: "[...document.querySelectorAll('#testimonials h2,#testimonials blockquote p,#testimonials figcaption')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
+        { name: "cards per view: 1 on phones, 2 on tablet, 3 on desktop", js: "(() => { const t=document.querySelector('#testimonials ul[tabindex]'); const w=t.querySelector('li').getBoundingClientRect().width; const per=Math.round((t.clientWidth+24)/(w+24)); return per===(innerWidth>=1024?3:innerWidth>=768?2:1); })()" },
+        { name: "no visible controls (owner, D-113); scroll track is keyboard focusable", js: "!document.querySelector('#testimonials button') && document.querySelector('#testimonials ul').tabIndex===0" },
       ],
     },
     {
@@ -788,11 +790,38 @@ function functionalJourneys() {
     },
     {
       ...base, name: "testimonials-no-js", page: "home", javascript: false,
-      expect: [{ name: "without JS: all 3 testimonials visible (nothing hidden by the reveal)", js: "!document.querySelector('#testimonials [data-reveal]') && document.querySelectorAll('#testimonials blockquote').length===3" }],
+      expect: [{ name: "without JS: all 6 testimonials present in a swipeable/scrollable row, no dead controls", js: "!document.querySelector('#testimonials [data-reveal]') && document.querySelectorAll('#testimonials blockquote').length===6 && !document.querySelector('#testimonials button') && document.querySelector('#testimonials ul[tabindex]').scrollWidth>document.querySelector('#testimonials ul[tabindex]').clientWidth" }],
     },
     {
       ...base, name: "testimonials-reduced-motion", page: "home", media: [{ name: "prefers-reduced-motion", value: "reduce" }],
-      expect: [{ name: "reduced motion: testimonials never hidden", js: "[...document.querySelectorAll('#testimonials figure')].every(f=>getComputedStyle(f.closest('li').firstElementChild).opacity==='1')" }],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true" }],
+      expect: [{ name: "reduced motion: nothing hidden, no autoplay", js: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1') && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating" }],
+    },
+    // -- D-112 testimonial slider: real autoplay, pause, controls, loop --
+    {
+      ...base, name: "testimonials-autoplay", page: "home", viewports: ["desktop"],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true" }, { moveTo: { x: 2, y: 2 } }, { waitFor: "(() => { const t=document.querySelector('#testimonials ul[tabindex]'); const step=t.children[1].offsetLeft-t.children[0].offsetLeft; return document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='1' && Math.abs(t.scrollLeft-step)<2; })()", timeout: 12000 }],
+      expect: [{ name: "slides one card automatically after ~5s and lands snapped on a card", js: "(() => { const t=document.querySelector('#testimonials ul[tabindex]'); const step=t.children[1].offsetLeft-t.children[0].offsetLeft; return t.scrollLeft>0 && Math.abs(t.scrollLeft-step)<2 && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true'; })()" }],
+    },
+    {
+      ...base, name: "testimonials-hover-pause", page: "home", viewports: ["desktop"],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); window.__t=Date.now(); true" }, { moveTo: { x: 720, y: 400 } }, { waitFor: "Date.now()-window.__t>6500", timeout: 10000 }],
+      expect: [{ name: "hovering pauses autoplay (still on the first card after 6.5s)", js: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='0' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && document.querySelector('#testimonials ul[tabindex]').scrollLeft===0" }],
+    },
+    {
+      ...base, name: "testimonials-loop", page: "home", viewports: ["desktop"],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); const t=document.querySelector('#testimonials ul[tabindex]'); t.style.scrollBehavior='auto'; t.scrollLeft=t.scrollWidth; t.style.scrollBehavior=''; true" }, { moveTo: { x: 2, y: 2 } }, { waitFor: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='3'" }, { waitFor: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='0' && document.querySelector('#testimonials ul[tabindex]').scrollLeft===0", timeout: 12000 }],
+      expect: [{ name: "after the last card, autoplay glides back to the first", js: "document.querySelector('#testimonials ul[tabindex]').scrollLeft===0 && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true'" }],
+    },
+    {
+      ...base, name: "testimonials-swipe-stops", page: "home",
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); document.querySelector('#testimonials ul[tabindex]').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'})); true" }, { waitFor: "!!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped" }],
+      expect: [{ name: "touching/swiping the row stops autoplay for good (visitor in control)", js: "!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true'" }],
+    },
+    {
+      ...base, name: "testimonials-keyboard-stops", page: "home", viewports: ["desktop"],
+      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); document.querySelector('#testimonials ul[tabindex]').focus(); true" }, { press: "ArrowRight" }, { evaluate: "document.querySelector('#testimonials ul[tabindex]').blur(); true" }, { moveTo: { x: 2, y: 2 } }],
+      expect: [{ name: "keyboard focus pauses; using the keys stops autoplay even after focus leaves", js: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating" }],
     },
     // -- §6 Our Origin: motion, reading order, accessibility and actual navigation --
     {

@@ -21,6 +21,8 @@ type EnquiryFormProps = {
   /** Product slug to preselect (from /wholesale?product=…). */
   defaultProduct?: string;
   defaultMessage?: string;
+  defaultQuantity?: string;
+  defaultUnit?: "cartons" | "bottles";
 };
 
 /**
@@ -28,7 +30,7 @@ type EnquiryFormProps = {
  * states; validation and delivery happen in the submitEnquiry Server Action. Works without
  * JavaScript (progressive enhancement). Never shows success unless the enquiry was delivered.
  */
-export function EnquiryForm({ defaultProduct = "", defaultMessage = "" }: EnquiryFormProps) {
+export function EnquiryForm({ defaultProduct = "", defaultMessage = "", defaultQuantity = "", defaultUnit = "cartons" }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -91,10 +93,10 @@ export function EnquiryForm({ defaultProduct = "", defaultMessage = "" }: Enquir
         </select>
       </Field>
       <Field label="Required quantity" field="quantity" error={error("quantity")}>
-        <input id="quantity" name="quantity" type="number" inputMode="numeric" min={1} step={1} required defaultValue={value("quantity")} aria-invalid={Boolean(error("quantity"))} aria-describedby={describedBy("quantity")} className={controlClass} />
+        <input id="quantity" name="quantity" type="number" inputMode="numeric" min={1} step={1} required defaultValue={value("quantity", defaultQuantity)} aria-invalid={Boolean(error("quantity"))} aria-describedby={describedBy("quantity")} className={controlClass} />
       </Field>
       <Field label="Unit" field="unit" error={error("unit")}>
-        <select id="unit" name="unit" required defaultValue={value("unit", "cartons")} aria-invalid={Boolean(error("unit"))} aria-describedby={describedBy("unit")} className={controlClass}>
+        <select id="unit" name="unit" required defaultValue={value("unit", defaultUnit)} aria-invalid={Boolean(error("unit"))} aria-describedby={describedBy("unit")} className={controlClass}>
           {enquiryUnits.map((unit) => (
             <option key={unit} value={unit}>
               {unit[0].toUpperCase() + unit.slice(1)}

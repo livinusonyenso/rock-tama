@@ -46,6 +46,7 @@ Implemented: `--ease-standard`, `--ease-out-soft`, the `enter` keyframes, `anima
 1. **`enter` (fade + rise):** keyframes from `opacity: 0; transform: translateY(var(--enter-distance))` to the natural state. `animation-fill-mode: both` + a `--enter-delay` custom property per element. Utility classes `animate-enter`, `animate-enter-fade` (no movement) and `animate-enter-media` (rise + 0.98 scale).
 2. **Interactive feedback:** buttons and links use `transition` on `background-color`, `border-color`, `color`, `box-shadow`, `transform` with `--motion-fast` and `--ease-standard`; hover lift at most `translateY(-1px)`; active state returns to 0.
 3. **Overlay open:** `@starting-style` + `transition-discrete` (existing drawer).
+5. **Testimonial slider [IMPLEMENTED D-112]:** native scroll-snap + `scrollTo({behavior:'smooth'})`, one card every 5s; no visible controls (D-113): pauses on hover/focus/hidden tab and stops for good on any swipe, drag, wheel or key; reduced motion: no autoplay.
 4. **Scroll reveal [IMPLEMENTED §5]:** `Reveal`, once per element, 16px rise; hides nothing that starts in the viewport, nothing without JS, nothing with reduced motion; elements jumped past are revealed too. §5 storyboard: heading block, then the 4 cards staggered 0/80/160/240ms; card hover = shadow + 2px lift (150ms, none with reduced motion); buttons keep their existing colour transitions.
 
 ## 5. Reduced motion (mandatory)
