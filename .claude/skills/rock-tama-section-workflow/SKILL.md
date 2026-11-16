@@ -53,3 +53,7 @@ The owner explicitly authorised all remaining homepage sections in one pass, ove
 ## Image assets — D-098/D-099
 
 Use `content/media.ts` for live paths/alt/focal points; no per-page image duplication. Source originals outside public, optimized live WebP files in public/images by role, unconfirmed artwork internal only. Supplying artwork does not change availability or verify printed claims/pack quantities. Do not invent/extract official logos from bottle artwork. Preserve alpha, contain full products, cover crop Origin, reserve aspect boxes, preload only primary image and use responsive sizes. Browser checks must decode visible media and scroll through lazy images rather than awaiting offscreen lazy images before scroll. Check CTA containment inside cards, not only page overflow. Do not promote old/new baselines without visual approval.
+
+## Deployment mode update — D-100
+
+Owner authorised removal of the missing-enquiry build blocker. Automatic mode (DEPLOY_MODE unset) now stages incomplete delivery/evidence with warnings + noindex; staging explicitly stages and production explicitly restores strict checks. Do not restore a default fatal build guard against this instruction. Never infer verified claims or functioning email from a staging build. Check mode behaviour with `node scripts/deployment-config-check.cjs`; runtime enquiry failure remains honest. No push/deploy without separate scope.

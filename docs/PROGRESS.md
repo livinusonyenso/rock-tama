@@ -6,7 +6,7 @@ _Last updated: 2026-11-16_
 
 - **Phase:** Implementation (homepage, Scope A)
 - **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** Supplied storefront images integrated across home, carousel, shop/product/wholesale consumers (D-098). Original/optimized assets organized, inactive future artwork withheld. Image verification and narrow-desktop card fix: `verification/storefront-images/REPORT.md`.
+- **Current task:** Deployment build blocker removed via automatic staging (D-100). Missing delivery/evidence produces warnings + noindex; explicit production mode remains strict. Tested locally; not pushed/deployed.
 
 ## Completed
 
@@ -107,3 +107,7 @@ Nine owner PNGs preserved under docs/assets/source; five live optimized WebP fil
 Image verification: lint/tsc and styled diagnostic Webpack build pass; 9 source/output integrity checks pass; initial carousel/no-JS/enquiry run 307/307; final 7-width image/CTA run 283/283. Captures and limitations recorded in `verification/storefront-images/REPORT.md`. Original stage configuration untouched.
 
 Final homepage column-count/containment verification after rem breakpoint correction: **175/175**, all seven widths; 1440 is four columns, 1024–1366 two, mobile one. Final captures refreshed in storefront-images; prior cross-page 283/283 and carousel/enquiry 307/307 results retained separately.
+
+## Deployment blocker removal — D-100, 2026-11-16
+
+Automatic staging removes fatal build errors for missing enquiry configuration and pending claims; noindex retained. Explicit DEPLOY_MODE=production remains strict. Runtime enquiry logic unchanged. Verification: lint/TypeScript; six actual-config cases via `node scripts/deployment-config-check.cjs`; local styled diagnostic Webpack production-mode build succeeded with VERCEL_ENV=production and missing credentials, emitting delivery/claim warnings. No default Turbopack pass or actual Vercel deployment claimed. Details: `verification/deployment-auto-staging/REPORT.md`. No push/deploy.

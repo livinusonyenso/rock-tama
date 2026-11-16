@@ -103,3 +103,7 @@ Legend: **Visible** = a UI affordance appears in the reference · **Implied** = 
 ## Homepage footer availability — D-095
 
 Footer UI exists; no newsletter data is collected while provider/consent configuration is missing. Input/button are disabled and honestly labelled. Contact, FAQs, delivery/returns and legal destinations remain planned non-links until actual content/pages are supplied; social links await official URLs. Shop, Origin, Quality and Wholesale navigation are live. This UI pass does not implement checkout/payments/accounts or a newsletter backend.
+
+## Automatic staging deployments (D-100)
+
+An incomplete Vercel production build now warns rather than failing on missing enquiry settings or unverified claims, without an extra environment variable. Responses carry `X-Robots-Tag: noindex, nofollow`. Leave DEPLOY_MODE unset (automatic), or set staging explicitly, for this preview state. DEPLOY_MODE=production enforces the original strict launch checks and therefore still requires ENQUIRY_DELIVERY=resend, RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM and verified claim records. When everything is ready, automatic mode also returns normal public configuration. Runtime form delivery is unchanged: without actual Resend configuration the form reports a real error, never a fake success. Build success is not proof of live email delivery or evidence verification.

@@ -20,12 +20,20 @@ const nextConfig: NextConfig = {
 };
 
 /**
- * Staging mode (D-097, owner-approved 2026-11-16): DEPLOY_MODE="staging" lets a Vercel production
- * deployment build while enquiry delivery or claim evidence is still pending. The guards below then warn
- * instead of failing, and every response carries `X-Robots-Tag: noindex` so the unfinished site is not
- * indexed. Remove DEPLOY_MODE for the public launch: the guards then block again until everything is ready.
+ * Incomplete deployments automatically use staging behaviour: warnings rather than a build failure,
+ * and noindex responses. DEPLOY_MODE=production explicitly restores strict launch checks.
+ * This never makes an unconfigured enquiry submission report success.
  */
-const stagingMode = () => process.env.DEPLOY_MODE === "staging";
+function missingDeliveryConfig() {
+  const missing = ["RESEND_API_KEY", "ENQUIRY_TO", "ENQUIRY_FROM"].filter(name => !process.env[name]);
+  if (process.env.ENQUIRY_DELIVERY !== "resend") missing.unshift('ENQUIRY_DELIVERY="resend"');
+  return missing;
+}
+
+const stagingMode = () => process.env.DEPLOY_MODE === "staging" || (
+  process.env.DEPLOY_MODE !== "production" &&
+  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0)
+);
 
 function blockOrWarn(message: string) {
   if (stagingMode()) {
@@ -36,14 +44,13 @@ function blockOrWarn(message: string) {
 }
 
 /**
- * Deploy guard (D-066/D-072): a production deployment must never ship a form that cannot deliver
- * enquiries. On Vercel production builds, require the Resend configuration; local builds and
- * preview deployments are unaffected (previews report an honest error at submit time instead).
+ * Delivery readiness check (D-100): warn for incomplete automatic/staging deployments.
+ * Explicit DEPLOY_MODE=production retains the strict Resend build requirement.
+ * Runtime delivery still reports an honest error when unconfigured.
  */
 function assertProductionDeliveryConfig() {
   if (process.env.VERCEL_ENV !== "production") return;
-  const missing = ["RESEND_API_KEY", "ENQUIRY_TO", "ENQUIRY_FROM"].filter((name) => !process.env[name]);
-  if (process.env.ENQUIRY_DELIVERY !== "resend") missing.unshift('ENQUIRY_DELIVERY="resend"');
+  const missing = missingDeliveryConfig();
   if (missing.length > 0) {
     blockOrWarn(
       `Production deployment blocked: enquiry delivery is not configured (missing ${missing.join(", ")}). ` +
@@ -53,8 +60,8 @@ function assertProductionDeliveryConfig() {
 }
 
 /**
- * Claims guard (D-013, D-078): a production deployment must not publish product, process or quality
- * claims without evidence. Lists every unverified claim in content/claims.ts.
+ * Claim readiness check: evidence is never inferred from a successful staging build.
+ * Explicit DEPLOY_MODE=production rejects unverified claims; staging warns and stays noindex.
  */
 function assertNoUnverifiedClaims() {
   if (process.env.VERCEL_ENV !== "production") return;

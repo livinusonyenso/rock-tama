@@ -1,0 +1,44 @@
+▲ Next.js 16.4.6 (webpack)
+✓ Running next.config.ts took 14ms
+- Cache Components enabled
+- Partial Prefetching enabled
+- Experiments (use with caution):
+  ✓ agentFeedback
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 798ms ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/14) ...
+  Generating static pages using 9 workers (3/14)
+  Generating static pages using 9 workers (6/14)
+  Generating static pages using 9 workers (10/14)
+✓ Generating static pages using 9 workers (14/14) in 412ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)                          Revalidate  Expire
+┌ ○ /                                        1d      1w
+├ ○ /_not-found                              1d      1w
+├ ○ /shop                                    1d      1w
+├   /shop/[slug]                             1d      1w
+│ ├ ◐ /shop/[slug]                           1d      1w
+│ ├ ○ /shop/750ml-glass-bottle               1d      1w
+│ ├ ○ /shop/1-5l-bottle                      1d      1w
+│ └ ○ /shop/carton-packs                     1d      1w
+├ ○ /wholesale                               1d      1w
+└   /wholesale/[product]                     1d      1w
+  ├ ◐ /wholesale/[product]                   1d      1w
+  ├ ○ /wholesale/750ml-glass-bottle          1d      1w
+  ├ ○ /wholesale/1-5l-bottle                 1d      1w
+  └ ○ /wholesale/carton-packs                1d      1w
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)             prerendered as static content
+◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
+
+[staging] Not launch-ready: enquiry delivery is not configured (missing ENQUIRY_DELIVERY="resend", RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM). See docs/ECOMMERCE_REQUIREMENTS.md.
+[staging] Not launch-ready: 13 claim(s) lack evidence: qualityPurityTrust ("Purity You Can Trust": needs Owner-approved purity assurance wording supported by current analyses); undistilled ("Undistilled (Natural State)": needs Documented process confirmation that the water is not distilled; reference typo corrected under the approved Quality briefing); odourlessTastelessAtSource ("Odourless & Tasteless at Source": needs Current sensory and relevant laboratory evidence at the source); iso22000 ("ISO 22000 Food Safety Management": needs Valid applicable certificate with certifying body, certificate number, entity/site, scope and issue/expiry dates; badge hidden until verified); naturallyProtectedSource ("Naturally Protected Source": needs Site or hydrogeological evidence establishing natural protection of the Nanka source; rendered in homepage origin, evidence pending); preservedNaturalPurity ("Preserved Natural Purity": needs Documented handling/process and relevant current analyses supporting preservation of natural purity; rendered in homepage origin, evidence pending); ultraPure ("Ultra Pure": needs Lab analysis supporting a purity claim; owner approval of the marketing wording); bottledAtSource ("Bottled at Source": needs Confirmation that bottling takes place at the spring site); lowTds ("Low TDS (6–8 mg/L)": needs Current lab report showing total dissolved solids of 6–8 mg/L); heavyMetalsNotDetected ("Heavy Metals Not Detected": needs Lab report covering the heavy-metal panel with detection limits); pathogensAbsent ("Pathogens Absent": needs Microbiological lab report); labTested ("Lab Tested": needs Name/accreditation of the testing laboratory and test frequency); rockFiltered ("Naturally filtered through ancient rock formations": needs Hydrogeological survey or equivalent (hero description)). Verify them in content/claims.ts or remove them from the content.

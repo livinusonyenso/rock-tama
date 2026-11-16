@@ -1,8 +1,9 @@
 /**
  * Register of product, process and quality claims shown on the site (D-013, D-068, D-078).
  * Every claim rendered anywhere must reference an entry here. A claim stays "unverified" until the
- * client supplies evidence (lab report, certificate, survey). Vercel production builds fail while
- * any claim is unverified (next.config.ts), so unsupported claims can't be published by accident.
+ * client supplies evidence (lab report, certificate, survey). Strict public-launch builds
+ * (DEPLOY_MODE=production) reject unverified claims; incomplete automatic deployments
+ * warn and remain noindex staging (next.config.ts, D-100).
  *
  * Self-contained on purpose (no path aliases): next.config.ts imports this file.
  */
