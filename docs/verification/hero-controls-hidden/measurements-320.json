@@ -1,0 +1,29 @@
+{
+  "viewport": 320,
+  "hero": {
+    "x": 0,
+    "y": 103,
+    "width": 320,
+    "height": 978
+  },
+  "heading": {
+    "x": 16,
+    "y": 217,
+    "width": 288,
+    "height": 48
+  },
+  "actions": {
+    "x": 16,
+    "y": 597,
+    "width": 288,
+    "height": 116
+  },
+  "carousel": {
+    "x": 16,
+    "y": 103,
+    "width": 288,
+    "height": 978
+  },
+  "crop": "65% 50%",
+  "overlay": "none"
+}

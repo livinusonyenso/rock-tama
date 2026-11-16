@@ -125,3 +125,5 @@ Owner-authorised implementation complete: reusable HeroCarousel with typed slide
 Lint/TypeScript and styled diagnostic Webpack build pass (15routes; config restored). Default build font-fetch restriction then elevated Turbopack worker-bind EPERM recorded; no default pass claimed. Corrected final visual/focus/real-touch run104/104 at320/375/768/1024/1280/1440. Final full functional/provider evidence and screenshots: verification/hero-five-slides/REVIEW.md. Visual/artwork approval pending; no push/deploy.
 
 D-102 final verification: full functional507/507; final responsive/contrast/focus/real-touch104/104; full-height five-slide captures78/78; Resend mock40/40 and unconfigured31/31. All five distinct alpha images and original hashes checked; no placeholders remain. Screenshots and generated concepts await owner/client review.
+
+D-103: removed visible hero dot/arrow/pause bar with focus-only accessible controls; removed normal-flow toolbar row while keeping autoplay and swipe. CSS change; image/content/timer logic unchanged. Verification: docs/verification/hero-controls-hidden/REVIEW.md. No push/deploy.

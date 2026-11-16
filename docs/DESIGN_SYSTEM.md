@@ -194,3 +194,5 @@ Hero uses static decorative water artwork with cover cropping (65% center mobile
 
 ## D-102 hero composition
 Attached owner waterfall mockup supersedes the three-product selector composition for the hero only. Persistent ROCK TAMA h1, gold eyebrow and serif italic tagline; each slide has a serif h2, short description and gold primary/outline wholesale CTAs. Five dots plus previous/next and pause/play. Same typography/colour/button tokens. Content grid stacks below768px and uses1.15:0.85 columns above it; controls span both. Desktop minimum41rem, bottle reserved stage up to384×560px; tablet up to352×416px; mobile up to288×320px. Overlapping grid-cell copy reserves tallest slide and avoids clipping long titles. Stage/control dimensions remain stable across selections. Waterfall static, strongly shaded left; brighter right highlights separate transparent bottle. No navigation or other section styling changes.
+
+D-103: hero dots/arrows/pause toolbar is visually hidden by default. Keyboard focus reveals the existing controls as an absolute bottom overlay without changing hero size; regular layout no longer reserves the toolbar row. Swipe/autoplay retained.

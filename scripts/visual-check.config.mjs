@@ -92,6 +92,8 @@ const config = {
       reference: { x: 0, y: 96, width: 1086, height: 396 },
       expect: [
         { name: "decorative background uses one responsive cover image", js: "(() => { const images = document.querySelectorAll('[data-hero-background] img'); return images.length===1 && images[0].alt==='' && images[0].sizes==='100vw' && !!images[0].srcset && getComputedStyle(images[0]).objectFit==='cover' && !!images[0].closest('[aria-hidden=true]'); })()" },
+        { name: "carousel toolbar hidden until keyboard focus", js: "getComputedStyle(document.querySelector('.hero-carousel-controls')).clipPath==='inset(50%)'" },
+        { name: "keyboard controls reveal without resizing hero", js: "(() => { const h=document.querySelector('.hero-carousel'),c=document.querySelector('.hero-carousel-controls'),b=c.querySelector('button');const before=h.offsetHeight;b.focus();const ok=getComputedStyle(c).clipPath==='none' && h.offsetHeight===before;b.blur();return ok;})()" },
         { name: "background is static and cannot intercept controls", js: "getComputedStyle(document.querySelector('[data-hero-background]')).pointerEvents==='none' && getComputedStyle(document.querySelector('[data-hero-background] img')).animationName==='none'" },
         { name: "hero CTAs and five-slide carousel", js: "[...document.querySelectorAll('[data-active=true] [data-hero-actions] a')].map(a=>a.getAttribute('href')).join(',')==='/shop,/wholesale' && document.querySelectorAll('[aria-roledescription=slide]').length===5" },
         { name: "hero text contrast over brightest possible background pixel ≥4.5:1", js: `(() => {
@@ -104,7 +106,7 @@ const config = {
         })()` },
         { name: "hero layout and responsive crop measurements", server: async ({evaluate,root}) => {
           const m = await evaluate(`(() => { const h=document.querySelector('section[aria-labelledby=hero-heading]'); const b=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}}; return {viewport:innerWidth,hero:b(h),heading:b(h.querySelector('h1')),actions:b(h.querySelector('[data-hero-actions]')),carousel:b(h.querySelector('[aria-roledescription=carousel]')),crop:getComputedStyle(h.querySelector('[data-hero-background] img')).objectPosition,overlay:getComputedStyle(h.querySelector('.hero-background-overlay')).backgroundImage}; })()`);
-          const {mkdir,writeFile}=await import('node:fs/promises'); await mkdir(`${root}/docs/verification/hero-five-slides`,{recursive:true}); await writeFile(`${root}/docs/verification/hero-five-slides/measurements-${m.viewport}.json`,JSON.stringify(m,null,2)+'\n'); return true;
+          const {mkdir,writeFile}=await import('node:fs/promises'); await mkdir(`${root}/.verification/hero-measurements`,{recursive:true}); await writeFile(`${root}/.verification/hero-measurements/measurements-${m.viewport}.json`,JSON.stringify(m,null,2)+'\n'); return true;
         } },
       ],
     },
@@ -969,5 +971,8 @@ function heroCarouselJourneys(base) {
     { ...base,name:"carousel-swipe",page:"home",viewports:["mobile"],actions:[{swipe:{selector:'.hero-bottle-stage',direction:'left'}},{waitFor:`${c}.dataset.carouselIndex==='1'`},{swipe:{selector:'.hero-bottle-stage',direction:'right'}},{waitFor:`${c}.dataset.carouselIndex==='0'`}],expect:[{name:"horizontal swipe advances and vertical scrolling retained",js:"getComputedStyle(document.querySelector('.hero-bottle-stage')).touchAction==='pan-y'"}]},
     { ...base,name:"carousel-reduced-motion",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],actions:[{click:dot(4)},{waitFor:`${c}.dataset.carouselIndex==='4'`}],expect:[{name:"manual selection works without motion or autoplay",js:`!${c}.dataset.carouselRotating && getComputedStyle(document.querySelector('.hero-bottle-frame')).transitionProperty==='none' && document.querySelector('[data-carousel-toggle]').disabled`}]},
     { ...base,name:"carousel-no-js",page:"home",viewports:["mobile","desktop"],javascript:false,expect:[{name:"first-slide content, bottle and working shop link survive without JS",js:"!!document.querySelector('[data-active=true] a[href=\"/shop\"]') && !document.querySelector('[data-carousel-toggle]') && !!document.querySelector('[data-frame=\"0\"] img')"}]},
-  ];
+  ].map(journey => ({ ...journey, actions: journey.actions?.flatMap(action =>
+    action.click && /Choose a slide|Previous slide|Next slide|data-carousel-toggle/.test(action.click)
+      ? [{evaluate: `document.querySelector(${JSON.stringify(action.click)}).focus({preventScroll:true}); true`}, action]
+      : [action]) }));
 }
