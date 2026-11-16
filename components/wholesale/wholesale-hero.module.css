@@ -1,10 +1,10 @@
 .hero { border-top: 4px solid var(--color-gold-500); }
-.overlay { background: rgb(6 39 30 / .9); }
+.overlay { background: rgb(5 43 32 / .94); }
 .rule { height: 1px; width: min(100%, 38rem); margin-top: 2rem; background: var(--color-gold-500); }
 @media (min-width: 64rem) {
   .content { max-width: none; min-height: clamp(35rem, 39vw, 47rem); padding-block: 4rem; padding-inline: 7.8125vw; display: flex; flex-direction: column; justify-content: center; }
   .rule { margin-top: 2.5rem; }
 }
 @media (min-width: 80rem) {
-  .overlay { background: linear-gradient(90deg, rgb(6 39 30 / .98), rgb(6 39 30 / .94) 32%, rgb(6 39 30 / .72) 50%, rgb(6 39 30 / .12) 78%, rgb(6 39 30 / .06)); }
+  .overlay { background: linear-gradient(90deg, rgb(5 43 32 / .99), rgb(5 43 32 / .98) 35%, rgb(5 43 32 / .94) 52%, rgb(5 43 32 / .62) 65%, rgb(5 43 32 / .28) 80%, rgb(5 43 32 / .22)); }
 }

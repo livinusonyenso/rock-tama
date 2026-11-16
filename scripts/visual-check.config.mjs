@@ -69,6 +69,7 @@ const config = {
     { name: "wholesale", path: "/wholesale" },
     { name: "shop", path: "/shop" },
     { name: "product", path: "/shop/750ml-glass-bottle" },
+    { name: "contact", path: "/contact" },
   ],
 
   sections: [
@@ -183,9 +184,32 @@ const config = {
       name: "footer", page: "home", selector: "body > footer",
       reference: { x: 0, y: 1286, width: 1086, height: 162 },
       expect: [
-        {name:"footer has three labelled navigation groups and no fake links",js:"document.querySelectorAll('footer nav[aria-labelledby]').length===3 && !document.querySelector('footer a[href=\"#\"],footer a[href=\"\"]')"},
-        {name:"newsletter honestly unavailable; no guessed social links",js:"document.querySelector('#footer-email').disabled && document.querySelector('footer button[aria-label=Subscribe]').disabled && !document.querySelector('footer form,footer ul[aria-label=\"Social media\"]')"},
+        {name:"footer has three labelled navigation groups and no fake links",js:"document.querySelectorAll('footer nav[aria-labelledby]').length===3 && !document.querySelector('footer nav a[href=\"#\"],footer a[href=\"\"]')"},
+        {name:"newsletter honestly unavailable",js:"document.querySelector('#footer-email').disabled && document.querySelector('footer button[aria-label=Subscribe]').disabled && !document.querySelector('footer form')"},
+        // D-109: owner chose "#" placeholders for the four reference platforms until official URLs exist (launch-blocked).
+        {name:"social links: Instagram, Facebook, LinkedIn, YouTube with names, decorative icons, 44px targets",js:"(() => { const a=[...document.querySelectorAll('footer ul[aria-label=\"Social media\"] a')]; return a.map(e=>e.getAttribute('aria-label')).join('|')==='ROCK-TAMA on Instagram|ROCK-TAMA on Facebook|ROCK-TAMA on LinkedIn|ROCK-TAMA on YouTube' && a.every(e=>e.querySelector('svg[aria-hidden=true]') && e.getBoundingClientRect().width>=44 && e.getBoundingClientRect().height>=44); })()"},
         {name:"footer brand, copyright and source location present",js:"document.querySelector('footer').textContent.includes('ROCK-TAMA') && document.querySelector('footer').textContent.includes('Nanka, Anambra State, Nigeria') && /© 20[0-9]{2}/.test(document.querySelector('footer').textContent)"},
+      ],
+    },
+
+    {
+      name: "testimonials", page: "home", selector: "#testimonials",
+      actions: [{ evaluate: "document.querySelector('#testimonials li:last-child').scrollIntoView({block:'end',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>e.dataset.reveal!=='hidden')" }],
+      expect: [
+        { name: "three testimonials with quote and attribution", js: "document.querySelectorAll('#testimonials figure blockquote').length===3 && [...document.querySelectorAll('#testimonials figcaption')].every(c=>c.textContent.trim().length>0)" },
+        { name: "sample content is visibly labelled (D-109)", js: "!!document.querySelector('#testimonials [data-sample-notice]')?.checkVisibility() && /Sample testimonials/.test(document.querySelector('#testimonials').textContent)" },
+        { name: "quotes make no product, quality or certification claims", js: "!/pure|lab|tested|TDS|certif|NAFDAC|ISO|mineral|filtered/i.test([...document.querySelectorAll('#testimonials blockquote')].map(b=>b.textContent).join(' '))" },
+        { name: "testimonial text visible without overflow", js: "[...document.querySelectorAll('#testimonials h2,#testimonials p,#testimonials figcaption')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
+      ],
+    },
+    {
+      name: "contact", page: "contact", selector: "main",
+      expect: [
+        { name: "Contact Us page: one h1, WhatsApp and email channels in order", js: "document.querySelectorAll('h1').length===1 && document.querySelector('main h1').textContent==='Get in Touch' && [...document.querySelectorAll('main [data-channel]')].map(e=>e.dataset.channel).join()==='whatsapp,email'" },
+        { name: "placeholder details are labelled and never linked (no wa.me / mailto to made-up contacts)", js: "!!document.querySelector('[data-contact-placeholder]') && !document.querySelector('main a[href^=\"https://wa.me\"],main a[href^=\"mailto:\"]') && document.querySelectorAll('main [data-channel] [data-pending]').length===2" },
+        { name: "wholesale pointer links to the working enquiry page", js: "document.querySelector('main aside a')?.getAttribute('href')==='/wholesale'" },
+        { name: "header Contact is a live link marked current", js: "(() => { const a=[...document.querySelectorAll('header a')].find(e=>e.getAttribute('href')==='/contact'); return !!a && (innerWidth<1024 || a.getAttribute('aria-current')==='page'); })()" },
+        { name: "contact text visible without overflow", js: "[...document.querySelectorAll('main h1,main h2,main p')].every(e=>e.scrollWidth<=e.clientWidth+1)" },
       ],
     },
 
@@ -250,6 +274,10 @@ const config = {
       name:"wholesale-hero-background",page:"wholesale",selector:'section[aria-labelledby="wholesale-heading"]',viewports:["small","mobile","tablet","laptop","large","desktop"],
       expect:[
         {name:"one decorative responsive warehouse background",js:"(()=>{const h=document.querySelector('section[aria-labelledby=wholesale-heading]'),i=h.querySelector('img');return h.querySelectorAll('img').length===1 && i.alt==='' && !!i.closest('[aria-hidden=true]') && i.sizes==='100vw' && getComputedStyle(i).objectFit==='cover' && decodeURIComponent(i.src).includes('/images/wholesale/warehouse-hero.webp')})()"},
+        {name:"warehouse overlay gives all hero text at least4.5:1 contrast",server:async({evaluate,root})=>{
+          const result=await evaluate(`(()=>{const h=document.querySelector('section[aria-labelledby=wholesale-heading]'),i=h.querySelector('img'),o=getComputedStyle(i.nextElementSibling);const rgb=s=>s.match(/[0-9.]+/g).map(Number);const raw=o.backgroundImage==='none'?o.backgroundColor:o.backgroundImage;const stops=[...raw.matchAll(/rgba[(]([^)]+)[)](?: ([0-9.]+)%)?/g)].map((m,j)=>({rgba:rgb(m[1]),p:m[2]?Number(m[2]):j?100:0}));const lum=a=>{const b=a.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return b[0]*.2126+b[1]*.7152+b[2]*.0722};const text=[...h.querySelectorAll('h1,p')].map(e=>{const r=document.createRange();r.selectNodeContents(e);const x=(r.getBoundingClientRect().right-h.getBoundingClientRect().left)/h.clientWidth*100;let alpha=stops.at(-1)?.rgba[3];for(let j=1;j<stops.length;j++){if(x<=stops[j].p){const a=stops[j-1],b=stops[j];alpha=a.rgba[3]+(b.rgba[3]-a.rgba[3])*(x-a.p)/(b.p-a.p);break}}const bg=stops[0]?.rgba.slice(0,3).map(v=>v*alpha+255*(1-alpha));const ratio=bg?(lum(rgb(getComputedStyle(e).color).slice(0,3))+.05)/(lum(bg)+.05):0;return {text:e.textContent.trim(),ratio}});return {width:innerWidth,overlay:raw,text}})()`);
+          const {mkdir,writeFile}=await import('node:fs/promises');const dir=`${root}/docs/verification/wholesale-overlay-refinement`;await mkdir(dir,{recursive:true});await writeFile(`${dir}/contrast-${result.width}.json`,JSON.stringify(result,null,2)+'\n');return result.text.every(x=>x.ratio>=4.5);
+        }},
         {name:"original wholesale heading and anchor actions retained",js:"document.querySelector('#wholesale-heading').textContent==='Wholesale and Distribution' && [...document.querySelectorAll('section[aria-labelledby=wholesale-heading] a')].map(a=>a.getAttribute('href')).join(',')==='#products,#enquiry'"},
         {name:"background is stationary and cannot block actions",js:"(()=>{const i=document.querySelector('section[aria-labelledby=wholesale-heading] img');return getComputedStyle(i).animationName==='none' && getComputedStyle(i.parentElement).pointerEvents==='none'})()"},
       ],
@@ -736,6 +764,35 @@ function functionalJourneys() {
       page: "home",
       javascript: false,
       expect: [{ name: "without JS: all 4 cards visible with working links", js: "!document.querySelector('#products [data-reveal]') && document.querySelectorAll('#products article a[href]').length === 4" }],
+    },
+    // -- D-109 Contact Us, testimonials --
+    {
+      ...base, name: "contact-header-link", page: "home", viewports: ["desktop"],
+      actions: [{ click: 'header nav a[href="/contact"]' }, { waitFor: "location.pathname === '/contact'" }],
+      expect: [{ name: "header Contact opens the Contact Us page", js: "(() => { const m=[...document.querySelectorAll('main')].filter(e=>e.checkVisibility()); return m.length===1 && m[0].querySelector('h1')?.textContent==='Get in Touch'; })()" }],
+    },
+    {
+      ...base, name: "contact-footer-link", page: "home",
+      actions: [{ click: 'footer a[href="/contact"]' }, { waitFor: "location.pathname === '/contact'" }],
+      expect: [{ name: "footer Contact Us opens the Contact Us page", js: "[...document.querySelectorAll('main')].filter(e=>e.checkVisibility()).some(m=>m.querySelector('h1')?.textContent==='Get in Touch')" }],
+    },
+    {
+      ...base, name: "contact-mobile-menu", page: "home",
+      actions: [{ click: MENU_BUTTON_SELECTOR }, { click: '#mobile-nav a[href="/contact"]' }, { waitFor: "location.pathname === '/contact' && !document.getElementById('mobile-nav').open" }],
+      expect: [{ name: "mobile menu Contact opens the page and closes the drawer", js: "!document.getElementById('mobile-nav').open && [...document.querySelectorAll('main')].filter(e=>e.checkVisibility()).some(m=>m.querySelector('h1')?.textContent==='Get in Touch')" }],
+    },
+    {
+      ...base, name: "contact-wholesale-link", page: "contact",
+      actions: [{ click: 'main aside a[href="/wholesale"]' }, { waitFor: "location.pathname === '/wholesale'" }],
+      expect: [{ name: "Request Wholesale from Contact opens the enquiry page", js: "[...document.querySelectorAll('main')].filter(e=>e.checkVisibility()).some(m=>!!m.querySelector('form'))" }],
+    },
+    {
+      ...base, name: "testimonials-no-js", page: "home", javascript: false,
+      expect: [{ name: "without JS: all 3 testimonials visible (nothing hidden by the reveal)", js: "!document.querySelector('#testimonials [data-reveal]') && document.querySelectorAll('#testimonials blockquote').length===3" }],
+    },
+    {
+      ...base, name: "testimonials-reduced-motion", page: "home", media: [{ name: "prefers-reduced-motion", value: "reduce" }],
+      expect: [{ name: "reduced motion: testimonials never hidden", js: "[...document.querySelectorAll('#testimonials figure')].every(f=>getComputedStyle(f.closest('li').firstElementChild).opacity==='1')" }],
     },
     // -- §6 Our Origin: motion, reading order, accessibility and actual navigation --
     {
