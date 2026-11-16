@@ -50,18 +50,18 @@ export function OfferCard({ title, text, media, mediaVariants, mediaNotice, comp
       icons={{ previous: <Icon name="chevron-right" className="size-5 rotate-180" />, next: <Icon name="chevron-right" className="size-5" />, pause: <Icon name="pause" className="size-5" />, play: <Icon name="play" className="size-5" /> }} />;
     return <MediaFrame media={media} compact sizes={sizes} className={sizing} />;
   };
-  const titleClass = `font-serif text-card-title font-bold leading-tight text-ink-900 lining-nums ${titleStyle === "italic" ? "italic" : ""}`;
+  const titleClass = `font-serif ${compactMedia ? "text-xl" : "text-card-title"} font-bold leading-tight text-ink-900 lining-nums ${titleStyle === "italic" ? "italic" : ""}`;
   const shell = `flex h-full rounded-card border border-line-card bg-cream-200 shadow-card transition-[box-shadow,translate] duration-150 ease-standard hover:-translate-y-0.5 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${className}`;
 
   if (layout === "media-side") {
     return (
       <article className={`${shell} flex-col items-stretch gap-4 p-5 sm:flex-row`}>
         {/* Stacked below sm: a half-width image leaves too little room for the action at 320px. */}
-        <div className="flex shrink-0 items-end justify-center sm:w-1/2">{frame(compactMedia ? "h-36 sm:h-40 lg:h-44" : "h-52 sm:h-60 lg:h-64")}</div>
-        <div className="flex min-w-0 flex-1 flex-col sm:pt-6">
+        <div className={`flex shrink-0 ${compactMedia ? "items-center" : "items-end"} justify-center sm:w-1/2`}>{frame(compactMedia ? "h-36 sm:h-40 lg:h-44" : "h-52 sm:h-60 lg:h-64")}</div>
+        <div className={`flex min-w-0 flex-1 flex-col ${compactMedia ? "" : "sm:pt-6"}`}>
           <Heading className={titleClass}>{title}</Heading>
           {eyebrow && <p className="mt-1 text-sm font-semibold uppercase tracking-eyebrow text-gold-700">{eyebrow}</p>}
-          <p className="mt-3 text-base leading-snug text-ink-700">{text}</p>
+          <p className={`mt-3 ${compactMedia ? "text-sm" : "text-base"} leading-snug text-ink-700`}>{text}</p>
           {mediaNotice && <p className="mt-2 text-sm leading-snug text-ink-700">{mediaNotice}</p>}
           {meta && <p className="mt-3 font-serif text-xl font-semibold text-forest-heading lining-nums">{meta}</p>}
           <div className="mt-auto pt-4">{action}</div>

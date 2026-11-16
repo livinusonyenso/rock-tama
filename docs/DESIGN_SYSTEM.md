@@ -202,3 +202,6 @@ D-107: ROCK TAMA Range cards retain titles, descriptions, CTA destinations,1/2/4
 D-109 wholesale hero follows supplied warehouse mockup: dark forest left-to-clear-right shade, white serif title, gold eyebrow/buttons/top border/bottom rule, spacious fluid desktop layout. Mobile/tablet use stronger uniform shade and stacked CTAs. Scoped CSS module; no changes to other page tokens. Visual approval pending.
 
 D-110: wholesale warehouse tint refined to#052b20; keep near-solid green across complete copy area (≥94%through52%desktop width), then softer right fade. Mobile/tablet94%shade. Do not weaken copy-area shade without rerunning glyph-bound contrast test (minimum4.5:1; current≥6.33:1).
+
+
+D-114 shop product composition: two columns at desktop, gallery then buying panel on mobile; ivory cards, forest selected states and gold borders. Manual thumbnail gallery with native zoom dialog; reserved frames and 44px quantity/cart targets. Shared OfferCard compactMedia is opt-in; other pages retain default sizing.

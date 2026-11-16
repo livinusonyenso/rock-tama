@@ -122,3 +122,6 @@ D-106: owner requests image-only animation during slide changes. Copy panels swi
 Only homepage card images slide/fade32px over450ms, every4seconds while at least25% visible. Text, titles, buttons and fixed750ml concept note remain static. Shared MediaCarousel decodes an incoming image first; manual selection pauses until Play. Hover/focus/hidden-tab/offscreen pauses; timer/listener/observer/async-request cleanup on unmount. Reduced motion disables autoplay/transitions while keeping manual selection/swipe; no-JS static first image. Keyboard-only44px previous/next/pause controls reveal without taking layout space; touch uses pan-y with horizontal-swipe threshold35px. No hero or scroll-Reveal behaviour change.
 
 D-109: wholesale warehouse background, overlay and gold rules are static. Existing wholesale text/button entrance animations retained and existing reduced-motion override respected. No video/GIF/parallax/new animation library.
+
+
+D-114 shop gallery is manual and decodes before changing images. No autoplay, animated zoom or new library. Native dialog and static frame work without motion; catalogue gallery changes do not animate text or page layout.

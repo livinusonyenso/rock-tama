@@ -152,3 +152,6 @@ D-108: Distributor Supply gallery uses a larger4:3 frame; warehouse photos fill 
 D-109: wholesale warehouse hero integrated/refined to owner mockup. Exact source archived,229570-byte WebP; stationary decorative cover with strong left shade, brighter right scene and gold rules. Lint/TypeScript, styled diagnostic Webpack and83browser checks at320/375/768/1024/1280/1440 PASS. Existing anchors/selection/reduced motion preserved. Evidence: verification/wholesale-warehouse-background/REVIEW.md. No push/deploy.
 
 D-110: corrected wholesale overlay fading too early behind paragraph. Extended near-opaque forest tint through text column and softly tinted right scene. Lint/TypeScript/diagnostic Webpack PASS;66/66six-width browser checks, minimum conservative text contrast6.33:1. Evidence: verification/wholesale-overlay-refinement/REVIEW.md. No push/deploy.
+
+
+Shop reference complete for owner review: final browser170/170 at six widths; provider mock40/40, unconfigured31/31; lint/types/pricing and styled diagnostic Webpack pass. Draft pricing, gallery, persistent basket and quotation prefills implemented. No push/deploy. See SHOP_REFERENCE_IMPLEMENTATION.md.

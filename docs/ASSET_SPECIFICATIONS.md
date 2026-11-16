@@ -117,3 +117,6 @@ New science wording on the carton references existing unverified ultraPure/lowTd
 D-108: Distributor Supply gallery uses a larger4:3 frame; warehouse photos fill it with cover fit and bottom-centred focal point, keeping the pallet prominent instead of small square letterboxing. Other product media retain contain; original transparent distributor artwork remains contain.
 
 D-109 wholesale hero: actual delivered public/images/wholesale/warehouse-hero..png (1672×941 opaque PNG) archived unchanged at docs/assets/source/wholesale/warehouse-hero.png. WebP229570bytes, same dimensions, stripped metadata; manifest wholesale-background-manifest.json and prepare-wholesale-background.mjs. Decorative Next/image fill/cover/preload/sizes100vw, alt empty/aria-hidden,70%center below wide desktop and center above. Representative artwork, not evidence of facility ownership or stock.
+
+
+D-114 shop reuses content/shop-gallery.ts assets: bottle-750ml-rock-tama.webp, bottle-1-5l.webp, waterfall-bg.webp, catalogue glass bottle and carton views, existing origin-landscape.webp illustration. No new imagery. Concept/crop captions preserve artwork status; next/image sizes and contain/cover depend on image role.

@@ -1,7 +1,7 @@
 .product { display:grid;gap:2rem;padding-block:1.5rem 2.5rem; }
 .info { min-width:0; }
 .gallery { display:grid;gap:.75rem; }
-.thumbs { display:flex;gap:.5rem;order:1;overflow-x:auto;padding:2px; }
+.thumbs { display:flex;gap:.5rem;order:1;overflow-x:auto;padding:4px; }
 .thumb { position:relative;flex:0 0 3.75rem;height:4.5rem;border:1px solid var(--color-line-card);border-radius:var(--radius-button);background:var(--color-cream-200);overflow:hidden;cursor:pointer; }
 .selected { border:2px solid var(--color-gold-700); }
 .stage { position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:var(--radius-card);background:var(--color-cream-200); }
@@ -23,7 +23,7 @@
 .packActive { border-color:var(--color-gold-700);background:var(--color-cream-200); }
 .quantity { display:flex;align-items:center;border:1px solid var(--color-line-card);border-radius:var(--radius-button);background:var(--color-ivory-50); }
 .quantity button { width:2.75rem;height:2.75rem;cursor:pointer; }
-.quantity input { width:3.5rem;min-width:0;text-align:center;appearance:textfield; }
+.quantity input { width:3.5rem;height:2.75rem;min-width:0;text-align:center;appearance:textfield; }
 .quantity input::-webkit-inner-spin-button { appearance:none; }
 .quantity button:focus-visible,.quantity input:focus-visible { outline:2px solid var(--color-gold-700);outline-offset:2px; }
 .request { display:flex;align-items:center;justify-content:center;min-height:3.25rem;border-radius:var(--radius-button);background:var(--color-forest-850);color:var(--color-on-dark);font-weight:600;text-transform:uppercase;letter-spacing:var(--tracking-nav); }

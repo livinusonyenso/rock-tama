@@ -107,3 +107,6 @@ Footer UI exists; no newsletter data is collected while provider/consent configu
 ## Automatic staging deployments (D-100)
 
 An incomplete Vercel production build now warns rather than failing on missing enquiry settings or unverified claims, without an extra environment variable. Responses carry `X-Robots-Tag: noindex, nofollow`. Leave DEPLOY_MODE unset (automatic), or set staging explicitly, for this preview state. DEPLOY_MODE=production enforces the original strict launch checks and therefore still requires ENQUIRY_DELIVERY=resend, RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM and verified claim records. When everything is ready, automatic mode also returns normal public configuration. Runtime form delivery is unchanged: without actual Resend configuration the form reports a real error, never a fake success. Build success is not proof of live email delivery or evidence verification.
+
+
+D-114 implementation update: F3 now has a local persistent quotation basket and header count. F4 remains quotation-only, without payment collection. Owner-approved draft prices reside in content/commerce.ts; unknown prices remain null. Final amounts, availability and delivery require confirmation. No subscription integration implied.

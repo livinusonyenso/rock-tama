@@ -77,3 +77,6 @@ D-107: homepage range galleries use shared MediaCarousel + rangeMediaVariants, o
 D-109: wholesale hero uses owner warehouse image, scoped styling and reference-inspired dark-left/bright-right composition. Keep warehouse static/decorative, copy/anchors/form/entrance preserved; no new facility/inventory claims. Asset config lives in content/wholesale.ts. No push/deploy or automatic visual approval.
 
 D-110: wholesale reference needs consistent strong forest backing across all copy; use current scoped overlay stops and actual text-bound contrast test. Keep min4.5:1, current measured≥6.33:1; no automatic visual approval.
+
+
+Shop reference handoff (D-114): preserve typed draft pricing in content/commerce.ts and local basket/quotation boundaries. Verify pack-to-bottle conversion, mixed-unit orders, unavailable storage and unknown prices when changing commerce. Use scripts/shop-pricing-check.mjs plus browser journeys. Never present draft prices as paid checkout or promote provisional screenshots. Guide: docs/SHOP_REFERENCE_IMPLEMENTATION.md.
