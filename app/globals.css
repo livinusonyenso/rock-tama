@@ -247,15 +247,27 @@
   .media-frame-responsive { aspect-ratio: var(--media-aspect); }
 }
 
-/* Static supplied hero artwork. Stronger mobile shade protects the stacked carousel.
-   Even a white source pixel stays under #2e4a42 (gold/white text contrast tested). */
+/* One stationary decorative waterfall; shade the copy column rather than animating scenery. */
 .hero-background-image { object-position: 65% center; }
-.hero-background-overlay {
-  background: linear-gradient(180deg, rgb(6 39 30 / 0.88), rgb(6 39 30 / 0.84));
-}
+.hero-background-overlay { background: rgb(6 39 30 / .86); }
+.hero-carousel { display: grid; gap: 1.5rem; padding-block: 2.5rem 1.5rem; }
+.hero-carousel-copy { min-width: 0; align-self: center; }
+.hero-copy-stack { display: grid; }
+.hero-slide-copy { grid-area: 1 / 1; min-width: 0; opacity: 0; translate: 0 8px; pointer-events: none; transition: opacity 600ms var(--ease-out-soft), translate 600ms var(--ease-out-soft); }
+.hero-slide-copy[data-active="true"] { opacity: 1; translate: 0; pointer-events: auto; }
+.hero-bottle-stage { position: relative; width: min(100%, 18rem); height: 20rem; margin-inline: auto; touch-action: pan-y; }
+.hero-bottle-frame { position: absolute; inset: 0; transition: opacity 600ms var(--ease-out-soft), translate 600ms var(--ease-out-soft); }
+.hero-carousel-controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem 1.5rem; padding: .5rem; border-radius: var(--radius-button); background: rgb(6 39 30 / .92); justify-self: center; max-width: 100%; }
 @media (min-width: 48rem) {
   .hero-background-image { object-position: center; }
-  .hero-background-overlay {
-    background: linear-gradient(90deg, rgb(6 39 30 / 0.93) 0%, rgb(6 39 30 / 0.86) 48%, rgb(6 39 30 / 0.84) 100%);
-  }
+  .hero-background-overlay { background: linear-gradient(90deg, rgb(6 39 30 / .94), rgb(6 39 30 / .86) 58%, rgb(6 39 30 / .2) 78%, rgb(6 39 30 / .12)); }
+  .hero-carousel { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.5rem; }
+  .hero-bottle-stage { width: min(100%, 22rem); height: 26rem; align-self: center; }
+}
+@media (min-width: 64rem) {
+  .hero-carousel { min-height: 41rem; padding-block: 2rem 1rem; }
+  .hero-bottle-stage { width: min(100%, 24rem); height: 35rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide-copy, .hero-bottle-frame { transition: none; translate: none !important; }
 }

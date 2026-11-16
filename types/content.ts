@@ -11,6 +11,7 @@ export type RouteKey =
   | "product750ml"
   | "product15l"
   | "productCartons"
+  | "customLabels"
   | "wholesale"
   | "ourStory"
   | "quality"
@@ -163,24 +164,10 @@ export type MediaAsset = {
   objectPosition?: string;
 };
 
-export type HeroCarouselContent = {
-  /** Product slugs in slide order; the first matches the reference (750 ml). */
-  products: readonly string[];
-  intervalMs: number;
-  label: string;
-  controlsLabel: string;
-  pauseLabel: string;
-  playLabel: string;
-  viewLabel: string;
-};
-
 export type HeroContent = {
   eyebrow: string;
   heading: string;
   tagline: string;
-  description: string;
-  actions: readonly CallToAction[];
-  carousel: HeroCarouselContent;
 };
 
 /** A short highlight (icon + label) backed by an entry in content/claims.ts. */

@@ -32,3 +32,6 @@ These are owner-supplied storefront artworks. The Origin illustration is not evi
 
 ## Proposed branding / decorative hero
 Original filenames `horizontal.ROCK.TAMA.png`, `stacked.ROCK.TAMA.png`, `herobackground.png` now live unchanged in `source/branding/`. `branding-manifest.json` and `scripts/prepare-brand-images.mjs` describe reproducible derivatives in public/images/brand and public/images/hero. Branding pending client approval. Logos are not evidence that printed scientific wording is verified; background is decorative artwork, not confirmed Nanka photography.
+
+## Five-slide carousel assets
+D-102 sources: source/hero-carousel; generation and asset mapping in ../HERO_CAROUSEL_GUIDE.md; manifest hero-carousel-manifest.json. Three supplied transparent bottles and two explicitly authorised generated concepts, plus one supplied decorative waterfall. Optimized derivatives in public/images/hero; generated concepts are not final client-approved artwork or evidence of custom-product availability. Unused supplied source files remain untouched.

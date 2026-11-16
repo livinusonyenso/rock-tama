@@ -11,6 +11,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   product750ml: { status: "live", path: "/shop/750ml-glass-bottle" }, // F2
   product15l: { status: "live", path: "/shop/1-5l-bottle" }, // F2
   productCartons: { status: "live", path: "/shop/carton-packs" }, // F2
+  customLabels: { status: "live", path: "/custom-labels" },
   wholesale: { status: "live", path: "/wholesale" }, // F1: working enquiry flow
   ourStory: { status: "planned", path: "/our-story", interimSection: "origin" },
   quality: { status: "planned", path: "/quality", interimSection: "quality" },

@@ -32,3 +32,7 @@ Logo SVGs (header + footer light) · hero/product photography (750 ml, 1.5 L, ca
 
 - [x] D-101 supplied proposed horizontal header logo, stacked footer logo with ivory contrast backing, static decorative hero background; preserve carousel/content/CTAs and responsive ratios.
 - [ ] Owner/client approval of D-101 branding and comparison screenshots; light-colour footer logo for direct green placement still needed. Verification details: hero-brand-integration report. No baseline promotion.
+
+- [x] D-102 five-slide copy/bottle hero: static waterfall,600ms transitions,6s timer,arrows/dots/pause,focus/hover/hidden-tab pause,real touch swipe,reduced motion/no-JS,stable stage/copy grid.
+- [x] Live custom-labels enquiry route reuses validated delivery; proposed concepts do not create unconfirmed catalogue products.
+- [ ] Client approval of generated memorial/coronation concepts and new five-slide screenshots. Existing §5/§6 baselines remain provisional.

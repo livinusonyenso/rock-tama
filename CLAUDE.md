@@ -75,3 +75,5 @@ Run `npm run verify:visual` after every UI task (add the section to `scripts/vis
 **Env:** see `.env.example` (enquiry delivery). Never commit `.env*` files or `.data/`.
 
 **D-101:** proposed horizontal/stacked logos and static decorative hero background integrated. See docs/assets/branding-manifest.json and hero-brand-integration report. Shared Logo + site.logos reused; ivory footer backing until genuine light variant supplied; no filters, no new animation or client component. Carousel and all CTAs preserved. Client approval pending, no push/deploy.
+
+**D-102 hero:** reusable five-slide HeroCarousel supersedes old three-product selector, with typed hero-slides data and Server HeroSection image/copy/icon slots. One static waterfall; five transparent bottles; missing memorial/coronation generated only after explicit owner permission and remain concepts pending approval. Real custom-labels enquiry route reuses existing delivery; no unconfirmed catalogue products or editor/checkout. Guide: docs/HERO_CAROUSEL_GUIDE.md; evidence: docs/verification/hero-five-slides/REVIEW.md. No push/deploy or visual baseline promotion.

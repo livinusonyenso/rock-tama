@@ -11,4 +11,4 @@ export const storefrontMedia = {
 } as const satisfies Record<string, MediaAsset>;
 
 /** Decorative supplied artwork; not documentary photography of the Nanka spring. */
-export const heroBackground = { src: "/images/hero/spring-water.webp", width: 1672, height: 941 } as const;
+export const heroBackground = { src: "/images/hero/waterfall-bg.webp", width: 1672, height: 941 } as const;

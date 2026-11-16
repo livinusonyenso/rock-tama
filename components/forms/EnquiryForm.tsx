@@ -20,6 +20,7 @@ const controlClass =
 type EnquiryFormProps = {
   /** Product slug to preselect (from /wholesale?product=…). */
   defaultProduct?: string;
+  defaultMessage?: string;
 };
 
 /**
@@ -27,7 +28,7 @@ type EnquiryFormProps = {
  * states; validation and delivery happen in the submitEnquiry Server Action. Works without
  * JavaScript (progressive enhancement). Never shows success unless the enquiry was delivered.
  */
-export function EnquiryForm({ defaultProduct = "" }: EnquiryFormProps) {
+export function EnquiryForm({ defaultProduct = "", defaultMessage = "" }: EnquiryFormProps) {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -105,7 +106,7 @@ export function EnquiryForm({ defaultProduct = "" }: EnquiryFormProps) {
         <input id="location" name="location" autoComplete="address-level2" required defaultValue={value("location")} aria-invalid={Boolean(error("location"))} aria-describedby={[describedBy("location"), "location-hint"].filter(Boolean).join(" ")} className={controlClass} />
       </Field>
       <Field label="Additional requirements (optional)" field="message" error={error("message")} wide>
-        <textarea id="message" name="message" rows={5} defaultValue={value("message")} aria-invalid={Boolean(error("message"))} aria-describedby={describedBy("message")} className={controlClass} />
+        <textarea id="message" name="message" rows={5} defaultValue={value("message", defaultMessage)} aria-invalid={Boolean(error("message"))} aria-describedby={describedBy("message")} className={controlClass} />
       </Field>
 
       {/* Spam trap (D-072): hidden from people and assistive technology; bots that fill it are rejected. */}

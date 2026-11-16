@@ -334,6 +334,8 @@ async function main() {
   await until(() => reachable(`http://127.0.0.1:${config.cdpPort}/json/version`), "headless Chrome");
   const cdp = await connect(config.cdpPort);
   await Promise.all(["Page.enable", "Runtime.enable", "Log.enable", "Network.enable"].map((m) => cdp.send(m)));
+  // Headless pages may be inactive: emulate a foreground tab so focus events match real keyboard use.
+  await cdp.send("Emulation.setFocusEmulationEnabled", { enabled: true });
 
   let consoleErrors = [];
   const ignored = (text) => config.ignoreConsole.some((p) => (p instanceof RegExp ? p.test(text) : text.includes(p)));
@@ -459,6 +461,23 @@ async function main() {
       const point = await cdp.evaluate(`(() => { const r = document.querySelector(${JSON.stringify(action.click)}).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
       if (!point) throw new Error(`action target not found: ${action.click}`);
       await mouseClick(point.x, point.y);
+    } else if (action.swipe) {
+      const selector = action.swipe.selector;
+      await cdp.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'instant'}); true`);
+      await waitForScrollSettled();
+      const r = await cdp.evaluate(`(() => {const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})()`);
+      const from = r.x + r.width * (action.swipe.direction === "right" ? .25 : .75);
+      const to = r.x + r.width * (action.swipe.direction === "right" ? .75 : .25);
+      const y = r.y + r.height / 2;
+      await cdp.send("Emulation.setTouchEmulationEnabled", {enabled:true});
+      try {
+        await cdp.send("Input.dispatchTouchEvent", {type:"touchStart",touchPoints:[{x:from,y}]});
+        for (let step=1;step<=4;step++) {
+          await cdp.send("Input.dispatchTouchEvent", {type:"touchMove",touchPoints:[{x:from+(to-from)*step/4,y:y+2}]});
+          await wait(30);
+        }
+        await cdp.send("Input.dispatchTouchEvent", {type:"touchEnd",touchPoints:[]});
+      } finally { await cdp.send("Emulation.setTouchEmulationEnabled", {enabled:false}); }
     } else if (action.moveTo) {
       await cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: action.moveTo.x, y: action.moveTo.y });
     } else if (action.clickAt) {

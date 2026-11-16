@@ -1,0 +1,77 @@
+{
+  "status": "Supplied concept artwork; not evidence of availability or printed claims. Memorial and coronation concepts generated with owner permission using supplied bottle reference; pending approval.",
+  "assets": [
+    {
+      "source": "docs/assets/source/hero-carousel/image.png",
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "sourceAlpha": true,
+      "sha256": "424b69492260791bc33040313350f84f5b787b047187e328376ddb3c180dee43",
+      "output": "/images/hero/bottle-750ml.webp",
+      "width": 375,
+      "height": 1200,
+      "alpha": true,
+      "bytes": 146362
+    },
+    {
+      "source": "docs/assets/source/hero-carousel/image copy.png",
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "sourceAlpha": true,
+      "sha256": "b0798f0d4c5dcc4d8634a25f477ea512d3763dc11c4228f7d0955864ce1f0472",
+      "output": "/images/hero/bottle-1-5l.webp",
+      "width": 404,
+      "height": 1200,
+      "alpha": true,
+      "bytes": 149400
+    },
+    {
+      "source": "docs/assets/source/hero-carousel/image copy 5.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1536,
+      "sourceAlpha": true,
+      "sha256": "7a58fd31667d239c2772a173683142513663684d96ec1f6a03ebf38c4d20deee",
+      "output": "/images/hero/wedding.webp",
+      "width": 407,
+      "height": 1200,
+      "alpha": true,
+      "bytes": 177020
+    },
+    {
+      "source": "docs/assets/source/hero-carousel/spring-water.png",
+      "sourceWidth": 1672,
+      "sourceHeight": 941,
+      "sourceAlpha": false,
+      "sha256": "498a7c360cb9bf971954ee4f6378427e9dbb5e99bb0a5c6332af7e5ee51b144d",
+      "output": "/images/hero/waterfall-bg.webp",
+      "width": 1672,
+      "height": 941,
+      "alpha": false,
+      "bytes": 258730
+    },
+    {
+      "source": "docs/assets/source/hero-carousel/memorial-generated.png",
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "sourceAlpha": true,
+      "sha256": "65946b4730105ffa4c09f0ba502e4e43df75f92e3f211812bc4a276933330906",
+      "output": "/images/hero/memorial.webp",
+      "width": 379,
+      "height": 1200,
+      "alpha": true,
+      "bytes": 110584
+    },
+    {
+      "source": "docs/assets/source/hero-carousel/coronation-generated.png",
+      "sourceWidth": 1122,
+      "sourceHeight": 1402,
+      "sourceAlpha": true,
+      "sha256": "1a4af7cc7ecf14328667eded91400d0a42f29078c691ab9f265ca20eada9d452",
+      "output": "/images/hero/coronation.webp",
+      "width": 382,
+      "height": 1200,
+      "alpha": true,
+      "bytes": 128362
+    }
+  ]
+}

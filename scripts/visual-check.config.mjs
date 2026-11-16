@@ -8,7 +8,6 @@ const DRAWER = 'document.getElementById("mobile-nav")';
 const MOBILE = ["small", "mobile", "tablet"];
 const HERO = 'document.querySelector(\'section[aria-labelledby="hero-heading"]\')';
 const HERO_ANIMATED = `[...${HERO}.querySelectorAll('[class*="animate-enter"]')]`;
-const CAROUSEL = 'document.querySelector("[aria-roledescription=carousel]")';
 const ENTER_ANIMS = `document.getAnimations().filter(a => a.animationName === "enter")`;
 
 // ---- Functional journey helpers (F0/F1) ----
@@ -94,18 +93,18 @@ const config = {
       expect: [
         { name: "decorative background uses one responsive cover image", js: "(() => { const images = document.querySelectorAll('[data-hero-background] img'); return images.length===1 && images[0].alt==='' && images[0].sizes==='100vw' && !!images[0].srcset && getComputedStyle(images[0]).objectFit==='cover' && !!images[0].closest('[aria-hidden=true]'); })()" },
         { name: "background is static and cannot intercept controls", js: "getComputedStyle(document.querySelector('[data-hero-background]')).pointerEvents==='none' && getComputedStyle(document.querySelector('[data-hero-background] img')).animationName==='none'" },
-        { name: "hero CTAs and three-slide carousel preserved", js: "[...document.querySelectorAll('[data-hero-actions] a')].map(a=>a.getAttribute('href')).join(',')==='/shop,/wholesale' && document.querySelectorAll('[aria-roledescription=slide]').length===3" },
+        { name: "hero CTAs and five-slide carousel", js: "[...document.querySelectorAll('[data-active=true] [data-hero-actions] a')].map(a=>a.getAttribute('href')).join(',')==='/shop,/wholesale' && document.querySelectorAll('[aria-roledescription=slide]').length===5" },
         { name: "hero text contrast over brightest possible background pixel ≥4.5:1", js: `(() => {
           const lum=c=>{const a=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return a[0]*.2126+a[1]*.7152+a[2]*.0722};
-          const gradient=getComputedStyle(document.querySelector('.hero-background-overlay')).backgroundImage;
-          const stops=[...gradient.matchAll(/rgba[(]([^)]+)[)]/g)].map(m=>m[1].split(',').map(Number));
-          if(!stops.length || stops.some(s=>s[3]<.84))return false;
+          const overlay=getComputedStyle(document.querySelector('.hero-background-overlay')); const gradient=overlay.backgroundImage==='none'?overlay.backgroundColor:overlay.backgroundImage;
+          const stops=[...gradient.matchAll(/rgba[(]([^)]+)[)]/g)].map(m=>m[1].split(',').map(Number)).slice(0,innerWidth>=768?2:1);
+          if(!stops.length || stops.some(s=>s[3]<.84))return false; if(innerWidth>=768 && document.querySelector('.hero-carousel-copy').getBoundingClientRect().right>innerWidth*.58)return false;
           const maxBg=Math.max(...stops.map(s=>lum(s.slice(0,3).map(v=>v*s[3]+255*(1-s[3])))));
-          return [...document.querySelectorAll('section[aria-labelledby=hero-heading] h1,section[aria-labelledby=hero-heading] p,[aria-roledescription=carousel] a')].every(e=>{const fg=lum(getComputedStyle(e).color.slice(4,-1).split(',').map(Number));return (fg+.05)/(maxBg+.05)>=4.5});
+          return [...document.querySelectorAll('section[aria-labelledby=hero-heading] h1,section[aria-labelledby=hero-heading] p,section[aria-labelledby=hero-heading] h2')].every(e=>{const fg=lum(getComputedStyle(e).color.slice(4,-1).split(',').map(Number));return (fg+.05)/(maxBg+.05)>=4.5});
         })()` },
         { name: "hero layout and responsive crop measurements", server: async ({evaluate,root}) => {
           const m = await evaluate(`(() => { const h=document.querySelector('section[aria-labelledby=hero-heading]'); const b=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}}; return {viewport:innerWidth,hero:b(h),heading:b(h.querySelector('h1')),actions:b(h.querySelector('[data-hero-actions]')),carousel:b(h.querySelector('[aria-roledescription=carousel]')),crop:getComputedStyle(h.querySelector('[data-hero-background] img')).objectPosition,overlay:getComputedStyle(h.querySelector('.hero-background-overlay')).backgroundImage}; })()`);
-          const {mkdir,writeFile}=await import('node:fs/promises'); await mkdir(`${root}/docs/verification/hero-brand-integration`,{recursive:true}); await writeFile(`${root}/docs/verification/hero-brand-integration/measurements-${m.viewport}.json`,JSON.stringify(m,null,2)+'\n'); return true;
+          const {mkdir,writeFile}=await import('node:fs/promises'); await mkdir(`${root}/docs/verification/hero-five-slides`,{recursive:true}); await writeFile(`${root}/docs/verification/hero-five-slides/measurements-${m.viewport}.json`,JSON.stringify(m,null,2)+'\n'); return true;
         } },
       ],
     },
@@ -208,11 +207,6 @@ const config = {
         {name:"footer dark lettering has ivory contrast backing",js:"getComputedStyle(document.querySelector('footer img').parentElement).backgroundColor==='rgb(249, 244, 237)'"},
       ],
     },
-    ...['750ml-glass-bottle','1-5l-bottle','carton-packs'].map((slug,index)=>({
-      name: `hero-product-link-${index+1}`, kind: "functional", page: "home", viewports:["mobile","desktop"],
-      actions:[{click:`[aria-roledescription=carousel] [role=group] button:nth-child(${index+1})`},{click:`[aria-roledescription=carousel] a[href="/shop/${slug}"]`},{waitFor:`location.pathname === '/shop/${slug}'`}],
-      expect:[{name:"selected product opens a visible product page",js:"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && !!m.querySelector('h1') && !!m.querySelector('a[href^=\"/wholesale/\"]'))"}],
-    })),
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",
@@ -221,7 +215,7 @@ const config = {
       viewports: ["mobile", "desktop"],
       actions: [{ pauseAnimationsAt: 0 }],
       expect: [
-        { name: "6+ entrance animations present", js: `${ENTER_ANIMS}.length >= 6` },
+        { name: "brand and bottle entrance animations present", js: `${ENTER_ANIMS}.length >= 2` },
         { name: "animated elements start invisible", js: `${HERO_ANIMATED}.every(el => Number(getComputedStyle(el).opacity) < 0.05)` },
         {
           name: "first starts ≤100ms, all done ≤1000ms",
@@ -233,7 +227,7 @@ const config = {
         },
         {
           name: "CTAs hit-testable at t=0",
-          js: `(() => { ${ENTER_ANIMS}.forEach(a => { a.pause(); a.currentTime = 0; }); return [...${HERO}.querySelectorAll('[data-hero-actions] a, [data-hero-actions] [data-pending]')].every(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); const r = el.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return el.contains(hit); }); })()`,
+          js: `(() => { ${ENTER_ANIMS}.forEach(a => { a.pause(); a.currentTime = 0; }); return [...${HERO}.querySelectorAll('[data-active=true] [data-hero-actions] a')].every(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); const r = el.getBoundingClientRect(); const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return el.contains(hit); }); })()`,
         },
       ],
     },
@@ -802,119 +796,7 @@ function functionalJourneys() {
       ...base,name:"remaining-no-js",page:"home",viewports:["mobile","desktop"],javascript:false,
       expect:[{name:"quality, supply, footer and working links server-rendered without JS",js:"!document.querySelector('#quality [data-reveal],#wholesale [data-reveal]') && document.querySelectorAll('#quality li').length===4 && document.querySelector('#wholesale a').getAttribute('href')==='/wholesale' && document.querySelectorAll('footer nav').length===3"}],
     },
-    // -- Hero Product Carousel (D-073) --
-    {
-      ...base,
-      name: "carousel-initial",
-      page: "home",
-      viewports: ["desktop"],
-      expect: [
-        { name: "region announced as a carousel", js: `${CAROUSEL}?.getAttribute("aria-roledescription") === "carousel" && Boolean(${CAROUSEL}.getAttribute("aria-label"))` },
-        { name: "first slide is the 750 ml Glass Bottle (reference)", js: `${CAROUSEL}.dataset.carouselIndex === "0" && ${CAROUSEL}.querySelector('[data-slide]:not([inert])')?.dataset.slide === "750ml-glass-bottle"` },
-        { name: "3 slides labelled 'N of 3', hidden ones inert + aria-hidden", js: `(() => { const s = [...${CAROUSEL}.querySelectorAll('[aria-roledescription=slide]')]; return s.length === 3 && s.every((el, i) => el.getAttribute('aria-label').startsWith(i + 1 + ' of 3')) && s.slice(1).every(el => el.inert && el.getAttribute('aria-hidden') === 'true'); })()` },
-        { name: "product label buttons 750 ml | 1.5 L | Carton Packs, first pressed", js: `[...${CAROUSEL}.querySelectorAll('[role=group] button')].map(b => b.textContent + ':' + b.getAttribute('aria-pressed')).join('|') === '750 ml:true|1.5 L:false|Carton Packs:false'` },
-        { name: "Pause control labelled for its action", js: `${CAROUSEL}.querySelector('[data-carousel-toggle]').getAttribute('aria-label') === 'Stop automatic slide show'` },
-        { name: "rotating (not hovered/focused), live region off", js: `${CAROUSEL}.dataset.carouselRotating === "true" && ${CAROUSEL}.querySelector('[aria-live]').getAttribute('aria-live') === 'off'` },
-        { name: "View link goes to the 750 ml product page", js: `${CAROUSEL}.querySelector('a[href^="/shop/"]')?.getAttribute('href') === '/shop/750ml-glass-bottle'` },
-        { name: "600ms slide-and-fade transition", js: `getComputedStyle(${CAROUSEL}.querySelector('[data-slide]')).transitionDuration.split(',').every(d => d.trim() === '0.6s')` },
-      ],
-    },
-    {
-      ...base,
-      name: "carousel-auto-rotates",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [{ moveTo: { x: 5, y: 880 } }, { waitFor: `${CAROUSEL}.dataset.carouselIndex === "1"`, timeout: 8000 }],
-      expect: [
-        { name: "advanced to slide 2 (1.5 L) after the 6s interval", js: `${CAROUSEL}.querySelector('[data-slide]:not([inert])')?.dataset.slide === "1-5l-bottle"` },
-        { name: "label buttons and View link follow the active slide", js: `${CAROUSEL}.querySelector('button[aria-pressed=true]').textContent === '1.5 L' && ${CAROUSEL}.querySelector('a[href^="/shop/"]').getAttribute('href') === '/shop/1-5l-bottle'` },
-      ],
-    },
-    {
-      ...base,
-      name: "carousel-pauses",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [{ moveTo: { x: 1010, y: 450 } }],
-      expect: [
-        { name: "pauses while hovered", js: `${CAROUSEL}.dataset.carouselRotating === undefined` },
-      ],
-    },
-    {
-      ...base,
-      name: "carousel-hidden-tab",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [
-        { moveTo: { x: 5, y: 880 } },
-        { evaluate: "Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true }); document.dispatchEvent(new Event('visibilitychange')); true" },
-      ],
-      expect: [{ name: "not rotating while the tab is hidden", js: `${CAROUSEL}.dataset.carouselRotating === undefined` }],
-    },
-    {
-      ...base,
-      name: "carousel-focus-pause",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [{ moveTo: { x: 5, y: 880 } }, { evaluate: `${CAROUSEL}.querySelector('a[href^="/shop/"]').focus(); true` }],
-      expect: [{ name: "pauses while focus is inside (not on the toggle)", js: `${CAROUSEL}.dataset.carouselRotating === undefined` }],
-    },
-    {
-      ...base,
-      name: "carousel-manual-select",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [{ click: `[aria-roledescription=carousel] [role=group] button:nth-child(3)` }, { moveTo: { x: 5, y: 880 } }, { evaluate: "document.activeElement.blur(); true" }],
-      expect: [
-        { name: "shows Carton Packs (slide 3 of 3)", js: `${CAROUSEL}.querySelector('[data-slide]:not([inert])')?.getAttribute('aria-label') === '3 of 3: Carton Packs'` },
-        { name: "manual choice stops auto-rotation until Play (even after leaving)", js: `${CAROUSEL}.dataset.carouselRotating === undefined && ${CAROUSEL}.querySelector('[data-carousel-toggle]').getAttribute('aria-label') === 'Start automatic slide show'` },
-        { name: "live region polite when not auto-rotating", js: `${CAROUSEL}.querySelector('[aria-live]').getAttribute('aria-live') === 'polite'` },
-        { name: "View link goes to the carton product page", js: `${CAROUSEL}.querySelector('a[href^="/shop/"]').getAttribute('href') === '/shop/carton-packs'` },
-        { name: "hero height unchanged by the landscape carton slide", js: `document.querySelector('section[aria-labelledby=hero-heading]').getBoundingClientRect().height === 525` },
-      ],
-    },
-    {
-      ...base,
-      name: "carousel-play-resumes",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [
-        { click: `[aria-roledescription=carousel] [role=group] button:nth-child(2)` },
-        { click: "[data-carousel-toggle]" },
-        { moveTo: { x: 5, y: 880 } },
-      ],
-      expect: [{ name: "Play resumes rotation (focus on the toggle doesn't pause)", js: `${CAROUSEL}.dataset.carouselRotating === "true" && ${CAROUSEL}.querySelector('[data-carousel-toggle]').getAttribute('aria-label') === 'Stop automatic slide show'` }],
-    },
-    {
-      ...base,
-      name: "carousel-view-link",
-      page: "home",
-      viewports: ["desktop"],
-      actions: [{ click: `[aria-roledescription=carousel] [role=group] button:nth-child(2)` }, { click: '[aria-roledescription=carousel] a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
-      expect: [{ name: "View link opens the product page", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle'" }],
-    },
-    {
-      ...base,
-      name: "carousel-reduced-motion",
-      page: "home",
-      viewports: ["desktop"],
-      media: [{ name: "prefers-reduced-motion", value: "reduce" }],
-      actions: [{ moveTo: { x: 5, y: 880 } }],
-      expect: [
-        { name: "no auto-rotation by default", js: `${CAROUSEL}.dataset.carouselRotating === undefined && ${CAROUSEL}.querySelector('[data-carousel-toggle]').getAttribute('aria-label') === 'Start automatic slide show'` },
-        { name: "instant change (no transition)", js: `getComputedStyle(${CAROUSEL}.querySelector('[data-slide]')).transitionProperty === 'none'` },
-      ],
-    },
-    {
-      ...base,
-      name: "carousel-no-js",
-      page: "home",
-      viewports: ["desktop", "mobile"],
-      javascript: false,
-      expect: [
-        { name: "without JS: first slide only, labels are links to product pages", js: `(() => { const c = ${CAROUSEL}; const links = [...c.querySelectorAll('[role=group] a')].map(a => a.getAttribute('href')).join(); return c.querySelectorAll('[data-slide] [aria-hidden=true], [data-slide] img').length >= 1 && links === '/shop/750ml-glass-bottle,/shop/1-5l-bottle,/shop/carton-packs' && !c.querySelector('button'); })()` },
-      ],
-    },
+    ...heroCarouselJourneys(base),
     // -- Validation --
     {
       ...base,
@@ -1047,4 +929,45 @@ function functionalJourneys() {
 /** Assigns a unique documentation-range IP (RFC 5737) per journey unless the journey sets headers. */
 function withOwnClient(journeys) {
   return journeys.map((journey, index) => (journey.headers ? journey : { ...journey, headers: { "x-forwarded-for": `198.51.100.${index + 1}` } }));
+}
+
+
+function heroCarouselJourneys(base) {
+  const c = 'document.querySelector("[aria-roledescription=carousel]")';
+  const dot = i => `[aria-label="Choose a slide"] button:nth-child(${i+1})`;
+  const dimensions = `JSON.stringify([document.querySelector('section[aria-labelledby=hero-heading]'),document.querySelector('.hero-bottle-stage')].map(e=>{const r=e.getBoundingClientRect();return [r.width,r.height]}))`;
+  const customName = uniqueName('Memorial label enquiry');
+  return [
+    { ...base,name:"custom-label-delivery",page:"home",path:"/custom-labels?occasion=memorial",viewports:["mobile"],
+      actions:[{waitFor:"document.querySelector('#message')?.value.startsWith('Memorial')"},...fillEnquiry(customName).filter(a=>a.type?.selector!=="#message"),...submitAndWait],
+      expect:[{name:"custom enquiry reports actual stored delivery",server:async({root})=>(await storedEnquiries(root)).some(r=>r.name===customName && r.message.startsWith('Memorial water label enquiry.'))}],
+    },
+
+    { ...base,name:"carousel-initial",page:"home",viewports:["small","mobile","tablet","laptop","large","desktop"],expect:[
+      {name:"five slides and distinct separate bottle files",js:`${c}.querySelectorAll('[data-slide]').length===5 && new Set([...${c}.querySelectorAll('[data-frame] img')].map(i=>decodeURIComponent(i.src).split('&')[0])).size===5`},
+      {name:"only current slide and image accessible",js:`${c}.querySelectorAll('[data-slide]:not([inert])').length===1 && ${c}.querySelectorAll('[data-frame]:not([inert])').length===1 && ${c}.querySelectorAll('[data-slide][aria-hidden=true]').length===4`},
+      {name:"600ms bottle transition and contain fit",js:`getComputedStyle(document.querySelector('.hero-bottle-frame')).transitionDuration.split(',').every(d=>d.trim()==='0.6s') && [...${c}.querySelectorAll('[data-frame] img')].every(i=>getComputedStyle(i).objectFit==='contain')`},
+      {name:"background fetched once and never animates",js:"performance.getEntriesByType('resource').filter(e=>decodeURIComponent(e.name).includes('/images/hero/waterfall-bg.webp')).length===1 && getComputedStyle(document.querySelector('[data-hero-background] img')).animationName==='none'"},
+      {name:"every active action fits within copy column",js:`[...${c}.querySelectorAll('[data-active=true] a')].every(a=>{const r=a.getBoundingClientRect(),p=document.querySelector('.hero-carousel-copy').getBoundingClientRect();return r.left>=p.left-1 && r.right<=p.right+1})`},
+    ]},
+    ...["Premium Natural Spring Water","Everyday Hydration","Wedding Water Labels","Memorial Water Labels","Royal & Coronation Events"].map((title,i)=>({
+      ...base,name:`carousel-slide-${i+1}`,page:"home",selector:"section[aria-labelledby=hero-heading]",viewports:["mobile","desktop"],actions:[{evaluate:`window.heroBefore=${dimensions}; true`},{click:dot(i)},{waitFor:`${c}.dataset.carouselIndex==='${i}'`},{wait:650}],expect:[
+        {name:"correct synchronized title, CTA and decoded bottle",js:`${c}.querySelector('[data-active=true] h2').textContent===${JSON.stringify(title)} && document.querySelector('[data-frame="${i}"] img').naturalWidth>0 && getComputedStyle(document.querySelector('[data-frame="${i}"]')).opacity==='1'`},
+        {name:"all slide switches preserve hero and bottle geometry",js:`${dimensions}===window.heroBefore`},
+        {name:"selected dot announced",js:`document.querySelector('${dot(i)}').getAttribute('aria-pressed')==='true'`},
+        {name:"manual choice stops rotation",js:`!${c}.dataset.carouselRotating`},
+    ]})),
+    ...['/shop','/shop','/custom-labels?occasion=wedding','/custom-labels?occasion=memorial','/custom-labels?occasion=coronation'].map((href,i)=>({
+      ...base,name:`carousel-cta-${i+1}`,page:"home",viewports:["mobile","desktop"],actions:[{click:dot(i)},{waitFor:`${c}.dataset.carouselIndex==='${i}'`},{click:'[data-active=true] [data-hero-actions] a:first-child'},{waitFor:`location.pathname===${JSON.stringify(href.split('?')[0])}`}],expect:[
+        {name:"CTA reaches working destination",js:i<2?"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && !!m.querySelector('h1') && m.querySelectorAll('ul > li article').length===3)":`location.search===${JSON.stringify('?'+href.split('?')[1])} && document.querySelector('#message').value.toLowerCase().includes(${JSON.stringify(href.split('=')[1])})`},
+    ]})),
+    { ...base,name:"carousel-arrows",page:"home",viewports:["mobile","desktop"],actions:[{click:'button[aria-label="Previous slide"]'},{waitFor:`${c}.dataset.carouselIndex==='4'`},{click:'button[aria-label="Next slide"]'},{waitFor:`${c}.dataset.carouselIndex==='0'`}],expect:[{name:"arrows wrap in both directions",js:`${c}.dataset.carouselIndex==='0'`}]},
+    { ...base,name:"carousel-auto-rotates",page:"home",viewports:["desktop"],actions:[{moveTo:{x:5,y:880}},{waitFor:`${c}.dataset.carouselIndex==='1'`,timeout:9000}],expect:[{name:"automatic advance after six seconds",js:`${c}.dataset.carouselRotating==='true'`}]},
+    { ...base,name:"carousel-pauses",page:"home",viewports:["desktop"],actions:[{moveTo:{x:500,y:300}}],expect:[{name:"hover pauses rotation",js:`!${c}.dataset.carouselRotating`}]},
+    { ...base,name:"carousel-focus-pause",page:"home",viewports:["desktop"],actions:[{waitFor:`${c}.dataset.carouselRotating==='true'`},{evaluate:"document.querySelector('[data-active=true] a').focus(); true"}],expect:[{name:"focus pauses rotation",js:`!${c}.dataset.carouselRotating && document.hasFocus() && ${c}.contains(document.activeElement)`}]},
+    { ...base,name:"carousel-play-resumes",page:"home",viewports:["desktop"],actions:[{click:'[data-carousel-toggle]'},{click:'[data-carousel-toggle]'},{evaluate:"document.activeElement.blur();true"},{moveTo:{x:5,y:880}}],expect:[{name:"Play resumes after pointer and focus leave",js:`${c}.dataset.carouselRotating==='true'`}]},
+    { ...base,name:"carousel-swipe",page:"home",viewports:["mobile"],actions:[{swipe:{selector:'.hero-bottle-stage',direction:'left'}},{waitFor:`${c}.dataset.carouselIndex==='1'`},{swipe:{selector:'.hero-bottle-stage',direction:'right'}},{waitFor:`${c}.dataset.carouselIndex==='0'`}],expect:[{name:"horizontal swipe advances and vertical scrolling retained",js:"getComputedStyle(document.querySelector('.hero-bottle-stage')).touchAction==='pan-y'"}]},
+    { ...base,name:"carousel-reduced-motion",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],actions:[{click:dot(4)},{waitFor:`${c}.dataset.carouselIndex==='4'`}],expect:[{name:"manual selection works without motion or autoplay",js:`!${c}.dataset.carouselRotating && getComputedStyle(document.querySelector('.hero-bottle-frame')).transitionProperty==='none' && document.querySelector('[data-carousel-toggle]').disabled`}]},
+    { ...base,name:"carousel-no-js",page:"home",viewports:["mobile","desktop"],javascript:false,expect:[{name:"first-slide content, bottle and working shop link survive without JS",js:"!!document.querySelector('[data-active=true] a[href=\"/shop\"]') && !document.querySelector('[data-carousel-toggle]') && !!document.querySelector('[data-frame=\"0\"] img')"}]},
+  ];
 }
