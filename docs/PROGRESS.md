@@ -129,3 +129,5 @@ D-102 final verification: full functional507/507; final responsive/contrast/focu
 D-103: removed visible hero dot/arrow/pause bar with focus-only accessible controls; removed normal-flow toolbar row while keeping autoplay and swipe. CSS change; image/content/timer logic unchanged. Verification: docs/verification/hero-controls-hidden/REVIEW.md. No push/deploy.
 
 D-104: first hero bottle updated to new ROCK-TAMA-only750ml artwork from image copy6; optimized/versioned WebP and source manifest updated. Existing1.5L AFRICA artwork still needs a matching size-specific version. Evidence: verification/hero-rock-tama-bottle/REVIEW.md. No push/deploy.
+
+D-105: faster hero autoplay4seconds with450ms bottle/text transitions, per owner request. No other motion or behaviour change.

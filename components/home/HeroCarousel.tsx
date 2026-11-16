@@ -20,7 +20,7 @@ const subscribeMotion = (notify: () => void) => {
 };
 
 /** Interactivity only: content, image frames and icons are passed from the Server Component. */
-export function HeroCarousel({ slides, intro, copy, frames, icons, intervalMs = 6000 }: Props) {
+export function HeroCarousel({ slides, intro, copy, frames, icons, intervalMs = 4000 }: Props) {
   const enhanced = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const reduced = useSyncExternalStore(subscribeMotion, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => false);
   const [index, setIndex] = useState(0);

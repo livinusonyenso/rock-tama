@@ -68,3 +68,5 @@ D-102 final verification: full functional507/507; final responsive/contrast/focu
 D-103 latest: owner asked to remove hero control strip. Now hidden by default; keyboard-focus-only absolute overlay retains accessible pause/navigation, no row/geometry shift. Autoplay/swipe retained. Evidence: verification/hero-controls-hidden/REVIEW.md. No push/deploy.
 
 D-104 latest:750ml hero uses supplied image copy6 (ROCK-TAMA main wordmark, no AFRICA), served as bottle-750ml-rock-tama.webp; source archived, manifest/generator updated. Current1.5L artwork still needs matching ROCK-TAMA-only label. No carousel/layout/catalogue change, no push/deploy. Evidence: verification/hero-rock-tama-bottle/REVIEW.md.
+
+D-105 latest: hero advances every4seconds, with450ms copy/bottle transitions. Replaces earlier6s/600ms timing; pause/swipe/reduced motion unchanged.

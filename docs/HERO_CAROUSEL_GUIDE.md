@@ -21,3 +21,5 @@ The owner authorised generating the missing memorial and coronation concepts. Bo
 D-103 refinement: at the owner’s request, the visible toolbar row is removed. Controls remain in the accessibility/tab order and reveal only on keyboard focus as an absolute overlay; no focus-induced reflow. Pointer/touch users keep autoplay, hover pause and swiping. Regression journeys focus the retained controls before activating them.
 
 D-104: first-slide source is now image copy6.png (ROCK-TAMA main wordmark), with optimized filename bottle-750ml-rock-tama.webp; replaces prior image.png/AFRICA-labelled first slide. Other sizes keep separate artwork; the750ml image is not reused as1.5L.
+
+D-105 timing update: autoplay interval is now4000ms and bottle/copy transition450ms at the owner’s request; earlier6s/600ms descriptions above are historical.

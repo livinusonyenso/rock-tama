@@ -67,3 +67,5 @@ Owner authorised replacing old three-product controls with five synchronized cop
 D-103: keep hero toolbar visually hidden by default per owner; reveal only on keyboard focus without reflow. Do not restore visible dots/arrows/pause strip unless asked. Retain accessible controls, autoplay and swipe. Tests focus hidden controls before activation.
 
 D-104: use supplied image copy6 for750ml hero (ROCK-TAMA-only main wordmark), via bottle-750ml-rock-tama.webp and updated generator/manifest. Do not revert first slide to AFRICA artwork or present750ml image as1.5L.
+
+D-105: current hero timing is4s autoplay /450ms copy and bottle transitions, per owner request. Retain focus/hover pause and reduced motion.

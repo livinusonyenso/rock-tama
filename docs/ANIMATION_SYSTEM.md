@@ -112,3 +112,5 @@ Background image and overlay are static at all times. No extra reflection animat
 
 ## Five-slide hero — D-102 (supersedes three-product hero controls)
 One stationary waterfall with responsive static left shade. Bottle panels transition opacity/horizontal translate48px over600ms using ease-out-soft; text opacity/rise8px over600ms. Manual selection stops autoplay until Play; interval6000ms runs only outside hover/focus/hidden-tab/reduced-motion conditions. Decode next image before switching. Intro and bottle stage retain existing entrance classes (450/750ms, bottle120ms delay). Reduced motion disables transitions/entrances and autoplay, keeping manual navigation. Standard React state, CSS and cleaned-up effects; no library/parallax/filter/background-position movement. Full explanation: HERO_CAROUSEL_GUIDE.md.
+
+D-105: owner requested faster slides. Hero autoplay now4000ms (was6000); bottle and copy transitions450ms (was600). Intro, below-fold motion, pause/swipe/reduced-motion unchanged.

@@ -123,3 +123,5 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 **D-103:** Owner requests removing the visible hero carousel toolbar. Hide the dot/arrow/pause strip by default, retain keyboard-focus access so autoplay can still be paused/navigated, and keep swipe/hover/focus behaviour. Absolute focus-only overlay avoids adding a control row or shifting hero layout. No autoplay or image/data change.
 
 **D-104:** Owner supplies image copy6 and corrects branding to ROCK-TAMA rather than ROCK-TAMA AFRICA. Use new transparent750ml artwork for first hero slide, preserve original/source provenance and use a fresh optimized filename. Do not mislabel the750ml asset as1.5L. Existing1.5L still has the AFRICA-labelled artwork pending a matching size-specific replacement. No push/deploy.
+
+**D-105:** Owner requests faster slides. Hero autoplay interval4seconds, bottle/copy transitions450ms; pause/reduced-motion/swipe unchanged. Lint/TypeScript/diagnostic Webpack and31browser checks pass.

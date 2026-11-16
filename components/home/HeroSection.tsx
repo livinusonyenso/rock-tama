@@ -31,7 +31,7 @@ export function HeroSection() {
       <div className="hero-background-overlay absolute inset-0" />
     </div>
     <Container>
-      <HeroCarousel slides={heroSlides} copy={copy} frames={frames} intervalMs={6000}
+      <HeroCarousel slides={heroSlides} copy={copy} frames={frames} intervalMs={4000}
         intro={<div className="animate-enter">
           <p className="text-sm font-semibold uppercase tracking-eyebrow text-gold-500 lg:text-lg">{hero.eyebrow}</p>
           <span aria-hidden="true" className="my-4 block h-0.5 w-16 bg-gold-500" />
