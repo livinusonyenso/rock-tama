@@ -71,3 +71,5 @@ D-104: use supplied image copy6 for750ml hero (ROCK-TAMA-only main wordmark), vi
 D-105: current hero timing is4s autoplay /450ms copy and bottle transitions, per owner request. Retain focus/hover pause and reduced motion.
 
 D-106: only bottle frames animate on slide changes; copy swaps visibility instantly, no fade/translate. Preserve per-slide text/CTA data and overlapping-grid height.
+
+D-107: homepage range galleries use shared MediaCarousel + rangeMediaVariants, only images move. Owner explicitly approved newer750ml as proposed packaging; keep fixed note and existing Glass Bottle SKU/title/route. Do not infer pack counts/material/availability from supplied illustrations. Preserve static shared-card defaults elsewhere, current frame aspects,4s/450ms, reduced motion, visibility pause, swipe and cleanup. MediaAsset.claims/data-claims references printed unverified artwork;15registered unverified claims. Reveal tests must allow absent data-reveal for reduced motion/already-visible elements; scroll every mobile card before asserting visibility. Keep visual approval separate.

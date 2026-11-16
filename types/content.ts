@@ -162,6 +162,8 @@ export type MediaAsset = {
   shape?: "rect" | "bottle";
   /** Optional crop focal point for photographic/illustrated landscape slots. */
   objectPosition?: string;
+  /** Evidence-dependent wording printed on supplied artwork; never implies verification. */
+  claims?: readonly import("@/content/claims").ClaimId[];
 };
 
 export type HeroContent = {

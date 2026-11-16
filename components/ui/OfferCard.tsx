@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { MediaCarousel } from "@/components/ui/MediaCarousel";
+import { Icon } from "@/components/icons/Icon";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import type { MediaAsset } from "@/types/content";
 
@@ -8,6 +10,9 @@ type OfferCardProps = {
   title: string;
   text: string;
   media: MediaAsset;
+  /** Optional image-only gallery; omit to preserve the static card. */
+  mediaVariants?: readonly MediaAsset[];
+  mediaNotice?: string;
   /** The card's single action. */
   action: ReactNode;
   /**
@@ -31,14 +36,19 @@ const isLandscape = (media: MediaAsset) => {
 
 /**
  * Presentational card shared by products and service offers (COMPONENT_ARCHITECTURE §5).
- * Server Component; only the action is interactive. Hover = slightly deeper shadow + 2px lift
+ * Server Component with an optional MediaCarousel client island. Hover = slightly deeper shadow + 2px lift
  * (no lift with reduced motion).
  */
-export function OfferCard({ title, text, media, action, layout = "media-top", headingLevel: Heading = "h3", titleStyle, eyebrow, meta, className = "" }: OfferCardProps) {
+export function OfferCard({ title, text, media, mediaVariants, mediaNotice, action, layout = "media-top", headingLevel: Heading = "h3", titleStyle, eyebrow, meta, className = "" }: OfferCardProps) {
   const landscape = isLandscape(media);
-  const frame = (sizeClass: string) => (
-    <MediaFrame media={media} compact sizes={landscape ? "(min-width: 1024px) 272px, (min-width: 768px) 320px, calc(100vw - 72px)" : "96px"} className={landscape ? "w-full max-w-68" : sizeClass} />
-  );
+  const frame = (sizeClass: string) => {
+    const sizing = landscape ? "w-full max-w-68" : sizeClass;
+    const sizes = landscape ? "(min-width: 1024px) 272px, (min-width: 768px) 320px, calc(100vw - 72px)" : "96px";
+    if (mediaVariants && mediaVariants.length > 1) return <MediaCarousel label={title} aspect={media.aspect} className={sizing}
+      frames={mediaVariants.map((variant, index) => <MediaFrame key={index} media={{ ...variant, aspect: media.aspect }} compact sizes={sizes} className="size-full" />)}
+      icons={{ previous: <Icon name="chevron-right" className="size-5 rotate-180" />, next: <Icon name="chevron-right" className="size-5" />, pause: <Icon name="pause" className="size-5" />, play: <Icon name="play" className="size-5" /> }} />;
+    return <MediaFrame media={media} compact sizes={sizes} className={sizing} />;
+  };
   const titleClass = `font-serif text-card-title font-bold leading-tight text-ink-900 lining-nums ${titleStyle === "italic" ? "italic" : ""}`;
   const shell = `flex h-full rounded-card border border-line-card bg-cream-200 shadow-card transition-[box-shadow,translate] duration-150 ease-standard hover:-translate-y-0.5 hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${className}`;
 
@@ -51,6 +61,7 @@ export function OfferCard({ title, text, media, action, layout = "media-top", he
           <Heading className={titleClass}>{title}</Heading>
           {eyebrow && <p className="mt-1 text-sm font-semibold uppercase tracking-eyebrow text-gold-700">{eyebrow}</p>}
           <p className="mt-3 text-base leading-snug text-ink-700">{text}</p>
+          {mediaNotice && <p className="mt-2 text-sm leading-snug text-ink-700">{mediaNotice}</p>}
           {meta && <p className="mt-3 font-serif text-xl font-semibold text-forest-heading lining-nums">{meta}</p>}
           <div className="mt-auto pt-4">{action}</div>
         </div>
@@ -64,6 +75,7 @@ export function OfferCard({ title, text, media, action, layout = "media-top", he
         <div className="w-full max-w-60 self-center text-center">
           <Heading className={titleClass}>{title}</Heading>
           <p className="mt-1.5 text-base leading-snug text-ink-700">{text}</p>
+          {mediaNotice && <p className="mt-2 text-sm leading-snug text-ink-700">{mediaNotice}</p>}
         </div>
         {/* w-full: without it the wrapper shrinks to its content and a landscape frame collapses */}
         <div className="flex w-full flex-1 items-center justify-center py-2.5">{frame("h-36")}</div>
@@ -79,6 +91,7 @@ export function OfferCard({ title, text, media, action, layout = "media-top", he
       <Heading className={`mt-6 ${titleClass}`}>{title}</Heading>
       {eyebrow && <p className="mt-1 text-sm font-semibold uppercase tracking-eyebrow text-gold-700">{eyebrow}</p>}
       <p className="mt-3 text-base text-ink-700">{text}</p>
+      {mediaNotice && <p className="mt-2 text-sm leading-snug text-ink-700">{mediaNotice}</p>}
       {meta && <p className="mt-4 font-serif text-xl font-semibold text-forest-heading lining-nums">{meta}</p>}
       <div className="mt-auto pt-6">{action}</div>
     </article>

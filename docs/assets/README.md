@@ -35,3 +35,6 @@ Original filenames `horizontal.ROCK.TAMA.png`, `stacked.ROCK.TAMA.png`, `herobac
 
 ## Five-slide carousel assets
 D-102 sources: source/hero-carousel; generation and asset mapping in ../HERO_CAROUSEL_GUIDE.md; manifest hero-carousel-manifest.json. Three supplied transparent bottles and two explicitly authorised generated concepts, plus one supplied decorative waterfall. Optimized derivatives in public/images/hero; generated concepts are not final client-approved artwork or evidence of custom-product availability. Unused supplied source files remain untouched.
+
+## Range packaging variants
+D-107 final batch:10 supplied source PNGs archived in source/range-variants, plus the earlier studio version of image copy.png as pallet-studio-original.png. Current image copy.png is the replacement warehouse image; copy2–7 are transparent cartons; copy8–9 are additional warehouse views. Ten optimized role-named WebPs in public/images/products (fresh warehouse filename avoids the old optimizer cache). Regenerate with prepare-range-variants.mjs; exact hashes/dimensions/alpha/bytes in range-variants-manifest.json. Existing bottle derivatives reused. Four galleries contain2/2/8/4images. Branding/printed claims/counts remain provisional; no business verification inferred.

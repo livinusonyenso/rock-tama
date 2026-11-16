@@ -18,6 +18,8 @@ export type Claim = {
 };
 
 export const claims = {
+  cartonPackConfiguration: { text: "12 × 1.5 L bottles per pictured carton", status: "unverified", evidence: "Client-confirmed packaging specification for the supplied closed-carton illustration; not established by artwork alone" },
+  palletPackConfiguration: { text: "24 × 750 ml bottles per pictured pack", status: "unverified", evidence: "Client-confirmed packaging specification for packs in the supplied pallet/open-carton illustrations; not established by artwork alone" },
   qualityPurityTrust: { text: "Purity You Can Trust", status: "unverified", evidence: "Owner-approved purity assurance wording supported by current analyses" },
   undistilled: { text: "Undistilled (Natural State)", status: "unverified", evidence: "Documented process confirmation that the water is not distilled; reference typo corrected under the approved Quality briefing" },
   odourlessTastelessAtSource: { text: "Odourless & Tasteless at Source", status: "unverified", evidence: "Current sensory and relevant laboratory evidence at the source" },

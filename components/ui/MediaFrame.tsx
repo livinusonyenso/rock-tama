@@ -41,7 +41,7 @@ export function MediaFrame({ media, className = "", sizes, priority = false, com
 
   if (media.src) {
     return (
-      <div className={frameClass} style={box}>
+      <div className={frameClass} style={box} data-claims={media.claims?.join(" ")}>
         <Image src={media.src} alt={media.alt} fill sizes={sizes} preload={priority} className={fit === "cover" ? "rounded-card object-cover" : "object-contain object-bottom"} style={position ? { objectPosition: position } : undefined} />
       </div>
     );

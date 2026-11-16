@@ -195,10 +195,10 @@ const config = {
       expect: [
         { name: "product grid keeps reference four columns only when wide enough", js: "getComputedStyle(document.querySelector('#products ul')).gridTemplateColumns.split(' ').length === (innerWidth>=1400?4:innerWidth>=768?2:1)" },
         { name: "product buttons remain inside their cards", js: "[...document.querySelectorAll('#products article a')].every(a=>{const r=a.getBoundingClientRect(),c=a.closest('article').getBoundingClientRect();return r.left>=c.left && r.right<=c.right+1 && r.bottom<=c.bottom+1;})" },
-        { name: "all five supplied live assets are referenced; no placeholders in product/origin slots", js: "['750ml-glass-bottle.webp','1-5l-bottle.webp','carton-packs.webp','distributor-supply.webp','origin-landscape.webp'].every(path => [...document.querySelectorAll('main img')].some(img => decodeURIComponent(img.getAttribute('src')).includes(path))) && document.querySelectorAll('#products img').length===4 && document.querySelectorAll('#origin img').length===1" },
+        { name: "all five supplied live assets are referenced; no placeholders in product/origin slots", js: "['750ml-glass-bottle.webp','1-5l-bottle.webp','carton-packs.webp','distributor-supply.webp','origin-landscape.webp'].every(path => [...document.querySelectorAll('main img')].some(img => decodeURIComponent(img.getAttribute('src')).includes(path))) && document.querySelectorAll('#products img').length===16 && document.querySelectorAll('#origin img').length===1" },
         { name: "real images use alt text, responsive sources and safe fit", js: "[...document.querySelectorAll('main img')].every(img=>(img.alt.length>0 || img.closest('[aria-hidden=true]')) && !!img.sizes && !!img.srcset && ['contain','cover'].includes(getComputedStyle(img).objectFit))" },
         { name: "origin remains lazy and uses its authored focal point", js: "document.querySelector('#origin img').loading==='lazy' && getComputedStyle(document.querySelector('#origin img')).objectPosition==='50% 60%'" },
-        { name: "unconfirmed artwork not promoted into the live catalogue", js: "![...document.querySelectorAll('main img')].some(img=>/sachet|wedding|corporate|traditional-marriage/.test(img.src))" },
+        { name: "unconfirmed artwork not promoted into the live catalogue", js: "![...document.querySelectorAll('#products img')].some(img=>/sachet|wedding|corporate|traditional-marriage/.test(img.src))" },
       ],
     },
 
@@ -209,6 +209,7 @@ const config = {
         {name:"footer dark lettering has ivory contrast backing",js:"getComputedStyle(document.querySelector('footer img').parentElement).backgroundColor==='rgb(249, 244, 237)'"},
       ],
     },
+    ...rangeMediaJourneys(),
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",
@@ -661,12 +662,12 @@ function functionalJourneys() {
       viewports: ["desktop"],
       actions: [
         { evaluate: "const h = document.getElementById('products-heading'); h.setAttribute('tabindex', '-1'); h.focus(); true" },
-        ...Array.from({ length: 4 }, () => [{ press: "Tab" }, { evaluate: "window.__focusTrail = [...(window.__focusTrail || []), document.activeElement.getAttribute('href') + ' ' + getComputedStyle(document.activeElement).outlineStyle]; true" }]).flat(),
+        ...Array.from({ length: 16 }, () => [{ press: "Tab" }, { evaluate: "window.__focusTrail = [...(window.__focusTrail || []), (document.activeElement.getAttribute('href') || document.activeElement.getAttribute('aria-label')) + ' ' + getComputedStyle(document.activeElement).outlineStyle]; true" }]).flat(),
       ],
       expect: [
         {
-          name: "Tab reaches the 4 CTAs in order, each with a visible focus outline",
-          js: "JSON.stringify(window.__focusTrail) === JSON.stringify(['/shop/750ml-glass-bottle solid', '/shop/1-5l-bottle solid', '/shop/carton-packs solid', '/wholesale solid'])",
+          name: "Tab reaches image controls and all 4 CTAs with visible focus outlines",
+          js: "window.__focusTrail.length===16 && window.__focusTrail.every(s=>s.endsWith(' solid')) && JSON.stringify(window.__focusTrail.filter(s=>s.startsWith('/'))) === JSON.stringify(['/shop/750ml-glass-bottle solid', '/shop/1-5l-bottle solid', '/shop/carton-packs solid', '/wholesale solid'])",
         },
       ],
     },
@@ -976,4 +977,45 @@ function heroCarouselJourneys(base) {
     action.click && /Choose a slide|Previous slide|Next slide|data-carousel-toggle/.test(action.click)
       ? [{evaluate: `document.querySelector(${JSON.stringify(action.click)}).focus({preventScroll:true}); true`}, action]
       : [action]) }));
+}
+
+function rangeMediaJourneys() {
+  const root = 'document.querySelectorAll("#products [data-media-carousel]")';
+  const focusNext = `(()=>{for(const c of ${root})c.querySelector('button[aria-label^="Next"]').focus();return true})()`;
+  const reveal = [
+    {evaluate:"document.querySelector('#products-heading').scrollIntoView({block:'center',behavior:'instant'});true"},
+    ...[0,1,2,3].flatMap(i=>[
+      {evaluate:`document.querySelectorAll('#products ul > li')[${i}].scrollIntoView({block:'center',behavior:'instant'});true`},
+      {waitFor:`document.querySelectorAll('#products ul > li')[${i}].querySelector('[data-reveal]')?.dataset.reveal!=='hidden'`},
+    ]),
+    {evaluate:"document.querySelector('#products').scrollIntoView({block:'center',behavior:'instant'});true"},
+    {waitFor:"document.querySelectorAll('#products .media-carousel-controls').length===4 && [...document.querySelectorAll('#products [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')"},
+  ];
+  const resetImages = [
+    {evaluate:`(async()=>{for(const c of ${root}){c.querySelector('button[aria-label^="Pause"]')?.click();while(Number(c.dataset.mediaIndex)>0){const target=Number(c.dataset.mediaIndex)-1;c.querySelector('button[aria-label^="Previous"]').click();const deadline=performance.now()+5000;while(Number(c.dataset.mediaIndex)!==target){if(performance.now()>deadline)throw new Error('Image reset timed out');await new Promise(r=>setTimeout(r,20))}}}return true})()`},
+    {waitFor:`[...${root}].every(c=>c.dataset.mediaIndex==='0')`},
+  ];
+  return [
+    {name:"range-media",page:"home",selector:"#products",viewports:["small","mobile","tablet","laptop","large","desktop"],actions:reveal,expect:[
+      {name:"four multi-image galleries; alternate packaging clearly proposed",js:`${root}.length===4 && [...${root}].map(c=>c.querySelectorAll('[data-media-slide]').length).join(',')==='2,2,8,4' && document.querySelector('#products li:first-child article').textContent.includes('Alternative bottle: proposed packaging')`},
+      {name:"no card title or CTA overflow",js:"[...document.querySelectorAll('#products article a,#products h3')].every(e=>{const r=e.getBoundingClientRect(),c=e.closest('article').getBoundingClientRect();return r.left>=c.left-1 && r.right<=c.right+1 && r.bottom<=c.bottom+1})"},
+      {name:"new photos use contain with preserved sources",js:"['closed-carton.webp','warehouse-pallet.webp'].every(n=>[...document.querySelectorAll('#products img')].some(i=>decodeURIComponent(i.src).includes(n) && getComputedStyle(i).objectFit==='contain'))"},
+      {name:"printed claims registered as evidence-dependent",js:"[...document.querySelectorAll('#products [data-claims]')].some(e=>e.dataset.claims.includes('cartonPackConfiguration') && e.dataset.claims.includes('lowTds')) && !!document.querySelector('#products [data-claims*=palletPackConfiguration]')"},
+      {name:"visible controls not added to normal cards",js:`[...${root}].every(c=>getComputedStyle(c.querySelector('.media-carousel-controls')).clipPath==='inset(50%)')`},
+    ]},
+    ...[0,1,2,3].map(i=>({name:`range-media-select-${i}`,kind:"functional",page:"home",viewports:["mobile","desktop"],actions:[...reveal,...resetImages,
+      {evaluate:`window.rangeBoxes=[...document.querySelectorAll('#products article,#products h3,#products article a')].map(e=>[e.offsetLeft,e.offsetTop,e.offsetWidth,e.offsetHeight]); const c=${root}[${i}];c.querySelector('button[aria-label^="Next"]').focus();c.querySelector('button[aria-label^="Next"]').click();true`},
+      {waitFor:`${root}[${i}].dataset.mediaIndex==='1'`},{wait:500}],expect:[
+      {name:"alternate image decoded and only one exposed",js:`(()=>{const c=${root}[${i}],p=c.querySelector('[data-media-slide="1"]');return c.querySelectorAll('[data-media-slide]:not([inert])').length===1 && p.querySelector('img').naturalWidth>0 && getComputedStyle(p).opacity==='1'})()`},
+      {name:"no shifting card, title or button boxes",js:"JSON.stringify([...document.querySelectorAll('#products article,#products h3,#products article a')].map(e=>[e.offsetLeft,e.offsetTop,e.offsetWidth,e.offsetHeight]))===JSON.stringify(window.rangeBoxes)"},
+      {name:"manual choice pauses rotation",js:`!${root}[${i}].dataset.mediaRotating`},
+    ]})),
+    {name:"range-media-all-alternates",kind:"functional",page:"home",selector:"#products",viewports:["mobile","desktop"],actions:[...reveal,...resetImages,{evaluate:`[...${root}].forEach(c=>c.querySelector('button[aria-label^="Next"]').click());true`},{waitFor:`[...${root}].every(c=>c.dataset.mediaIndex==='1')`},{wait:500}],expect:[{name:"all four alternate images decoded and visible",js:`[...${root}].every(c=>{const p=c.querySelector('[data-media-slide="1"]');return p.querySelector('img').naturalWidth>0 && getComputedStyle(p).opacity==='1'})`}]},
+    {name:"range-media-every-variant",kind:"functional",page:"home",viewports:["desktop"],actions:[...reveal,...resetImages,{evaluate:`(async()=>{const boxes=()=>JSON.stringify([...document.querySelectorAll('#products article,#products h3,#products article a')].map(e=>[e.offsetLeft,e.offsetTop,e.offsetWidth,e.offsetHeight]));const before=boxes();const text=[...document.querySelectorAll('#products h3,#products p,#products article a')].map(e=>e.textContent).join('|');let visited=0;for(const c of ${root}){const count=c.querySelectorAll('[data-media-slide]').length;for(let i=0;i<count;i++){if(i>0){c.querySelector('button[aria-label^="Next"]').click();const deadline=performance.now()+5000;while(Number(c.dataset.mediaIndex)!==i){if(performance.now()>deadline)throw new Error('Variant did not activate');await new Promise(r=>setTimeout(r,20))}}const p=c.querySelector('[data-media-slide="'+i+'"]'),img=p.querySelector('img');img.loading='eager';await img.decode();if(p.inert || img.naturalWidth===0 || boxes()!==before)throw new Error('Variant failed decode/accessibility/layout');visited++}}window.rangeVisited=visited;return text===[...document.querySelectorAll('#products h3,#products p,#products article a')].map(e=>e.textContent).join('|')})()`}],expect:[{name:"all sixteen supplied/reused images decode without layout or text changes",js:"window.rangeVisited===16"}]},
+    {name:"range-media-auto",kind:"functional",page:"home",viewports:["desktop"],actions:[...reveal,{moveTo:{x:5,y:5}},{waitFor:`[...${root}].some(c=>c.dataset.mediaIndex==='1')`,timeout:7000}],expect:[{name:"visible images rotate automatically",js:`[...${root}].some(c=>c.dataset.mediaRotating==='true')`}]},
+    {name:"range-media-offscreen",kind:"functional",page:"home",viewports:["desktop"],actions:[...reveal,{evaluate:"window.scrollTo({top:0,behavior:'instant'});true"},{waitFor:`[...${root}].every(c=>!c.dataset.mediaRotating)`}],expect:[{name:"offscreen image timers stop",js:`[...${root}].every(c=>!c.dataset.mediaRotating)`}]},
+    {name:"range-media-reduced",kind:"functional",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],actions:[...reveal,{evaluate:focusNext}],expect:[{name:"reduced motion stops auto and image transitions",js:`[...${root}].every(c=>!c.dataset.mediaRotating && getComputedStyle(c.querySelector('[data-media-slide]')).transitionProperty==='none')`}]},
+    {name:"range-media-swipe",kind:"functional",page:"home",viewports:["mobile"],actions:[...reveal,...resetImages,{swipe:{selector:'#products li:nth-child(2) [data-media-carousel]',direction:'left'}},{waitFor:`${root}[1].dataset.mediaIndex==='1'`}],expect:[{name:"touch swipe changes image, page retains vertical scrolling",js:`getComputedStyle(${root}[1]).touchAction==='pan-y'`}]},
+    {name:"range-media-no-js",kind:"functional",page:"home",viewports:["mobile"],javascript:false,actions:[{evaluate:"document.querySelector('#products').scrollIntoView();true"}],expect:[{name:"first images and product links survive without JS",js:"document.querySelectorAll('#products article a').length===4 && document.querySelectorAll('#products [data-media-slide=\"0\"]:not([inert])').length===4 && !document.querySelector('#products .media-carousel-controls')"}]},
+  ];
 }

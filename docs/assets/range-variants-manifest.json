@@ -1,0 +1,125 @@
+{
+  "status": "Supplied proposed packaging artwork. Printed pack quantities/claims not verified; see content/claims.ts and asset specifications.",
+  "assets": [
+    {
+      "source": "docs/assets/source/range-variants/image.png",
+      "sha256": "cca33ee3dece0ae4017aebf795b0a995acef0c5fd3610ec466df3f61120c731b",
+      "sourceWidth": 1448,
+      "sourceHeight": 1086,
+      "sourceAlpha": false,
+      "output": "/images/products/closed-carton.webp",
+      "width": 1200,
+      "height": 900,
+      "alpha": false,
+      "bytes": 160826
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy.png",
+      "sha256": "6cc544902e0c7ddbc5c16b7fbce3223cb16ebbb4dfe618177dcdef3a794587d7",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceAlpha": false,
+      "output": "/images/products/warehouse-pallet.webp",
+      "width": 1200,
+      "height": 1200,
+      "alpha": false,
+      "bytes": 368626
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 2.png",
+      "sha256": "e8819c41854eb430c5ba1691970d3010daeb4b7c31fc33ec1129b5d020b8711d",
+      "sourceWidth": 1448,
+      "sourceHeight": 1086,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-closed-front.webp",
+      "width": 1200,
+      "height": 954,
+      "alpha": true,
+      "bytes": 266660
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 3.png",
+      "sha256": "a0150d70e13301b2965644024bc29d745a4b5fc84f55ac5122df7dc1c8c380ac",
+      "sourceWidth": 1448,
+      "sourceHeight": 1086,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-closed-angle.webp",
+      "width": 1200,
+      "height": 979,
+      "alpha": true,
+      "bytes": 338870
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 4.png",
+      "sha256": "2579588e8add0459c4ed0aa1ebb670bb0c1c9be8b85a0736421bd6eb5573fc1b",
+      "sourceWidth": 1448,
+      "sourceHeight": 1086,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-open-row.webp",
+      "width": 1200,
+      "height": 834,
+      "alpha": true,
+      "bytes": 319046
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 5.png",
+      "sha256": "c7fa66ab13c957bfa80f4dbac125f4670b1e18b6865060565a67b7cb044ee426",
+      "sourceWidth": 1448,
+      "sourceHeight": 1086,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-open-angle.webp",
+      "width": 1200,
+      "height": 842,
+      "alpha": true,
+      "bytes": 306514
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 6.png",
+      "sha256": "ec27d201057cac2281ca5a807790152c6ee92c8866e64eac00b60051cb7a5541",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-closed-wide.webp",
+      "width": 1200,
+      "height": 858,
+      "alpha": true,
+      "bytes": 291828
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 7.png",
+      "sha256": "ae1988f726505528edc1ad3cf24028a2f074efa95d8801b788a77cbdd2b28e31",
+      "sourceWidth": 1536,
+      "sourceHeight": 1024,
+      "sourceAlpha": true,
+      "output": "/images/products/carton-closed-side.webp",
+      "width": 1200,
+      "height": 924,
+      "alpha": true,
+      "bytes": 285196
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 8.png",
+      "sha256": "104d9956b4cfff65e054c13e36a9bf91ede9ae8b4ff6da89a6b9920b7f212b2d",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceAlpha": false,
+      "output": "/images/products/warehouse-pack-stack.webp",
+      "width": 1200,
+      "height": 1200,
+      "alpha": false,
+      "bytes": 385772
+    },
+    {
+      "source": "docs/assets/source/range-variants/image copy 9.png",
+      "sha256": "80867c184f4d36dd3549c63727f29c6b8cb33f85be0c2ea08d6f61b45a369538",
+      "sourceWidth": 1254,
+      "sourceHeight": 1254,
+      "sourceAlpha": false,
+      "output": "/images/products/warehouse-carton-stack.webp",
+      "width": 1200,
+      "height": 1200,
+      "alpha": false,
+      "bytes": 320154
+    }
+  ]
+}

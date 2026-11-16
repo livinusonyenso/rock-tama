@@ -133,3 +133,10 @@ D-104: first hero bottle updated to new ROCK-TAMA-only750ml artwork from image c
 D-105: faster hero autoplay4seconds with450ms bottle/text transitions, per owner request. No other motion or behaviour change.
 
 D-106: removed the blinking text transition; per-slide copy/CTA now swaps instantly while only bottles animate. Grid preserves tallest-copy height. Four-second autoplay and450ms bottle transition retained. Evidence: verification/hero-image-only-motion/REVIEW.md.
+
+## D-107 — ROCK TAMA Range image variants
+Four image-only galleries added using shared MediaCarousel + existing OfferCard/ProductCard/MediaFrame. New opaque carton and pallet PNGs inspected, archived and optimized; existing bottle variants reused. Owner explicitly approved newer750ml as proposed packaging with fixed note; catalogue title/SKU/CTA unchanged.4s autoplay/450ms image movement only; pause/visibility/reduced motion/swipe/no-JS supported. Printed new pack configurations registered unverified; claim register15unverified, science evidence not inferred from artwork. Lint/TypeScript/diagnostic Webpack and deployment mode checks pass. Responsive/manual/keyboard/swipe/link evidence and corrected reduced-motion/offscreen tests: verification/range-image-variants/REVIEW.md. No push/deploy; §5 visuals still provisional.
+
+D-107 source update: owner added6more carton views and2more warehouse views, and replaced image copy.png while implementation was active. All10final packaging sources archived/optimized; prior studio source retained. Final galleries2/2/8/4images(total16), with all carton/warehouse versions available and fixed card content.
+
+D-107 final: lint/TypeScript, styled diagnostic Webpack and6deployment-mode cases PASS. Final six-width layout/provenance80/80; cross-page/keyboard/reduced-motion regression69/69; final visibility/all16-variant smoke13/13 PASS. Main final-batch run208checks pass with6metadata-predicate failures corrected by the80/80 run; raw results retained and explained in REVIEW. All10optimized source hashes/dimensions/alpha/metadata validated. No push/deploy.

@@ -12,3 +12,26 @@ export const storefrontMedia = {
 
 /** Decorative supplied artwork; not documentary photography of the Nanka spring. */
 export const heroBackground = { src: "/images/hero/waterfall-bg.webp", width: 1672, height: 941 } as const;
+
+/** Home range image variants only. No SKU, availability or pack-quantity changes. */
+export const rangeMediaVariants: Partial<Record<string, readonly MediaAsset[]>> = {
+  "750ml-glass-bottle": [storefrontMedia.bottle750, { label: "Proposed alternative 750 ml packaging", alt: "Proposed alternative ROCK-TAMA 750 ml bottle packaging, not confirmed glass packaging", src: "/images/hero/bottle-750ml-rock-tama.webp", aspect: storefrontMedia.bottle750.aspect, shape: "bottle" }],
+  "1-5l-bottle": [storefrontMedia.bottle15, { label: "Alternative 1.5 L bottle artwork", alt: "Alternative ROCK-TAMA 1.5 litre bottle artwork with a green label and gold cap", src: "/images/hero/bottle-1-5l.webp", aspect: storefrontMedia.bottle15.aspect, shape: "bottle" }],
+  "carton-packs": [storefrontMedia.cartons,
+    ...["carton-closed-front", "carton-closed-angle", "carton-open-row", "carton-open-angle", "carton-closed-wide", "carton-closed-side", "closed-carton"].map(name => ({
+      label: "Alternative carton packaging artwork", alt: `Proposed ROCK-TAMA carton packaging — ${name.replaceAll("-", " ")}`,
+      src: `/images/products/${name}.webp` as const, aspect: "4/3" as const,
+      claims: name.startsWith("carton-open") ? ["palletPackConfiguration"] as const : name === "closed-carton" ? ["ultraPure", "lowTds", "heavyMetalsNotDetected", "odourlessTastelessAtSource", "cartonPackConfiguration"] as const : ["cartonPackConfiguration"] as const,
+    })),
+  ],
+  distributor: [storefrontMedia.distributor,
+    ...["warehouse-pallet", "warehouse-pack-stack", "warehouse-carton-stack"].map(name => ({
+      label: "Warehouse pallet artwork", alt: `Proposed ROCK-TAMA warehouse supply — ${name.replaceAll("-", " ")}`,
+      src: `/images/products/${name}.webp` as const, aspect: "1/1" as const, claims: ["palletPackConfiguration"] as const,
+    })),
+  ],
+};
+
+export const rangeMediaNotices: Partial<Record<string, string>> = {
+  "750ml-glass-bottle": "Alternative bottle: proposed packaging",
+};

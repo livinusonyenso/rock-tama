@@ -4,6 +4,7 @@ import { OfferCard } from "@/components/ui/OfferCard";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { rangeMediaVariants, rangeMediaNotices } from "@/content/media";
 import { homeProducts } from "@/content/home";
 import { productBySlug } from "@/content/products";
 import { productHref, resolveHref } from "@/lib/navigation";
@@ -12,7 +13,7 @@ import type { Product } from "@/types/content";
 /**
  * Homepage §5 "Our Products" (UI_BREAKDOWN §05): three catalogue products linking to their product
  * pages + the Distributor Supply service offer linking to /wholesale. Server Component; the only client
- * code is the Reveal island. Reference layouts: cards 1–2 media-side, cards 3–4 media-middle.
+ * code is Reveal and the image-only MediaCarousel islands. Reference layouts: cards 1–2 media-side, cards 3–4 media-middle.
  */
 export function ProductRangeSection() {
   const cards = homeProducts.products
@@ -43,6 +44,8 @@ export function ProductRangeSection() {
                 <Reveal delay={index * 80} className="h-full">
                   <ProductCard
                     product={product}
+                    mediaVariants={rangeMediaVariants[product.slug]}
+                    mediaNotice={rangeMediaNotices[product.slug]}
                     showPackaging={false}
                     layout={index < 2 ? "media-side" : "media-middle"}
                     action={
@@ -64,6 +67,7 @@ export function ProductRangeSection() {
                   title={offer.title}
                   text={offer.text}
                   media={offer.media}
+                  mediaVariants={rangeMediaVariants.distributor}
                   titleStyle={offer.titleStyle}
                   layout="media-middle"
                   action={

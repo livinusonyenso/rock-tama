@@ -36,3 +36,6 @@ Logo SVGs (header + footer light) · hero/product photography (750 ml, 1.5 L, ca
 - [x] D-102 five-slide copy/bottle hero: static waterfall,600ms transitions,6s timer,arrows/dots/pause,focus/hover/hidden-tab pause,real touch swipe,reduced motion/no-JS,stable stage/copy grid.
 - [x] Live custom-labels enquiry route reuses validated delivery; proposed concepts do not create unconfirmed catalogue products.
 - [ ] Client approval of generated memorial/coronation concepts and new five-slide screenshots. Existing §5/§6 baselines remain provisional.
+
+- [x] D-107 four range image galleries,16images, stationary text/actions, responsive fixed media boxes, keyboard/swipe/reduced motion/no-JS, offscreen pause.750ml alternative explicitly marked as proposed packaging.
+- [ ] Owner/client visual approval of D-107 snapshots and printed packaging quantities/claims; source artwork is not evidence.
