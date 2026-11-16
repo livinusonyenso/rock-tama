@@ -127,3 +127,5 @@ Lint/TypeScript and styled diagnostic Webpack build pass (15routes; config resto
 D-102 final verification: full functional507/507; final responsive/contrast/focus/real-touch104/104; full-height five-slide captures78/78; Resend mock40/40 and unconfigured31/31. All five distinct alpha images and original hashes checked; no placeholders remain. Screenshots and generated concepts await owner/client review.
 
 D-103: removed visible hero dot/arrow/pause bar with focus-only accessible controls; removed normal-flow toolbar row while keeping autoplay and swipe. CSS change; image/content/timer logic unchanged. Verification: docs/verification/hero-controls-hidden/REVIEW.md. No push/deploy.
+
+D-104: first hero bottle updated to new ROCK-TAMA-only750ml artwork from image copy6; optimized/versioned WebP and source manifest updated. Existing1.5L AFRICA artwork still needs a matching size-specific version. Evidence: verification/hero-rock-tama-bottle/REVIEW.md. No push/deploy.

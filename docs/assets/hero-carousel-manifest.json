@@ -2,16 +2,16 @@
   "status": "Supplied concept artwork; not evidence of availability or printed claims. Memorial and coronation concepts generated with owner permission using supplied bottle reference; pending approval.",
   "assets": [
     {
-      "source": "docs/assets/source/hero-carousel/image.png",
-      "sourceWidth": 1122,
-      "sourceHeight": 1402,
+      "source": "docs/assets/source/hero-carousel/image copy 6.png",
+      "sourceWidth": 1024,
+      "sourceHeight": 1536,
       "sourceAlpha": true,
-      "sha256": "424b69492260791bc33040313350f84f5b787b047187e328376ddb3c180dee43",
-      "output": "/images/hero/bottle-750ml.webp",
-      "width": 375,
+      "sha256": "13de2c43262261fc30aa9a938234a0fb4facb92cc7d3ec112b8fbbc5c5b36788",
+      "output": "/images/hero/bottle-750ml-rock-tama.webp",
+      "width": 365,
       "height": 1200,
       "alpha": true,
-      "bytes": 146362
+      "bytes": 155794
     },
     {
       "source": "docs/assets/source/hero-carousel/image copy.png",

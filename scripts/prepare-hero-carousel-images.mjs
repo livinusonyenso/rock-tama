@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 
 const assets = [];
 for (const [filename, output, bottle] of [
-  ['image.png', 'bottle-750ml.webp', true],
+  ['image copy 6.png', 'bottle-750ml-rock-tama.webp', true],
   ['image copy.png', 'bottle-1-5l.webp', true],
   ['image copy 5.png', 'wedding.webp', true],
   ['spring-water.png', 'waterfall-bg.webp', false],

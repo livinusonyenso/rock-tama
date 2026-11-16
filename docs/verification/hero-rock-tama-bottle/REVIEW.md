@@ -1,0 +1,5 @@
+# ROCK-TAMA 750 ml hero image — D-104
+
+Integrated owner-supplied image copy6.png:1024×1536PNG with real transparency and ROCK-TAMA main wordmark, without AFRICA as part of the brand name. Original archived unchanged; manifest records SHA256. Optimized bottle-750ml-rock-tama.webp365×1200,155794bytes, preserves alpha/proportions, strips EXIF. Fresh filename avoids stale optimizer responses. Only first slide's image reference changes; no timer, controls, layout, catalogue or size-label changes. Existing1.5L AFRICA artwork remains pending a matching size-specific version.
+
+Verification: lint/TypeScript PASS; styled diagnostic Webpack build PASS with config restored; desktop/mobile browser checks42/42 PASS. Independently verified source hash, dimensions, actual alpha and no output EXIF. Inspected desktop capture: correct wordmark, full bottle contained over static waterfall; hidden toolbar remains hidden. Screenshots in sections/; raw report report.md. Earlier default Turbopack environment restriction is not claimed resolved. No visual-baseline promotion, push or deploy.
