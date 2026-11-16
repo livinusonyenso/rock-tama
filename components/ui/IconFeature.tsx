@@ -23,7 +23,7 @@ export function IconFeature({ icon, label, tone = "dark", layout = "stacked", co
   return (
     <div className={`flex ${inline ? "items-start gap-2 text-left" : "flex-col items-center text-center"} ${className}`}>
       {circled ? (
-        <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full border border-forest-700 text-forest-heading">
+        <span aria-hidden="true" className="flex size-13 shrink-0 items-center justify-center rounded-full bg-sage-200/80 text-forest-heading">
           <Icon name={icon} strokeWidth={1.5} className="size-7" />
         </span>
       ) : <Icon name={icon} strokeWidth={1.5} className={inline ? "size-7 shrink-0 text-gold-600" : compact ? "size-7 shrink-0 text-gold-500" : "size-9 shrink-0 text-gold-500 lg:size-12"} />}

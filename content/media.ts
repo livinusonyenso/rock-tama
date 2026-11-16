@@ -11,6 +11,9 @@ export const storefrontMedia = {
 } as const satisfies Record<string, MediaAsset>;
 
 /** Decorative supplied artwork; not documentary photography of the Nanka spring. */
+/** Decorative supplied spring artwork (waterfall, leaves, misty water) behind Quality & Safety + the supply banner (D-108). */
+export const qualityBackground = { src: "/images/quality/spring-band.webp", width: 1672, height: 941 } as const;
+
 export const heroBackground = { src: "/images/hero/waterfall-bg.webp", width: 1672, height: 941 } as const;
 
 /** Home range image variants only. No SKU, availability or pack-quantity changes. */

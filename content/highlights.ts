@@ -18,5 +18,5 @@ export const qualityIndicators: readonly Highlight[] = [
   { icon: "droplet", label: "Low TDS\n6–8 mg/L", claim: "lowTds" },
   { icon: "waves", label: "Undistilled\n(Natural State)", claim: "undistilled" },
   { icon: "leaf", label: "Odourless & Tasteless\nat Source", claim: "odourlessTastelessAtSource" },
-  { icon: "clipboard-check", label: "Lab\nTested", claim: "labTested" },
+  { icon: "flask-conical", label: "Lab\nTested", claim: "labTested" },
 ];

@@ -67,6 +67,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-16 | **Vercel 404 fixed (D-097):** opt-in `DEPLOY_MODE=staging` so Vercel production builds succeed (guards warn, noindex) | lint ✓ · tsc ✓ · simulated Vercel production build: without staging exit 1 (guard), with staging exit 0 + 2 warnings · `next start`: 200 + `X-Robots-Tag: noindex, nofollow` |
 
+| 2026-11-16 | **Quality & Safety restyled to the owner's image (D-108):** owner's revised design: shared spring artwork (waterfall + leaves) behind Quality + supply banner, eyebrow rule, larger heading, filled icon circles, indicator dividers, flask icon, banner inset | lint ✓ · tsc ✓ · build ✓ · functional dev-file 596/596, resend-mock 40/40, unconfigured 31/31 · quality + supply + storefront-images + 200%-text checks 162 passed at 7 widths; only failures are the pre-existing header overflow at 200% text (same on the previous commit) · full visual run: no new failures in these sections (header/hero/mobile-nav baselines and wholesale stale-CSS errors from a concurrent rebuild also fail without this change) · found + fixed during testing: decorative image not aria-hidden, banner description collapsing at 1280, indicator columns collapsing at 200% text (desktop rows now flex-wrap) · reviewed @1440 against the owner's design, plus 375/768/1024/1280 |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

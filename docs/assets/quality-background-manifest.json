@@ -1,0 +1,18 @@
+{
+  "status": "Owner-supplied decorative artwork for the Quality & Supply band; not documentary photography.",
+  "asset": {
+    "source": "docs/assets/source/quality/spring-band.png",
+    "sha256": "d67ba7301ae5d38187b2ec33776a056785daebd588864813e14c34254359bfbf",
+    "original": {
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "alpha": false,
+      "bytes": 1963001
+    },
+    "output": "public/images/quality/spring-band.webp",
+    "width": 1672,
+    "height": 941,
+    "bytes": 98252
+  }
+}

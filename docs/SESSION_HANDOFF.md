@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Quality & Safety (D-108):** restyled to the owner's supplied image; `WaterBand` wraps Quality + supply banner in `app/page.tsx` with the owner's spring artwork (layered from `xl`, softened below).
+
 **Vercel (D-097):** production builds succeed only with the Vercel env var `DEPLOY_MODE=staging` (noindex, guards warn) until Resend is configured and claims are verified; remove it for launch.
 
 **Where we are:** All nine homepage sections are now present. Owner authorised combined §7–§9 implementation (D-095): QualitySection + WholesaleBanner + shared SiteFooter. `docs/verification/home-7-9-completion/REPORT.md` contains current results/screenshots and limitations. Existing shop, product pages, carousel and enquiry flow retained. No new push/deployment; earlier push ended at `32e826d`. Visual baselines (including §5/§6 and new sections) are not approved by the build instruction. Default Turbopack worker restriction remains; diagnostic styled Webpack used, config restored.
