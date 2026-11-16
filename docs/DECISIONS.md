@@ -147,3 +147,6 @@ D-114 — Owner approved reference prices as draft: ₦650 single 750 ml, ₦7,5
 
 
 D-115 — Shop UI recovery: constrain the Tailwind Turbopack loader to globals.css. The old wildcard rule erased CSS Module exports in development, causing fill images to escape their gallery. Native Next CSS Module handling restores scoped layout without modifying artwork or shopping behaviour.
+
+
+D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.

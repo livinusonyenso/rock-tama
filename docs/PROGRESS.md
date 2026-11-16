@@ -158,3 +158,6 @@ Shop reference complete for owner review: final browser170/170 at six widths; pr
 
 
 Shop route UI fixed (D-115): actual Turbopack development route78/78 at six widths, lint/types and diagnostic Webpack pass. Regression now asserts computed gallery containment; prior structural checks missed missing module classes. Evidence: verification/shop-route-css-fix/REVIEW.md. Visual approval pending, no push/deploy.
+
+
+D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.

@@ -14,10 +14,11 @@ export function ShopProductExperience(){
  const variant=variantById(id)!;const count=Number(quantity),valid=Number.isInteger(count)&&count>=1&&count<=10000;
  const choose=(next:string)=>{setId(next);setNotice("")};
  const options=[shopVariants.find(v=>v.size===variant.size&&v.pack==="single")!,variantById("750-pack12")!,variantById("1500-carton")!];
+ const galleryKey=variant.pack==="pack12"?"750-pack12":variant.product as keyof typeof shopGallery;
  const href=selectionHref([{variantId:id,quantity:valid?count:1}]);
  const add=()=>{try{addBasket(id,count);setNotice("Added to your basket. No payment has been taken.")}catch(error){setNotice(error instanceof Error && error.message.startsWith("The basket limit") ? error.message : "Basket storage is unavailable. You can still request this selection directly.")}};
  return <section className={styles.product} aria-labelledby="shop-heading">
- <ProductGallery key={variant.product} images={shopGallery[variant.product as keyof typeof shopGallery]} enhanced={enhanced}/>
+ <ProductGallery key={galleryKey} images={shopGallery[galleryKey]} enhanced={enhanced}/>
  <div className={styles.info}>
  <h1 id="shop-heading" className="font-serif text-4xl font-bold leading-none text-forest-850 lg:text-5xl">ROCK-TAMA –<br/> Natural Spring Water</h1>
  <p className="mt-3 font-serif text-2xl font-semibold italic text-ink-900">Pure by Nature. African at Heart.</p>

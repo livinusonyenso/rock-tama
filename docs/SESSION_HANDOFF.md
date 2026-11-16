@@ -94,3 +94,6 @@ D-114 shop: reference layout + approved draft prices, no paid checkout. Gallery 
 
 
 D-115 latest: next.config.ts Tailwind rule MUST target globals.css, not *.css with as:*.css: wildcard removes CSS Module mappings in Turbopack and makes shop fill images viewport-sized. Actual dev route six-width78checks pass; diagnostic Webpack pass. New computed-style/image-bounds regression prevents recurrence. See verification/shop-route-css-fix/REVIEW.md. Separate deployment-config script has stale2-warning expectation (actual3 after launch placeholders), unrelated to this fix.
+
+
+D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.

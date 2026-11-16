@@ -25,3 +25,6 @@ Lint, TypeScript and pure pricing/pack-conversion checks pass. A styled diagnost
 Final browser run: **170 passed, 0 failed, 0 incomplete**, at 320, 375, 768, 1024, 1280 and 1440 px. Covers gallery/zoom/focus, selections, quantity validation, basket persistence/corruption/storage failure, mixed orders, unknown price, actual quotation submission, no-JS fallback and existing product/hero links. Mocked provider regression: **40/40**; unconfigured delivery: **31/31**. See `verification/shop-reference-final/report.md` and the six `shop-reference-*.png` images. Screenshots are provisional and await owner review; §5/§6 baselines remain provisional too.
 
 No push or deployment was performed.
+
+
+D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.

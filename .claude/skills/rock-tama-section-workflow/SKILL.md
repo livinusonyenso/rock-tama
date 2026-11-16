@@ -83,3 +83,6 @@ Shop reference handoff (D-114): preserve typed draft pricing in content/commerce
 
 
 D-115 safeguard: run gallery UI checks on the actual Turbopack development route as well as diagnostic Webpack. Tailwind loader applies only to globals.css; rewriting *.module.css as *.css discards exported scoped class names. Assert computed grid/position/object-fit and image bounds, not only viewport overflow or element counts.
+
+
+D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.

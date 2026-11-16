@@ -6,6 +6,7 @@ const bottle=(src:string,size:string):GalleryImage[]=>[
  {src:"/images/origin/origin-landscape.webp",alt:"Illustrated landscape with trees, hills and a stream",label:"Origin illustration"},
 ];
 export const shopGallery={
+ "750-pack12":[{src:"/images/products/carton-packs.webp",alt:"ROCK-TAMA pack of twelve 750 ml bottles",label:"Pack of 12",concept:true}],
  "750ml-glass-bottle":[bottle("/images/hero/bottle-750ml-rock-tama.webp","750 ml")[0],{src:"/images/products/750ml-glass-bottle.webp",alt:"ROCK-TAMA catalogue glass bottle",label:"Glass bottle"},...bottle("/images/hero/bottle-750ml-rock-tama.webp","750 ml").slice(1)],
  "1-5l-bottle":bottle("/images/hero/bottle-1-5l.webp","1.5 L"),
  "carton-packs":[{src:"/images/products/carton-closed-front.webp",alt:"Proposed ROCK-TAMA carton packaging",label:"Closed carton",concept:true},{src:"/images/products/carton-closed-angle.webp",alt:"Alternative view of proposed carton",label:"Side view",concept:true},{src:"/images/products/carton-open-row.webp",alt:"Proposed open multi-bottle pack",label:"Open pack",concept:true}],
