@@ -131,3 +131,5 @@ D-103: removed visible hero dot/arrow/pause bar with focus-only accessible contr
 D-104: first hero bottle updated to new ROCK-TAMA-only750ml artwork from image copy6; optimized/versioned WebP and source manifest updated. Existing1.5L AFRICA artwork still needs a matching size-specific version. Evidence: verification/hero-rock-tama-bottle/REVIEW.md. No push/deploy.
 
 D-105: faster hero autoplay4seconds with450ms bottle/text transitions, per owner request. No other motion or behaviour change.
+
+D-106: removed the blinking text transition; per-slide copy/CTA now swaps instantly while only bottles animate. Grid preserves tallest-copy height. Four-second autoplay and450ms bottle transition retained. Evidence: verification/hero-image-only-motion/REVIEW.md.

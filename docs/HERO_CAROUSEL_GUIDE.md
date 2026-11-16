@@ -23,3 +23,5 @@ D-103 refinement: at the owner’s request, the visible toolbar row is removed. 
 D-104: first-slide source is now image copy6.png (ROCK-TAMA main wordmark), with optimized filename bottle-750ml-rock-tama.webp; replaces prior image.png/AFRICA-labelled first slide. Other sizes keep separate artwork; the750ml image is not reused as1.5L.
 
 D-105 timing update: autoplay interval is now4000ms and bottle/copy transition450ms at the owner’s request; earlier6s/600ms descriptions above are historical.
+
+D-106: only bottles animate during slide changes. Copy uses instant visibility swapping, not opacity/translate transitions; all panels still reserve grid size. Text and CTA remain slide-specific, with no fade/blink interval.

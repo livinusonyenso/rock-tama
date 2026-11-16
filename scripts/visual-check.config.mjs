@@ -955,6 +955,7 @@ function heroCarouselJourneys(base) {
     ...["Premium Natural Spring Water","Everyday Hydration","Wedding Water Labels","Memorial Water Labels","Royal & Coronation Events"].map((title,i)=>({
       ...base,name:`carousel-slide-${i+1}`,page:"home",selector:"section[aria-labelledby=hero-heading]",viewports:["mobile","desktop"],actions:[{evaluate:`window.heroBefore=${dimensions}; true`},{click:dot(i)},{waitFor:`${c}.dataset.carouselIndex==='${i}'`},{wait:650}],expect:[
         {name:"correct synchronized title, CTA and decoded bottle",js:`${c}.querySelector('[data-active=true] h2').textContent===${JSON.stringify(title)} && document.querySelector('[data-frame="${i}"] img').naturalWidth>0 && getComputedStyle(document.querySelector('[data-frame="${i}"]')).opacity==='1'`},
+        {name:"copy swaps instantly without fade or movement",js:`(()=>{const e=${c}.querySelector('[data-active=true]'),s=getComputedStyle(e);return s.visibility==='visible' && s.opacity==='1' && s.translate==='none' && s.transitionDuration==='0s' && s.animationName==='none'})()`},
         {name:"all slide switches preserve hero and bottle geometry",js:`${dimensions}===window.heroBefore`},
         {name:"selected dot announced",js:`document.querySelector('${dot(i)}').getAttribute('aria-pressed')==='true'`},
         {name:"manual choice stops rotation",js:`!${c}.dataset.carouselRotating`},

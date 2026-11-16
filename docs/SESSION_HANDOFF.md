@@ -70,3 +70,5 @@ D-103 latest: owner asked to remove hero control strip. Now hidden by default; k
 D-104 latest:750ml hero uses supplied image copy6 (ROCK-TAMA main wordmark, no AFRICA), served as bottle-750ml-rock-tama.webp; source archived, manifest/generator updated. Current1.5L artwork still needs matching ROCK-TAMA-only label. No carousel/layout/catalogue change, no push/deploy. Evidence: verification/hero-rock-tama-bottle/REVIEW.md.
 
 D-105 latest: hero advances every4seconds, with450ms copy/bottle transitions. Replaces earlier6s/600ms timing; pause/swipe/reduced motion unchanged.
+
+D-106 latest: slide copy now switches visibility with no fade/rise; only bottle transitions animate on changes. Initial intro entrance retained, grid height stable,4s autoplay/450ms bottle unchanged. Evidence: verification/hero-image-only-motion/REVIEW.md.
