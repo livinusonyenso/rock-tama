@@ -140,3 +140,5 @@ Four image-only galleries added using shared MediaCarousel + existing OfferCard/
 D-107 source update: owner added6more carton views and2more warehouse views, and replaced image copy.png while implementation was active. All10final packaging sources archived/optimized; prior studio source retained. Final galleries2/2/8/4images(total16), with all carton/warehouse versions available and fixed card content.
 
 D-107 final: lint/TypeScript, styled diagnostic Webpack and6deployment-mode cases PASS. Final six-width layout/provenance80/80; cross-page/keyboard/reduced-motion regression69/69; final visibility/all16-variant smoke13/13 PASS. Main final-batch run208checks pass with6metadata-predicate failures corrected by the80/80 run; raw results retained and explained in REVIEW. All10optimized source hashes/dimensions/alpha/metadata validated. No push/deploy.
+
+D-108: Distributor Supply gallery uses a larger4:3 frame; warehouse photos fill it with cover fit and bottom-centred focal point, keeping the pallet prominent instead of small square letterboxing. Other product media retain contain; original transparent distributor artwork remains contain.

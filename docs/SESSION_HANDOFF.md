@@ -78,3 +78,5 @@ D-107 latest: all four homepage range cards now have image-only variants from co
 D-107 source update: owner added6more carton views and2more warehouse views, and replaced image copy.png while implementation was active. All10final packaging sources archived/optimized; prior studio source retained. Final galleries2/2/8/4images(total16), with all carton/warehouse versions available and fixed card content.
 
 D-107 complete: final layout80/80, regression69/69 and final smoke13/13; all16images decode with stable copy/geometry. Main208passing checks plus6test-predicate failures corrected in final layout run, transparently retained. Lint/TypeScript/diagnostic Webpack and6mode cases pass; source hashes/dimensions/alpha checked. Review screenshots in range-image-variants/sections; approval pending, no push/deploy.
+
+D-108: Distributor Supply gallery uses a larger4:3 frame; warehouse photos fill it with cover fit and bottom-centred focal point, keeping the pallet prominent instead of small square letterboxing. Other product media retain contain; original transparent distributor artwork remains contain.

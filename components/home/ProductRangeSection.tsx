@@ -66,7 +66,7 @@ export function ProductRangeSection() {
                 <OfferCard
                   title={offer.title}
                   text={offer.text}
-                  media={offer.media}
+                  media={{ ...offer.media, aspect: "4/3" }}
                   mediaVariants={rangeMediaVariants.distributor}
                   titleStyle={offer.titleStyle}
                   layout="media-middle"

@@ -45,7 +45,7 @@ export function OfferCard({ title, text, media, mediaVariants, mediaNotice, acti
     const sizing = landscape ? "w-full max-w-68" : sizeClass;
     const sizes = landscape ? "(min-width: 1024px) 272px, (min-width: 768px) 320px, calc(100vw - 72px)" : "96px";
     if (mediaVariants && mediaVariants.length > 1) return <MediaCarousel label={title} aspect={media.aspect} className={sizing}
-      frames={mediaVariants.map((variant, index) => <MediaFrame key={index} media={{ ...variant, aspect: media.aspect }} compact sizes={sizes} className="size-full" />)}
+      frames={mediaVariants.map((variant, index) => <MediaFrame key={index} media={{ ...variant, aspect: media.aspect }} compact sizes={sizes} fit={variant.fit ?? "contain"} className="size-full" />)}
       icons={{ previous: <Icon name="chevron-right" className="size-5 rotate-180" />, next: <Icon name="chevron-right" className="size-5" />, pause: <Icon name="pause" className="size-5" />, play: <Icon name="play" className="size-5" /> }} />;
     return <MediaFrame media={media} compact sizes={sizes} className={sizing} />;
   };

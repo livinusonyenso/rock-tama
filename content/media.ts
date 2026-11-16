@@ -27,7 +27,7 @@ export const rangeMediaVariants: Partial<Record<string, readonly MediaAsset[]>> 
   distributor: [storefrontMedia.distributor,
     ...["warehouse-pallet", "warehouse-pack-stack", "warehouse-carton-stack"].map(name => ({
       label: "Warehouse pallet artwork", alt: `Proposed ROCK-TAMA warehouse supply — ${name.replaceAll("-", " ")}`,
-      src: `/images/products/${name}.webp` as const, aspect: "1/1" as const, claims: ["palletPackConfiguration"] as const,
+      src: `/images/products/${name}.webp` as const, aspect: "1/1" as const, fit: "cover" as const, objectPosition: "50% 100%", claims: ["palletPackConfiguration"] as const,
     })),
   ],
 };
