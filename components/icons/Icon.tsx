@@ -3,6 +3,9 @@ import {
   ArrowRight,
   MapPin,
   Leaf,
+  Mail,
+  MessageCircle,
+  Quote,
   Layers,
   BedDouble,
   BugOff,
@@ -31,6 +34,7 @@ import {
   X,
 } from "lucide-react";
 import { GlobeFilled } from "@/components/icons/GlobeFilled";
+import { FacebookIcon, InstagramIcon, LinkedInIcon, YouTubeIcon } from "@/components/icons/BrandIcons";
 import type { IconName } from "@/types/content";
 
 // Lucide icons and custom SVG icons (e.g. GlobeFilled) share this shape.
@@ -69,6 +73,13 @@ const icons: Record<IconName, IconComponent> = {
   pause: Pause,
   play: Play,
   "chevron-right": ChevronRight,
+  mail: Mail,
+  "message-circle": MessageCircle,
+  quote: Quote,
+  instagram: InstagramIcon, // brand marks: Simple Icons, CC0 (D-111)
+  facebook: FacebookIcon,
+  linkedin: LinkedInIcon,
+  youtube: YouTubeIcon,
 };
 
 type IconProps = {

@@ -1,4 +1,4 @@
-import type { NavLinkItem } from "@/types/content";
+import type { IconName, NavLinkItem } from "@/types/content";
 
 export const footer = {
   groups: [
@@ -26,6 +26,15 @@ export const footer = {
     description: "News and updates from ROCK-TAMA.",
     unavailable: "Newsletter coming soon.",
   },
-  // Only official, owner-supplied destinations belong here. No guessed social handles.
-  socials: [] as readonly { label: string; href: `https://${string}` }[],
+  /**
+   * Social links shown in the reference (Instagram, Facebook, LinkedIn, YouTube). Owner (D-111): use "#" until
+   * the official URLs exist. Replace each "#" with the official https URL; "#" entries block strict production
+   * launches (content/launch.ts). Never guess handles.
+   */
+  socials: [
+    { label: "Instagram", icon: "instagram", href: "#" },
+    { label: "Facebook", icon: "facebook", href: "#" },
+    { label: "LinkedIn", icon: "linkedin", href: "#" },
+    { label: "YouTube", icon: "youtube", href: "#" },
+  ] as readonly { label: string; icon: IconName; href: `https://${string}` | "#" }[],
 };

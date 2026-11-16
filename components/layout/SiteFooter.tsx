@@ -41,7 +41,18 @@ export async function SiteFooter() {
               <button type="button" disabled aria-label="Subscribe" aria-describedby="newsletter-availability" className="flex size-11 shrink-0 items-center justify-center rounded-r-button bg-gold-gradient text-ink-900 disabled:cursor-not-allowed"><Icon name="arrow-right" className="size-5" /></button>
             </div>
             <p id="newsletter-availability" className="mt-2 text-sm text-on-dark-muted">{footer.newsletter.unavailable}</p>
-            {footer.socials.length > 0 && <ul aria-label="Social media" className="mt-4 flex flex-wrap gap-4">{footer.socials.map(social => <li key={social.label}><a href={social.href} className="focus-ring-dark text-sm hover:text-gold-400">{social.label}</a></li>)}</ul>}
+            {footer.socials.length > 0 && (
+              <ul aria-label="Social media" className="mt-4 flex flex-wrap gap-2">
+                {footer.socials.map(social => (
+                  <li key={social.label}>
+                    {/* Plain <a>: external (or "#" until the official URL is supplied, D-111). 44px touch target. */}
+                    <a href={social.href} aria-label={`${site.name} on ${social.label}`} className="focus-ring-dark flex size-11 items-center justify-center rounded-full text-on-dark transition-colors hover:text-gold-400" {...(social.href === "#" ? {} : { target: "_blank", rel: "noopener noreferrer" })}>
+                      <Icon name={social.icon} className="size-5" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-3 border-t border-line-dark/70 py-4 text-center text-xs text-on-dark-muted md:flex-row md:justify-between md:text-left">

@@ -69,6 +69,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-16 | **Quality & Safety restyled to the owner's image (D-108):** owner's revised design: shared spring artwork (waterfall + leaves) behind Quality + supply banner, eyebrow rule, larger heading, filled icon circles, indicator dividers, flask icon, banner inset | lint ✓ · tsc ✓ · build ✓ · functional dev-file 596/596, resend-mock 40/40, unconfigured 31/31 · quality + supply + storefront-images + 200%-text checks 162 passed at 7 widths; only failures are the pre-existing header overflow at 200% text (same on the previous commit) · full visual run: no new failures in these sections (header/hero/mobile-nav baselines and wholesale stale-CSS errors from a concurrent rebuild also fail without this change) · found + fixed during testing: decorative image not aria-hidden, banner description collapsing at 1280, indicator columns collapsing at 200% text (desktop rows now flex-wrap) · reviewed @1440 against the owner's design, plus 375/768/1024/1280 |
 
+| 2026-11-16 | **Contact Us, testimonials, footer socials (D-111)** | lint ✓ · tsc ✓ · build ✓ · new checks: visual/a11y 161/161 (contact, testimonials, footer at 7 widths), journeys 74/74 (header, footer and mobile-menu Contact links, Contact → wholesale, testimonials without JS and with reduced motion) · real-details path verified by a temporary flip (wa.me + mailto links, notice hidden) · simulated Vercel build warns about the placeholders · full functional run 640 passed, 2 failed = stale-CSS 404s from a concurrent rebuild by another session (not code); full visual run not finished at commit time (owner asked to commit + push) |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

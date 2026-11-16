@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import { unverifiedClaims } from "./content/claims";
+import { launchPlaceholders } from "./content/launch";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -32,7 +33,7 @@ function missingDeliveryConfig() {
 
 const stagingMode = () => process.env.DEPLOY_MODE === "staging" || (
   process.env.DEPLOY_MODE !== "production" &&
-  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0)
+  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0 || launchPlaceholders().length > 0)
 );
 
 function blockOrWarn(message: string) {
@@ -75,10 +76,23 @@ function assertNoUnverifiedClaims() {
   }
 }
 
+/**
+ * Placeholder readiness check (D-111): placeholder contact details, sample testimonials and "#" social links
+ * must be replaced before a public launch. Strict mode rejects them; staging warns and stays noindex.
+ */
+function assertNoLaunchPlaceholders() {
+  if (process.env.VERCEL_ENV !== "production") return;
+  const pending = launchPlaceholders();
+  if (pending.length > 0) {
+    blockOrWarn(`Production deployment blocked: placeholder content still present: ${pending.join("; ")}.`);
+  }
+}
+
 export default function config(phase: string): NextConfig {
   if (phase === PHASE_PRODUCTION_BUILD) {
     assertProductionDeliveryConfig();
     assertNoUnverifiedClaims();
+    assertNoLaunchPlaceholders();
   }
   if (!stagingMode()) return nextConfig;
   return {

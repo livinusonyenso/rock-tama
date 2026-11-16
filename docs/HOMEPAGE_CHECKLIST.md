@@ -16,7 +16,9 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 | 6 | Our Origin | **Implemented; Chrome checked using styled Webpack diagnostic** | 105/105 seven-width capture checks; **comparison awaiting owner approval** | Our Story → `/#origin`; desktop keyboard/mobile journeys tested (recovery report) | Supplied Origin illustration integrated; actual site photo pending; default Turbopack check; V-012/V-013 differences and unverified claims |
 | 7 | Quality & Safety | **Built under D-095, restyled to owner design D-108** | Matches the owner's revised design @1440; no automatic approval | Informational; Quality navigation → `/#quality` | Claims unverified; ISO hidden |
 | 8 | Business supply banner | **Built under D-095; on the shared water band (D-108)** | Responsive captures; pending owner review | **Request Wholesale → working /wholesale enquiry** | Events & Institutions replaces unsupported export promise |
-| 9 | Footer | **Built under D-095; shared across routes** | Responsive captures; pending owner review | Live catalogue/Origin/Quality/Wholesale links; pending pages are text | Newsletter disabled, provider/contact/policies/social URLs pending; official footer logo pending |
+| 9 | Footer | **Built under D-095; shared across routes** | Responsive captures; pending owner review | Live catalogue/Origin/Quality/Wholesale links; pending pages are text | Newsletter disabled, provider/policies pending; **social icons live with `#` placeholders (D-111)**; official footer logo pending |
+
+| + | Testimonials (not in the reference; owner request) | **Built D-111** after §6 | Captured at 7 widths; pending owner review | Informational | **Sample quotes, visibly labelled; launch-blocked until real customer quotes** |
 
 ## Dependency-aware build order
 

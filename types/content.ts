@@ -73,7 +73,14 @@ export type IconName =
   | "chevron-right"
   | "map-pin"
   | "leaf"
-  | "layers";
+  | "layers"
+  | "mail"
+  | "message-circle"
+  | "quote"
+  | "instagram"
+  | "facebook"
+  | "linkedin"
+  | "youtube";
 
 export type NavLinkItem = {
   label: string;

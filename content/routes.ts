@@ -15,7 +15,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   wholesale: { status: "live", path: "/wholesale" }, // F1: working enquiry flow
   ourStory: { status: "planned", path: "/our-story", interimSection: "origin" },
   quality: { status: "planned", path: "/quality", interimSection: "quality" },
-  contact: { status: "planned", path: "/contact" },
+  contact: { status: "live", path: "/contact" }, // D-111: WhatsApp + email (placeholders until supplied)
   search: { status: "planned", path: "/search" },
   account: { status: "planned", path: "/account" },
   deliveryReturns: { status: "planned", path: "/delivery-returns" },

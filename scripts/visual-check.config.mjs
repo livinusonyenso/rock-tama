@@ -186,7 +186,7 @@ const config = {
       expect: [
         {name:"footer has three labelled navigation groups and no fake links",js:"document.querySelectorAll('footer nav[aria-labelledby]').length===3 && !document.querySelector('footer nav a[href=\"#\"],footer a[href=\"\"]')"},
         {name:"newsletter honestly unavailable",js:"document.querySelector('#footer-email').disabled && document.querySelector('footer button[aria-label=Subscribe]').disabled && !document.querySelector('footer form')"},
-        // D-109: owner chose "#" placeholders for the four reference platforms until official URLs exist (launch-blocked).
+        // D-111: owner chose "#" placeholders for the four reference platforms until official URLs exist (launch-blocked).
         {name:"social links: Instagram, Facebook, LinkedIn, YouTube with names, decorative icons, 44px targets",js:"(() => { const a=[...document.querySelectorAll('footer ul[aria-label=\"Social media\"] a')]; return a.map(e=>e.getAttribute('aria-label')).join('|')==='ROCK-TAMA on Instagram|ROCK-TAMA on Facebook|ROCK-TAMA on LinkedIn|ROCK-TAMA on YouTube' && a.every(e=>e.querySelector('svg[aria-hidden=true]') && e.getBoundingClientRect().width>=44 && e.getBoundingClientRect().height>=44); })()"},
         {name:"footer brand, copyright and source location present",js:"document.querySelector('footer').textContent.includes('ROCK-TAMA') && document.querySelector('footer').textContent.includes('Nanka, Anambra State, Nigeria') && /© 20[0-9]{2}/.test(document.querySelector('footer').textContent)"},
       ],
@@ -197,7 +197,7 @@ const config = {
       actions: [{ evaluate: "document.querySelector('#testimonials li:last-child').scrollIntoView({block:'end',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>e.dataset.reveal!=='hidden')" }],
       expect: [
         { name: "three testimonials with quote and attribution", js: "document.querySelectorAll('#testimonials figure blockquote').length===3 && [...document.querySelectorAll('#testimonials figcaption')].every(c=>c.textContent.trim().length>0)" },
-        { name: "sample content is visibly labelled (D-109)", js: "!!document.querySelector('#testimonials [data-sample-notice]')?.checkVisibility() && /Sample testimonials/.test(document.querySelector('#testimonials').textContent)" },
+        { name: "sample content is visibly labelled (D-111)", js: "!!document.querySelector('#testimonials [data-sample-notice]')?.checkVisibility() && /Sample testimonials/.test(document.querySelector('#testimonials').textContent)" },
         { name: "quotes make no product, quality or certification claims", js: "!/pure|lab|tested|TDS|certif|NAFDAC|ISO|mineral|filtered/i.test([...document.querySelectorAll('#testimonials blockquote')].map(b=>b.textContent).join(' '))" },
         { name: "testimonial text visible without overflow", js: "[...document.querySelectorAll('#testimonials h2,#testimonials p,#testimonials figcaption')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
       ],
@@ -765,7 +765,7 @@ function functionalJourneys() {
       javascript: false,
       expect: [{ name: "without JS: all 4 cards visible with working links", js: "!document.querySelector('#products [data-reveal]') && document.querySelectorAll('#products article a[href]').length === 4" }],
     },
-    // -- D-109 Contact Us, testimonials --
+    // -- D-111 Contact Us, testimonials --
     {
       ...base, name: "contact-header-link", page: "home", viewports: ["desktop"],
       actions: [{ click: 'header nav a[href="/contact"]' }, { waitFor: "location.pathname === '/contact'" }],

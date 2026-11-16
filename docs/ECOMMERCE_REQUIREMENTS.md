@@ -48,7 +48,7 @@ A Vercel **production** build fails if these are missing; preview deployments bu
 | Hosting target (e.g. Vercel) | Storage/runtime choices | — |
 | Contact details (phone, email, address, WhatsApp) | Contact page (F5), footer | — |
 | Newsletter provider + consent wording | F6 | — |
-| Social media URLs | F8 | Icons not linked |
+| Social media URLs | F8 | Icons shown with `#` (D-111), launch-blocked until official URLs |
 | Privacy notice (NDPA), Terms, Delivery & Returns, FAQs copy | F10; **required before public forms** | — |
 | Official logo + product photography | Visual completion | Placeholders |
 | Evidence for quality/process claims | Publication | Flagged |
@@ -74,7 +74,7 @@ Legend: **Visible** = a UI affordance appears in the reference · **Implied** = 
 | Order management | — | Checkout | With checkout: minimal admin view + email notifications | Who processes orders, how |
 | Shipping & delivery logic | "Nationwide Delivery" | Announcement bar, footer "Delivery & Returns" | Flat rates/zones table first | Zones, fees, lead times, minimum order |
 | Wholesale enquiry form | "Request Wholesale/Supply" CTAs (3) | Hero, products, banner | **Yes, high business value, low complexity** | Fields, recipient email, CRM? |
-| Contact page/form | CONTACT nav, "Contact Us" | Header, footer | Yes | Phone, email, address, WhatsApp? |
+| Contact page/form | CONTACT nav, "Contact Us" | Header, footer | **Built D-111: WhatsApp + email (no form)** | **Real WhatsApp number + email** (placeholders now, launch-blocked) |
 | Newsletter subscription | Footer form | Footer | UI yes; backend once a provider is chosen | Provider (e.g. Mailchimp, Brevo, Resend audiences), consent wording |
 | Search | Search icon | Header | Low value with ~4 products; propose filtering on `/shop` or hide icon | Keep icon? |
 | Content pages | — | Our Story, Quality & Safety, Wholesale, FAQs, Delivery & Returns, Terms, Privacy | Yes (static) | Copy for each page |

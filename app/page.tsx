@@ -3,6 +3,7 @@ import { WholesaleBanner } from "@/components/home/WholesaleBanner";
 import { OriginSection } from "@/components/home/OriginSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ProductRangeSection } from "@/components/home/ProductRangeSection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { TrustStrip } from "@/components/home/TrustStrip";
 import { WaterBand } from "@/components/home/WaterBand";
 
@@ -14,6 +15,7 @@ export default function HomePage() {
       <TrustStrip />
       <ProductRangeSection />
       <OriginSection />
+      <TestimonialsSection />
       <WaterBand>
         <QualitySection />
         <WholesaleBanner />
