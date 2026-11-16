@@ -144,3 +144,6 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 
 
 D-114 — Owner approved reference prices as draft: ₦650 single 750 ml, ₦7,500 pack12×750 ml, ₦14,500 carton12×1.5 L. Reference shop layout now uses real persistent basket and quotation requests; unknown 1.5 L unit price stays on request. No fake payment, reviews, subscription or delivery promises. Existing staging claims remain unverified. See SHOP_REFERENCE_IMPLEMENTATION.md; screenshots provisional.
+
+
+D-115 — Shop UI recovery: constrain the Tailwind Turbopack loader to globals.css. The old wildcard rule erased CSS Module exports in development, causing fill images to escape their gallery. Native Next CSS Module handling restores scoped layout without modifying artwork or shopping behaviour.

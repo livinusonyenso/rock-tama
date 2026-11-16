@@ -12,7 +12,9 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   turbopack: {
     rules: {
-      "*.css": {
+      // Process Tailwind only in its entry stylesheet; CSS Modules must retain
+      // Next.js scoping and their exported class-name mapping.
+      "globals.css": {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },

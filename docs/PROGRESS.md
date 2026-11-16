@@ -155,3 +155,6 @@ D-110: corrected wholesale overlay fading too early behind paragraph. Extended n
 
 
 Shop reference complete for owner review: final browser170/170 at six widths; provider mock40/40, unconfigured31/31; lint/types/pricing and styled diagnostic Webpack pass. Draft pricing, gallery, persistent basket and quotation prefills implemented. No push/deploy. See SHOP_REFERENCE_IMPLEMENTATION.md.
+
+
+Shop route UI fixed (D-115): actual Turbopack development route78/78 at six widths, lint/types and diagnostic Webpack pass. Regression now asserts computed gallery containment; prior structural checks missed missing module classes. Evidence: verification/shop-route-css-fix/REVIEW.md. Visual approval pending, no push/deploy.

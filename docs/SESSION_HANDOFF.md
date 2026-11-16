@@ -91,3 +91,6 @@ D-110 latest: wholesale overlay is#052b20 with99/98/94%opacity through0/35/52%de
 
 
 D-114 shop: reference layout + approved draft prices, no paid checkout. Gallery and /cart share typed commerce data; useBasket persists IDs/quantities, quote conversion handles packs/cartons/mixed units. Final170 browser +40 mock +31 unconfigured checks pass. Default Turbopack remains environment restricted; diagnostic Webpack restored config. Review screenshots: verification/shop-reference-final/sections/shop-reference-{small,mobile,tablet,laptop,large,desktop}.png. All visual approval pending. Guide: SHOP_REFERENCE_IMPLEMENTATION.md.
+
+
+D-115 latest: next.config.ts Tailwind rule MUST target globals.css, not *.css with as:*.css: wildcard removes CSS Module mappings in Turbopack and makes shop fill images viewport-sized. Actual dev route six-width78checks pass; diagnostic Webpack pass. New computed-style/image-bounds regression prevents recurrence. See verification/shop-route-css-fix/REVIEW.md. Separate deployment-config script has stale2-warning expectation (actual3 after launch placeholders), unrelated to this fix.

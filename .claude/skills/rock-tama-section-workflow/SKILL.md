@@ -80,3 +80,6 @@ D-110: wholesale reference needs consistent strong forest backing across all cop
 
 
 Shop reference handoff (D-114): preserve typed draft pricing in content/commerce.ts and local basket/quotation boundaries. Verify pack-to-bottle conversion, mixed-unit orders, unavailable storage and unknown prices when changing commerce. Use scripts/shop-pricing-check.mjs plus browser journeys. Never present draft prices as paid checkout or promote provisional screenshots. Guide: docs/SHOP_REFERENCE_IMPLEMENTATION.md.
+
+
+D-115 safeguard: run gallery UI checks on the actual Turbopack development route as well as diagnostic Webpack. Tailwind loader applies only to globals.css; rewriting *.module.css as *.css discards exported scoped class names. Assert computed grid/position/object-fit and image bounds, not only viewport overflow or element counts.
