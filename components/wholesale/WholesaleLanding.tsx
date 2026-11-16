@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { EnquiryForm } from "@/components/forms/EnquiryForm";
 import { EnquiryFormWithPrefill } from "@/components/forms/EnquiryFormWithPrefill";
-import { HeroWaves } from "@/components/home/HeroWaves";
+import Image from "next/image";
+import styles from "./wholesale-hero.module.css";
 import { Icon } from "@/components/icons/Icon";
 import { SelectProductLink } from "@/components/wholesale/SelectProductLink";
 import { buttonClassName } from "@/components/ui/button-styles";
@@ -27,26 +28,30 @@ export function WholesaleLanding({ selectedProduct }: WholesaleLandingProps) {
   return (
     <main id="main" className="flex-1">
       {/* 1. Wholesale hero */}
-      <section aria-labelledby="wholesale-heading" className="relative isolate overflow-hidden bg-hero text-on-dark">
-        <HeroWaves />
-        <Container className="py-section-sm lg:py-section">
+      <section aria-labelledby="wholesale-heading" className={`relative isolate overflow-hidden bg-hero text-on-dark ${styles.hero}`}>
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <Image src={wholesale.hero.background.src} alt="" fill preload sizes="100vw" className="object-cover object-[70%_center] xl:object-center" />
+          <div className={`absolute inset-0 ${styles.overlay}`} />
+        </div>
+        <Container className={`py-section-sm ${styles.content}`}>
           <p className="animate-enter text-sm font-semibold uppercase tracking-eyebrow text-gold-500 lg:text-base">
             {wholesale.hero.eyebrow}
           </p>
           <h1
             id="wholesale-heading"
-            className="mt-4 max-w-3xl animate-enter font-serif text-5xl font-bold leading-none enter-delay-80 enter-duration-600 enter-rise-12 lg:text-7xl"
+            className="mt-4 max-w-3xl animate-enter font-serif text-5xl font-bold leading-none enter-delay-80 enter-duration-600 enter-rise-12 lg:max-w-[44vw] lg:text-7xl xl:text-[clamp(4.5rem,4.5vw,5.5rem)]"
           >
             {wholesale.hero.heading}
           </h1>
-          <p className="mt-6 max-w-2xl animate-enter text-lg text-on-dark enter-delay-200 lg:text-xl">{wholesale.hero.description}</p>
+          <p className="mt-6 max-w-2xl animate-enter text-lg leading-relaxed text-on-dark enter-delay-200 lg:mt-10 lg:max-w-[44vw] lg:text-xl">{wholesale.hero.description}</p>
           <div className="mt-8 flex animate-enter flex-col gap-4 enter-delay-280 sm:flex-row sm:flex-wrap sm:gap-5">
             {wholesale.hero.actions.map((action) => (
-              <ButtonLink key={action.label} href={action.href} variant={action.variant} icon={action.icon} className="sm:min-w-56">
+              <ButtonLink key={action.label} href={action.href} variant={action.variant} icon={action.icon} className="sm:min-w-56 lg:min-w-64">
                 {action.label}
               </ButtonLink>
             ))}
           </div>
+          <div aria-hidden="true" className={styles.rule} />
         </Container>
       </section>
 

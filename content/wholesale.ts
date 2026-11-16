@@ -10,6 +10,7 @@ export const wholesale = {
   metaDescription:
     "Wholesale and bulk supply of ROCK-TAMA natural spring water for hotels, offices, retailers, events and institutions. Choose your products and request a quotation.",
   hero: {
+    background: { src: "/images/wholesale/warehouse-hero.webp" },
     eyebrow: "ROCK-TAMA Wholesale",
     heading: "Wholesale and Distribution",
     description:

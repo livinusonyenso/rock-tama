@@ -246,6 +246,14 @@ const config = {
       ],
     },
 
+    {
+      name:"wholesale-hero-background",page:"wholesale",selector:'section[aria-labelledby="wholesale-heading"]',viewports:["small","mobile","tablet","laptop","large","desktop"],
+      expect:[
+        {name:"one decorative responsive warehouse background",js:"(()=>{const h=document.querySelector('section[aria-labelledby=wholesale-heading]'),i=h.querySelector('img');return h.querySelectorAll('img').length===1 && i.alt==='' && !!i.closest('[aria-hidden=true]') && i.sizes==='100vw' && getComputedStyle(i).objectFit==='cover' && decodeURIComponent(i.src).includes('/images/wholesale/warehouse-hero.webp')})()"},
+        {name:"original wholesale heading and anchor actions retained",js:"document.querySelector('#wholesale-heading').textContent==='Wholesale and Distribution' && [...document.querySelectorAll('section[aria-labelledby=wholesale-heading] a')].map(a=>a.getAttribute('href')).join(',')==='#products,#enquiry'"},
+        {name:"background is stationary and cannot block actions",js:"(()=>{const i=document.querySelector('section[aria-labelledby=wholesale-heading] img');return getComputedStyle(i).animationName==='none' && getComputedStyle(i.parentElement).pointerEvents==='none'})()"},
+      ],
+    },
     // ---- /shop (F2) ----
     { name: "shop-page", page: "shop", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
     { name: "product-page", page: "product", selector: "main", viewports: ["mobile", "tablet", "desktop"] },

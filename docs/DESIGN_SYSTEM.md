@@ -198,3 +198,5 @@ Attached owner waterfall mockup supersedes the three-product selector compositio
 D-103: hero dots/arrows/pause toolbar is visually hidden by default. Keyboard focus reveals the existing controls as an absolute bottom overlay without changing hero size; regular layout no longer reserves the toolbar row. Swipe/autoplay retained.
 
 D-107: ROCK TAMA Range cards retain titles, descriptions, CTA destinations,1/2/4-column breakpoints and original media box sizes. Only images transition450ms/32px every4seconds; contain fit preserves transparent bottle and opaque4:3 packaging proportions.750ml gains fixed “Alternative bottle: proposed packaging” note, explicitly approved by owner. No visible image-toolbar clutter; keyboard controls overlay on focus. No text cross-fade, card reflow or squeezed button targets.
+
+D-109 wholesale hero follows supplied warehouse mockup: dark forest left-to-clear-right shade, white serif title, gold eyebrow/buttons/top border/bottom rule, spacious fluid desktop layout. Mobile/tablet use stronger uniform shade and stacked CTAs. Scoped CSS module; no changes to other page tokens. Visual approval pending.
