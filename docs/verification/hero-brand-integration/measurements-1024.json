@@ -1,0 +1,29 @@
+{
+  "viewport": 1024,
+  "hero": {
+    "x": 0,
+    "y": 125,
+    "width": 1024,
+    "height": 525
+  },
+  "heading": {
+    "x": 32,
+    "y": 223.390625,
+    "width": 468,
+    "height": 72
+  },
+  "actions": {
+    "x": 32,
+    "y": 496.890625,
+    "width": 468,
+    "height": 124
+  },
+  "carousel": {
+    "x": 614,
+    "y": 146,
+    "width": 288,
+    "height": 484
+  },
+  "crop": "50% 50%",
+  "overlay": "linear-gradient(90deg, rgba(6, 39, 30, 0.93), rgba(6, 39, 30, 0.86) 48%, rgba(6, 39, 30, 0.84))"
+}

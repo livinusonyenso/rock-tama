@@ -30,7 +30,7 @@ const navItemClass = [
  */
 export function SiteHeader({ cartCount }: SiteHeaderProps) {
   const homeHref = resolveHref("home");
-  const logo = <Logo variant="header" className="h-9 sm:h-10 lg:h-12 xl:h-16" />;
+  const logo = <Logo variant="header" className="h-12 xl:h-16" />;
 
   return (
     <header className="border-b border-line-light bg-ivory-100">

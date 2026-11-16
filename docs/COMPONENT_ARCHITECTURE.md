@@ -122,3 +122,5 @@ QualitySection and WholesaleBanner are Server sections composed in app/page; Sit
 ## Image integration — D-098/D-099
 
 `content/media.ts` supplies catalogue media for all existing product consumers plus home distributor/Origin slots. MediaAsset adds optional objectPosition; MediaFrame respects content focal point and uses supported Next 16 preload. Existing placeholder fallback, fixed ratios and fit defaults remain. Hero/cards/product detail supply narrower accurate sizes for portrait images. ProductRangeSection uses two columns below 1400px, four at wide desktop to contain CTA targets. No new Client boundary or image library.
+
+D-101 update: shared Server Component Logo consumes `site.logos.horizontal` / `stacked`, intrinsic dimensions and responsive sources; footer adds an ivory backing. No duplicate logo or client wrapper. HeroSection uses one decorative Next/image fill from content/media.ts plus static overlay; existing HeroProductCarousel client boundary unchanged. HeroWaves retained for other pages.

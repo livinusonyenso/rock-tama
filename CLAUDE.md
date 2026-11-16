@@ -37,7 +37,7 @@ Next.js 16.4.6 App Router (Turbopack, `cacheComponents: true`) · React 19.3 · 
 
 ## Current phase
 
-M1 foundation, M2 header and M3 hero/carousel are implemented; F0–F2 shop/product/enquiry journeys are live. **All nine homepage sections are built** (D-095/D-096), including Quality, supply banner and shared footer. Current evidence: `docs/verification/home-7-9-completion/REPORT.md`; status: `docs/HOMEPAGE_CHECKLIST.md`. Use the styled diagnostic Webpack path documented in the recovery report while Turbopack's worker port remains restricted; do not claim a default build pass. No visual baseline approval implied. Supplied product/service/Origin artwork is integrated via `content/media.ts` (D-098); originals and inactive assets are organized under docs/assets. Claims, standalone logos, actual site photography, policy/contact/social details and newsletter provider remain client inputs. Below-the-fold motion uses Reveal (D-088/D-094); cards use OfferCard/ProductCard (D-087); only listedProducts may be offered (D-081). Reference comparisons at 1440 use ×1.326 scaling (D-058). Resolve internal destinations through resolveHref; unavailable pages remain non-links.
+M1 foundation, M2 header and M3 hero/carousel are implemented; F0–F2 shop/product/enquiry journeys are live. **All nine homepage sections are built** (D-095/D-096), including Quality, supply banner and shared footer. Current evidence: `docs/verification/home-7-9-completion/REPORT.md`; status: `docs/HOMEPAGE_CHECKLIST.md`. Use the styled diagnostic Webpack path documented in the recovery report while Turbopack's worker port remains restricted; do not claim a default build pass. No visual baseline approval implied. Supplied product/service/Origin artwork is integrated via `content/media.ts` (D-098); originals and inactive assets are organized under docs/assets. Claims, final client-approved logos, actual site photography, policy/contact/social details and newsletter provider remain client inputs. Below-the-fold motion uses Reveal (D-088/D-094); cards use OfferCard/ProductCard (D-087); only listedProducts may be offered (D-081). Reference comparisons at 1440 use ×1.326 scaling (D-058). Resolve internal destinations through resolveHref; unavailable pages remain non-links.
 
 ## Git
 
@@ -73,3 +73,5 @@ Run `npm run verify:visual` after every UI task (add the section to `scripts/vis
 `npm run dev` · `npm run lint` · `npx tsc --noEmit` · `npm run build` · `npm run verify:visual` · `npm run verify:functional`
 
 **Env:** see `.env.example` (enquiry delivery). Never commit `.env*` files or `.data/`.
+
+**D-101:** proposed horizontal/stacked logos and static decorative hero background integrated. See docs/assets/branding-manifest.json and hero-brand-integration report. Shared Logo + site.logos reused; ivory footer backing until genuine light variant supplied; no filters, no new animation or client component. Carousel and all CTAs preserved. Client approval pending, no push/deploy.

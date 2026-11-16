@@ -1,0 +1,29 @@
+{
+  "viewport": 375,
+  "hero": {
+    "x": 0,
+    "y": 105,
+    "width": 375,
+    "height": 968
+  },
+  "heading": {
+    "x": 16,
+    "y": 203,
+    "width": 343,
+    "height": 48
+  },
+  "actions": {
+    "x": 16,
+    "y": 477,
+    "width": 343,
+    "height": 120
+  },
+  "carousel": {
+    "x": 41.28125,
+    "y": 637,
+    "width": 292.421875,
+    "height": 412
+  },
+  "crop": "65% 50%",
+  "overlay": "linear-gradient(rgba(6, 39, 30, 0.88), rgba(6, 39, 30, 0.84))"
+}

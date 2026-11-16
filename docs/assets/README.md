@@ -29,3 +29,6 @@ Product/service slots use contain-fit to preserve the entire artwork without dis
 Supplying an image does not confirm new product availability. Sachet/custom/event artwork remains outside public and existing unconfirmed products remain unavailable. To activate later, first confirm catalogue/business details, then publish the prepared file and add its typed media reference plus real route availability in the same change.
 
 These are owner-supplied storefront artworks. The Origin illustration is not evidence of the spring's physical appearance or exact location. Printed pack quantities and label claims in artwork do not verify case configuration or scientific statements; existing claim/evidence rules remain in force. No prices, certifications or product statuses were changed. No standalone official header/footer logo was supplied, so existing Logo placeholders remain.
+
+## Proposed branding / decorative hero
+Original filenames `horizontal.ROCK.TAMA.png`, `stacked.ROCK.TAMA.png`, `herobackground.png` now live unchanged in `source/branding/`. `branding-manifest.json` and `scripts/prepare-brand-images.mjs` describe reproducible derivatives in public/images/brand and public/images/hero. Branding pending client approval. Logos are not evidence that printed scientific wording is verified; background is decorative artwork, not confirmed Nanka photography.

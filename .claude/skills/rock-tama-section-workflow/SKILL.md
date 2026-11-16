@@ -57,3 +57,6 @@ Use `content/media.ts` for live paths/alt/focal points; no per-page image duplic
 ## Deployment mode update — D-100
 
 Owner authorised removal of the missing-enquiry build blocker. Automatic mode (DEPLOY_MODE unset) now stages incomplete delivery/evidence with warnings + noindex; staging explicitly stages and production explicitly restores strict checks. Do not restore a default fatal build guard against this instruction. Never infer verified claims or functioning email from a staging build. Check mode behaviour with `node scripts/deployment-config-check.cjs`; runtime enquiry failure remains honest. No push/deploy without separate scope.
+
+## Proposed logo/hero assets — D-101
+Three supplied originals are preserved in docs/assets/source/branding and derivatives/manifests regenerated with prepare-brand-images.mjs. Logos are proposed branding, not client-approved. Use existing Logo + site.logos horizontal/stacked; retain ivory footer backing until a genuine light variant is supplied, never filter artwork. Hero background decorative/static with responsive cover and contrast-tested forest overlay; preserve carousel, selectors, CTAs and existing entrance/reduced-motion. Keep baselines provisional; no push/deploy.

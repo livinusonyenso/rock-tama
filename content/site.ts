@@ -16,18 +16,18 @@ export const site: SiteConfig = {
   },
   logos: {
     horizontal: {
-      src: "/brand/rock-tama-logo-horizontal.svg",
+      src: "/images/brand/rock-tama-horizontal.webp",
       alt: name,
-      width: 314, // measured ratio 4.76 (ref 238×50)
-      height: 66,
-      available: false,
+      width: 960,
+      height: 379,
+      available: true,
     },
-    stackedLight: {
-      src: "/brand/rock-tama-logo-stacked-light.svg",
+    stacked: {
+      src: "/images/brand/rock-tama-stacked.webp",
       alt: name,
-      width: 170, // measured ratio 1.78 (ref 128×72)
-      height: 96,
-      available: false,
+      width: 960,
+      height: 464,
+      available: true,
     },
   },
   // Interim, enquiry-oriented wording. Delivery coverage, wholesale fulfilment and

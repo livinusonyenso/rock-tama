@@ -107,13 +107,13 @@ export type AnnouncementMessage = {
 };
 
 export type LogoAsset = {
-  /** Planned path for the official file (D-020). */
+  /** Served logo derivative; source provenance lives in docs/assets. */
   src: AbsolutePath;
   alt: string;
-  /** Placeholder box size in px, estimated from the reference; replace with the SVG's real dimensions. */
+  /** Intrinsic image dimensions (also reserve the fallback aspect ratio). */
   width: number;
   height: number;
-  /** False until the owner supplies the official file; a same-size placeholder renders meanwhile. */
+  /** False when no supplied artwork is available; not a statement of client approval. */
   available: boolean;
 };
 
@@ -132,7 +132,7 @@ export type SiteConfig = {
   };
   logos: {
     horizontal: LogoAsset;
-    stackedLight: LogoAsset;
+    stacked: LogoAsset;
   };
   announcements: readonly AnnouncementMessage[];
 };

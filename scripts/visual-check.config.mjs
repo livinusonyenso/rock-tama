@@ -91,6 +91,23 @@ const config = {
       page: "home",
       selector: 'section[aria-labelledby="hero-heading"]',
       reference: { x: 0, y: 96, width: 1086, height: 396 },
+      expect: [
+        { name: "decorative background uses one responsive cover image", js: "(() => { const images = document.querySelectorAll('[data-hero-background] img'); return images.length===1 && images[0].alt==='' && images[0].sizes==='100vw' && !!images[0].srcset && getComputedStyle(images[0]).objectFit==='cover' && !!images[0].closest('[aria-hidden=true]'); })()" },
+        { name: "background is static and cannot intercept controls", js: "getComputedStyle(document.querySelector('[data-hero-background]')).pointerEvents==='none' && getComputedStyle(document.querySelector('[data-hero-background] img')).animationName==='none'" },
+        { name: "hero CTAs and three-slide carousel preserved", js: "[...document.querySelectorAll('[data-hero-actions] a')].map(a=>a.getAttribute('href')).join(',')==='/shop,/wholesale' && document.querySelectorAll('[aria-roledescription=slide]').length===3" },
+        { name: "hero text contrast over brightest possible background pixel ≥4.5:1", js: `(() => {
+          const lum=c=>{const a=c.map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4});return a[0]*.2126+a[1]*.7152+a[2]*.0722};
+          const gradient=getComputedStyle(document.querySelector('.hero-background-overlay')).backgroundImage;
+          const stops=[...gradient.matchAll(/rgba[(]([^)]+)[)]/g)].map(m=>m[1].split(',').map(Number));
+          if(!stops.length || stops.some(s=>s[3]<.84))return false;
+          const maxBg=Math.max(...stops.map(s=>lum(s.slice(0,3).map(v=>v*s[3]+255*(1-s[3])))));
+          return [...document.querySelectorAll('section[aria-labelledby=hero-heading] h1,section[aria-labelledby=hero-heading] p,[aria-roledescription=carousel] a')].every(e=>{const fg=lum(getComputedStyle(e).color.slice(4,-1).split(',').map(Number));return (fg+.05)/(maxBg+.05)>=4.5});
+        })()` },
+        { name: "hero layout and responsive crop measurements", server: async ({evaluate,root}) => {
+          const m = await evaluate(`(() => { const h=document.querySelector('section[aria-labelledby=hero-heading]'); const b=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}}; return {viewport:innerWidth,hero:b(h),heading:b(h.querySelector('h1')),actions:b(h.querySelector('[data-hero-actions]')),carousel:b(h.querySelector('[aria-roledescription=carousel]')),crop:getComputedStyle(h.querySelector('[data-hero-background] img')).objectPosition,overlay:getComputedStyle(h.querySelector('.hero-background-overlay')).backgroundImage}; })()`);
+          const {mkdir,writeFile}=await import('node:fs/promises'); await mkdir(`${root}/docs/verification/hero-brand-integration`,{recursive:true}); await writeFile(`${root}/docs/verification/hero-brand-integration/measurements-${m.viewport}.json`,JSON.stringify(m,null,2)+'\n'); return true;
+        } },
+      ],
     },
 
     {
@@ -178,12 +195,24 @@ const config = {
         { name: "product grid keeps reference four columns only when wide enough", js: "getComputedStyle(document.querySelector('#products ul')).gridTemplateColumns.split(' ').length === (innerWidth>=1400?4:innerWidth>=768?2:1)" },
         { name: "product buttons remain inside their cards", js: "[...document.querySelectorAll('#products article a')].every(a=>{const r=a.getBoundingClientRect(),c=a.closest('article').getBoundingClientRect();return r.left>=c.left && r.right<=c.right+1 && r.bottom<=c.bottom+1;})" },
         { name: "all five supplied live assets are referenced; no placeholders in product/origin slots", js: "['750ml-glass-bottle.webp','1-5l-bottle.webp','carton-packs.webp','distributor-supply.webp','origin-landscape.webp'].every(path => [...document.querySelectorAll('main img')].some(img => decodeURIComponent(img.getAttribute('src')).includes(path))) && document.querySelectorAll('#products img').length===4 && document.querySelectorAll('#origin img').length===1" },
-        { name: "real images use alt text, responsive sources and safe fit", js: "[...document.querySelectorAll('main img')].every(img=>img.alt.length>0 && !!img.sizes && !!img.srcset && ['contain','cover'].includes(getComputedStyle(img).objectFit))" },
+        { name: "real images use alt text, responsive sources and safe fit", js: "[...document.querySelectorAll('main img')].every(img=>(img.alt.length>0 || img.closest('[aria-hidden=true]')) && !!img.sizes && !!img.srcset && ['contain','cover'].includes(getComputedStyle(img).objectFit))" },
         { name: "origin remains lazy and uses its authored focal point", js: "document.querySelector('#origin img').loading==='lazy' && getComputedStyle(document.querySelector('#origin img')).objectPosition==='50% 60%'" },
         { name: "unconfirmed artwork not promoted into the live catalogue", js: "![...document.querySelectorAll('main img')].some(img=>/sachet|wedding|corporate|traditional-marriage/.test(img.src))" },
       ],
     },
 
+    {
+      name: "brand-assets", page: "home", selector: "body > header",
+      expect: [
+        {name:"header and footer use supplied logos with meaningful alt and no filters",js:"[document.querySelector('header img'),document.querySelector('footer img')].every(i=>i?.alt==='ROCK-TAMA' && getComputedStyle(i).filter==='none' && Math.abs(i.width/i.height-Number(i.getAttribute('width'))/Number(i.getAttribute('height')))<0.06)"},
+        {name:"footer dark lettering has ivory contrast backing",js:"getComputedStyle(document.querySelector('footer img').parentElement).backgroundColor==='rgb(249, 244, 237)'"},
+      ],
+    },
+    ...['750ml-glass-bottle','1-5l-bottle','carton-packs'].map((slug,index)=>({
+      name: `hero-product-link-${index+1}`, kind: "functional", page: "home", viewports:["mobile","desktop"],
+      actions:[{click:`[aria-roledescription=carousel] [role=group] button:nth-child(${index+1})`},{click:`[aria-roledescription=carousel] a[href="/shop/${slug}"]`},{waitFor:`location.pathname === '/shop/${slug}'`}],
+      expect:[{name:"selected product opens a visible product page",js:"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && !!m.querySelector('h1') && !!m.querySelector('a[href^=\"/wholesale/\"]'))"}],
+    })),
     // ---- Hero entrance animation (M3.3): deterministic, no timing-based sleeps ----
     {
       name: "hero-animation-initial",

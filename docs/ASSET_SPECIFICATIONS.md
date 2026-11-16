@@ -1,6 +1,6 @@
 # Asset Specifications
 
-**Owner-supplied storefront artwork is now integrated (2026-11-16, D-098).** Five live optimized WebP assets replace product/service/Origin placeholders; original PNGs and four inactive future/custom derivatives are organized outside public. See `assets/README.md` and `assets/storefront-manifest.json`. Standalone official logo files and verified source-site photography remain pending.
+**Owner-supplied storefront artwork is now integrated (2026-11-16, D-098).** Five live optimized WebP assets replace product/service/Origin placeholders; original PNGs and four inactive future/custom derivatives are organized outside public. See `assets/README.md` and `assets/storefront-manifest.json`. Proposed standalone logos are integrated under D-101 below; final client approval, light-colour footer variant and verified source-site photography remain pending.
 
 Ref px = measured in the 1086 px-wide reference. Rendered sizes are estimates at a 1440 px viewport.
 
@@ -86,3 +86,16 @@ Quality uses a CSS sage gradient; no unlicensed droplet bitmap added. ISO seal i
 Source of truth: `content/media.ts`. Products in `public/images/products/{750ml-glass-bottle,1-5l-bottle,carton-packs}.webp`; service image `public/images/services/distributor-supply.webp`; Origin illustration `public/images/origin/origin-landscape.webp`. Asset table above preserves initial proposed slots; these paths supersede pending/photo-only entries. Hero reuses catalogue images; no duplicate source file. Origin focal point 50% 60%, descriptive illustration alt text. All imagery remains in fixed display boxes; products contain-fit, Origin cover-fit; Next 16 preload only for primary image, other media lazy.
 
 Nine original PNGs preserved at `docs/assets/source/storefront/`, four unconfirmed optimized derivatives at `docs/assets/prepared/unconfirmed/` (not served). Live asset source bytes 10,409,476 → WebP 1,402,246 (86.5% reduction). Preparation command, manifest/checksums and provenance: `docs/assets/README.md`. Labels/art do not verify pack quantities, scientific claims or actual source appearance. Official Logo placeholders remain; catalogue availability unchanged.
+
+## Supplied proposed logos and hero — D-101
+Supersedes the earlier pending logo paths/instructions above. All three originals were inspected then preserved unchanged under `docs/assets/source/branding/` (not served):
+
+| Original filename | Source dimensions / format / alpha | Served derivative | Dimensions |
+|---|---|---|---|
+| horizontal.ROCK.TAMA.png | 2172×724 PNG, transparent | public/images/brand/rock-tama-horizontal.webp | 960×379 |
+| stacked.ROCK.TAMA.png | 1254×1254 PNG, transparent | public/images/brand/rock-tama-stacked.webp | 960×464 |
+| herobackground.png | 1672×941 PNG, opaque | public/images/hero/spring-water.webp | 1672×941 |
+
+Reproduce with `node scripts/prepare-brand-images.mjs` (installed Sharp; no new dependency). Transparent canvas trimmed threshold 10; logos resized proportionally within 960px, encoded lossless with alpha; background WebP quality85 (115,836 bytes versus 1,837,945 source bytes). No redrawing, filtering, colour replacement or added imagery. Manifest `docs/assets/branding-manifest.json` records original hashes, dimensions, formats, transparency and bytes. Artwork remains proposed, pending client approval; source-site photo provenance not verified.
+
+`site.logos.horizontal` and `site.logos.stacked` provide real dimensions/paths; `available` means a supplied file exists, not branding approval. Shared Logo serves header eager/footer lazy, explicit width/height and responsive sizes. Footer ivory plaque preserves original dark lettering; request a light-colour variant for placement directly on dark green. `content/media.ts:heroBackground` supplies one decorative Next/image fill/preload/sizes=100vw instance. No CSS image URL or separate mobile source, no duplicate hero asset. Existing first-product preload retained. Products contain; background cover with responsive focal position and a reserved existing section layout. Background/waves were replaced only in HeroSection; other consumers of HeroWaves unchanged.

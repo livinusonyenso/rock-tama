@@ -106,3 +106,6 @@ See `ORIGIN_SECTION_BRIEFING.md`: reuse D-088 Reveal (600ms / 16px), image 0ms, 
 ## Remaining homepage motion — D-095
 
 Quality: existing Reveal, 600ms/16px; title/description 0ms, indicators 0/50/100/150ms. Supply: one group reveal 600ms/16px. Both use zero viewport inset; footer entirely static. No new libraries/parallax/loops. Reduced motion and no-JS remain immediately visible; section snapshots scroll into actual view before capture.
+
+## Hero branding integration — D-101
+Background image and overlay are static at all times. No extra reflection animation was added: existing text (0–790ms) and product entrance (120–870ms) provide the restrained reveal without competing effects. Existing three-product carousel timing/pause/focus controls unchanged; reduced motion suppresses entrance/rotation through the existing system. No GIF/video/new library/filter/large-position animations. Optional future client-approved short video would require a demonstrated benefit, lightweight encoding, static poster fallback, reduced-motion handling and a separate performance review; not implemented.

@@ -29,3 +29,6 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 ## Missing images or business information (consolidated)
 
 Logo SVGs (header + footer light) · hero/product photography (750 ml, 1.5 L, carton) · origin landscape photo · lab reports (TDS, heavy metals, pathogens) · ISO 22000 certificate · NAFDAC A1-2462L documents · evidence for process claims (rock filtration, bottled at source, naturally protected source) · prices, pack sizes, delivery rules, payment provider · enquiry recipient + sending domain · contact details · social URLs · newsletter provider · privacy notice and other policy pages.
+
+- [x] D-101 supplied proposed horizontal header logo, stacked footer logo with ivory contrast backing, static decorative hero background; preserve carousel/content/CTAs and responsive ratios.
+- [ ] Owner/client approval of D-101 branding and comparison screenshots; light-colour footer logo for direct green placement still needed. Verification details: hero-brand-integration report. No baseline promotion.

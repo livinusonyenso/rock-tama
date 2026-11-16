@@ -1,0 +1,53 @@
+{
+  "status": "Owner-supplied proposed branding; pending final client approval. Background is decorative artwork, not verified source-site photography.",
+  "assets": [
+    {
+      "source": "docs/assets/source/branding/horizontal.ROCK.TAMA.png",
+      "sha256": "d404cc3b6419b0a57421509c490de26327f6694e30b34ce0d7e4d6455f47a095",
+      "original": {
+        "width": 2172,
+        "height": 724,
+        "format": "png",
+        "alpha": true,
+        "bytes": 471919
+      },
+      "output": "public/images/brand/rock-tama-horizontal.webp",
+      "width": 960,
+      "height": 379,
+      "bytes": 133106,
+      "alpha": true
+    },
+    {
+      "source": "docs/assets/source/branding/stacked.ROCK.TAMA.png",
+      "sha256": "421483937478a899c128ed743256dc926e6026a2c3461dfd25de191107caa408",
+      "original": {
+        "width": 1254,
+        "height": 1254,
+        "format": "png",
+        "alpha": true,
+        "bytes": 454219
+      },
+      "output": "public/images/brand/rock-tama-stacked.webp",
+      "width": 960,
+      "height": 464,
+      "bytes": 202988,
+      "alpha": true
+    },
+    {
+      "source": "docs/assets/source/branding/herobackground.png",
+      "sha256": "3f3f72fa73692876b2de7a2612196b0bfee7dcbca8cb64a32f40f77765d000dc",
+      "original": {
+        "width": 1672,
+        "height": 941,
+        "format": "png",
+        "alpha": false,
+        "bytes": 1837945
+      },
+      "output": "public/images/hero/spring-water.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 115836,
+      "alpha": false
+    }
+  ]
+}

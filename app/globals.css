@@ -246,3 +246,16 @@
 @media (min-width: 48rem) {
   .media-frame-responsive { aspect-ratio: var(--media-aspect); }
 }
+
+/* Static supplied hero artwork. Stronger mobile shade protects the stacked carousel.
+   Even a white source pixel stays under #2e4a42 (gold/white text contrast tested). */
+.hero-background-image { object-position: 65% center; }
+.hero-background-overlay {
+  background: linear-gradient(180deg, rgb(6 39 30 / 0.88), rgb(6 39 30 / 0.84));
+}
+@media (min-width: 48rem) {
+  .hero-background-image { object-position: center; }
+  .hero-background-overlay {
+    background: linear-gradient(90deg, rgb(6 39 30 / 0.93) 0%, rgb(6 39 30 / 0.86) 48%, rgb(6 39 30 / 0.84) 100%);
+  }
+}

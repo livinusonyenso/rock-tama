@@ -1,4 +1,5 @@
-import { HeroWaves } from "@/components/home/HeroWaves";
+import Image from "next/image";
+import { heroBackground } from "@/content/media";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { HeroProductCarousel, type CarouselSlide } from "@/components/home/HeroProductCarousel";
@@ -40,7 +41,10 @@ export function HeroSection() {
 
   return (
     <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden bg-hero text-on-dark">
-      <HeroWaves />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" data-hero-background>
+        <Image src={heroBackground.src} alt="" fill preload sizes="100vw" className="hero-background-image object-cover" />
+        <div className="hero-background-overlay absolute inset-0" />
+      </div>
       <Container className="grid gap-10 pt-12 md:grid-cols-2 md:gap-6 lg:min-h-hero lg:pt-0">
         <div className="md:self-center lg:self-start lg:pt-11">
           {/* Entrance storyboard (D-068, ANIMATION_SYSTEM §9): CSS only, done by ≈870ms, off with reduced motion */}

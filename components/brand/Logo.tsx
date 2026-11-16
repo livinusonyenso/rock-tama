@@ -15,11 +15,11 @@ type VariantConfig = {
 const variants: Record<LogoVariant, VariantConfig> = {
   header: {
     asset: site.logos.horizontal,
-    height: "h-10 lg:h-16", // 40px in the 64px mobile header, 64px in the 84px desktop header
+    height: "h-12 xl:h-16", // 48px mobile/compact desktop, 64px wide desktop
     placeholder: "border-placeholder-ink/40 bg-placeholder/50 text-placeholder-ink",
   },
   footer: {
-    asset: site.logos.stackedLight, // separate light-colour file for the dark footer (D-038)
+    asset: site.logos.stacked, // supplied dark lettering needs an ivory backing
     height: "h-20 lg:h-24", // 80px mobile, 96px desktop
     placeholder: "border-on-dark-muted/40 bg-on-dark/5 text-on-dark-muted",
   },
@@ -32,7 +32,7 @@ type LogoProps = {
 };
 
 /**
- * Brand logo (D-020). Renders the official file once `available` is true in
+ * Brand logo (D-020). Renders the supplied file once `available` is true in
  * `content/site.ts`; until then, a same-size labelled placeholder. Renders the
  * image only; callers decide whether it's a link.
  */
@@ -42,13 +42,17 @@ export function Logo({ variant, className }: LogoProps) {
 
   if (asset.available) {
     return (
-      <Image
-        src={asset.src}
-        alt={asset.alt}
-        width={asset.width}
-        height={asset.height}
-        className={`w-auto ${sizing}`}
-      />
+      <span className={variant === "footer" ? "inline-flex max-w-full rounded-button bg-ivory-100 p-3" : "inline-flex"}>
+        <Image
+          src={asset.src}
+          alt={asset.alt}
+          width={asset.width}
+          height={asset.height}
+          sizes={variant === "header" ? "(min-width: 1280px) 163px, 122px" : "(min-width: 1024px) 199px, 166px"}
+          loading={variant === "header" ? "eager" : "lazy"}
+          className={variant === "footer" && !className ? "h-auto w-42 object-contain lg:w-50" : `w-auto object-contain ${sizing}`}
+        />
+      </span>
     );
   }
 

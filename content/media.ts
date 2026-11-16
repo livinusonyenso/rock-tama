@@ -9,3 +9,6 @@ export const storefrontMedia = {
   distributor: { label: "Distributor Supply Image", alt: `Stacked ${site.name} branded packs on a distributor pallet`, src: "/images/services/distributor-supply.webp", aspect: "2/1", shape: "rect" },
   origin: { label: "Story Section Image (Landscape)", alt: "Illustrated green landscape with a flowing stream, trees and distant hills", src: "/images/origin/origin-landscape.webp", aspect: "3/1", shape: "rect", objectPosition: "50% 60%" },
 } as const satisfies Record<string, MediaAsset>;
+
+/** Decorative supplied artwork; not documentary photography of the Nanka spring. */
+export const heroBackground = { src: "/images/hero/spring-water.webp", width: 1672, height: 941 } as const;
