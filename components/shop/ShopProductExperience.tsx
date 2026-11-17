@@ -13,8 +13,8 @@ export function ShopProductExperience(){
  const [id,setId]=useState("750-single"),[quantity,setQuantity]=useState("1"),[notice,setNotice]=useState("");
  const variant=variantById(id)!;const count=Number(quantity),valid=Number.isInteger(count)&&count>=1&&count<=10000;
  const choose=(next:string)=>{setId(next);setNotice("")};
- const options=[shopVariants.find(v=>v.size===variant.size&&v.pack==="single")!,variantById("750-pack12")!,variantById("1500-carton")!];
- const galleryKey=variant.pack==="pack12"?"750-pack12":variant.product as keyof typeof shopGallery;
+ const options=[shopVariants.find(v=>v.size===variant.size&&v.pack==="single")!,variantById("750-pack12")!,variantById("750-pack24")!,variantById("1500-carton")!];
+ const galleryKey=variant.pack==="pack12"?"750-pack12":variant.pack==="pack24"?"750-pack24":variant.product as keyof typeof shopGallery;
  const href=selectionHref([{variantId:id,quantity:valid?count:1}]);
  const add=()=>{try{addBasket(id,count);setNotice("Added to your basket. No payment has been taken.")}catch(error){setNotice(error instanceof Error && error.message.startsWith("The basket limit") ? error.message : "Basket storage is unavailable. You can still request this selection directly.")}};
  return <section className={styles.product} aria-labelledby="shop-heading">

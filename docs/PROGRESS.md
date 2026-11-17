@@ -75,6 +75,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Homepage Contact Us section (D-117)** | lint ✓ · tsc ✓ · build ✓ · home-contact 77/77 at 7 widths (h2 + two h3 cards, placeholder notice, no wa.me/mailto while placeholder, no duplicate wholesale box, last section before footer, no overflow) · /contact page checks still pass · earlier full-run failures (shop, hero CTAs, quality/origin navigation) re-run on current code: 78/78 pass (they came from concurrent edits during the run) |
 
+| 2026-11-17 | **Shop pack/carton imagery (D-118):** Pack of 24 × 750 ml (price on request) with tray images; carton gallery = five 12 × 1.5 L views (wrong 24-tray removed) | lint ✓ (only warning is in another session's untracked scratch file) · tsc ✓ · build ✓ · shop journeys 74/74 (mobile + desktop) |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

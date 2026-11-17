@@ -1,9 +1,11 @@
 /** Owner-approved draft prices from the shop reference. No payment/stock commitment. */
 export type ShopSize = "750" | "1500";
-export type ShopVariant = { id: string; label: string; detail: string; product: string; size: ShopSize; pack: "single" | "pack12" | "carton"; amount: number | null; bottles: number; unit: "bottles" | "cartons" };
+export type ShopVariant = { id: string; label: string; detail: string; product: string; size: ShopSize; pack: "single" | "pack12" | "pack24" | "carton"; amount: number | null; bottles: number; unit: "bottles" | "cartons" };
 export const shopVariants: readonly ShopVariant[] = [
   {id:"750-single",label:"Single bottle",detail:"750 ml",product:"750ml-glass-bottle",size:"750",pack:"single",amount:650,bottles:1,unit:"bottles"},
   {id:"750-pack12",label:"Pack of 12",detail:"12 × 750 ml",product:"750ml-glass-bottle",size:"750",pack:"pack12",amount:7500,bottles:12,unit:"bottles"},
+  // D-118: owner-supplied 24 × 750 ml tray artwork; sold on request only, no price invented.
+  {id:"750-pack24",label:"Pack of 24",detail:"24 × 750 ml",product:"750ml-glass-bottle",size:"750",pack:"pack24",amount:null,bottles:24,unit:"bottles"},
   {id:"1500-single",label:"Single bottle",detail:"1.5 L · price on request",product:"1-5l-bottle",size:"1500",pack:"single",amount:null,bottles:1,unit:"bottles"},
   {id:"1500-carton",label:"Carton",detail:"12 × 1.5 L · draft configuration",product:"carton-packs",size:"1500",pack:"carton",amount:14500,bottles:1,unit:"cartons"},
 ];

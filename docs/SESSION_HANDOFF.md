@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Shop imagery (D-118):** Pack of 24 × 750 ml (price on request) added; carton gallery shows only 12 × 1.5 L carton views (+ labelled alternative design).
+
 **Contact / testimonials / socials (D-111, homepage Contact D-117):** `/contact` live and the same cards on the homepage (last section) (WhatsApp + email placeholders, actions inactive until real values in `content/contact.ts`); sample testimonials on the homepage (labelled; 6 in a scroll-snap slider with autoplay, no visible controls, D-112/D-113); footer social icons with `#`. All listed in `content/launch.ts` and launch-blocked.
 
 **Quality & Safety (D-108):** restyled to the owner's supplied image; `WaterBand` wraps Quality + supply banner in `app/page.tsx` with the owner's spring artwork (layered from `xl`, softened below).
