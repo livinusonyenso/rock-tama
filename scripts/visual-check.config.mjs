@@ -205,6 +205,16 @@ const config = {
       ],
     },
     {
+      name: "home-contact", page: "home", selector: "#contact",
+      actions: [{ evaluate: "document.querySelector('#contact').scrollIntoView({block:'start',behavior:'instant'}); true" }, { waitFor: "[...document.querySelectorAll('#contact [data-reveal]')].every(e=>e.dataset.reveal!=='hidden')" }],
+      expect: [
+        { name: "homepage Contact Us: h2 then WhatsApp and email cards as h3 (D-117)", js: "document.querySelector('#contact h2')?.textContent==='Get in Touch' && [...document.querySelectorAll('#contact [data-channel]')].map(e=>e.dataset.channel).join()==='whatsapp,email' && document.querySelectorAll('#contact [data-channel] h3').length===2" },
+        { name: "placeholders labelled and never linked; no duplicate wholesale box under the supply banner", js: "!!document.querySelector('#contact [data-contact-placeholder]') && !document.querySelector('#contact a[href^=\"https://wa.me\"],#contact a[href^=\"mailto:\"]') && document.querySelectorAll('#contact [data-channel] [data-pending]').length===2 && !document.querySelector('#contact aside')" },
+        { name: "sits after the supply banner, before the footer", js: "document.querySelector('main').lastElementChild.id==='contact' && !!(document.querySelector('#wholesale').compareDocumentPosition(document.querySelector('#contact')) & Node.DOCUMENT_POSITION_FOLLOWING)" },
+        { name: "contact text visible without overflow", js: "[...document.querySelectorAll('#contact h2,#contact h3,#contact p')].every(e=>e.scrollWidth<=e.clientWidth+1) && [...document.querySelectorAll('#contact [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1')" },
+      ],
+    },
+    {
       name: "contact", page: "contact", selector: "main",
       expect: [
         { name: "Contact Us page: one h1, WhatsApp and email channels in order", js: "document.querySelectorAll('h1').length===1 && document.querySelector('main h1').textContent==='Get in Touch' && [...document.querySelectorAll('main [data-channel]')].map(e=>e.dataset.channel).join()==='whatsapp,email'" },

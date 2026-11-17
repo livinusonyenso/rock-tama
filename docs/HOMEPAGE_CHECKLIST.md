@@ -20,6 +20,8 @@ Order and reference: `docs/UI_BREAKDOWN.md` §01–09, `docs/reference/homepage-
 
 | + | Testimonials (not in the reference; owner request) | **Built D-111; slider D-112 (6 samples)** after §6 | Captured at 7 widths; pending owner review | Informational | **Sample quotes, visibly labelled; launch-blocked until real customer quotes** |
 
+| + | Contact Us (homepage, owner request) | **Built D-117**, last before the footer | Captured at 7 widths; pending owner review | Same cards as `/contact`; actions inactive until real details | **Placeholder WhatsApp/email** |
+
 ## Dependency-aware build order
 
 1. ~~§4 Purity / trust indicators~~ **done**.

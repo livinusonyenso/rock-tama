@@ -73,6 +73,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-16 | **Testimonial slider (D-112):** 6 sample testimonials, scroll-snap slider with autoplay + controls | RESULTS_PLACEHOLDER |
 
+| 2026-11-17 | **Homepage Contact Us section (D-117)** | lint ✓ · tsc ✓ · build ✓ · home-contact 77/77 at 7 widths (h2 + two h3 cards, placeholder notice, no wa.me/mailto while placeholder, no duplicate wholesale box, last section before footer, no overflow) · /contact page checks still pass · earlier full-run failures (shop, hero CTAs, quality/origin navigation) re-run on current code: 78/78 pass (they came from concurrent edits during the run) |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

@@ -1,3 +1,4 @@
+import { ContactSection } from "@/components/home/ContactSection";
 import { QualitySection } from "@/components/home/QualitySection";
 import { WholesaleBanner } from "@/components/home/WholesaleBanner";
 import { OriginSection } from "@/components/home/OriginSection";
@@ -20,6 +21,7 @@ export default function HomePage() {
         <QualitySection />
         <WholesaleBanner />
       </WaterBand>
+      <ContactSection />
     </main>
   );
 }

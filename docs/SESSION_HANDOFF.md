@@ -2,7 +2,7 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
-**Contact / testimonials / socials (D-111):** `/contact` live (WhatsApp + email placeholders, actions inactive until real values in `content/contact.ts`); sample testimonials on the homepage (labelled; 6 in a scroll-snap slider with autoplay, no visible controls, D-112/D-113); footer social icons with `#`. All listed in `content/launch.ts` and launch-blocked.
+**Contact / testimonials / socials (D-111, homepage Contact D-117):** `/contact` live and the same cards on the homepage (last section) (WhatsApp + email placeholders, actions inactive until real values in `content/contact.ts`); sample testimonials on the homepage (labelled; 6 in a scroll-snap slider with autoplay, no visible controls, D-112/D-113); footer social icons with `#`. All listed in `content/launch.ts` and launch-blocked.
 
 **Quality & Safety (D-108):** restyled to the owner's supplied image; `WaterBand` wraps Quality + supply banner in `app/page.tsx` with the owner's spring artwork (layered from `xl`, softened below).
 

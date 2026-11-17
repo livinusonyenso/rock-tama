@@ -64,7 +64,8 @@ Paths below follow [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md). Priorities re
 
 | `TestimonialsSection` ✓ D-111/D-112 | + | Sample-labelled customer quotes in a slider | No | none (`content/testimonials.ts`) | `SectionHeading`, `Reveal`, `Icon`, `TestimonialSlider` | 3 / 2 / 1 per view | — |
 | `TestimonialSlider` ✓ D-112 | + | Scroll-snap track + autoplay (no visible controls, D-113) | **Client** | `label`, `slideLabels`, `intervalMs?`, `children` (cards) | Native swipe; no-JS = scrollable row | — |
-| `ContactChannels` ✓ D-111 (`components/contact/`) | /contact | WhatsApp + email cards, wholesale pointer | No | none (`content/contact.ts`, `lib/contact.ts`) | `ButtonLink`, `Icon` | 2 → 1 columns | — |
+| `ContactSection` ✓ D-117 | home | Homepage Contact Us: heading + `ContactChannels` | No | none | `SectionHeading`, `Reveal`, `ContactChannels` | 1 → 2 columns | — |
+| `ContactChannels` ✓ D-111/D-117 (`components/contact/`) | /contact, home | WhatsApp + email cards, optional wholesale pointer | No | `headingLevel?`, `withWholesale?` (`content/contact.ts`, `lib/contact.ts`) | `ButtonLink`, `Icon` | 2 → 1 columns | — |
 
 ## 5. Shared UI
 
