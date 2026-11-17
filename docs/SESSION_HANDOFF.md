@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Admin (D-128):** `/auth/admin` (demo login on dev/staging) → `/admin` dashboard with labelled demo data (`content/admin-demo.ts`); proxy-protected; `SiteChrome` hides storefront chrome there. Needs `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` for launch.
+
 **One shop UI (D-125):** `/shop` and `/shop/[slug]` render `components/shop/ShopStorefront.tsx`; product URLs preselect their pack.
 
 **Payment page (D-124):** `/checkout` (details) → `/checkout/pay` (card via Paystack, or bank transfer with transaction ID/receipt → `/checkout/transfer`, awaiting confirmation). Pending order in a signed httpOnly cookie. Bank details are demo placeholders in `content/payment.ts`.

@@ -41,7 +41,7 @@ function missingDeliveryConfig() {
 
 const stagingMode = () => process.env.DEPLOY_MODE === "staging" || (
   process.env.DEPLOY_MODE !== "production" &&
-  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0 || launchPlaceholders().length > 0 || paymentProblem() !== null)
+  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0 || launchPlaceholders().length > 0 || paymentProblem() !== null || adminProblem() !== null)
 );
 
 function blockOrWarn(message: string) {
@@ -96,6 +96,21 @@ function paymentProblem(): string | null {
   return null;
 }
 
+/**
+ * Admin readiness (D-128): a public launch needs real admin credentials and a session-signing secret. Without
+ * them the demo login (shown on the sign-in page) and a public fallback secret would protect the admin portal.
+ */
+function adminProblem(): string | null {
+  const missing = ["ADMIN_EMAIL", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET"].filter((name) => !process.env[name]);
+  return missing.length ? `admin portal not secured (missing ${missing.join(", ")})` : null;
+}
+
+function assertAdminReady() {
+  if (process.env.VERCEL_ENV !== "production") return;
+  const problem = adminProblem();
+  if (problem) blockOrWarn(`Production deployment blocked: ${problem}. See .env.example.`);
+}
+
 function assertPaymentsReady() {
   if (process.env.VERCEL_ENV !== "production") return;
   const problem = paymentProblem();
@@ -120,6 +135,7 @@ export default function config(phase: string): NextConfig {
     assertNoUnverifiedClaims();
     assertNoLaunchPlaceholders();
     assertPaymentsReady();
+    assertAdminReady();
   }
   if (!stagingMode()) return nextConfig;
   return {

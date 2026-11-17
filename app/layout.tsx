@@ -2,6 +2,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { site } from "@/content/site";
 import "./globals.css";
@@ -36,11 +37,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cormorant.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AnnouncementBar />
-        {/* Cart count is 0 until the cart feature supplies it (D-029). */}
-        <SiteHeader cartCount={0} />
-        {children}
-        <SiteFooter />
+        {/* Storefront chrome everywhere except the admin portal (D-128). */}
+        <SiteChrome
+          header={
+            <>
+              <AnnouncementBar />
+              {/* Cart count is 0 until the cart feature supplies it (D-029). */}
+              <SiteHeader cartCount={0} />
+            </>
+          }
+          footer={<SiteFooter />}
+        >
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );

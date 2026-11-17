@@ -80,7 +80,23 @@ export type IconName =
   | "instagram"
   | "facebook"
   | "linkedin"
-  | "youtube";
+  | "youtube"
+  | "house"
+  | "package"
+  | "users"
+  | "credit-card"
+  | "chart-column"
+  | "settings"
+  | "bell"
+  | "coins"
+  | "triangle-alert"
+  | "log-out"
+  | "boxes"
+  | "trending-up"
+  | "trending-down"
+  | "lock"
+  | "eye"
+  | "eye-off";
 
 export type NavLinkItem = {
   label: string;

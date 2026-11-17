@@ -1,6 +1,7 @@
 import {distributorDashboardJourneys} from "./distributor-dashboard.config.mjs";
 import {distributorAccountJourneys} from "./distributor-account.config.mjs";
 import {checkoutJourneys} from "./checkout-check.config.mjs";
+import {adminJourneys} from "./admin-check.config.mjs";
 // Configuration for scripts/visual-check.mjs (D-040).
 // Add a `sections` entry whenever a homepage section is implemented.
 
@@ -73,6 +74,7 @@ const config = {
     { name: "shop", path: "/shop" },
     { name: "product", path: "/shop/750ml-glass-bottle" },
     { name: "contact", path: "/contact" },
+    { name: "admin-login", path: "/auth/admin" },
     { name: "accountLogin", path: "/account/login" },
     { name: "accountRegister", path: "/account/register" },
     { name: "checkout", path: "/checkout" },
@@ -302,6 +304,7 @@ const config = {
     },
     ...shopReferenceJourneys(),
     ...checkoutJourneys(),
+    ...adminJourneys(),
     ...distributorAccountJourneys(),
     ...distributorDashboardJourneys(),
     // ---- /shop (F2) ----

@@ -91,6 +91,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Dev warnings fixed: URL data outside Suspense, HeroCarousel key, image warnings (D-126)** | lint ✓ · tsc ✓ · build ✓ (product URLs still prerendered) · functional dev-file 907/907, resend-mock 40/40, unconfigured 31/31 · on the owner's dev server: 0 key warnings in 16 homepage loads (was ~1 in 3), no 'URL data' errors on product pages, no browser warnings/errors in the dev log for home, quality/supply, product pages |
 
+| 2026-11-17 | **Admin portal: /auth/admin sign-in + /admin dashboard (D-128)** | lint ✓ · tsc ✓ · build ✓ · functional dev-file 1169/1169, resend-mock 40/40, unconfigured 31/31 · admin journeys 80/80 at mobile + desktop (protection is an HTTP redirect; wrong password generic; forged cookie rejected; dashboard sections and demo-data consistency; chart toggle and keyboard tooltip; logout; signed-in sign-in redirect; no overflow 320–1440) · storefront chrome unchanged on shop pages · palette validated with the dataviz validator · screenshots reviewed |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)
