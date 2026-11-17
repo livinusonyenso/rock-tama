@@ -14,7 +14,7 @@ Sections: testimonials-no-js, testimonials-reduced-motion, testimonials-autoplay
 | home @small 320px | no console errors | PASS |  |
 | testimonials-autoplay @small 320px | testimonials-autoplay | PASS |  |
 | testimonials-autoplay @small 320px | no horizontal overflow | PASS |  |
-| testimonials-autoplay @small 320px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-autoplay @small 320px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
 | home @mobile 375px | fonts loaded | PASS | loaded |
@@ -32,7 +32,7 @@ Check the render method of `HeroCarousel`.  It was passed a child from HeroSecti
 | testimonials-autoplay @mobile 375px | no console errors | PASS |  |
 | testimonials-loop @mobile 375px | testimonials-loop | PASS |  |
 | testimonials-loop @mobile 375px | no horizontal overflow | PASS |  |
-| testimonials-loop @mobile 375px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-loop @mobile 375px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
 | testimonials-swipe-stops @mobile 375px | testimonials-swipe-stops | PASS |  |
@@ -51,7 +51,7 @@ Check the render method of `HeroCarousel`.  It was passed a child from HeroSecti
 | home @laptop 1024px | no console errors | PASS |  |
 | testimonials-autoplay @laptop 1024px | testimonials-autoplay | PASS |  |
 | testimonials-autoplay @laptop 1024px | no horizontal overflow | PASS |  |
-| testimonials-autoplay @laptop 1024px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-autoplay @laptop 1024px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
 | home @large 1280px | fonts loaded | PASS | loaded |
@@ -60,7 +60,7 @@ Check the render method of `HeroCarousel`.  It was passed a child from HeroSecti
 | home @large 1280px | no console errors | PASS |  |
 | testimonials-autoplay @large 1280px | testimonials-autoplay | PASS |  |
 | testimonials-autoplay @large 1280px | no horizontal overflow | PASS |  |
-| testimonials-autoplay @large 1280px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-autoplay @large 1280px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
 | home @desktop 1440px | fonts loaded | PASS | loaded |
@@ -69,7 +69,7 @@ Check the render method of `HeroCarousel`.  It was passed a child from HeroSecti
 | home @desktop 1440px | no console errors | PASS |  |
 | testimonials-autoplay @desktop 1440px | testimonials-autoplay | PASS |  |
 | testimonials-autoplay @desktop 1440px | no horizontal overflow | PASS |  |
-| testimonials-autoplay @desktop 1440px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-autoplay @desktop 1440px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
 | testimonials-hover-pause @desktop 1440px | testimonials-hover-pause | PASS |  |
@@ -77,6 +77,6 @@ Check the render method of `HeroCarousel`.  It was passed a child from HeroSecti
 | testimonials-hover-pause @desktop 1440px | no console errors | PASS |  |
 | testimonials-keyboard-stops @desktop 1440px | testimonials-keyboard-stops | PASS |  |
 | testimonials-keyboard-stops @desktop 1440px | no horizontal overflow | PASS |  |
-| testimonials-keyboard-stops @desktop 1440px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+| testimonials-keyboard-stops @desktop 1440px | no console errors | FAIL | Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.
 
 Check the render method of `HeroCarousel`.  It was passed a child from HeroSection. |
