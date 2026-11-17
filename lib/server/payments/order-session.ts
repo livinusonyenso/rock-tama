@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import type { PaymentMetadata } from "@/lib/server/payments/order";
 import { readPayload, signPayload } from "@/lib/server/payments/token";
 
@@ -32,6 +33,8 @@ export async function savePendingOrder(order: PendingOrder) {
 }
 
 export async function readPendingOrder(): Promise<PendingOrder | null> {
+  // Expiry must use the request clock, never an instant-navigation prerender.
+  await connection();
   return readPayload<PendingOrder>(secret(), (await cookies()).get(COOKIE)?.value);
 }
 

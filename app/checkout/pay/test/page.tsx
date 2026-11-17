@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
@@ -25,6 +26,8 @@ export default function TestPaymentPage({ searchParams }: Props) {
 }
 
 async function TestPayment({ searchParams }: Props) {
+  // Token expiry is request-time data, including during partial prefetches.
+  await connection();
   const { token } = await searchParams;
   const config = getPaymentConfig();
   const payment = config.kind === "test" ? readTestToken(config.secret, token) : null;

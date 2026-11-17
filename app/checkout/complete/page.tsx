@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ClearBasket } from "@/components/shop/ClearBasket";
@@ -24,6 +25,8 @@ export default function PaymentCompletePage({ searchParams }: Props) {
 }
 
 async function PaymentResult({ searchParams }: Props) {
+  // Token expiry is request-time data, including during partial prefetches.
+  await connection();
   const { reference = "", token } = await searchParams;
   const payment = await verifyPayment(reference, token);
   if (payment.status === "paid") {

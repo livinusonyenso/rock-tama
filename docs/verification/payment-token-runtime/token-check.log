@@ -1,0 +1,1 @@
+PASS signed payment tokens: valid before expiry, rejected exactly at expiry, wrong secret, tampering, malformed tokens and signed invalid JSON.

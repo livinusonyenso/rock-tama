@@ -192,3 +192,6 @@ D-127 distributor account UI complete: header icon/mobile drawer→login, regist
 
 
 Distributor demo dashboard complete: any email/non-empty password→dashboard, refresh persistence, account routing and logout. Responsive navigation, sample orders/details, profile, live basket count and real shop/supply/support links.138/138 browser checks at six widths; lint/types/styled diagnostic Webpack/session checks pass. Password never sent/stored; no real authentication/approval/orders. Strict production disables demo. Guide DISTRIBUTOR_DASHBOARD.md. No push/deploy.
+
+
+Payment expiry prerender blocker fixed: request boundaries before order-cookie/test/payment-result token validation. Actual dev cancellation/failed/expired flows13/13; signed-token expiry/tamper cases, lint/types and styled diagnostic Webpack pass. No payment behaviour/UI changes, push or deployment. Review verification/payment-token-runtime/REVIEW.md.

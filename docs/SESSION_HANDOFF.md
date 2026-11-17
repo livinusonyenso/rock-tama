@@ -122,3 +122,6 @@ D-127 latest: owner explicitly wants UI first; auth backend will be their Node.j
 
 
 Latest distributor demo: owner superseded disabled login with temporary any-email/password dashboard access. /account/login→/account/dashboard; /account routes according to demo cookie. lib/account/demo.ts and demo-actions.ts isolate preview state; only email sent, no password persistence,8h httpOnly cookie, no actual auth/roles. DEPLOY_MODE=production rejects demo. Registration remains pending Express API. Dashboard data clearly sample, basket count real local state.138browserchecks, lint/types/diagnostic Webpack and session checks pass. Evidence verification/distributor-dashboard, guide DISTRIBUTOR_DASHBOARD.md. Do not commit concurrent admin work or raw public/image.png as part of this task.
+
+
+Latest payment fix: Date.now in token.ts was reached during Next partial prerender. readPendingOrder now awaits connection; TestPayment and PaymentResult do likewise inside their existing Suspense boundaries. Shared signature and expiry checks stay unchanged. Actual dev13checks pass, token boundary/tamper script scripts/payment-token-check.mjs passes, lint/types/diagnostic Webpack pass. Initial test-gateway reproduction retained. See verification/payment-token-runtime/REVIEW.md. Do not remove/cache expiry checks to fix prerender errors.

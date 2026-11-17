@@ -95,3 +95,6 @@ D-127 distributor UI boundary: owner chose custom Node.js/Express and said UI on
 
 
 Distributor demo exception (owner-authorised): login now accepts any email/non-empty password for UI preview, superseding the disabled-login part of D-127. Keep demo state isolated, never transmit/store password or expose real data/approval, and retain strict-production exclusion. Replace with owner’s Express API later. Tests distributor-dashboard.config.mjs and distributor-demo-check.mjs; guide docs/DISTRIBUTOR_DASHBOARD.md.
+
+
+Payment clock safeguard: expiring signed tokens must be validated at request time. Under Cache Components/partial prefetch, await connection before a render path calls synchronous readPayload/Date.now, within an existing Suspense child. Do not remove expiry, use cached clocks or shift validation to the client. Test actual dev checkout/pay/test/complete paths as well as build, plus payment-token-check.mjs.

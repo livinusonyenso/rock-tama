@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {createHmac,timingSafeEqual} from "node:crypto";
+import vm from "node:vm";
+import ts from "typescript";
+const exports={};let now=100000;
+vm.runInNewContext(ts.transpileModule(readFileSync('lib/server/payments/token.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>name==='server-only'?{}:{createHmac,timingSafeEqual},Buffer,Date:{now:()=>now}});
+const token=exports.signPayload('test-secret',{reference:'TEST-ORDER'},1000);
+assert.equal(exports.readPayload('test-secret',token).reference,'TEST-ORDER');
+now=100999;assert(exports.readPayload('test-secret',token));now=101000;assert.equal(exports.readPayload('test-secret',token),null);
+now=100000;assert.equal(exports.readPayload('wrong-secret',token),null);
+const [body,signature]=token.split('.');assert.equal(exports.readPayload('test-secret',`${body.slice(0,-1)}X.${signature}`),null);
+for(const value of [null,undefined,'','invalid','missing.signature'])assert.equal(exports.readPayload('test-secret',value),null);
+const invalidBody=Buffer.from('{invalid JSON').toString('base64url');const invalidSig=createHmac('sha256','test-secret').update(invalidBody).digest('base64url');assert.equal(exports.readPayload('test-secret',`${invalidBody}.${invalidSig}`),null);
+console.log('PASS signed payment tokens: valid before expiry, rejected exactly at expiry, wrong secret, tampering, malformed tokens and signed invalid JSON.');
