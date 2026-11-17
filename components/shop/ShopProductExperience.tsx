@@ -3,20 +3,34 @@ import {useState,useSyncExternalStore} from "react";
 import Link from "next/link";
 import {ProductGallery} from "./ProductGallery";
 import {shopGallery} from "@/content/shop-gallery";
-import {shopVariants,money,selectionHref,variantById} from "@/content/commerce";
-import {addBasket} from "@/lib/basket";
+import {shopVariants,money,selectionHref,variantById,type BasketLine,type ShopSize} from "@/content/commerce";
+import {addBasketLines} from "@/lib/basket";
 import {buttonClassName} from "@/components/ui/button-styles";
 import styles from "./shop-experience.module.css";
 const subscribe=()=>()=>{};
+const MAX=10000;
+// Default selection used only without JavaScript (the steppers need JS): one 750 ml bottle.
+const NO_JS_DEFAULT:BasketLine[]=[{variantId:"750-single",quantity:1}];
 export function ShopProductExperience(){
  const enhanced=useSyncExternalStore(subscribe,()=>true,()=>false);
- const [id,setId]=useState("750-single"),[quantity,setQuantity]=useState("1"),[notice,setNotice]=useState("");
- const variant=variantById(id)!;const count=Number(quantity),valid=Number.isInteger(count)&&count>=1&&count<=10000;
- const choose=(next:string)=>{setId(next);setNotice("")};
- const options=[shopVariants.find(v=>v.size===variant.size&&v.pack==="single")!,variantById("750-pack12")!,variantById("750-pack24")!,variantById("1500-carton")!];
+ // D-119: every pack has its own quantity; the selection can combine packs (and sizes).
+ const [viewing,setViewing]=useState("750-single"),[size,setSize]=useState<ShopSize>("750");
+ const [quantities,setQuantities]=useState<Record<string,string>>({}),[notice,setNotice]=useState("");
+ const variant=variantById(viewing)!;
+ const rows=shopVariants.filter(v=>v.size===size);
+ const parsed=shopVariants.map(v=>{const raw=quantities[v.id]??"0";const n=Number(raw);return {v,raw,n,valid:raw.trim()!==""&&Number.isInteger(n)&&n>=0&&n<=MAX}});
+ const invalid=parsed.filter(x=>!x.valid);
+ const selected=parsed.filter(x=>x.valid&&x.n>0);
+ const lines:BasketLine[]=selected.map(x=>({variantId:x.v.id,quantity:x.n}));
+ const ready=enhanced&&invalid.length===0&&lines.length>0;
+ const priced=selected.filter(x=>x.v.amount!==null),onRequest=selected.length-priced.length;
+ const total=priced.reduce((sum,x)=>sum+(x.v.amount??0)*x.n,0);
+ const setQuantity=(id:string,value:string)=>{setQuantities(q=>({...q,[id]:value}));setViewing(id);setNotice("")};
+ const step=(id:string,delta:number)=>{const n=Number(quantities[id]??"0");setQuantity(id,String(Math.min(MAX,Math.max(0,(Number.isInteger(n)?n:0)+delta))))};
+ const chooseSize=(next:ShopSize)=>{setSize(next);setViewing(shopVariants.find(v=>v.size===next&&v.pack==="single")!.id);setNotice("")};
  const galleryKey=variant.pack==="pack12"?"750-pack12":variant.pack==="pack24"?"750-pack24":variant.product as keyof typeof shopGallery;
- const href=selectionHref([{variantId:id,quantity:valid?count:1}]);
- const add=()=>{try{addBasket(id,count);setNotice("Added to your basket. No payment has been taken.")}catch(error){setNotice(error instanceof Error && error.message.startsWith("The basket limit") ? error.message : "Basket storage is unavailable. You can still request this selection directly.")}};
+ const href=selectionHref(enhanced?lines:NO_JS_DEFAULT);
+ const add=()=>{try{addBasketLines(lines);setQuantities({});setNotice(`Added ${lines.length===1?"1 selection":`${lines.length} selections`} to your basket. No payment has been taken.`)}catch(error){setNotice(error instanceof Error && error.message.startsWith("The basket limit") ? error.message : "Basket storage is unavailable. You can still request this selection directly.")}};
  return <section className={styles.product} aria-labelledby="shop-heading">
  <ProductGallery key={galleryKey} images={shopGallery[galleryKey]} enhanced={enhanced}/>
  <div className={styles.info}>
@@ -25,12 +39,15 @@ export function ShopProductExperience(){
  <p className="mt-4 text-base leading-relaxed text-ink-900">Natural spring water from Nanka, Anambra State, Nigeria. Choose your bottle size and packaging, then send your selection for an order quotation.</p>
  <div className="mt-5 flex flex-wrap items-baseline gap-3"><p className="font-serif text-4xl font-bold text-forest-850 lining-nums" data-shop-price>{money(variant.amount)}</p><span className="text-sm text-ink-700">({variant.detail})</span></div>
  <p className="mt-2 text-sm text-gold-700">Draft pricing approved for planning. Final price and availability are confirmed in your quotation.</p>
- <div className={styles.sizeRow}><span className={styles.label}>Size</span><div role="group" aria-label="Bottle size" className="flex flex-1 gap-3">{[{id:"750-single",label:"750 ml",size:"750"},{id:"1500-single",label:"1.5 L",size:"1500"}].map(x=><button type="button" key={x.id} disabled={!enhanced} aria-pressed={variant.size===x.size} onClick={()=>choose(x.id)} className={`${styles.size} focus-ring ${variant.size===x.size?styles.sizeActive:""}`}>{x.label}</button>)}</div></div>
- <fieldset className="mt-5"><legend className={styles.label}>Pack</legend><div className={styles.packGrid}>{options.map(v=><label key={v.id} className={`${styles.pack} ${id===v.id?styles.packActive:""}`}><input type="radio" name="shop-pack" value={v.id} disabled={!enhanced} checked={id===v.id} onChange={()=>choose(v.id)} className="mt-0.5 size-4 shrink-0 accent-forest-850 focus-ring"/><span><strong className="block text-sm">{v.label}</strong><span className="block text-xs">{v.detail}</span><strong className="mt-1 block text-sm">{money(v.amount)}</strong></span></label>)}</div></fieldset>
+ <div className={styles.sizeRow}><span className={styles.label}>Size</span><div role="group" aria-label="Bottle size" className="flex flex-1 gap-3">{([{label:"750 ml",size:"750"},{label:"1.5 L",size:"1500"}] as const).map(x=><button type="button" key={x.size} disabled={!enhanced} aria-pressed={size===x.size} onClick={()=>chooseSize(x.size)} className={`${styles.size} focus-ring ${size===x.size?styles.sizeActive:""}`}>{x.label}</button>)}</div></div>
+ <fieldset className="mt-5"><legend className={styles.label}>Pack and quantity</legend><p className="mt-1 text-xs text-ink-700">Set a quantity for each pack you want. You can combine packs and sizes.</p><ul className={styles.packGrid}>{rows.map(v=>{const q=quantities[v.id]??"0";const n=Number(q);const ok=q.trim()!==""&&Number.isInteger(n)&&n>=0&&n<=MAX;const name=`${v.label} (${v.detail})`;return <li key={v.id} data-pack={v.id} className={`${styles.pack} ${viewing===v.id?styles.packActive:""} ${ok&&n>0?styles.packSelected:""}`}>
+ <button type="button" data-pack-view disabled={!enhanced} aria-pressed={viewing===v.id} onClick={()=>setViewing(v.id)} className="min-w-0 flex-1 cursor-pointer text-left focus-ring"><strong className="block text-sm">{v.label}</strong><span className="block text-xs">{v.detail}</span><strong className="mt-1 block text-sm">{money(v.amount)}</strong></button>
+ <div className={`${styles.quantity} ${styles.packQuantity}`}><button type="button" aria-label={`Decrease ${name}`} disabled={!enhanced||!ok||n<=0} onClick={()=>step(v.id,-1)}>−</button><input id={`qty-${v.id}`} type="number" inputMode="numeric" min={0} max={MAX} step={1} disabled={!enhanced} value={q} onChange={e=>setQuantity(v.id,e.target.value)} aria-label={`Quantity of ${name}`} aria-invalid={!ok}/><button type="button" aria-label={`Increase ${name}`} disabled={!enhanced||(ok&&n>=MAX)} onClick={()=>step(v.id,1)}>+</button></div>
+ </li>})}</ul></fieldset>
+ {invalid.length>0&&<p role="alert" className="mt-2 text-sm text-error">Use whole numbers from 0 to 10,000 for each pack.</p>}
+ <div data-selection-summary aria-live="polite" className="mt-4 rounded-button border border-line-card bg-cream-200 p-4 text-sm">{selected.length===0?<p className="text-ink-700">No packs selected yet. Set a quantity above 0 for at least one pack.</p>:<><p className={styles.label}>Your selection</p><ul className="mt-2 space-y-1">{selected.map(x=><li key={x.v.id} data-selection-line={x.v.id} className="flex justify-between gap-3"><span>{x.n} × {x.v.label} <span className="text-ink-700">({x.v.detail})</span></span><span className="shrink-0 font-semibold lining-nums">{x.v.amount===null?"Price on request":money(x.v.amount*x.n)}</span></li>)}</ul><p data-selection-total className="mt-2 flex justify-between gap-3 border-t border-line-card pt-2 font-semibold"><span>Total</span><span className="lining-nums">{priced.length>0?money(total):"Price on request"}{priced.length>0&&onRequest>0?" + items priced on request":""}</span></p></>}</div>
  <div className="mt-5"><p className={styles.label}>Purchase type</p><div className="mt-2 grid gap-3 sm:grid-cols-2"><div className="rounded-button border border-gold-700 bg-cream-200 p-3 text-sm"><span aria-hidden="true">◉ </span>One-time order request</div><Link href="/wholesale#enquiry" className="focus-ring rounded-button border border-line-card p-3 text-sm underline-offset-4 hover:underline">Ask about recurring supply</Link></div></div>
- <div className="mt-5 flex items-center gap-5"><label htmlFor="shop-quantity" className={styles.label}>Quantity</label><div className={styles.quantity}><button type="button" aria-label="Decrease quantity" disabled={!enhanced||count<=1} onClick={()=>setQuantity(String(Math.max(1,(count||1)-1)))}>−</button><input id="shop-quantity" type="number" min={1} max={10000} step={1} disabled={!enhanced} value={quantity} onChange={e=>setQuantity(e.target.value)} aria-invalid={!valid}/><button type="button" aria-label="Increase quantity" disabled={!enhanced||count>=10000} onClick={()=>setQuantity(String(Math.min(10000,(count||1)+1)))}>+</button></div></div>
- {!valid&&<p role="alert" className="mt-2 text-sm text-error">Choose a whole quantity from 1 to 10,000.</p>}
- <div className="mt-5 grid gap-3 sm:grid-cols-2"><button data-add-basket disabled={!enhanced||!valid} type="button" onClick={add} className={`${buttonClassName("outline-light",{surface:"light"})} disabled:cursor-not-allowed disabled:opacity-50`}>Add to cart</button><Link href={href} aria-disabled={!valid} onClick={e=>{if(!valid)e.preventDefault()}} className={`${styles.request} focus-ring`}>Request order</Link></div>
+ <div className="mt-5 grid gap-3 sm:grid-cols-2"><button data-add-basket disabled={!ready} type="button" onClick={add} className={`${buttonClassName("outline-light",{surface:"light"})} disabled:cursor-not-allowed disabled:opacity-50`}>Add to cart</button><Link href={href} aria-disabled={enhanced&&!ready} onClick={e=>{if(enhanced&&!ready)e.preventDefault()}} className={`${styles.request} focus-ring ${enhanced&&!ready?"opacity-50":""}`}>Request order</Link></div>
  <div role="status" className="mt-2 min-h-5 text-sm text-forest-850">{notice} {notice.startsWith("Added")&&<Link href="/cart" className="underline">View basket →</Link>}</div>
  <div className="mt-4 grid gap-3 border-t border-line-card pt-4 text-sm sm:grid-cols-2"><p>Delivery arrangements confirmed with your quote.</p><Link href="/wholesale#enquiry" className="text-gold-700 underline underline-offset-4">Need larger quantities? Request wholesale pricing →</Link></div>
  <p className="mt-4 text-xs font-semibold uppercase tracking-nav text-ink-700">Order enquiry · No payment collected online</p>

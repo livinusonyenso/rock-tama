@@ -77,6 +77,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Shop pack/carton imagery (D-118):** Pack of 24 × 750 ml (price on request) with tray images; carton gallery = five 12 × 1.5 L views (wrong 24-tray removed) | lint ✓ (only warning is in another session's untracked scratch file) · tsc ✓ · build ✓ · shop journeys 74/74 (mobile + desktop) |
 
+| 2026-11-17 | **Per-pack quantities in the shop (D-119)** | tsc ✓ · lint ✓ (only warning in another session's scratch file) · build ✓ · shop journeys 116/116 on mobile + desktop (incl. new multi-select, multi-add, nothing-selected; all controls fit at 320–1440) · mobile and desktop screenshots reviewed |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

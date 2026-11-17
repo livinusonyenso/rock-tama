@@ -9,3 +9,17 @@ function parse(raw:string):BasketLine[]{try{const data=JSON.parse(raw);if(!Array
 export function useBasket(){const raw=useSyncExternalStore(subscribe,read,server);return useMemo(()=>parse(raw),[raw])}
 export function updateBasket(lines:BasketLine[]){window.localStorage.setItem(KEY,JSON.stringify(lines));window.dispatchEvent(new Event(EVENT))}
 export function addBasket(variantId:string,quantity:number){if(!variantById(variantId)||!Number.isInteger(quantity)||quantity<1||quantity>10000)throw new Error("Choose a valid quantity.");const lines=parse(read()),old=lines.find(l=>l.variantId===variantId);if(old){if(old.quantity+quantity>10000)throw new Error("The basket limit is 10,000 selections per item.");old.quantity+=quantity;}else lines.push({variantId,quantity});updateBasket(lines)}
+/**
+ * Adds several selections at once (D-119): all lines are validated against the current basket first and
+ * written in one update, so a limit error never leaves a half-added selection.
+ */
+export function addBasketLines(additions:readonly BasketLine[]){
+ const lines=parse(read());
+ for(const {variantId,quantity} of additions){
+  if(!variantById(variantId)||!Number.isInteger(quantity)||quantity<1||quantity>10000)throw new Error("Choose a valid quantity.");
+  const old=lines.find(l=>l.variantId===variantId);
+  if((old?.quantity??0)+quantity>10000)throw new Error("The basket limit is 10,000 selections per item.");
+ }
+ for(const {variantId,quantity} of additions){const old=lines.find(l=>l.variantId===variantId);if(old)old.quantity+=quantity;else lines.push({variantId,quantity})}
+ updateBasket(lines);
+}

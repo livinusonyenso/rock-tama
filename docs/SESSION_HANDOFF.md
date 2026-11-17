@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Shop selection (D-119):** each pack has its own quantity stepper; selections combine packs and sizes, with a live summary; Add to cart / Request order act on the whole selection.
+
 **Shop imagery (D-118):** Pack of 24 × 750 ml (price on request) added; carton gallery shows only 12 × 1.5 L carton views (+ labelled alternative design).
 
 **Contact / testimonials / socials (D-111, homepage Contact D-117):** `/contact` live and the same cards on the homepage (last section) (WhatsApp + email placeholders, actions inactive until real values in `content/contact.ts`); sample testimonials on the homepage (labelled; 6 in a scroll-snap slider with autoplay, no visible controls, D-112/D-113); footer social icons with `#`. All listed in `content/launch.ts` and launch-blocked.
