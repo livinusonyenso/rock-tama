@@ -1,6 +1,7 @@
 import "server-only";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { isStrictLaunch } from "@/lib/server/payments/config";
 import { ADMIN_COOKIE, ADMIN_SESSION_TTL_MS, signAdminSession, verifyAdminSession, type AdminSession } from "@/lib/server/admin/session-token";
 
@@ -41,6 +42,8 @@ export async function startAdminSession(email: string) {
 }
 
 export async function readAdminSession(): Promise<AdminSession | null> {
+  // Request-time only: the expiry check reads the clock, which Cache Components must never prerender (D-129).
+  await connection();
   return verifyAdminSession((await cookies()).get(ADMIN_COOKIE)?.value);
 }
 

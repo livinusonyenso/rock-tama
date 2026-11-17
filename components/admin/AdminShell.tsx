@@ -14,11 +14,14 @@ import { badges } from "@/content/admin-demo";
 export function AdminShell({ children, account }: { children: ReactNode; account: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-ivory-50 text-ink-900">
-      <aside aria-label="Admin navigation" className="relative isolate hidden w-64 shrink-0 flex-col overflow-hidden bg-forest-950 text-on-dark lg:sticky lg:top-0 lg:flex lg:h-screen">
-        <Image src="/images/hero/waterfall-bg.webp" alt="" aria-hidden="true" fill sizes="256px" className="-z-20 object-cover object-[70%_100%] opacity-90" />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-b from-forest-950 from-55% via-forest-950/80 to-forest-950/10" />
+      <aside aria-label="Admin navigation" className="isolate hidden w-56 shrink-0 flex-col overflow-hidden bg-forest-950 text-on-dark md:sticky md:top-0 md:flex md:h-screen lg:w-64">
+        {/* Own absolute layer: next/image `fill` needs a relative/absolute parent, and the sidebar itself is sticky (D-129). */}
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <Image src="/images/hero/waterfall-bg.webp" alt="" fill loading="eager" sizes="256px" className="object-cover object-[70%_100%] opacity-90" />
+          <div className="absolute inset-0 bg-linear-to-b from-forest-950 from-55% via-forest-950/80 to-forest-950/10" />
+        </div>
         <div className="flex flex-col items-center px-6 pt-6 pb-4">
-          <Link href="/admin" aria-label="Rock Tama admin dashboard" className="focus-ring-dark"><Logo variant="footer" className="h-20" /></Link>
+          <Link href="/admin" aria-label="Rock Tama admin dashboard" className="focus-ring-dark"><Logo variant="footer" className="h-16 lg:h-20" eager /></Link>
           <p className="mt-3 flex w-full items-center gap-3 text-xs font-semibold uppercase tracking-eyebrow text-gold-500"><span aria-hidden="true" className="h-px flex-1 bg-gold-500/70" />{adminCopy.portal}<span aria-hidden="true" className="h-px flex-1 bg-gold-500/70" /></p>
         </div>
         <nav className="px-3">
@@ -49,7 +52,7 @@ export function AdminShell({ children, account }: { children: ReactNode; account
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="relative isolate overflow-hidden border-b border-line-card bg-cream-200/60">
-          <Image src="/images/origin/origin-landscape.webp" alt="" aria-hidden="true" fill sizes="(min-width: 1024px) 70vw, 100vw" className="-z-20 object-cover object-[70%_40%]" />
+          <Image src="/images/origin/origin-landscape.webp" alt="" aria-hidden="true" fill preload loading="eager" sizes="(min-width: 768px) 75vw, 100vw" className="-z-20 object-cover object-[70%_40%]" />
           <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-r from-ivory-50 from-45% via-ivory-50/85 to-ivory-50/20" />
           <div className="flex items-start justify-between gap-4 px-4 py-5 sm:px-8">
             <div>
@@ -67,10 +70,10 @@ export function AdminShell({ children, account }: { children: ReactNode; account
             </div>
           </div>
         </header>
-        {/* Below lg the sidebar is hidden: the same navigation as a scrollable strip. */}
+        {/* Phones (below md): the sidebar is hidden, so the same navigation as a scrollable strip. */}
         {/* relative: the sr-only "(Coming soon)" spans are absolutely positioned; without a positioned ancestor they
             escape this strip's scroll clipping and widen the whole page on phones. */}
-        <nav aria-label="Admin navigation (compact)" className="relative overflow-x-auto border-b border-line-card bg-forest-950 lg:hidden">
+        <nav aria-label="Admin navigation (compact)" className="relative overflow-x-auto border-b border-line-card bg-forest-950 md:hidden">
           <ul className="flex gap-1 px-3 py-2 text-sm whitespace-nowrap text-on-dark">
             {adminNav.map((item) => (
               <li key={item.label}>

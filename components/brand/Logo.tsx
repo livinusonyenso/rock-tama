@@ -29,6 +29,8 @@ type LogoProps = {
   variant: LogoVariant;
   /** Replaces the variant's default height classes, e.g. "h-12". Width always follows the aspect ratio. */
   className?: string;
+  /** Load immediately when the logo is above the fold (e.g. admin sidebar and sign-in, D-129). */
+  eager?: boolean;
 };
 
 /**
@@ -36,7 +38,7 @@ type LogoProps = {
  * `content/site.ts`; until then, a same-size labelled placeholder. Renders the
  * image only; callers decide whether it's a link.
  */
-export function Logo({ variant, className }: LogoProps) {
+export function Logo({ variant, className, eager }: LogoProps) {
   const { asset, height, placeholder } = variants[variant];
   const sizing = className ?? height;
 
@@ -49,7 +51,7 @@ export function Logo({ variant, className }: LogoProps) {
           width={asset.width}
           height={asset.height}
           sizes={variant === "header" ? "(min-width: 1280px) 163px, 122px" : "(min-width: 1024px) 199px, 166px"}
-          loading={variant === "header" ? "eager" : "lazy"}
+          loading={eager || variant === "header" ? "eager" : "lazy"}
           className={variant === "footer" && !className ? "h-auto w-42 object-contain lg:w-50" : `w-auto object-contain ${sizing}`}
         />
       </span>
