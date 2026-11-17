@@ -8,7 +8,11 @@ import { heroSlides } from "@/content/hero-slides";
 import { heroBackground } from "@/content/media";
 import { resolveHref } from "@/lib/navigation";
 
-/** Static background and content stay on the server; only carousel behaviour is interactive. */
+/**
+ * Static background and content stay on the server; only carousel behaviour is interactive.
+ * `intro` carries a key: HeroCarousel renders it beside the slide stack, and in development the server element
+ * can arrive after its parent in the streamed payload, so React validated it as an unkeyed sibling (D-126).
+ */
 export function HeroSection() {
   const copy = heroSlides.map(slide => {
     const base = resolveHref(slide.route);
@@ -27,12 +31,12 @@ export function HeroSection() {
     fill preload={index === 0} loading={index === 0 ? undefined : "lazy"} sizes="(min-width: 1024px) 190px, (min-width: 768px) 160px, 120px" className="object-contain" />);
   return <section aria-labelledby="hero-heading" className="relative isolate overflow-hidden bg-hero text-on-dark">
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" data-hero-background>
-      <Image src={heroBackground.src} alt="" fill preload sizes="100vw" className="hero-background-image object-cover" />
+      <Image src={heroBackground.src} alt="" fill preload loading="eager" sizes="100vw" className="hero-background-image object-cover" />
       <div className="hero-background-overlay absolute inset-0" />
     </div>
     <Container>
       <HeroCarousel slides={heroSlides} copy={copy} frames={frames} intervalMs={4000}
-        intro={<div className="animate-enter">
+        intro={<div key="intro" className="animate-enter">
           <p className="text-sm font-semibold uppercase tracking-eyebrow text-gold-500 lg:text-lg">{hero.eyebrow}</p>
           <span aria-hidden="true" className="my-4 block h-0.5 w-16 bg-gold-500" />
           <h1 id="hero-heading" className="font-serif text-5xl font-bold leading-none sm:text-6xl md:text-5xl lg:text-7xl xl:text-display">{hero.heading}</h1>

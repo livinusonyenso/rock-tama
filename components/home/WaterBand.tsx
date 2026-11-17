@@ -17,13 +17,15 @@ export function WaterBand({ children }: { children: ReactNode }) {
   return (
     <div className="relative isolate overflow-hidden bg-spring-mist">
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <Image src={src} alt="" fill sizes="100vw" className="object-cover object-[50%_68%] xl:hidden" />
+        {/* Kept laid out but invisible where unused (display:none gave next/image "height 0" warnings); a tiny
+            `sizes` at those widths means only a thumbnail-size file is fetched there (D-126). */}
+        <Image src={src} alt="" fill sizes="(min-width: 1280px) 16px, 100vw" className="object-cover object-[50%_68%] xl:invisible" />
         {/* Below xl the content stacks over the whole artwork, so soften it to keep every label readable. */}
         <div className="absolute inset-0 bg-spring-mist/65 xl:hidden" />
-        <Image src={src} alt="" width={width} height={height} sizes="900px"
-          className={`${layer} left-0 hidden mask-[linear-gradient(to_right,black_45%,transparent_75%)] xl:block`} />
-        <Image src={src} alt="" width={width} height={height} sizes="900px"
-          className={`${layer} right-0 hidden mask-[linear-gradient(to_left,black_15%,transparent_45%)] xl:block`} />
+        <Image src={src} alt="" width={width} height={height} sizes="(min-width: 1280px) 900px, 16px"
+          className={`${layer} invisible left-0 mask-[linear-gradient(to_right,black_45%,transparent_75%)] xl:visible`} />
+        <Image src={src} alt="" width={width} height={height} sizes="(min-width: 1280px) 900px, 16px"
+          className={`${layer} invisible right-0 mask-[linear-gradient(to_left,black_15%,transparent_45%)] xl:visible`} />
       </div>
       {children}
     </div>
