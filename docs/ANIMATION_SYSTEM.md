@@ -125,3 +125,6 @@ D-109: wholesale warehouse background, overlay and gold rules are static. Existi
 
 
 D-114 shop gallery is manual and decodes before changing images. No autoplay, animated zoom or new library. Native dialog and static frame work without motion; catalogue gallery changes do not animate text or page layout.
+
+
+D-119 supersedes D-112/D-113 timed testimonial steps: linear transform(-50%→0),72s for6cards, two equal lists including joining gap. CSS compositor animation only; no JS frame loop/timer. Hover/focus/hidden tab pauses, direct interaction persistent stop, keyboard-only pause/resume. Reduced-motion/no-JS single static scrollable group, duplicate hidden/inert. Checkout adds no moving backgrounds or new motion.

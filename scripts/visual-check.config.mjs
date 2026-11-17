@@ -1,3 +1,4 @@
+import {checkoutJourneys} from "./checkout-check.config.mjs";
 // Configuration for scripts/visual-check.mjs (D-040).
 // Add a `sections` entry whenever a homepage section is implemented.
 
@@ -70,6 +71,7 @@ const config = {
     { name: "shop", path: "/shop" },
     { name: "product", path: "/shop/750ml-glass-bottle" },
     { name: "contact", path: "/contact" },
+    { name: "checkout", path: "/checkout" },
   ],
 
   sections: [
@@ -295,6 +297,7 @@ const config = {
       ],
     },
     ...shopReferenceJourneys(),
+    ...checkoutJourneys(),
     // ---- /shop (F2) ----
     { name: "shop-page", page: "shop", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
     { name: "product-page", page: "product", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
@@ -799,41 +802,13 @@ function functionalJourneys() {
       actions: [{ click: 'main aside a[href="/wholesale"]' }, { waitFor: "location.pathname === '/wholesale'" }],
       expect: [{ name: "Request Wholesale from Contact opens the enquiry page", js: "[...document.querySelectorAll('main')].filter(e=>e.checkVisibility()).some(m=>!!m.querySelector('form'))" }],
     },
-    {
-      ...base, name: "testimonials-no-js", page: "home", javascript: false,
-      expect: [{ name: "without JS: all 6 testimonials present in a swipeable/scrollable row, no dead controls", js: "!document.querySelector('#testimonials [data-reveal]') && document.querySelectorAll('#testimonials blockquote').length===6 && !document.querySelector('#testimonials button') && document.querySelector('#testimonials ul[tabindex]').scrollWidth>document.querySelector('#testimonials ul[tabindex]').clientWidth" }],
-    },
-    {
-      ...base, name: "testimonials-reduced-motion", page: "home", media: [{ name: "prefers-reduced-motion", value: "reduce" }],
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true" }],
-      expect: [{ name: "reduced motion: nothing hidden, no autoplay", js: "[...document.querySelectorAll('#testimonials [data-reveal]')].every(e=>getComputedStyle(e).opacity==='1') && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating" }],
-    },
-    // -- D-112 testimonial slider: real autoplay, pause, controls, loop --
-    {
-      ...base, name: "testimonials-autoplay", page: "home", viewports: ["desktop"],
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true" }, { moveTo: { x: 2, y: 2 } }, { waitFor: "(() => { const t=document.querySelector('#testimonials ul[tabindex]'); const step=t.children[1].offsetLeft-t.children[0].offsetLeft; return document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='1' && Math.abs(t.scrollLeft-step)<2; })()", timeout: 12000 }],
-      expect: [{ name: "slides one card automatically after ~5s and lands snapped on a card", js: "(() => { const t=document.querySelector('#testimonials ul[tabindex]'); const step=t.children[1].offsetLeft-t.children[0].offsetLeft; return t.scrollLeft>0 && Math.abs(t.scrollLeft-step)<2 && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true'; })()" }],
-    },
-    {
-      ...base, name: "testimonials-hover-pause", page: "home", viewports: ["desktop"],
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); window.__t=Date.now(); true" }, { moveTo: { x: 720, y: 400 } }, { waitFor: "Date.now()-window.__t>6500", timeout: 10000 }],
-      expect: [{ name: "hovering pauses autoplay (still on the first card after 6.5s)", js: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='0' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && document.querySelector('#testimonials ul[tabindex]').scrollLeft===0" }],
-    },
-    {
-      ...base, name: "testimonials-loop", page: "home", viewports: ["desktop"],
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); const t=document.querySelector('#testimonials ul[tabindex]'); t.style.scrollBehavior='auto'; t.scrollLeft=t.scrollWidth; t.style.scrollBehavior=''; true" }, { moveTo: { x: 2, y: 2 } }, { waitFor: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='3'" }, { waitFor: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselIndex==='0' && document.querySelector('#testimonials ul[tabindex]').scrollLeft===0", timeout: 12000 }],
-      expect: [{ name: "after the last card, autoplay glides back to the first", js: "document.querySelector('#testimonials ul[tabindex]').scrollLeft===0 && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true'" }],
-    },
-    {
-      ...base, name: "testimonials-swipe-stops", page: "home",
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); document.querySelector('#testimonials ul[tabindex]').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'})); true" }, { waitFor: "!!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped" }],
-      expect: [{ name: "touching/swiping the row stops autoplay for good (visitor in control)", js: "!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true'" }],
-    },
-    {
-      ...base, name: "testimonials-keyboard-stops", page: "home", viewports: ["desktop"],
-      actions: [{ evaluate: "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); document.querySelector('#testimonials ul[tabindex]').focus(); true" }, { press: "ArrowRight" }, { evaluate: "document.querySelector('#testimonials ul[tabindex]').blur(); true" }, { moveTo: { x: 2, y: 2 } }],
-      expect: [{ name: "keyboard focus pauses; using the keys stops autoplay even after focus leaves", js: "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating" }],
-    },
+    {...base,"name": "testimonials-no-js", "page": "home", "actions": [], "expect": [{"name": "testimonials-no-js", "js": "document.querySelectorAll('#testimonials ul:not([aria-hidden]) blockquote').length===6 && !document.querySelector('#testimonials button') && document.querySelector('#testimonials [tabindex]').scrollWidth>document.querySelector('#testimonials [tabindex]').clientWidth && getComputedStyle(document.querySelector('[data-testimonial-copy]')).display==='none'"}], "javascript": false},
+    {...base,"name": "testimonials-reduced-motion", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}], "expect": [{"name": "testimonials-reduced-motion", "js": "!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && getComputedStyle(document.querySelector('[data-testimonial-track]')).animationName==='none' && getComputedStyle(document.querySelector('[data-testimonial-copy]')).display==='none'"}], "media": [{"name": "prefers-reduced-motion", "value": "reduce"}]},
+    {...base,"name": "testimonials-autoplay", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}, {"moveTo": {"x": 2, "y": 2}}, {"evaluate": "window.__marqueeX=new DOMMatrix(getComputedStyle(document.querySelector('[data-testimonial-track]')).transform).m41; true"}, {"wait": 500}], "expect": [{"name": "testimonials-autoplay", "js": "new DOMMatrix(getComputedStyle(document.querySelector('[data-testimonial-track]')).transform).m41>window.__marqueeX+2 && getComputedStyle(document.querySelector('[data-testimonial-track]')).animationTimingFunction==='linear' && document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true'"}], "viewports": ["small", "mobile", "tablet", "laptop", "large", "desktop"]},
+    {...base,"name": "testimonials-hover-pause", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}, {"evaluate": "document.querySelector('#testimonials [aria-roledescription=carousel]').dispatchEvent(new PointerEvent('pointerover',{bubbles:true,pointerType:'mouse'})); true"}, {"wait": 100}, {"evaluate": "window.__marqueeX=getComputedStyle(document.querySelector('[data-testimonial-track]')).transform; true"}, {"wait": 400}], "expect": [{"name": "testimonials-hover-pause", "js": "getComputedStyle(document.querySelector('[data-testimonial-track]')).transform===window.__marqueeX && getComputedStyle(document.querySelector('[data-testimonial-track]')).animationPlayState==='paused' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating"}], "viewports": ["desktop"]},
+    {...base,"name": "testimonials-loop", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}], "expect": [{"name": "testimonials-loop", "js": "(()=>{const t=document.querySelector('[data-testimonial-track]'),groups=t.children,a=t.getAnimations()[0]; if(!a)return false;const width=groups[0].getBoundingClientRect().width;const saved=a.currentTime,duration=a.effect.getTiming().duration;a.currentTime=duration-.1;const before=groups[0].getBoundingClientRect().left;a.currentTime=duration+.1;const after=groups[1].getBoundingClientRect().left;a.currentTime=saved;if(Math.abs(after-before)>1)return false;return Math.abs(width-groups[1].getBoundingClientRect().width)<.1 && Math.abs(t.getBoundingClientRect().width-width*2)<.1 && groups[0].textContent===groups[1].textContent && groups[1].inert && groups[1].getAttribute('aria-hidden')==='true' && a.effect.getTiming().iterations===Infinity && a.effect.getTiming().easing==='linear';})()"}]},
+    {...base,"name": "testimonials-swipe-stops", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}, {"evaluate": "document.querySelector('#testimonials [tabindex]').dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'})); true"}, {"wait": 100}], "expect": [{"name": "testimonials-swipe-stops", "js": "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true' && getComputedStyle(document.querySelector('[data-testimonial-track]')).animationPlayState==='paused'"}]},
+    {...base,"name": "testimonials-keyboard-stops", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}, {"evaluate": "document.querySelector('#testimonials [tabindex]').focus(); true"}, {"press": "ArrowRight"}, {"evaluate": "document.querySelector('#testimonials [tabindex]').blur(); true"}, {"moveTo": {"x": 2, "y": 2}}], "expect": [{"name": "testimonials-keyboard-stops", "js": "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating"}], "viewports": ["desktop"]},
     // -- §6 Our Origin: motion, reading order, accessibility and actual navigation --
     {
       ...base, name: "origin-initial", page: "home", viewports: ["mobile", "desktop"],

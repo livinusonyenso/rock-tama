@@ -1,0 +1,18 @@
+.root { container-type:inline-size; }
+.viewport { overflow-x:auto; padding: .5rem .25rem; }
+.track { display:flex; width:max-content; }
+.group { display:flex; gap:1.5rem; padding-right:1.5rem; flex:none; }
+.card { width:calc(100cqw - .5rem); flex:none; }
+.group[data-testimonial-copy] { display:none; }
+.root[data-marquee-enabled] .viewport { scrollbar-width:none; }
+.root[data-marquee-enabled] .viewport::-webkit-scrollbar { display:none; }
+.root[data-marquee-enabled] .track { animation:drift-right linear infinite; }
+.root[data-marquee-enabled] .group[data-testimonial-copy] { display:flex; }
+/* Both groups include the joining gap: half the track is exactly one repeat. */
+@keyframes drift-right { from { transform:translateX(-50%); } to { transform:translateX(0); } }
+@media(min-width:48rem){ .card { width:calc((100cqw - 2rem)/2); } }
+@media(min-width:64rem){ .card { width:calc((100cqw - 3.5rem)/3); } }
+@media(prefers-reduced-motion:reduce){
+  .root .track { animation:none; transform:none; }
+  .root .group[data-testimonial-copy] { display:none; }
+}

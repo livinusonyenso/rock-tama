@@ -6,8 +6,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { testimonials } from "@/content/testimonials";
 
 /**
- * Customer testimonials (D-111, slider D-112). Server Component: renders the heading and every card; the
- * `TestimonialSlider` island only adds autoplay (no visible controls, D-113). Shows a visible note while the content is sample data.
+ * Customer testimonials: server-rendered card design with a lightweight continuous-motion island.
+ * Shows a visible note while the content is sample data.
  */
 export function TestimonialsSection() {
   return (

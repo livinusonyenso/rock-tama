@@ -205,3 +205,6 @@ D-110: wholesale warehouse tint refined to#052b20; keep near-solid green across 
 
 
 D-114 shop product composition: two columns at desktop, gallery then buying panel on mobile; ivory cards, forest selected states and gold borders. Manual thumbnail gallery with native zoom dialog; reserved frames and 44px quantity/cart targets. Shared OfferCard compactMedia is opt-in; other pages retain default sizing.
+
+
+D-119 testimonials preserve card styling but use a continuous left-to-right track, with 24px joining gaps and responsive1/2/3 card widths. D-120 checkout reuses forest/gold/ivory, serif headings, rounded bordered panels, medallion icons and existing optimized waterfall. Desktop detail/summary columns collapse to contact/address then summary on mobile; inputs16px/44px minimum height.

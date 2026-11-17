@@ -120,3 +120,6 @@ D-109 wholesale hero: actual delivered public/images/wholesale/warehouse-hero..p
 
 
 D-114 shop reuses content/shop-gallery.ts assets: bottle-750ml-rock-tama.webp, bottle-1-5l.webp, waterfall-bg.webp, catalogue glass bottle and carton views, existing origin-landscape.webp illustration. No new imagery. Concept/crop captions preserve artwork status; next/image sizes and contain/cover depend on image role.
+
+
+D-120 checkout reuses /images/hero/waterfall-bg.webp (decorative cover, banner preload only) and content/shop-gallery.ts product/pack images with contain and reserved aspect boxes. No new or generated assets; raw public/image.png is unrelated and untouched.

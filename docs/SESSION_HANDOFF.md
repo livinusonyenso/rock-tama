@@ -101,3 +101,6 @@ D-115 latest: next.config.ts Tailwind rule MUST target globals.css, not *.css wi
 
 
 D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.
+
+
+Latest D-119/D-120: testimonials now CSS continuous left-to-right loop (72s for6cards), two equal groups, hover/focus/hidden pause, direct interaction stops, reduced-motion/no-JS single scrollable list, keyboard-only Pause/Resume. Final60checks pass. Checkout /checkout uses persistent basket, controlled contact/address fields, quantity editing and server-validated enquiry delivery; no paid checkout. Existing prices draft; delivery TBD, unknown items on request.69functional+7unconfigured pass. See CHECKOUT_IMPLEMENTATION.md and verification/testimonials-continuous/REVIEW.md. Checkout full-page captures in verification/checkout-layout. No push/deploy or visual approval.

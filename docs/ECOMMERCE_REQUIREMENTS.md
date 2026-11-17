@@ -110,3 +110,6 @@ An incomplete Vercel production build now warns rather than failing on missing e
 
 
 D-114 implementation update: F3 now has a local persistent quotation basket and header count. F4 remains quotation-only, without payment collection. Owner-approved draft prices reside in content/commerce.ts; unknown prices remain null. Final amounts, availability and delivery require confirmation. No subscription integration implied.
+
+
+D-120: /checkout now supplies reference-style contact/address and live basket summary, with real server-validated order-request submission through existing enquiry delivery. F4 payment collection remains outstanding. No configured Paystack/bank/promo/delivery fee integration is implied. Draft catalogue prices authoritative on server; unknown prices stay on request; final price/delivery confirmed before payment.

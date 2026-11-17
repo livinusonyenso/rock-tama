@@ -86,3 +86,6 @@ D-115 safeguard: run gallery UI checks on the actual Turbopack development route
 
 
 D-116: shop pack-of-12 selection now has its own gallery key and uses existing /images/products/carton-packs.webp (printed12×750ml), rather than sharing the single-bottle gallery through its catalogue SKU. Gallery remounts on presentation key so stale thumbnail selection resets. Carton retains separate gallery. Pricing, SKU and quotation conversion unchanged. Lint/types pass; mobile/desktop gallery, pack-image and option journeys26/26. Evidence: docs/verification/shop-pack-image. Screenshots remain provisional; no push/deploy.
+
+
+D-119/D-120 safeguards: continuous testimonial loops require equal repeat widths including join gap, inert/aria-hidden duplicates, actual transform/boundary tests, reduced-motion/no-JS and interaction pauses. Checkout is an order-request UI until real payment/delivery integrations are authorised/configured; never replace Send order request with Pay Now without them. Reuse server enquiry validation/delivery and derive basket prices server-side. Tests: checkout-check.config.mjs and testimonials journeys; scope summary assertions to main aside (header has a separate sidebar).
