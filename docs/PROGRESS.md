@@ -185,3 +185,6 @@ D-119 continuous testimonials complete: production60/60, seamless-loop boundary 
 
 
 D-127 distributor account UI complete: header icon/mobile drawer→login, registration tab/business fields, responsive green/gold/ivory design, password visibility.150/150 browser checks at six widths, lint/types/styled diagnostic Webpack pass. Owner will use custom Node.js/Express; API not connected, submission visibly unavailable. Evidence/guide: DISTRIBUTOR_ACCOUNT_UI.md. No push/deploy.
+
+
+Distributor demo dashboard complete: any email/non-empty password→dashboard, refresh persistence, account routing and logout. Responsive navigation, sample orders/details, profile, live basket count and real shop/supply/support links.138/138 browser checks at six widths; lint/types/styled diagnostic Webpack/session checks pass. Password never sent/stored; no real authentication/approval/orders. Strict production disables demo. Guide DISTRIBUTOR_DASHBOARD.md. No push/deploy.

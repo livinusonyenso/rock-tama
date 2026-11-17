@@ -1,5 +1,7 @@
 # Distributor account UI — 2026-11-17
 
+**Current update:** owner subsequently enabled a demo login/dashboard using any email and non-empty password. See DISTRIBUTOR_DASHBOARD.md. Registration and real Express authentication remain pending; the disabled-login description below records the original UI milestone.
+
 Owner scope: account icon should lead to distributor registration/login. Owner clarified the backend will be a **custom Node.js/Express API**, and requested **UI only now**. No authentication provider, API or database has been connected. Supabase-specific draft code was discarded, with no new dependencies or environment settings retained.
 
 ## Routes and components

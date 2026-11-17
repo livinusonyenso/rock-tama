@@ -92,3 +92,6 @@ D-119/D-120 safeguards: continuous testimonial loops require equal repeat widths
 
 
 D-127 distributor UI boundary: owner chose custom Node.js/Express and said UI only. Preserve live account navigation/login/register views and explicit disabled submission until API contracts are supplied. Do not add Supabase/other provider, simulate authentication, store credentials locally or infer distributor approval from registration. Browser journeys in distributor-account.config.mjs; scope cached-route assertions to visible main. Guide docs/DISTRIBUTOR_ACCOUNT_UI.md.
+
+
+Distributor demo exception (owner-authorised): login now accepts any email/non-empty password for UI preview, superseding the disabled-login part of D-127. Keep demo state isolated, never transmit/store password or expose real data/approval, and retain strict-production exclusion. Replace with owner’s Express API later. Tests distributor-dashboard.config.mjs and distributor-demo-check.mjs; guide docs/DISTRIBUTOR_DASHBOARD.md.

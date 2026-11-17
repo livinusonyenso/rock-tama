@@ -1,0 +1,14 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import vm from "node:vm";
+import ts from "typescript";
+const exports={},env={};
+vm.runInNewContext(ts.transpileModule(readFileSync('lib/account/demo.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,process:{env}});
+assert.equal(exports.demoLoginEnabled(),true);
+assert.equal(exports.parseDemoSession(undefined),null);
+assert.equal(exports.parseDemoSession('broken'),null);
+assert.equal(exports.parseDemoSession(JSON.stringify({mode:'real',email:'demo@example.com'})),null);
+assert.equal(exports.parseDemoSession(JSON.stringify({mode:'demo',email:''})),null);
+assert.equal(exports.parseDemoSession(JSON.stringify({mode:'demo',email:'demo@example.com'})).email,'demo@example.com');
+env.DEPLOY_MODE='production';assert.equal(exports.demoLoginEnabled(),false);assert.equal(exports.parseDemoSession(JSON.stringify({mode:'demo',email:'demo@example.com'})),null);
+console.log('PASS demo session parsing and strict-production exclusion. Demo cookies do not authorize real data.');

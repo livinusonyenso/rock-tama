@@ -1,3 +1,4 @@
+import {distributorDashboardJourneys} from "./distributor-dashboard.config.mjs";
 import {distributorAccountJourneys} from "./distributor-account.config.mjs";
 import {checkoutJourneys} from "./checkout-check.config.mjs";
 // Configuration for scripts/visual-check.mjs (D-040).
@@ -302,6 +303,7 @@ const config = {
     ...shopReferenceJourneys(),
     ...checkoutJourneys(),
     ...distributorAccountJourneys(),
+    ...distributorDashboardJourneys(),
     // ---- /shop (F2) ----
     { name: "shop-page", page: "shop", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
     { name: "product-page", page: "product", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
