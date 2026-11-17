@@ -123,3 +123,6 @@ D-114 shop reuses content/shop-gallery.ts assets: bottle-750ml-rock-tama.webp, b
 
 
 D-120 checkout reuses /images/hero/waterfall-bg.webp (decorative cover, banner preload only) and content/shop-gallery.ts product/pack images with contain and reserved aspect boxes. No new or generated assets; raw public/image.png is unrelated and untouched.
+
+
+D-127 account shell reuses /images/hero/waterfall-bg.webp as decorative next/image fill/cover with forest overlay and responsive sizes. No new images or logo variants.

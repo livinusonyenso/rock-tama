@@ -208,3 +208,6 @@ D-114 shop product composition: two columns at desktop, gallery then buying pane
 
 
 D-119 testimonials preserve card styling but use a continuous left-to-right track, with 24px joining gaps and responsive1/2/3 card widths. D-120 checkout reuses forest/gold/ivory, serif headings, rounded bordered panels, medallion icons and existing optimized waterfall. Desktop detail/summary columns collapse to contact/address then summary on mobile; inputs16px/44px minimum height.
+
+
+D-127 account UI: shared ivory rounded card with forest waterfall brand panel, gold icon/eyebrow, serif headings; full benefits panel at desktop, compact brand intro below1024px. Form inputs16px/min48px height and visible focus, password toggle44px, native autocomplete. Login/Register tabs use gold active underline. Uses existing typography/spacing tokens.

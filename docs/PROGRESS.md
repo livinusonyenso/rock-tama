@@ -182,3 +182,6 @@ D-116: shop pack-of-12 selection now has its own gallery key and uses existing /
 
 
 D-119 continuous testimonials complete: production60/60, seamless-loop boundary tested, unchanged card design. D-120 checkout UI/request flow complete: lint/types/styled diagnostic Webpack,69functional +7unconfigured checks pass. Six-width captures in verification/checkout-layout. No payment integration, visual baseline approval, push or deployment.
+
+
+D-127 distributor account UI complete: header icon/mobile drawer→login, registration tab/business fields, responsive green/gold/ivory design, password visibility.150/150 browser checks at six widths, lint/types/styled diagnostic Webpack pass. Owner will use custom Node.js/Express; API not connected, submission visibly unavailable. Evidence/guide: DISTRIBUTOR_ACCOUNT_UI.md. No push/deploy.

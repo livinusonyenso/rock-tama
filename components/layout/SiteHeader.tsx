@@ -122,7 +122,7 @@ function HeaderActionItem({ action, href, cartCount }: HeaderActionItemProps) {
     </>
   );
 
-  const base = "relative flex text-forest-heading";
+  const base = "relative flex min-h-11 min-w-11 items-center justify-center text-forest-heading";
 
   return href ? (
     <Link href={href} className={`focus-ring hover:text-gold-700 ${base}`}>

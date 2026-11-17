@@ -89,3 +89,6 @@ D-116: shop pack-of-12 selection now has its own gallery key and uses existing /
 
 
 D-119/D-120 safeguards: continuous testimonial loops require equal repeat widths including join gap, inert/aria-hidden duplicates, actual transform/boundary tests, reduced-motion/no-JS and interaction pauses. Checkout is an order-request UI until real payment/delivery integrations are authorised/configured; never replace Send order request with Pay Now without them. Reuse server enquiry validation/delivery and derive basket prices server-side. Tests: checkout-check.config.mjs and testimonials journeys; scope summary assertions to main aside (header has a separate sidebar).
+
+
+D-127 distributor UI boundary: owner chose custom Node.js/Express and said UI only. Preserve live account navigation/login/register views and explicit disabled submission until API contracts are supplied. Do not add Supabase/other provider, simulate authentication, store credentials locally or infer distributor approval from registration. Browser journeys in distributor-account.config.mjs; scope cached-route assertions to visible main. Guide docs/DISTRIBUTOR_ACCOUNT_UI.md.
