@@ -104,7 +104,7 @@ type HeaderActionItemProps = {
 /** Icon-only action. Links when its route resolves; otherwise non-interactive with "coming soon" text. */
 function HeaderActionItem({ action, href, cartCount }: HeaderActionItemProps) {
   const isCart = action.id === "cart";
-  if (isCart && href) return <CartIndicator label={action.label} icon={<Icon name={action.icon} strokeWidth={1.75} className="size-6 xl:size-6.5" />} />;
+  if (isCart && href) return <CartIndicator href={href} label={action.label} icon={<Icon name={action.icon} strokeWidth={1.75} className="size-6 xl:size-6.5" />} />;
   const name = isCart ? `${action.label}, ${cartCount} ${cartCount === 1 ? "item" : "items"}` : action.label;
 
   const content = (

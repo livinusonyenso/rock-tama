@@ -79,6 +79,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Per-pack quantities in the shop (D-119)** | tsc ✓ · lint ✓ (only warning in another session's scratch file) · build ✓ · shop journeys 116/116 on mobile + desktop (incl. new multi-select, multi-add, nothing-selected; all controls fit at 320–1440) · mobile and desktop screenshots reviewed |
 
+| 2026-11-17 | **Buy now + one cart/checkout page (D-121)** | lint ✓ · build ✓ · shop/cart/checkout journeys 269/270, the one failure (`shop-menu-navigate` console RSC-prefetch error) passed on two isolated re-runs (intermittent) · /cart → /checkout 308 verified · screenshots reviewed |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

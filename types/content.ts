@@ -18,7 +18,7 @@ export type RouteKey =
   | "contact"
   | "search"
   | "account"
-  | "cart"
+  | "checkout"
   | "deliveryReturns"
   | "faqs"
   | "terms"

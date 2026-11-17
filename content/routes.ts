@@ -22,7 +22,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   faqs: { status: "planned", path: "/faqs" },
   terms: { status: "planned", path: "/terms" },
   privacy: { status: "planned", path: "/privacy" },
-  cart: { status: "live", path: "/cart" },
+  checkout: { status: "live", path: "/checkout" }, // D-121: the cart and checkout are one page; /cart redirects here
 };
 
 /**

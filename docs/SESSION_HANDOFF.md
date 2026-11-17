@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Cart/checkout (D-121):** `/checkout` is the one cart page (cart icon + Buy now go there; `/cart` 308-redirects). Product page: Add to cart + Buy now; no-JS keeps Request order.
+
 **Shop selection (D-119):** each pack has its own quantity stepper; selections combine packs and sizes, with a live summary; Add to cart / Request order act on the whole selection.
 
 **Shop imagery (D-118):** Pack of 24 × 750 ml (price on request) added; carton gallery shows only 12 × 1.5 L carton views (+ labelled alternative design).

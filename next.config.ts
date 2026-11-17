@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
     agentFeedback: true,
   },
   cacheComponents: true,
+  // D-121: one cart/checkout page. Old /cart links and bookmarks go permanently to /checkout.
+  async redirects() {
+    return [{ source: "/cart", destination: "/checkout", permanent: true }];
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

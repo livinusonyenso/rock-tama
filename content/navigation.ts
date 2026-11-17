@@ -23,7 +23,7 @@ export const mainNav: readonly NavItem[] = [
 export const headerActions: readonly HeaderAction[] = [
   { id: "search", label: "Search", icon: "search", route: "search" },
   { id: "account", label: "Account", icon: "user", route: "account" },
-  { id: "cart", label: "Cart", icon: "shopping-cart", route: "cart" },
+  { id: "cart", label: "Cart", icon: "shopping-cart", route: "checkout" },
 ];
 
 /** Shared copy for navigation states. */

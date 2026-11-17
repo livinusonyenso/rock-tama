@@ -1,6 +1,8 @@
 "use client";
 import {useState,useSyncExternalStore} from "react";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+import {resolveHref} from "@/lib/navigation";
 import {ProductGallery} from "./ProductGallery";
 import {shopGallery} from "@/content/shop-gallery";
 import {shopVariants,money,selectionHref,variantById,type BasketLine,type ShopSize} from "@/content/commerce";
@@ -29,8 +31,13 @@ export function ShopProductExperience(){
  const step=(id:string,delta:number)=>{const n=Number(quantities[id]??"0");setQuantity(id,String(Math.min(MAX,Math.max(0,(Number.isInteger(n)?n:0)+delta))))};
  const chooseSize=(next:ShopSize)=>{setSize(next);setViewing(shopVariants.find(v=>v.size===next&&v.pack==="single")!.id);setNotice("")};
  const galleryKey=variant.pack==="pack12"?"750-pack12":variant.pack==="pack24"?"750-pack24":variant.product as keyof typeof shopGallery;
- const href=selectionHref(enhanced?lines:NO_JS_DEFAULT);
- const add=()=>{try{addBasketLines(lines);setQuantities({});setNotice(`Added ${lines.length===1?"1 selection":`${lines.length} selections`} to your basket. No payment has been taken.`)}catch(error){setNotice(error instanceof Error && error.message.startsWith("The basket limit") ? error.message : "Basket storage is unavailable. You can still request this selection directly.")}};
+ const href=selectionHref(NO_JS_DEFAULT); // no-JS fallback link only
+ // D-121: Add to cart keeps the visitor here; Buy now adds the same selection and opens the cart/checkout page.
+ const router=useRouter();const checkoutHref=resolveHref("checkout");
+ const [storageFailed,setStorageFailed]=useState(false);
+ const save=()=>{try{addBasketLines(lines);setStorageFailed(false);return true}catch(error){const limit=error instanceof Error&&error.message.startsWith("The basket limit");setStorageFailed(!limit);setNotice(limit?(error as Error).message:"Basket storage is unavailable. You can still request this selection directly.");return false}};
+ const add=()=>{if(save()){setQuantities({});setNotice(`Added ${lines.length===1?"1 selection":`${lines.length} selections`} to your cart. No payment has been taken.`)}};
+ const buyNow=()=>{if(save()&&checkoutHref){setQuantities({});router.push(checkoutHref)}};
  return <section className={styles.product} aria-labelledby="shop-heading">
  <ProductGallery key={galleryKey} images={shopGallery[galleryKey]} enhanced={enhanced}/>
  <div className={styles.info}>
@@ -47,8 +54,11 @@ export function ShopProductExperience(){
  {invalid.length>0&&<p role="alert" className="mt-2 text-sm text-error">Use whole numbers from 0 to 10,000 for each pack.</p>}
  <div data-selection-summary aria-live="polite" className="mt-4 rounded-button border border-line-card bg-cream-200 p-4 text-sm">{selected.length===0?<p className="text-ink-700">No packs selected yet. Set a quantity above 0 for at least one pack.</p>:<><p className={styles.label}>Your selection</p><ul className="mt-2 space-y-1">{selected.map(x=><li key={x.v.id} data-selection-line={x.v.id} className="flex justify-between gap-3"><span>{x.n} × {x.v.label} <span className="text-ink-700">({x.v.detail})</span></span><span className="shrink-0 font-semibold lining-nums">{x.v.amount===null?"Price on request":money(x.v.amount*x.n)}</span></li>)}</ul><p data-selection-total className="mt-2 flex justify-between gap-3 border-t border-line-card pt-2 font-semibold"><span>Total</span><span className="lining-nums">{priced.length>0?money(total):"Price on request"}{priced.length>0&&onRequest>0?" + items priced on request":""}</span></p></>}</div>
  <div className="mt-5"><p className={styles.label}>Purchase type</p><div className="mt-2 grid gap-3 sm:grid-cols-2"><div className="rounded-button border border-gold-700 bg-cream-200 p-3 text-sm"><span aria-hidden="true">◉ </span>One-time order request</div><Link href="/wholesale#enquiry" className="focus-ring rounded-button border border-line-card p-3 text-sm underline-offset-4 hover:underline">Ask about recurring supply</Link></div></div>
- <div className="mt-5 grid gap-3 sm:grid-cols-2"><button data-add-basket disabled={!ready} type="button" onClick={add} className={`${buttonClassName("outline-light",{surface:"light"})} disabled:cursor-not-allowed disabled:opacity-50`}>Add to cart</button><Link href={href} aria-disabled={enhanced&&!ready} onClick={e=>{if(enhanced&&!ready)e.preventDefault()}} className={`${styles.request} focus-ring ${enhanced&&!ready?"opacity-50":""}`}>Request order</Link></div>
- <div role="status" className="mt-2 min-h-5 text-sm text-forest-850">{notice} {notice.startsWith("Added")&&<Link href="/cart" className="underline">View basket →</Link>}</div>
+ <div className="mt-5 grid gap-3 sm:grid-cols-2"><button data-add-basket disabled={!ready} type="button" onClick={add} className={`${buttonClassName("outline-light",{surface:"light"})} disabled:cursor-not-allowed disabled:opacity-50`}>Add to cart</button>{enhanced
+  ?<button data-buy-now disabled={!ready} type="button" onClick={buyNow} className={`${styles.request} focus-ring cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}>Buy now</button>
+  /* Without JavaScript the cart (browser storage) can't work: keep the direct order request link. */
+  :<Link href={href} className={`${styles.request} focus-ring`}>Request order</Link>}</div>
+ <div role="status" className="mt-2 min-h-5 text-sm text-forest-850">{notice} {notice.startsWith("Added")&&checkoutHref&&<Link href={checkoutHref} className="underline">View cart &amp; checkout →</Link>}{storageFailed&&<Link href={selectionHref(lines)} className="underline">Request this selection →</Link>}</div>
  <div className="mt-4 grid gap-3 border-t border-line-card pt-4 text-sm sm:grid-cols-2"><p>Delivery arrangements confirmed with your quote.</p><Link href="/wholesale#enquiry" className="text-gold-700 underline underline-offset-4">Need larger quantities? Request wholesale pricing →</Link></div>
  <p className="mt-4 text-xs font-semibold uppercase tracking-nav text-ink-700">Order enquiry · No payment collected online</p>
  <noscript><p className="mt-4 text-sm">You can request the displayed selection using the order link. For other sizes, use the product links below.</p></noscript>
