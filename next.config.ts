@@ -39,7 +39,7 @@ function missingDeliveryConfig() {
 
 const stagingMode = () => process.env.DEPLOY_MODE === "staging" || (
   process.env.DEPLOY_MODE !== "production" &&
-  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0 || launchPlaceholders().length > 0)
+  (missingDeliveryConfig().length > 0 || unverifiedClaims().length > 0 || launchPlaceholders().length > 0 || paymentProblem() !== null)
 );
 
 function blockOrWarn(message: string) {
@@ -83,6 +83,24 @@ function assertNoUnverifiedClaims() {
 }
 
 /**
+ * Payment readiness (D-122): a public launch needs a live Paystack secret key. Without one, checkout uses the
+ * built-in test gateway on staging (labelled "no money is charged") and online payment is off on a strict launch.
+ */
+function paymentProblem(): string | null {
+  const key = process.env.PAYSTACK_SECRET_KEY?.trim();
+  if (!key) return "PAYSTACK_SECRET_KEY is not set (checkout uses the test gateway)";
+  if (!/^sk_(test|live)_/.test(key)) return "PAYSTACK_SECRET_KEY must start with sk_test_ or sk_live_";
+  if (key.startsWith("sk_test_")) return "PAYSTACK_SECRET_KEY is a Paystack test key (no real payments)";
+  return null;
+}
+
+function assertPaymentsReady() {
+  if (process.env.VERCEL_ENV !== "production") return;
+  const problem = paymentProblem();
+  if (problem) blockOrWarn(`Production deployment blocked: online payments are not live: ${problem}. See .env.example.`);
+}
+
+/**
  * Placeholder readiness check (D-111): placeholder contact details, sample testimonials and "#" social links
  * must be replaced before a public launch. Strict mode rejects them; staging warns and stays noindex.
  */
@@ -99,6 +117,7 @@ export default function config(phase: string): NextConfig {
     assertProductionDeliveryConfig();
     assertNoUnverifiedClaims();
     assertNoLaunchPlaceholders();
+    assertPaymentsReady();
   }
   if (!stagingMode()) return nextConfig;
   return {

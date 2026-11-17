@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Payments (D-122):** checkout → Pay now via Paystack (`PAYSTACK_SECRET_KEY`), verified server-side + webhook; without a key a labelled test gateway is used (staging only). `lib/server/payments/`, `/api/payments/paystack/{callback,webhook}`, `/checkout/pay/test`, `/checkout/complete`.
+
 **Cart/checkout (D-121):** `/checkout` is the one cart page (cart icon + Buy now go there; `/cart` 308-redirects). Product page: Add to cart + Buy now; no-JS keeps Request order.
 
 **Shop selection (D-119):** each pack has its own quantity stepper; selections combine packs and sizes, with a live summary; Add to cart / Request order act on the whole selection.

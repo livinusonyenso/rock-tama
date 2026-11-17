@@ -69,7 +69,7 @@ Legend: **Visible** = a UI affordance appears in the reference · **Implied** = 
 | Pricing display | **Not shown** | — | — | **Prices, currency (NGN? USD for export?), VAT** |
 | Shopping cart | Cart icon + badge "0" | Header | Only if online ordering is wanted | **Is v1 order-online or enquiry-only?** |
 | Checkout | — | Cart | Only with cart | Guest checkout vs. accounts |
-| Payment integration | — | Checkout | Only with checkout | Provider (Nigerian options include Paystack and Flutterwave; owner to choose), merchant account |
+| Payment integration | — | Checkout | **Built D-122: Paystack** (test gateway until keys) | **Paystack live secret key, webhook URL, final prices** |
 | Customer accounts | Account icon | Header | **Defer**; guest checkout is simpler | Needed for v1? |
 | Order management | — | Checkout | With checkout: minimal admin view + email notifications | Who processes orders, how |
 | Shipping & delivery logic | "Nationwide Delivery" | Announcement bar, footer "Delivery & Returns" | Flat rates/zones table first | Zones, fees, lead times, minimum order |

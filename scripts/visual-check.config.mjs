@@ -1104,7 +1104,6 @@ function shopReferenceJourneys(){
  const ready={waitFor:"document.querySelector('button[aria-label=\"Show Bottle\"]')?.disabled===false"};
  const reset={evaluate:"localStorage.removeItem('rocktama.basket.v1');window.dispatchEvent(new Event('rocktama:basket'));true"};
  const base={kind:"functional",page:"shop",viewports:["mobile","desktop"]};
- const name=uniqueName('Shop draft order');
  return [
  {name:"shop-reference",page:"shop",selector:"main",viewports:["small","mobile","tablet","laptop","large","desktop"],expect:[
  {name:"reference structure has gallery, buying panel, specifications and four related cards",js:"document.querySelectorAll('[data-gallery-frame]').length===5 && document.querySelectorAll('[data-shop-products] article').length===4 && !!document.querySelector('#shop-specifications-heading') && document.querySelectorAll('h1#shop-heading').length===1"},
