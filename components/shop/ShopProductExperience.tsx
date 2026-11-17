@@ -12,10 +12,11 @@ import styles from "./shop-experience.module.css";
 const subscribe=()=>()=>{};
 const MAX=10000;
 
-export function ShopProductExperience(){
+export function ShopProductExperience({initialVariant}:{initialVariant?:string}={}){
  const enhanced=useSyncExternalStore(subscribe,()=>true,()=>false);
  // D-119: every pack has its own quantity; the selection can combine packs (and sizes).
- const [viewing,setViewing]=useState("750-single"),[size,setSize]=useState<ShopSize>("750");
+ const start=(initialVariant&&variantById(initialVariant))||variantById("750-single")||shopVariants[0];
+ const [viewing,setViewing]=useState(start.id),[size,setSize]=useState<ShopSize>(start.size);
  const [quantities,setQuantities]=useState<Record<string,string>>({}),[notice,setNotice]=useState("");
  const variant=variantById(viewing)!;
  const rows=shopVariants.filter(v=>v.size===size);

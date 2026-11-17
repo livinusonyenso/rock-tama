@@ -31,3 +31,12 @@ export function selectionHref(lines: readonly BasketLine[]) {
   if(valid.length===1){q.set("quantity",String(valid[0].quantity*valid[0].v.bottles));q.set("unit",valid[0].v.unit);}
   return `/wholesale?${q.toString()}#enquiry`;
 }
+
+/** Size of each catalogue product URL (D-125). */
+const productSize: Record<string, ShopSize> = { "750ml-glass-bottle": "750", "1-5l-bottle": "1500", "carton-packs": "1500" };
+/**
+ * Pack a product URL opens with (D-125): its own first pack on sale, else the first pack on sale in the same
+ * size (the 1.5 L single has no price yet, so /shop/1-5l-bottle opens the 1.5 L carton), else the first pack.
+ */
+export const defaultVariantFor = (product: string) =>
+  shopVariants.find(v=>v.product===product) ?? shopVariants.find(v=>v.size===productSize[product]) ?? shopVariants[0];

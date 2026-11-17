@@ -568,23 +568,31 @@ function functionalJourneys() {
         { name: "nav Shop marked current", js: "document.querySelector('header nav [data-current]')?.textContent.trim().startsWith('Shop')" },
       ],
     },
-    {
-      ...base,
-      name: "product-buy-journey",
-      page: "product",
-      actions: [{ click: 'main article a[href="/shop"]' }, { waitFor: "location.pathname === '/shop' && !!document.querySelector('[data-pack]')" }],
-      expect: [{ name: "product page → Choose a pack and buy → the shop's pack selection (D-123)", js: "!!document.querySelector('[data-buy-now]')" }],
-    },
+    // D-125: every Shop menu URL renders the same storefront, with its product preselected.
     {
       ...base,
       name: "product-page-content",
       page: "product",
       expect: [
-        { name: "h1 is the product name", js: "document.querySelector('main h1')?.textContent === '750 ml Glass Bottle'" },
-        { name: "price from the shop price list; buy action; custom labels the only on-request route; no enquiry button (D-123)", js: "document.querySelector('[data-product-price]').textContent==='From ₦650.00' && !document.querySelector('main a[href^=\"/wholesale\"]') && document.querySelector('main [data-custom-labels] a')?.getAttribute('href')==='/custom-labels' && !/Price on request/.test(document.querySelector('main').innerText) && !document.querySelector('main button')" },
-        { name: "breadcrumb links back to /shop", js: "document.querySelector('nav[aria-label=Breadcrumb] a')?.getAttribute('href') === '/shop'" },
-        { name: "other products link to their pages", js: "[...document.querySelectorAll('section[aria-labelledby=other-products-heading] a')].map(a => a.getAttribute('href')).join() === '/shop/1-5l-bottle,/shop/carton-packs'" },
+        { name: "/shop/750ml-glass-bottle = the All Products storefront with the 750 ml bottle preselected", js: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='750 ml Glass Bottle' && m.querySelector('[data-pack=\"750-single\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})() && document.querySelectorAll('[data-shop-products] article').length===4 && !!document.querySelector('[data-buy-now]')" },
+        { name: "product keeps its own page title", js: "document.title.startsWith('750 ml Glass Bottle')" },
+        { name: "breadcrumb links back to /shop", js: "[...document.querySelectorAll('nav[aria-label=Breadcrumb] a')].some(a=>a.getAttribute('href') === '/shop')" },
       ],
+    },
+    {
+      ...base,
+      name: "product-urls-same-ui",
+      page: "shop",
+      actions: [{ navigate: "/shop/carton-packs" }, { waitFor: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='Carton Packs' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()" }, { evaluate: "sessionStorage.setItem('cartonPrice',document.querySelector('[data-shop-price]').textContent); true" }, { navigate: "/shop/1-5l-bottle" }, { waitFor: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='1.5 L Bottle' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()" }],
+      expect: [{ name: "carton and 1.5 L URLs open the same storefront: 1.5 L size, carton preselected (₦14,500.00)", js: "(sessionStorage.getItem('cartonPrice')||'').includes('14,500.00') && document.querySelector('[data-shop-price]').textContent.includes('14,500.00') && [...document.querySelectorAll('button[aria-pressed=true]')].some(b=>b.textContent==='1.5 L') && [...document.querySelectorAll('[data-pack]')].map(e=>e.dataset.pack).join()==='1500-carton'" }],
+    },
+    {
+      ...base,
+      name: "product-switch-resets",
+      page: "product",
+      viewports: ["desktop"],
+      actions: [{ click: "header nav button[aria-controls]" }, { click: 'header nav a[href="/shop/carton-packs"]' }, { waitFor: "location.pathname==='/shop/carton-packs' && (()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='Carton Packs' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()" }],
+      expect: [{ name: "switching product in the Shop menu resets the selection to the new product", js: "document.querySelector('[data-shop-price]').textContent.includes('14,500.00')" }],
     },
     {
       ...base,
@@ -660,7 +668,7 @@ function functionalJourneys() {
       viewports: ["desktop"],
       actions: [{ click: "header nav button[aria-controls]" }, { click: 'header nav a[href="/shop/carton-packs"]' }, { waitFor: "location.pathname === '/shop/carton-packs'" }],
       expect: [
-        { name: "choosing a product opens its page", js: "document.querySelector('main h1')?.textContent === 'Carton Packs'" },
+        { name: "choosing a product opens the shop storefront with it preselected (D-125)", js: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='Carton Packs' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()" },
         { name: "menu closed after navigation", js: "document.querySelector('header nav button[aria-controls]').getAttribute('aria-expanded') === 'false'" },
       ],
     },
@@ -680,7 +688,7 @@ function functionalJourneys() {
       actions: [{ click: 'button[aria-controls="mobile-nav"]' }, { click: '#mobile-nav a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
       expect: [
         { name: "drawer lists Shop's 4 links in a labelled group", js: "[...document.querySelectorAll('#mobile-nav ul[aria-labelledby] a')].length === 4" },
-        { name: "tapping a product opens its page and closes the drawer", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle' && !document.getElementById('mobile-nav').open" },
+        { name: "tapping a product opens the storefront with its 1.5 L pack preselected and closes the drawer", js: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='1.5 L Bottle' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})() && !document.getElementById('mobile-nav').open" },
       ],
     },
     // -- Homepage §5 Our Products (D-087) --
@@ -719,7 +727,7 @@ function functionalJourneys() {
       name: "products-card-link",
       page: "home",
       actions: [{ click: '#products a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
-      expect: [{ name: "Shop 1.5 L opens the working product page", js: "document.querySelector('main h1')?.textContent === '1.5 L Bottle'" }],
+      expect: [{ name: "Shop 1.5 L opens the storefront with a 1.5 L pack preselected", js: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='1.5 L Bottle' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()" }],
     },
     {
       ...base,
@@ -855,7 +863,7 @@ function functionalJourneys() {
     {
       ...base,name:"footer-product",page:"home",
       actions:[{click:'footer a[href="/shop/750ml-glass-bottle"]'},{waitFor:"location.pathname==='/shop/750ml-glass-bottle'"}],
-      expect:[{name:"footer product link opens product page",js:"[...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('h1')?.textContent==='750 ml Glass Bottle')"}],
+      expect:[{name:"footer product link opens the storefront with the 750 ml bottle preselected",js:"(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='750 ml Glass Bottle' && m.querySelector('[data-pack=\"750-single\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()"}],
     },
     {
       ...base,name:"quality-navigation",page:"shop",viewports:["desktop"],

@@ -87,6 +87,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Payment page: card or bank transfer (D-124)** | lint ✓ · tsc ✓ · build ✓ · functional dev-file 905/905, resend-mock 40/40, unconfigured 31/31 · new journeys: payment page (server total, RT-ORD reference, both methods, no PII in URL), card → test gateway success/failed/cancel (cancel returns to /checkout/pay), transfer details (demo-labelled account, narration = order ref), transfer with ID (awaiting confirmation, basket + pending order cleared, TEST TRANSFER notification), receipt-only (PNG stored and checked by content), neither → asks for one, fake image rejected, expired session · screenshots reviewed |
 
+| 2026-11-17 | **One shop UI for every Shop menu item (D-125)** | lint ✓ · tsc ✓ · build ✓ · functional dev-file 907/907, resend-mock 40/40, unconfigured 31/31 (incl. product-page-content, product-urls-same-ui, product-switch-resets; menu/footer/home/carousel product links check breadcrumb + preselected pack) · screenshots reviewed |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

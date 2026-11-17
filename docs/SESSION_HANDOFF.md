@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**One shop UI (D-125):** `/shop` and `/shop/[slug]` render `components/shop/ShopStorefront.tsx`; product URLs preselect their pack.
+
 **Payment page (D-124):** `/checkout` (details) → `/checkout/pay` (card via Paystack, or bank transfer with transaction ID/receipt → `/checkout/transfer`, awaiting confirmation). Pending order in a signed httpOnly cookie. Bank details are demo placeholders in `content/payment.ts`.
 
 **Always pay (D-123):** shop orders must be paid online (no order-request path); unpriced packs hidden until priced (`content/commerce.ts`); custom labels are the only on-request orders.
