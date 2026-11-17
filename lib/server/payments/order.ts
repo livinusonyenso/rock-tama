@@ -39,4 +39,6 @@ export function newPaymentReference(now = new Date()): string {
 export type PaymentMetadata = {
   customer: { name: string; email: string; phone: string; address: string; city: string; state: string; notes: string };
   lines: BasketLine[];
+  /** Order reference from the payment page (D-124), shown in notifications. */
+  orderRef?: string;
 };

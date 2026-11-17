@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { notifyPaidOrder, verifyPayment } from "@/lib/server/payments/complete";
+import { PENDING_ORDER_COOKIE } from "@/lib/server/payments/order-session";
 
 /**
  * Paystack returns the customer here (callback_url) with ?reference=… (D-122). Verify with Paystack's API,
@@ -11,5 +12,7 @@ export async function GET(request: NextRequest) {
   if (payment.status === "paid") await notifyPaidOrder(payment);
   const target = new URL("/checkout/complete", request.nextUrl.origin);
   target.searchParams.set("reference", reference);
-  return NextResponse.redirect(target, 303);
+  const response = NextResponse.redirect(target, 303);
+  if (payment.status === "paid") response.cookies.delete(PENDING_ORDER_COOKIE); // order complete (D-124)
+  return response;
 }

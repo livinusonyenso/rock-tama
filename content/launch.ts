@@ -1,5 +1,6 @@
 import { contact } from "./contact";
 import { footer } from "./footer";
+import { payment } from "./payment";
 import { testimonials } from "./testimonials";
 
 /**
@@ -13,6 +14,7 @@ export function launchPlaceholders(): string[] {
   if (contact.whatsapp.placeholder) pending.push("WhatsApp number (content/contact.ts)");
   if (contact.email.placeholder) pending.push("contact email (content/contact.ts)");
   if (testimonials.sample) pending.push("sample testimonials (content/testimonials.ts)");
+  if (payment.transfer.placeholder) pending.push("bank transfer account details (content/payment.ts)");
   const unsetSocials = footer.socials.filter((social) => social.href === "#").map((social) => social.label);
   if (unsetSocials.length > 0) pending.push(`social links ${unsetSocials.join(", ")} (content/footer.ts)`);
   return pending;

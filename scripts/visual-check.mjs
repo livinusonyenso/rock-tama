@@ -448,7 +448,7 @@ async function main() {
   /**
    * Actions: { click: selector } | { clickAt: { x, y } } | { press: key, times? } | { wait: ms }
    * | { pauseAnimationsAt: ms } | { type: { selector, text } } | { select: { selector, value } }
-   * | { check: selector } | { navigate: path } | { evaluate: js } | { waitFor: js, timeout? } | { moveTo: { x, y } }
+   * | { check: selector } | { clearCookies: true } | { navigate: path } | { evaluate: js } | { waitFor: js, timeout? } | { moveTo: { x, y } }
    */
   async function runAction(action) {
     if (action.click) {
@@ -501,6 +501,8 @@ async function main() {
     } else if (action.select) {
       const ok = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.select.selector)}); if (!el) return false; el.value = ${JSON.stringify(action.select.value)}; el.dispatchEvent(new Event("change", { bubbles: true })); return el.value === ${JSON.stringify(action.select.value)}; })()`);
       if (!ok) throw new Error(`could not select "${action.select.value}" in ${action.select.selector}`);
+    } else if (action.clearCookies) {
+      await cdp.send("Network.clearBrowserCookies");
     } else if (action.check) {
       const ok = await cdp.evaluate(`(() => { const el = document.querySelector(${JSON.stringify(action.check)}); if (!el) return false; el.checked = true; el.dispatchEvent(new Event("change", { bubbles: true })); return true; })()`);
       if (!ok) throw new Error(`action target not found: ${action.check}`);

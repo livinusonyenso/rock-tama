@@ -2,6 +2,8 @@
 
 _Last updated: 2026-11-16 (supplied images integrated)_
 
+**Payment page (D-124):** `/checkout` (details) → `/checkout/pay` (card via Paystack, or bank transfer with transaction ID/receipt → `/checkout/transfer`, awaiting confirmation). Pending order in a signed httpOnly cookie. Bank details are demo placeholders in `content/payment.ts`.
+
 **Always pay (D-123):** shop orders must be paid online (no order-request path); unpriced packs hidden until priced (`content/commerce.ts`); custom labels are the only on-request orders.
 
 **Payments (D-122):** checkout → Pay now via Paystack (`PAYSTACK_SECRET_KEY`), verified server-side + webhook; without a key a labelled test gateway is used (staging only). `lib/server/payments/`, `/api/payments/paystack/{callback,webhook}`, `/checkout/pay/test`, `/checkout/complete`.

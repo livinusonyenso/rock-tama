@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
     agentFeedback: true,
+    // D-124: bank-transfer receipts (≤ 4 MB) are uploaded through a Server Action; Vercel caps bodies at 4.5 MB.
+    serverActions: { bodySizeLimit: "4.5mb" },
   },
   cacheComponents: true,
   // D-121: one cart/checkout page. Old /cart links and bookmarks go permanently to /checkout.

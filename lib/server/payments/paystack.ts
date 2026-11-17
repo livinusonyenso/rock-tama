@@ -4,7 +4,7 @@ import type { PaymentConfig } from "@/lib/server/payments/config";
 import type { PaymentMetadata } from "@/lib/server/payments/order";
 
 type Paystack = Extract<PaymentConfig, { kind: "paystack" }>;
-type InitializeInput = { email: string; amountKobo: number; reference: string; callbackUrl: string; metadata: PaymentMetadata };
+type InitializeInput = { email: string; amountKobo: number; reference: string; callbackUrl: string; metadata: PaymentMetadata; channels?: string[] };
 export type ProviderTransaction = {
   status: "success" | "failed" | "abandoned" | "pending";
   reference: string;
@@ -38,6 +38,7 @@ export async function initializeTransaction(config: Paystack, input: InitializeI
       reference: input.reference,
       callback_url: input.callbackUrl,
       metadata: input.metadata,
+      ...(input.channels && { channels: input.channels }),
     }),
   });
   const url = String(data.authorization_url ?? "");
