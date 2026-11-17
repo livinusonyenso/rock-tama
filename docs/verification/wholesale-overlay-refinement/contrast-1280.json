@@ -1,18 +1,18 @@
 {
   "width": 1280,
-  "overlay": "rgba(0, 0, 0, 0)",
+  "overlay": "linear-gradient(90deg, rgba(5, 43, 32, 0.99), rgba(5, 43, 32, 0.98) 35%, rgba(5, 43, 32, 0.94) 52%, rgba(5, 43, 32, 0.62) 65%, rgba(5, 43, 32, 0.28) 80%, rgba(5, 43, 32, 0.22))",
   "text": [
     {
       "text": "ROCK-TAMA Wholesale",
-      "ratio": 0.4910538777230302
+      "ratio": 7.166783733039076
     },
     {
       "text": "Wholesale and Distribution",
-      "ratio": 0.9381098325173156
+      "ratio": 13.145974484576325
     },
     {
       "text": "Natural spring water from Nanka, Anambra State, for hotels, offices, retailers and events. Choose the products you need and request a quotation for your volumes and delivery location.",
-      "ratio": 0.9381098325173156
+      "ratio": 12.140374486624404
     }
   ]
 }
