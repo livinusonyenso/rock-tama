@@ -83,6 +83,8 @@ _Last updated: 2026-11-16_
 
 | 2026-11-17 | **Online payment: Paystack + test gateway (D-122)** | lint ✓ · tsc ✓ · build ✓ · functional dev-file 881/882, resend-mock 40/40, unconfigured 62/62 (the one failure: intermittent Next RSC-prefetch console error 'can't infer type of chunk' under full-suite load; 0 occurrences in 8 isolated runs, also seen once in the D-121 run) · test gateway journeys: default, unpriced, success (one TEST notification, basket cleared), failed, cancel, forged link, webhook closed · real Paystack adapter against a fake Paystack API (documented contract): initialize → hosted → callback verify + notify → confirmation verify; webhook valid 200 (no duplicate) / bad or missing signature 401; tampered amount, USD and provider-failed never shown as paid; provider down → pending · simulated Vercel staging build warns 'online payments are not live' |
 
+| 2026-11-17 | **Always pay; on request = custom labels (D-123)** | lint ✓ · tsc ✓ · build ✓ · functional dev-file 874/874, resend-mock 40/40, unconfigured 31/31 (incl. shop-unpriced-hidden, shop-stale-basket, checkout-stale-unpriced, checkout-pay-default without an order-request option, product-buy-journey) · screenshots reviewed |
+
 ## Blockers / inputs from the owner (non-blocking for M2 unless noted)
 
 1. Official logo SVGs (placeholders used meanwhile, D-020)

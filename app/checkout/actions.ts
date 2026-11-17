@@ -7,8 +7,7 @@ import {newPaymentReference,priceBasket,type PaymentMetadata} from "@/lib/server
 import {initializeTransaction} from "@/lib/server/payments/paystack";
 import {createTestToken} from "@/lib/server/payments/test-gateway";
 import {isRateLimited} from "@/lib/server/rate-limit";
-import {submitEnquiry} from "@/app/wholesale/actions";
-import {variantById,money} from "@/content/commerce";
+import {variantById} from "@/content/commerce";
 import {HONEYPOT_FIELD} from "@/lib/enquiry";
 export type CheckoutState={status:"idle"|"invalid"|"error"|"success";message?:string;errors?:Record<string,string>;reference?:string};
 const schema=z.object({
@@ -30,21 +29,8 @@ export async function submitCheckout(_previous:CheckoutState,form:FormData):Prom
  const parsed=linesSchema.safeParse(raw);
  if(!parsed.success||new Set(parsed.data.map(l=>l.variantId)).size!==parsed.data.length)return {status:"error",message:"Your basket is empty or has invalid items. Please review it before continuing."};
  const lines=parsed.data,customer=details.data;
- if(form.get("payment")==="now")return startPayment(customer,lines,String(form.get(HONEYPOT_FIELD)??""));
- // Prices are always read on the server. Client-supplied totals are never accepted.
- const variants=lines.map(line=>({...line,variant:variantById(line.variantId)!}));
- const single=variants.length===1?variants[0]:null;
- const enquiry=new FormData();
- for(const key of ["name","email","phone","consent"] as const)enquiry.set(key,customer[key]);
- enquiry.set(HONEYPOT_FIELD,String(form.get(HONEYPOT_FIELD)??""));
- enquiry.set("product",single?single.variant.product:"mixed");
- enquiry.set("quantity",String(single?single.quantity*single.variant.bottles:variants.reduce((n,l)=>n+l.quantity*(l.variant.unit==="cartons"?12:l.variant.bottles),0)));
- enquiry.set("unit",single?single.variant.unit:"bottles");
- enquiry.set("location",`${customer.address}, ${customer.city}, ${customer.state}`);
- enquiry.set("message",["Checkout order request — no payment collected. Draft prices subject to confirmation.",...variants.map(l=>`${l.quantity} × ${l.variant.label} (${l.variant.detail}) — ${money(l.variant.amount)} per selection.`),single?"":"Mixed total expressed in bottles; draft carton configuration is 12 bottles.","Delivery fee, availability and payment arrangements require confirmation.",customer.notes?`Delivery notes: ${customer.notes}`:""].filter(Boolean).join("\n"));
- const result=await submitEnquiry({status:"idle"},enquiry);
- if(result.status==="success")return {status:"success",reference:result.reference};
- return {status:"error",message:result.status==="error"?result.message:"Please check your contact and delivery details and try again."};
+ // D-123: shop orders are always paid online (custom labels are the only "on request" orders).
+ return startPayment(customer,lines,String(form.get(HONEYPOT_FIELD)??""));
 }
 
 /**
@@ -52,13 +38,13 @@ export async function submitCheckout(_previous:CheckoutState,form:FormData):Prom
  * (Paystack) or the built-in test gateway. Card details never touch this site. redirect() must stay outside try/catch.
  */
 async function startPayment(customer:z.infer<typeof schema>,lines:PaymentMetadata["lines"],honeypot:string):Promise<CheckoutState>{
- const unavailable="Online payment isn't available right now. Choose “Arrange payment after quotation” or try again later.";
+ const unavailable="Online payment isn't available right now. Please try again shortly or contact us to complete your order.";
  if(honeypot!=="")return {status:"error",message:unavailable};
  const requestHeaders=await headers();
  const client=requestHeaders.get("x-forwarded-for")?.split(",")[0]?.trim()||requestHeaders.get("x-real-ip")||"local";
  if(isRateLimited(`payment:${client}`,10,10*60*1000))return {status:"error",message:"Too many payment attempts from this connection. Please wait a few minutes and try again."};
  const basket=priceBasket(lines);
- if(basket.unpriced.length>0)return {status:"error",message:`Some items are priced on request (${basket.unpriced.map(l=>l.label).join(", ")}). Choose “Arrange payment after quotation” for this order.`};
+ if(basket.unpriced.length>0)return {status:"error",message:"Some items in your basket are no longer sold online. Please review your basket."};
  const config=getPaymentConfig();
  if(config.kind==="unavailable"){console.error(`[payment] unavailable: ${config.reason}`);return {status:"error",message:unavailable};}
  const reference=newPaymentReference();

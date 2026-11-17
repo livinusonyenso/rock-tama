@@ -19,7 +19,7 @@ export function ProductGallery({images,enhanced}:{images:GalleryImage[];enhanced
  {images.map((x,i)=><div key={i} data-gallery-frame={i} className={styles.frame} aria-hidden={i!==index} inert={i!==index} style={{visibility:i===index?"visible":"hidden"}}><Picture image={x} priority={i===0} /></div>)}
  <button type="button" disabled={!enhanced} className={`${styles.zoomButton} focus-ring`} aria-label="Enlarge product image" onClick={()=>dialog.current?.showModal()}><span aria-hidden="true">＋</span></button>
  </div></div>
- <p className="mt-2 min-h-10 text-xs text-ink-500">{image.concept?"Proposed packaging artwork — confirm packaging in your quotation.":"Product imagery for illustration."}</p>
+ <p className="mt-2 min-h-10 text-xs text-ink-500">{image.concept?"Proposed packaging artwork — final packaging may differ slightly.":"Product imagery for illustration."}</p>
  <Zoom dialog={dialog} image={image}/>
  </div>
 }

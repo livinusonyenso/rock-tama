@@ -8,8 +8,8 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { listedProducts, productBySlug } from "@/content/products";
 import { shop } from "@/content/shop";
-import { productHref, resolveHref, wholesaleQuoteHref } from "@/lib/navigation";
-import { formatPrice } from "@/lib/price";
+import { productHref, resolveHref } from "@/lib/navigation";
+import { fromPrice, money } from "@/content/commerce";
 
 /** Pre-built product pages for listed products; unknown slugs get a real 404 in proxy.ts. */
 export function generateStaticParams() {
@@ -21,11 +21,12 @@ export async function generateMetadata({ params }: PageProps<"/shop/[slug]">): P
   return product ? { title: product.name, description: product.summary } : { title: shop.metaTitle };
 }
 
-/** /shop/[slug]: product details; primary action = product enquiry with the product preselected (F2). */
+/** /shop/[slug]: product details; price from the shop price list; primary action = choose a pack and buy (D-123). */
 export default async function ProductPage({ params }: PageProps<"/shop/[slug]">) {
   const product = productBySlug((await params).slug);
   if (!product) notFound();
-  const requestHref = wholesaleQuoteHref(product.slug);
+  const price = fromPrice(product.slug);
+  const customLabelsHref = resolveHref("customLabels");
   const shopHref = resolveHref("shop");
   const others = listedProducts.filter((other) => other.slug !== product.slug);
   const [w, h] = product.media.aspect.split("/").map(Number);
@@ -77,24 +78,25 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
               </div>
               <div className="flex gap-4">
                 <dt className="w-32 shrink-0 font-semibold text-ink-900">Price</dt>
-                <dd className="font-serif text-2xl font-semibold text-forest-heading lining-nums">{formatPrice(product.price)}</dd>
+                <dd data-product-price className="font-serif text-2xl font-semibold text-forest-heading lining-nums">{price === null ? "—" : `From ${money(price)}`}</dd>
               </div>
             </dl>
 
-            {product.price === null && <p className="mt-6 text-base text-ink-700">{shop.requestNote}</p>}
+            {price === null && <p className="mt-6 text-base text-ink-700">{shop.notSoldNote}</p>}
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-              {requestHref && (
-                <ButtonLink href={requestHref} variant="primary" surface="light" icon="file-text">
-                  {shop.requestLabel}
+              {shopHref && (
+                <ButtonLink href={shopHref} variant="primary" surface="light" icon="shopping-cart">
+                  {shop.buyLabel}
                 </ButtonLink>
               )}
-              {shopHref && (
-                <Link href={shopHref} className={buttonClassName("outline-light", { surface: "light" })}>
-                  All products
-                </Link>
-              )}
             </div>
+            {customLabelsHref && (
+              <p data-custom-labels className="mt-6 text-sm text-ink-700">
+                {shop.customLabelsNote}{" "}
+                <Link href={customLabelsHref} className="font-semibold text-gold-700 underline underline-offset-4">{shop.customLabelsLabel} →</Link>
+              </p>
+            )}
           </div>
         </Container>
       </article>
@@ -112,7 +114,7 @@ export default async function ProductPage({ params }: PageProps<"/shop/[slug]">)
                 <li key={other.slug}>
                   <ProductCard
                     product={other}
-                    meta={formatPrice(other.price)}
+                    meta={fromPrice(other.slug) === null ? undefined : `From ${money(fromPrice(other.slug))}`}
                     action={
                       href && (
                         <Link href={href} className={buttonClassName("outline-light", { size: "sm", surface: "light" })}>
