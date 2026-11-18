@@ -1,4 +1,5 @@
 "use server";
+import {allowReceiptDownload} from "@/lib/server/payments/receipt-access";
 import { redirect } from "next/navigation";
 import { getPaymentConfig } from "@/lib/server/payments/config";
 import { notifyPaidOrder, verifyPayment } from "@/lib/server/payments/complete";
@@ -17,6 +18,7 @@ export async function finishTestPayment(form: FormData) {
   if (verified.status === "paid") {
     await notifyPaidOrder(verified);
     await clearPendingOrder();
+    await allowReceiptDownload(payment.reference);
   }
   redirect(`/checkout/complete?reference=${encodeURIComponent(payment.reference)}&token=${encodeURIComponent(token)}`);
 }

@@ -104,3 +104,6 @@ Navbar review2026-11-18: preserve main menu order; Wholesale/Contact use dedicat
 
 
 Receipt safeguard2026-11-18: send customer payment receipts only from verified paid server handlers, never a confirmation render or browser-reported success. Keep customer/merchant recipients separate, HTML escaped, TEST labelling explicit, per-channel retries and stable Resend idempotency payload/key. Do not claim inbox delivery from API acceptance. Managed tests must override real Paystack keys; secrets stay in ignored local environment. PAYMENT_RECEIPTS.md records setup and 24h deduplication limits.
+
+
+Receipt/prefill safeguard2026-11-18: PDF downloads require reference-bound signed browser proof plus verified paid status; never return another customer receipt by bare reference. Keep download private/no-store, test receipts clearly marked, and email PDF identical to download. Checkout must prefill only known details, validate saved profile and owner, keep guest/edit paths and explicit consent, and clear demo profile on logout/new login. Never pretend demo email is a complete real account profile. Tests checkout-prefill.config.mjs and receipt-profile-check.mjs; guide RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md.

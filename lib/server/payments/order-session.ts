@@ -13,7 +13,7 @@ export type PendingOrder = PaymentMetadata & { orderRef: string };
 
 const COOKIE = "rt_order";
 const TTL_MS = 60 * 60 * 1000;
-const secret = () =>
+export const paymentTokenSecret = () =>
   process.env.PAYMENT_TOKEN_SECRET ?? process.env.PAYSTACK_SECRET_KEY ?? process.env.PAYMENT_TEST_SECRET ?? "rocktama-test-gateway";
 
 /** Order reference customers quote in a bank transfer narration: RT-ORD-YYYYMMDD-XXXXXX. */
@@ -23,7 +23,7 @@ export function newOrderReference(now = new Date()): string {
 }
 
 export async function savePendingOrder(order: PendingOrder) {
-  (await cookies()).set(COOKIE, signPayload(secret(), order, TTL_MS), {
+  (await cookies()).set(COOKIE, signPayload(paymentTokenSecret(), order, TTL_MS), {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production" && !!process.env.VERCEL,
@@ -35,7 +35,7 @@ export async function savePendingOrder(order: PendingOrder) {
 export async function readPendingOrder(): Promise<PendingOrder | null> {
   // Expiry must use the request clock, never an instant-navigation prerender.
   await connection();
-  return readPayload<PendingOrder>(secret(), (await cookies()).get(COOKIE)?.value);
+  return readPayload<PendingOrder>(paymentTokenSecret(), (await cookies()).get(COOKIE)?.value);
 }
 
 export async function clearPendingOrder() {

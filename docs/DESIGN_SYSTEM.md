@@ -217,3 +217,6 @@ Distributor dashboard: forest sidebar + ivory overview/stat/order/profile cards,
 
 
 Navbar2026-11-18: six primary labels retained in reference order. Only working account/checkout utility actions shown; inactive Search hidden in desktop and drawer until implemented. Main destinations remain consistent across devices; planned Story/Quality use existing homepage anchors temporarily.
+
+
+Receipt/prefill2026-11-18: successful payment shows a gold Download receipt (PDF) action. Signed-in checkout uses a bordered saved-details card with Edit details instead of repeated contact/address forms; unknown fields remain explicit. Guest form and existing responsive tokens retained. Receipt PDF is A4, forest heading, wrapped text and NGN amounts; email keeps HTML/text plus matching PDF.

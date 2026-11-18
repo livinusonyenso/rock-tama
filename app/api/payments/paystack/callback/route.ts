@@ -1,3 +1,4 @@
+import {allowReceiptDownload} from "@/lib/server/payments/receipt-access";
 import { NextResponse, type NextRequest } from "next/server";
 import { notifyPaidOrder, verifyPayment } from "@/lib/server/payments/complete";
 import { PENDING_ORDER_COOKIE } from "@/lib/server/payments/order-session";
@@ -9,7 +10,10 @@ import { PENDING_ORDER_COOKIE } from "@/lib/server/payments/order-session";
 export async function GET(request: NextRequest) {
   const reference = request.nextUrl.searchParams.get("reference") ?? request.nextUrl.searchParams.get("trxref") ?? "";
   const payment = await verifyPayment(reference);
-  if (payment.status === "paid") await notifyPaidOrder(payment);
+  if (payment.status === "paid") {
+    await notifyPaidOrder(payment);
+    await allowReceiptDownload(payment.reference);
+  }
   const target = new URL("/checkout/complete", request.nextUrl.origin);
   target.searchParams.set("reference", reference);
   const response = NextResponse.redirect(target, 303);

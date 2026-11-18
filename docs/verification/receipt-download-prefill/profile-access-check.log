@@ -1,0 +1,1 @@
+PASS guest/known-email/saved-profile prefill, owner isolation, tamper rejection, HttpOnly flags, receipt-session proof, reference binding, re-verification, attachment headers, no-store and expiry.

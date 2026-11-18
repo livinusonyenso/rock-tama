@@ -116,3 +116,6 @@ D-120: /checkout now supplies reference-style contact/address and live basket su
 
 
 2026-11-18 customer receipts: verified paid card/test transactions now trigger separate customer receipt email through configured Resend; bank-transfer claims remain unverified and do not get paid receipts. Local adapter saves previews only. Real email requires existing RESEND_API_KEY, ENQUIRY_FROM verified sender, ENQUIRY_TO business recipient and ENQUIRY_DELIVERY=resend. Merchant and customer recipients are separate. Supplied Paystack test keys local-only; provider403 prevents credential validation. See PAYMENT_RECEIPTS.md for retry/idempotency limits and launch setup.
+
+
+2026-11-18: customer receipt now includes PDF attachment and verified-session PDF download. Signed-in demo checkout reuses validated details within its login session; current demo only knows email initially, so missing details are collected once. Actual authenticated Express profile integration still pending. Contact/address cookie is cleared on logout/new login, no card/notes saved. Consent remains explicit per order. Email configuration/provider blockers unchanged. See RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md.

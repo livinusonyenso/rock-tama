@@ -201,3 +201,6 @@ Navbar cleanup complete: inactive Search removed from desktop/mobile, existing m
 
 
 Customer receipt feature complete in code: verified payment→merchant notification + separate customer receipt. Local preview19/19, mock provider7/7, logic/retry/escaping checks, lint/types and diagnostic Webpack pass. Supplied Paystack test keys installed in ignored local environment; external initialization/verification returned403 (not validated). Resend absent locally, so no real emails sent yet. PAYMENT_RECEIPTS.md documents setup/limits. No push/deploy.
+
+
+PDF receipt download + email attachment complete; signed-in checkout prefills email and reuses validated contact/address details during the demo session, including after paid checkout. Guest/edit/logout paths verified.81/81 browser checks plus receipt/profile/access tests and native PDFKit rendering/text checks pass; lint/types/diagnostic Webpack pass. Real email setup and prior Paystack403 remain external blockers. See RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md. No push/deploy.

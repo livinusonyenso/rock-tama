@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useActionState,useEffect,useRef,useState,type ReactNode} from "react";
 import {submitCheckout,type CheckoutState} from "@/app/checkout/actions";
+import type {CheckoutDetails} from "@/lib/checkout-details";
 import {useBasket,updateBasket} from "@/lib/basket";
 import {money,variantById} from "@/content/commerce";
 import {shopGallery} from "@/content/shop-gallery";
@@ -15,9 +16,10 @@ const customLabelsHref=resolveHref("customLabels")??"/custom-labels";
 const initial:CheckoutState={status:"idle"};
 function Panel({title,subtitle,icon,children}:{title:string;subtitle:string;icon:IconName;children:ReactNode}){return <section className={styles.panel}><div className={styles.panelHeading}><span className={styles.medallion}><Icon name={icon} className="size-6"/></span><div><h2 className="font-serif text-2xl font-bold leading-tight sm:text-3xl">{title}</h2><p className="mt-1 font-serif text-base italic">{subtitle}</p></div></div>{children}</section>}
 /** Step 1 of 2 (D-124): contact + delivery details, then /checkout/pay for card or bank transfer. Prices are re-checked server-side. */
-export function Checkout(){
+export function Checkout({initialDetails,signedInEmail,savedDetails=false}:{initialDetails?:Partial<CheckoutDetails>;signedInEmail?:string;savedDetails?:boolean}){
  const lines=useBasket();const [state,action,pending]=useActionState(submitCheckout,initial);
- const [values,setValues]=useState({name:"",email:"",phone:"",address:"",city:"",state:"",notes:""});
+ const [values,setValues]=useState({name:"",email:"",phone:"",address:"",city:"",state:"",notes:"",...initialDetails});
+ const [useSavedDetails,setUseSavedDetails]=useState(savedDetails);
  const [storageError,setStorageError]=useState("");const form=useRef<HTMLFormElement>(null);const status=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(state.status==="invalid")form.current?.querySelector<HTMLElement>('[aria-invalid=true]')?.focus();if(state.status==="error")status.current?.focus()},[state]);
  const save=(next:typeof lines)=>{try{updateBasket(next);setStorageError("")}catch{setStorageError("Your browser could not update the basket. Please try again.")}};
@@ -27,8 +29,11 @@ export function Checkout(){
  return <form ref={form} action={action} noValidate className={styles.layout} aria-label="Checkout order request">
  <input type="hidden" name="basket" value={JSON.stringify(lines)}/><div className="hidden" aria-hidden="true"><label htmlFor="checkout-website">Website</label><input id="checkout-website" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off"/></div>
  <div className={styles.details}>
+ {signedInEmail&&<p className="rounded-button border border-line-card bg-cream-200 p-4 text-sm">Signed in as <strong className="break-all">{signedInEmail}</strong>. {useSavedDetails?"Your saved contact and delivery details are ready to use.":"Your email is filled in. Add your remaining contact and delivery details to continue."}</p>}
+ {useSavedDetails?<section data-saved-checkout-details className={styles.panel} aria-labelledby="saved-checkout-heading"><div className="flex items-center justify-between gap-4"><h2 id="saved-checkout-heading" className="font-serif text-2xl font-bold text-forest-heading">Your saved details</h2><button type="button" className="min-h-11 shrink-0 px-3 text-sm text-gold-700 underline focus-ring" onClick={()=>setUseSavedDetails(false)}>Edit details</button></div><p className="mt-4 font-semibold">{values.name}</p><p className="mt-2 break-all text-sm">{values.email} · {values.phone}</p><p className="mt-3 text-sm leading-relaxed">{values.address}<br/>{values.city}, {values.state}</p>{(["name","email","phone","address","city","state"] as const).map(name=><input key={name} type="hidden" name={name} value={values[name]}/>)}<label className={`${styles.field} mt-5`} htmlFor="checkout-notes">Delivery notes (optional)<textarea id="checkout-notes" name="notes" rows={2} maxLength={500} value={values.notes} onChange={e=>setValues({...values,notes:e.target.value})}/></label></section>:<>
  <Panel title="Contact Information" subtitle="We’ll use these details to arrange your order." icon="user"><div className={styles.fields}>{field("name","Full name","name")}{field("phone","Phone number","tel","tel")}<div className="sm:col-span-2">{field("email","Email address","email","email")}</div></div></Panel>
  <Panel title="Delivery Address" subtitle="Where should we deliver your ROCK-TAMA order?" icon="map-pin"><div className={styles.fields}><div className="sm:col-span-2">{field("address","Address","street-address")}</div>{field("city","City","address-level2")}{field("state","State / region","address-level1")}<label className={`${styles.field} sm:col-span-2`} htmlFor="checkout-notes">Delivery notes <span className="font-normal">(optional)</span><textarea id="checkout-notes" name="notes" rows={3} maxLength={500} value={values.notes} onChange={e=>setValues({...values,notes:e.target.value})} placeholder="Reception details, preferred delivery time or other instructions." aria-invalid={!!state.errors?.notes}/>{state.errors?.notes&&<span className="text-sm text-error">{state.errors.notes}</span>}</label></div></Panel>
+ </>}
  <Panel title="Delivery Method" subtitle="Let us help arrange a suitable delivery option." icon="truck"><div className={styles.option}><span className={styles.radio} aria-hidden="true"/><div><h3 className="font-serif text-xl font-bold">Delivery to your address</h3><p className="mt-1 text-sm text-ink-700">Delivery timing and fee are arranged with you after payment.</p></div></div></Panel>
  <Panel title="Payment" subtitle="Next: pay by card or bank transfer." icon="file-text"><div data-payment-option="next" className={styles.option}><span className={styles.radio} aria-hidden="true"/><div><h3 className="font-serif text-xl font-bold">Card or bank transfer</h3><p className="mt-1 text-sm text-ink-700">On the next page, pay by card (processed securely by Paystack) or by bank transfer and send us your receipt or transaction ID.</p></div></div>
  <p className="mt-3 text-sm text-ink-700">Need custom labels for a wedding, memorial or event? Those are priced on request: <Link data-custom-labels href={customLabelsHref} className="font-semibold text-gold-700 underline">request a custom label quote</Link>.</p></Panel>

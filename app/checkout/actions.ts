@@ -1,4 +1,6 @@
 "use server";
+import {checkoutDetailsSchema} from "@/lib/checkout-details";
+import {saveCheckoutProfile} from "@/lib/server/checkout-profile";
 import {redirect} from "next/navigation";
 import {z} from "zod";
 import {priceBasket} from "@/lib/server/payments/order";
@@ -6,13 +8,7 @@ import {newOrderReference,savePendingOrder} from "@/lib/server/payments/order-se
 import {variantById} from "@/content/commerce";
 import {HONEYPOT_FIELD} from "@/lib/enquiry";
 export type CheckoutState={status:"idle"|"invalid"|"error";message?:string;errors?:Record<string,string>};
-const schema=z.object({
- name:z.string().trim().min(2,"Enter your full name.").max(120),
- email:z.email("Enter a valid email address."),
- phone:z.string().trim().regex(/^\+?[0-9\s()-]{7,20}$/, "Enter a valid phone number with country code."),
- address:z.string().trim().min(5,"Enter your delivery address.").max(120),
- city:z.string().trim().min(2,"Enter your city.").max(40),
- state:z.string().trim().min(2,"Enter your state or region.").max(35),
+const schema=checkoutDetailsSchema.extend({
  notes:z.string().trim().max(500,"Use 500 characters or fewer."),
  consent:z.literal("yes","Please agree that we may contact you about this request."),
 });
@@ -34,5 +30,6 @@ export async function submitCheckout(_previous:CheckoutState,form:FormData):Prom
  if(priceBasket(parsed.data).unpriced.length>0)return {status:"error",message:"Some items in your basket are no longer sold online. Please review your basket."};
  const c=details.data;
  await savePendingOrder({orderRef:newOrderReference(),customer:{name:c.name,email:c.email,phone:c.phone,address:c.address,city:c.city,state:c.state,notes:c.notes},lines:parsed.data});
+ await saveCheckoutProfile({name:c.name,email:c.email,phone:c.phone,address:c.address,city:c.city,state:c.state});
  redirect("/checkout/pay");
 }

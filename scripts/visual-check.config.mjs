@@ -1,3 +1,4 @@
+import {checkoutPrefillJourneys} from "./checkout-prefill.config.mjs";
 import {distributorDashboardJourneys} from "./distributor-dashboard.config.mjs";
 import {distributorAccountJourneys} from "./distributor-account.config.mjs";
 import {checkoutJourneys} from "./checkout-check.config.mjs";
@@ -304,6 +305,7 @@ const config = {
     },
     ...shopReferenceJourneys(),
     ...checkoutJourneys(),
+    ...checkoutPrefillJourneys(),
     ...adminJourneys(),
     ...distributorAccountJourneys(),
     ...distributorDashboardJourneys(),

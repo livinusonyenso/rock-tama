@@ -2,7 +2,7 @@
 
 After a server-verified successful payment, ROCK-TAMA now sends two separate messages: the existing business order notification and an itemised receipt to the customer's checkout email. No receipt is issued for failed, pending or invalid payments, or an unverified bank-transfer claim. Callback, signed webhook and built-in test gateway share notifyPaidOrder. The confirmation Server Component remains read-only.
 
-The receipt has plain-text and branded HTML versions with customer name, payment/order reference, verified provider payment date when available, item quantities/prices, verified NGN total and delivery address. Delivery fee is explicitly excluded. Customer-provided HTML is escaped. This is an email receipt, not an automatically generated PDF. Test receipts say TEST / no money charged / not proof of payment.
+The receipt has plain-text and branded HTML versions with customer name, payment/order reference, verified provider payment date when available, item quantities/prices, verified NGN total and delivery address. Delivery fee is explicitly excluded. Customer-provided HTML is escaped. The same receipt is now also attached as a PDF and downloadable after payment; see RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md. Test receipts say TEST / no money charged / not proof of payment.
 
 ## Delivery and retry handling
 

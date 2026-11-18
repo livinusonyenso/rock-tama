@@ -43,6 +43,11 @@ async function PaymentResult({ searchParams }: Props) {
           ))}
         </ul>
         <p className="mt-5 text-sm text-on-dark-muted">Our team will contact you at {payment.metadata.customer.email} to arrange delivery. Any delivery fee is agreed with you separately.</p>
+        <form method="post" action="/api/payments/receipt" className="mt-6">
+          <input type="hidden" name="reference" value={payment.reference}/><input type="hidden" name="token" value={token??""}/>
+          <button type="submit" data-download-receipt className="min-h-12 rounded-button bg-gold-500 px-5 py-3 font-semibold text-forest-950 focus-ring-dark">Download receipt (PDF)</button>
+        </form>
+        <p className="mt-3 text-sm text-on-dark-muted">Receipt email: {payment.metadata.customer.email}. Keep this PDF for your records.</p>
         <Link href="/shop" className="mt-6 inline-block text-gold-500 underline">Continue shopping</Link>
       </section>
     );
