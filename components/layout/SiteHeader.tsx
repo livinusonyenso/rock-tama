@@ -72,7 +72,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
 
           <ul className="flex items-center gap-5 xl:mr-2 xl:gap-7">
             {headerActions.map((action) => (
-              // Search and account move into the mobile drawer below lg; the cart stays.
+              // Account moves into the mobile drawer below lg; the cart stays.
               <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:block"}>
                 <HeaderActionItem action={action} href={resolveHref(action.route)} cartCount={cartCount} />
               </li>

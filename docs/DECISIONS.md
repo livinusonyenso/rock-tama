@@ -186,3 +186,6 @@ Distributor demo dashboard [OWNER AUTHORISED 2026-11-17]: owner asked for dashbo
 
 
 Payment token clock fix [2026-11-17]: confirmed Next unstable-Date.now prerender error in /checkout/pay. Add request-time connection before readPendingOrder token validation, and in existing Suspense children for test-gateway/payment-result token reads. Keep token.ts synchronous HMAC/expiry logic unchanged; never cache or omit security expiry. Live dev13/13, signed-token tests, lint/types/diagnostic Webpack pass. Evidence verification/payment-token-runtime.
+
+
+Navbar review approved2026-11-18: keep Home / Shop / Wholesale / Our Story / Quality / Contact order. Wholesale and Contact use dedicated pages; Story/Quality remain temporary homepage anchors until useful pages exist. Hide inactive Search in shared headerActions so desktop/mobile show only working account/checkout actions. Do not create empty pages to make routes uniform. Evidence verification/navbar-cleanup; screenshots provisional.

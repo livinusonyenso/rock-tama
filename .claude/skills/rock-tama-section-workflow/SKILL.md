@@ -98,3 +98,6 @@ Distributor demo exception (owner-authorised): login now accepts any email/non-e
 
 
 Payment clock safeguard: expiring signed tokens must be validated at request time. Under Cache Components/partial prefetch, await connection before a render path calls synchronous readPayload/Date.now, within an existing Suspense child. Do not remove expiry, use cached clocks or shift validation to the client. Test actual dev checkout/pay/test/complete paths as well as build, plus payment-token-check.mjs.
+
+
+Navbar review2026-11-18: preserve main menu order; Wholesale/Contact use dedicated routes, Story/Quality anchors are temporary until substantive pages exist. Do not restore the inactive Search header/drawer entry before search is functional. Header/drawer captures remain provisional; old baseline differences do not authorise automatic promotion.

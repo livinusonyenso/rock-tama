@@ -195,3 +195,6 @@ Distributor demo dashboard complete: any email/non-empty password→dashboard, r
 
 
 Payment expiry prerender blocker fixed: request boundaries before order-cookie/test/payment-result token validation. Actual dev cancellation/failed/expired flows13/13; signed-token expiry/tamper cases, lint/types and styled diagnostic Webpack pass. No payment behaviour/UI changes, push or deployment. Review verification/payment-token-runtime/REVIEW.md.
+
+
+Navbar cleanup complete: inactive Search removed from desktop/mobile, existing menu order/destinations retained per approved review. Lint/types pass; live browser82checks pass with9older-baseline visual differences, no functional/overflow failures. Header1440/1024 and mobile drawer visually inspected. No baseline promotion/build rerun/push/deploy. See verification/navbar-cleanup/REVIEW.md.

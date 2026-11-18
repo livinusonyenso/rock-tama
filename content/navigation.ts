@@ -19,9 +19,8 @@ export const mainNav: readonly NavItem[] = [
   { label: "Contact", route: "contact" },
 ];
 
-/** Icon-only header actions, in reference order. The cart count is runtime data passed to the header, not content. */
+/** Available header actions. Keep Search out until its planned route has a working page. */
 export const headerActions: readonly HeaderAction[] = [
-  { id: "search", label: "Search", icon: "search", route: "search" },
   { id: "account", label: "Distributor account", icon: "user", route: "account" },
   { id: "cart", label: "Cart", icon: "shopping-cart", route: "checkout" },
 ];

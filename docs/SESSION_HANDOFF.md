@@ -125,3 +125,6 @@ Latest distributor demo: owner superseded disabled login with temporary any-emai
 
 
 Latest payment fix: Date.now in token.ts was reached during Next partial prerender. readPendingOrder now awaits connection; TestPayment and PaymentResult do likewise inside their existing Suspense boundaries. Shared signature and expiry checks stay unchanged. Actual dev13checks pass, token boundary/tamper script scripts/payment-token-check.mjs passes, lint/types/diagnostic Webpack pass. Initial test-gateway reproduction retained. See verification/payment-token-runtime/REVIEW.md. Do not remove/cache expiry checks to fix prerender errors.
+
+
+Latest navbar decision2026-11-18: Search omitted from headerActions until /search works; planned route/icon stays available. Desktop and drawer share data. Keep Wholesale/Contact dedicated and Our Story/Quality temporary homepage anchors; no new pages authorised in this cleanup. Menu order retained. Lint/types +82livechecks pass;9old image baselines differ (no automatic approval), screenshots inspected. Evidence verification/navbar-cleanup/REVIEW.md. No push/deploy.

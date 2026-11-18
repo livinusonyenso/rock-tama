@@ -19,7 +19,7 @@ const childRowClass = [
 const secondaryRowClass =
   "flex min-h-12 items-center justify-between gap-4 py-2 pl-4 text-base text-on-dark data-pending:text-on-dark-muted";
 
-// Search and account live in the drawer on mobile; the cart stays in the header.
+// Account lives in the drawer on mobile; the cart stays in the header.
 const drawerActions = headerActions.filter((action) => action.id !== "cart");
 
 /**

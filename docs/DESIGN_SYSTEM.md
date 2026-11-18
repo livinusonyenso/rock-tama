@@ -214,3 +214,6 @@ D-127 account UI: shared ivory rounded card with forest waterfall brand panel, g
 
 
 Distributor dashboard: forest sidebar + ivory overview/stat/order/profile cards, gold accents, shared serif headings/icons/tokens. Sidebar sticky on desktop, horizontal scroll navigation below1024px. Native expandable sample details and44px controls. Sample labels and demo banner stay visible; no invented privileges or live order history.
+
+
+Navbar2026-11-18: six primary labels retained in reference order. Only working account/checkout utility actions shown; inactive Search hidden in desktop and drawer until implemented. Main destinations remain consistent across devices; planned Story/Quality use existing homepage anchors temporarily.
