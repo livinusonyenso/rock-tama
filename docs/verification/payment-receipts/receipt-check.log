@@ -1,0 +1,1 @@
+PASS customer recipient, itemisation/amount, HTML escaping, test labels, stable idempotency payload, local preview, provider failure, concurrent confirmations, independent channel retries and no failed/pending receipts (mock delivery only).

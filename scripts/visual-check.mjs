@@ -281,6 +281,9 @@ function startResendMock(port) {
 /** Environment for `next start` per delivery mode. */
 function serverEnv() {
   const env = { ...process.env };
+  // Managed verification must never use developer Paystack keys loaded from .env.local.
+  // An explicit empty value also prevents Next dotenv from reintroducing that key.
+  env.PAYSTACK_SECRET_KEY = "";
   for (const key of ["ENQUIRY_DELIVERY", "RESEND_API_KEY", "RESEND_API_BASE_URL", "ENQUIRY_TO", "ENQUIRY_FROM", "VERCEL"]) delete env[key];
   if (args.delivery === "resend-mock") {
     Object.assign(env, {

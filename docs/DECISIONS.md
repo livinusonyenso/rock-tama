@@ -189,3 +189,6 @@ Payment token clock fix [2026-11-17]: confirmed Next unstable-Date.now prerender
 
 
 Navbar review approved2026-11-18: keep Home / Shop / Wholesale / Our Story / Quality / Contact order. Wholesale and Contact use dedicated pages; Story/Quality remain temporary homepage anchors until useful pages exist. Hide inactive Search in shared headerActions so desktop/mobile show only working account/checkout actions. Do not create empty pages to make routes uniform. Evidence verification/navbar-cleanup; screenshots provisional.
+
+
+Customer receipt emails [OWNER AUTHORISED 2026-11-18]: send separate itemised customer receipt only after verified paid status; share existing Resend configuration, not merchant recipient. Plaintext/escaped branded HTML, reference/amount/items/address, explicit TEST labels. Independent channel retry markers and receipt provider idempotency; webhook retries on delivery failure. Local preview JSON in .data/payment-receipts. User test credentials saved only in ignored .env.local; Paystack API403, validity unconfirmed. Actual email awaits Resend sender/credentials. Guide PAYMENT_RECEIPTS.md;19+7browser checks and logic/lint/types/diagnostic Webpack pass. No push/deploy.

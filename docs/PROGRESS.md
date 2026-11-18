@@ -198,3 +198,6 @@ Payment expiry prerender blocker fixed: request boundaries before order-cookie/t
 
 
 Navbar cleanup complete: inactive Search removed from desktop/mobile, existing menu order/destinations retained per approved review. Lint/types pass; live browser82checks pass with9older-baseline visual differences, no functional/overflow failures. Header1440/1024 and mobile drawer visually inspected. No baseline promotion/build rerun/push/deploy. See verification/navbar-cleanup/REVIEW.md.
+
+
+Customer receipt feature complete in code: verified payment→merchant notification + separate customer receipt. Local preview19/19, mock provider7/7, logic/retry/escaping checks, lint/types and diagnostic Webpack pass. Supplied Paystack test keys installed in ignored local environment; external initialization/verification returned403 (not validated). Resend absent locally, so no real emails sent yet. PAYMENT_RECEIPTS.md documents setup/limits. No push/deploy.

@@ -128,3 +128,6 @@ Latest payment fix: Date.now in token.ts was reached during Next partial prerend
 
 
 Latest navbar decision2026-11-18: Search omitted from headerActions until /search works; planned route/icon stays available. Desktop and drawer share data. Keep Wholesale/Contact dedicated and Our Story/Quality temporary homepage anchors; no new pages authorised in this cleanup. Menu order retained. Lint/types +82livechecks pass;9old image baselines differ (no automatic approval), screenshots inspected. Evidence verification/navbar-cleanup/REVIEW.md. No push/deploy.
+
+
+Latest receipt change: receipt.ts builds plaintext/HTML and sends to checkout customer email after verified paid status; complete.ts independently tracks merchant/receipt success and in-flight confirmations. Receipt Idempotency-Key stable per payment, Resend24h protection; no durable outbox yet. Webhook500 triggers retries, payment status stays independent. .data/payment-receipts local previews. User-supplied Paystack test keys only in ignored .env.local; API403 so unverified. Resend credentials/sender missing, real emails not sent. Verifier explicitly blanks PAYSTACK_SECRET_KEY on its managed server to avoid .env.local leaks into tests.19+7 browser checks, logic checks/lint/types/diagnostic build pass. Guide PAYMENT_RECEIPTS.md. No push/deploy.

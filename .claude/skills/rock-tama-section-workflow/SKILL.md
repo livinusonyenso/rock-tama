@@ -101,3 +101,6 @@ Payment clock safeguard: expiring signed tokens must be validated at request tim
 
 
 Navbar review2026-11-18: preserve main menu order; Wholesale/Contact use dedicated routes, Story/Quality anchors are temporary until substantive pages exist. Do not restore the inactive Search header/drawer entry before search is functional. Header/drawer captures remain provisional; old baseline differences do not authorise automatic promotion.
+
+
+Receipt safeguard2026-11-18: send customer payment receipts only from verified paid server handlers, never a confirmation render or browser-reported success. Keep customer/merchant recipients separate, HTML escaped, TEST labelling explicit, per-channel retries and stable Resend idempotency payload/key. Do not claim inbox delivery from API acceptance. Managed tests must override real Paystack keys; secrets stay in ignored local environment. PAYMENT_RECEIPTS.md records setup and 24h deduplication limits.

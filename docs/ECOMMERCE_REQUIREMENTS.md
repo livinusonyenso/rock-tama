@@ -113,3 +113,6 @@ D-114 implementation update: F3 now has a local persistent quotation basket and 
 
 
 D-120: /checkout now supplies reference-style contact/address and live basket summary, with real server-validated order-request submission through existing enquiry delivery. F4 payment collection remains outstanding. No configured Paystack/bank/promo/delivery fee integration is implied. Draft catalogue prices authoritative on server; unknown prices stay on request; final price/delivery confirmed before payment.
+
+
+2026-11-18 customer receipts: verified paid card/test transactions now trigger separate customer receipt email through configured Resend; bank-transfer claims remain unverified and do not get paid receipts. Local adapter saves previews only. Real email requires existing RESEND_API_KEY, ENQUIRY_FROM verified sender, ENQUIRY_TO business recipient and ENQUIRY_DELIVERY=resend. Merchant and customer recipients are separate. Supplied Paystack test keys local-only; provider403 prevents credential validation. See PAYMENT_RECEIPTS.md for retry/idempotency limits and launch setup.

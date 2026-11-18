@@ -6,10 +6,11 @@ import { readTestToken } from "@/lib/server/payments/test-gateway";
 import { deliverEnquiry } from "@/lib/server/enquiries/deliver";
 import { getDeliveryConfig } from "@/lib/server/env";
 import { MIXED_PRODUCTS } from "@/lib/enquiry";
+import { deliverPaymentReceipt } from "@/lib/server/payments/receipt";
 import { variantById } from "@/content/commerce";
 
 export type VerifiedPayment =
-  | { status: "paid"; reference: string; amountKobo: number; channel: string | null; test: boolean; metadata: PaymentMetadata; basket: PricedBasket }
+  | { status: "paid"; reference: string; amountKobo: number; channel: string | null; test: boolean; paidAt: string | null; metadata: PaymentMetadata; basket: PricedBasket }
   | { status: "failed" | "pending"; reference: string }
   | { status: "invalid"; reference: string; reason: string };
 
@@ -37,7 +38,7 @@ export async function verifyPayment(reference: string, token?: string | null, co
       const tx = await verifyTransaction(config, reference);
       if (tx.reference !== reference) return { status: "invalid", reference, reason: "Reference mismatch." };
       if (tx.status !== "success") return { status: tx.status === "pending" ? "pending" : "failed", reference };
-      return check(reference, tx.amountKobo, tx.currency, tx.channel, !config.live, tx.metadata);
+      return check(reference, tx.amountKobo, tx.currency, tx.channel, !config.live, tx.metadata, tx.paidAt);
     } catch (error) {
       console.error(`[payment] verification failed (${reference}): ${(error as Error).message}`);
       return { status: "pending", reference };
@@ -46,29 +47,41 @@ export async function verifyPayment(reference: string, token?: string | null, co
   return { status: "invalid", reference, reason: "Online payment is not configured." };
 }
 
-function check(reference: string, amountKobo: number, currency: string, channel: string | null, test: boolean, metadata: unknown): VerifiedPayment {
+function check(reference: string, amountKobo: number, currency: string, channel: string | null, test: boolean, metadata: unknown, paidAt: string | null = null): VerifiedPayment {
   if (!isMetadata(metadata)) return { status: "invalid", reference, reason: "The order details for this payment are missing." };
   const basket = priceBasket(metadata.lines);
   if (basket.unpriced.length > 0 || currency !== "NGN" || amountKobo !== basket.totalKobo) {
     console.error(`[payment] amount check failed (${reference}): paid ${amountKobo} ${currency}, expected ${basket.totalKobo} NGN`);
     return { status: "invalid", reference, reason: "The amount paid does not match the order. Our team will contact you." };
   }
-  return { status: "paid", reference, amountKobo, channel, test, metadata, basket };
+  return { status: "paid", reference, amountKobo, channel, test, paidAt, metadata, basket };
 }
 
 // Per-instance de-duplication: the browser return and the webhook can both confirm the same payment.
 const notified = new Set<string>();
+const receipts = new Set<string>();
+const inFlight = new Map<string, Promise<boolean>>();
 
 /**
- * Sends the "PAID" order notification through the existing delivery adapter (email in production).
+ * Sends the merchant notification and customer receipt separately (email in production).
+ * Failed channels remain retryable; webhook returns 500 until both adapters accept delivery.
  * Called only after verifyPayment() returned "paid", from the return handler and the webhook.
  */
 export async function notifyPaidOrder(payment: Extract<VerifiedPayment, { status: "paid" }>): Promise<boolean> {
-  if (notified.has(payment.reference)) return true;
+  if (payment.status !== "paid") return false;
+  const existing = inFlight.get(payment.reference);
+  if (existing) return existing;
+  const task = notifyBoth(payment);
+  inFlight.set(payment.reference, task);
+  try { return await task; } finally { inFlight.delete(payment.reference); }
+}
+
+async function notifyBoth(payment: Extract<VerifiedPayment, { status: "paid" }>): Promise<boolean> {
+  if (notified.has(payment.reference) && receipts.has(payment.reference)) return true;
   const { customer } = payment.metadata;
   const single = payment.basket.lines.length === 1 ? payment.basket.lines[0] : null;
   const variant = single ? variantById(single.variantId) : undefined;
-  const result = await deliverEnquiry(
+  const result = notified.has(payment.reference) ? { ok: true as const } : await deliverEnquiry(
     {
       reference: payment.reference,
       receivedAt: new Date().toISOString(),
@@ -93,8 +106,11 @@ export async function notifyPaidOrder(payment: Extract<VerifiedPayment, { status
   );
   if (!result.ok) {
     console.error(`[payment] order notification failed (${payment.reference}): ${result.reason}`);
-    return false;
+  } else {
+    notified.add(payment.reference);
   }
-  notified.add(payment.reference);
-  return true;
+  const receipt = receipts.has(payment.reference) ? { ok: true as const } : await deliverPaymentReceipt(payment, getDeliveryConfig());
+  if (receipt.ok) receipts.add(payment.reference);
+  else console.error(`[payment] customer receipt failed (${payment.reference}): ${receipt.reason}`);
+  return result.ok && receipt.ok;
 }
