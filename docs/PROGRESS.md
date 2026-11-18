@@ -204,3 +204,6 @@ Customer receipt feature complete in code: verified payment→merchant notificat
 
 
 PDF receipt download + email attachment complete; signed-in checkout prefills email and reuses validated contact/address details during the demo session, including after paid checkout. Guest/edit/logout paths verified.81/81 browser checks plus receipt/profile/access tests and native PDFKit rendering/text checks pass; lint/types/diagnostic Webpack pass. Real email setup and prior Paystack403 remain external blockers. See RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md. No push/deploy.
+
+
+Node/Express/PostgreSQL/Docker/GitHub Actions guide delivered: docs/NODE_EXPRESS_POSTGRES_DOCKER_GITHUB_ACTIONS_GUIDE.md.20 ordered steps and18 complete file examples covering API, migrations, tests, Dockerfiles, base/dev Compose and CI. JS/JSON/shell/YAML and Compose model validation pass in /tmp; no dependency installation, container startup or workflow execution. Existing app unchanged. Validation: verification/backend-guide/REVIEW.md.
