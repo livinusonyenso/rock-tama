@@ -1,0 +1,59 @@
+# Database preparation (Phase C1, D-131). Use with compose.yml and compose.db.yml:
+#
+#   docker compose --env-file .env.docker -f compose.yml -f compose.db.yml -f compose.migrate.yml up --build -d --wait
+#
+# Start-up order: db (healthy) → db-bootstrap (exits 0) → migrate (exits 0) → api (healthy).
+# If either one-shot service fails, the API does not start.
+services:
+  # Idempotent role and privilege setup, run as the bootstrap superuser on every `up`.
+  # Works for the existing volume, where /docker-entrypoint-initdb.d scripts never run again.
+  # The SQL file is copied into a small image instead of bind-mounted: no host-folder sharing is
+  # needed (a Desktop-folder mount stalled Docker Desktop), and the same image can run on AWS.
+  db-bootstrap:
+    build:
+      context: ./backend/db
+      dockerfile_inline: |
+        FROM postgres:18-alpine
+        COPY bootstrap-roles.sql /bootstrap/roles.sql
+    # Nothing is stored here; keep the image's declared data volume in memory, not on disk.
+    tmpfs:
+      - /var/lib/postgresql
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:?required}
+      PGPASSWORD: ${POSTGRES_PASSWORD:?required}
+      PGDATABASE: ${POSTGRES_DB:?required}
+      MIGRATOR_PASSWORD: ${MIGRATOR_PASSWORD:?required}
+      API_DB_PASSWORD: ${API_DB_PASSWORD:?required}
+    command:
+      - sh
+      - -c
+      - >-
+        psql -X -q
+        -v dbname="$$PGDATABASE"
+        -v migrator_password="$$MIGRATOR_PASSWORD"
+        -v api_password="$$API_DB_PASSWORD"
+        -f /bootstrap/roles.sql
+    restart: "no"
+
+  # Applies backend/migrations/*.sql as rocktama_migrator (table owner, not a superuser), then exits.
+  migrate:
+    build:
+      context: ./backend
+    depends_on:
+      db-bootstrap:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://rocktama_migrator:${MIGRATOR_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}
+    command: ["node", "src/migrate.mjs"]
+    restart: "no"
+
+  # The API starts only after migrations succeeded (merged with depends_on in compose.yml).
+  api:
+    depends_on:
+      migrate:
+        condition: service_completed_successfully

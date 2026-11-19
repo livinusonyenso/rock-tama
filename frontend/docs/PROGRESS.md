@@ -4,8 +4,8 @@ _Last updated: 2026-11-19_
 
 ## Current state
 
-- **DevOps phase:** Phase 1, Task 1 (minimal Express backend foundation) implemented and verified locally. Owner review pending.
-- **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend in `backend/` and PostgreSQL through Docker Compose for a later task.
+- **DevOps phase:** Phase C1 (secure database foundation) implemented and verified locally on 2026-11-19. Owner review pending; C2 (authentication schema and endpoints) not started.
+- **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend in `backend/`; [D-131](DECISIONS.md#d-131--database-roles-and-start-up-order) records the database roles and the bootstrap → migrate → API start-up order.
 - **Frontend milestones:** M1 Foundation approved on 2026-11-14. See the entries below for subsequent frontend implementation and verification.
 
 ## Completed
@@ -215,3 +215,20 @@ Created the Express 5.3.0 service in `backend/` under [D-130](DECISIONS.md#d-130
 Verified on Node.js v26.13.1 LTS. `npm ci` reproduced the install, the built-in HTTP test passed (1/1), and live requests returned HTTP 200 with the expected JSON on ports 4000 and 4400. The sandbox denied the loopback socket on the initial test run. Verification passed outside the sandbox, and both temporary API processes were stopped. Frontend TypeScript and ESLint checks passed.
 
 **Next proposed DevOps task:** After owner review, create a dedicated local Docker Compose project for the API and PostgreSQL. Verify that the API responds and the PostgreSQL service reports ready. Database schema work and deployment await separate approval.
+
+## DevOps Phase C1 — Secure database foundation — 2026-11-19
+
+Scope approved by the owner: C1 only ([D-131](DECISIONS.md#d-131--database-roles-and-start-up-order)). No frontend, auth or payment code changed; no AWS resources; nothing pushed.
+
+- `compose.migrate.yml`: `db-bootstrap` (idempotent roles, runs every `up`) → `migrate` (as `rocktama_migrator`) → `api` (as `rocktama_api`). Either one-shot failure stops the API from starting.
+- `backend/db/bootstrap-roles.sql`: creates `rocktama_migrator` (table owner) and `rocktama_api` (DML only, 20 connections), revokes database `CONNECT` from `PUBLIC`, transfers the two existing tables to the migrator, and makes `schema_migrations` read-only for the API. Non-destructive. It runs as a service, not an init script, because `/docker-entrypoint-initdb.d` never re-runs on the existing volume.
+- `compose.db.yml`: the API now connects as `rocktama_api`. `rocktama_app` remains the bootstrap superuser (PostgreSQL forbids removing it), used only by `db-bootstrap`.
+- `backend/src/shutdown.mjs` + `server.mjs`: SIGTERM/SIGINT close the HTTP server, then the pool; 8 s forced-exit fallback.
+- `backend/Dockerfile`: `node:26.13.1-bookworm-slim` pinned by multi-arch digest; dependencies layer first; code owned by root; runs as `node`.
+- Tests: `test/shutdown.test.mjs` (4 unit) and `test/integration/database-roles.test.mjs` (7, skipped unless connection strings are set). New `.env.docker.example`; `.gitignore` allows it.
+
+**Verified:** pre-change `pg_dump` taken. After start-up: `db-bootstrap` and `migrate` exit 0 (two full runs, plus two queued runs of the earlier mount-based version: idempotent); the migrate log says "Already applied: 001_initial.sql"; `app_metadata` (schema_version = 1) and `schema_migrations` (001, original checksum and `applied_at`) unchanged; both tables owned by `rocktama_migrator`; the API's live connection is `rocktama_api` (`rolsuper = f`); `/health` and `/health/ready` return 200. Unit 7/7, integration 7/7, image user `node` with Node v26.13.1, `docker stop` returns in under 1 s with exit code 0 and "Shutdown complete". Frontend `tsc` and `lint` pass. Not run: `npm run build`, visual checks (no UI change).
+
+**Incident:** the first bootstrap version bind-mounted the SQL from `~/Desktop`; Docker Desktop stalled every container start until the owner approved the macOS folder-access prompt. Replaced with a built image (no bind mount, also portable to ECS). An empty anonymous volume from that first container remains attached to `rocktama-db-bootstrap-1`; it is harmless.
+
+**Next proposed DevOps task:** C2: `002_auth.sql` (users, sessions) and the register/login/logout/me endpoints, after owner approval of the Phase B design (including the `argon2` dependency).

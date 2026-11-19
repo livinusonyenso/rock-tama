@@ -206,3 +206,13 @@ Backend direction/learning guide [OWNER REQUESTED 2026-11-18]: user chose Node.j
 Phase 1, Task 1 covers only the Node.js service and `GET /health`. The backend targets Node.js 26 Lithium, which entered Active LTS at v26.13.0. The workstation’s Node.js v26.11.0 was released during the Current phase. The backend baseline is v26.13.1. [Node.js LTS release notes](https://nodejs.org/en/blog/release/v26.13.0) · [Node.js v26.13.1 release notes](https://nodejs.org/en/blog/release/v26.13.1/)
 
 PostgreSQL, Docker Compose, ECR and deployment require separate owner approval after review of the backend foundation.
+
+## D-131 — Database roles and start-up order
+
+**APPROVED 2026-11-19 (Phase C1).** The owner approved separating the PostgreSQL superuser into a migration role and a least-privilege runtime role, without resetting the database.
+
+- **Roles:** `rocktama_app` (bootstrap superuser created by the image; cannot be demoted; used only by `db-bootstrap`). `rocktama_migrator` (owns tables, runs migrations, `CONNECT`/`CREATE` on the database, no other attributes). `rocktama_api` (`SELECT/INSERT/UPDATE/DELETE` on application tables, read-only `schema_migrations`, no DDL, 20 connections). `PUBLIC` cannot connect.
+- **Bootstrap, not init scripts:** `backend/db/bootstrap-roles.sql` runs on every `up` from the `db-bootstrap` service, because `/docker-entrypoint-initdb.d` only runs on an empty data directory and would never apply to the existing volume. It is idempotent and non-destructive (ownership transfer and grants only). The SQL is built into a small image rather than bind-mounted.
+- **Start-up order:** `db` healthy → `db-bootstrap` exits 0 → `migrate` exits 0 → `api`. Always start with `compose.yml` + `compose.db.yml` + `compose.migrate.yml`.
+- **Shutdown and image:** the API handles SIGTERM/SIGINT; the base image is pinned to `node:26.13.1-bookworm-slim` by multi-arch digest.
+- **AWS mapping (not built):** the same split applies to RDS. Bootstrap and migrate become one-off ECS tasks, and passwords come from Secrets Manager.
