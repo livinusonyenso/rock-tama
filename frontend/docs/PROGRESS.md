@@ -1,12 +1,12 @@
 # Progress
 
-_Last updated: 2026-11-16_
+_Last updated: 2026-11-19_
 
 ## Current state
 
-- **Phase:** Implementation (homepage, Scope A)
-- **Milestone:** M1 Foundation **complete and approved by owner** (2026-11-14). M2 Header approved to start, task by task.
-- **Current task:** Deployment build blocker removed via automatic staging (D-100). Missing delivery/evidence produces warnings + noindex; explicit production mode remains strict. Tested locally; not pushed/deployed.
+- **DevOps phase:** Phase 1, Task 1 (minimal Express backend foundation) implemented and verified locally. Owner review pending.
+- **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend in `backend/` and PostgreSQL through Docker Compose for a later task.
+- **Frontend milestones:** M1 Foundation approved on 2026-11-14. See the entries below for subsequent frontend implementation and verification.
 
 ## Completed
 
@@ -207,3 +207,11 @@ PDF receipt download + email attachment complete; signed-in checkout prefills em
 
 
 Node/Express/PostgreSQL/Docker/GitHub Actions guide delivered: docs/NODE_EXPRESS_POSTGRES_DOCKER_GITHUB_ACTIONS_GUIDE.md.20 ordered steps and18 complete file examples covering API, migrations, tests, Dockerfiles, base/dev Compose and CI. JS/JSON/shell/YAML and Compose model validation pass in /tmp; no dependency installation, container startup or workflow execution. Existing app unchanged. Validation: verification/backend-guide/REVIEW.md.
+
+## DevOps Phase 1, Task 1 — 2026-11-19
+
+Created the Express 5.3.0 service in `backend/` under [D-130](DECISIONS.md#d-130--backend-architecture). `GET /health` returns HTTP 200 with `{"status":"ok"}`. The service listens on `0.0.0.0`, with port 4000 as the default and `PORT` as the override. Express is the sole direct dependency, and the npm lockfile records the install.
+
+Verified on Node.js v26.13.1 LTS. `npm ci` reproduced the install, the built-in HTTP test passed (1/1), and live requests returned HTTP 200 with the expected JSON on ports 4000 and 4400. The sandbox denied the loopback socket on the initial test run. Verification passed outside the sandbox, and both temporary API processes were stopped. Frontend TypeScript and ESLint checks passed.
+
+**Next proposed DevOps task:** After owner review, create a dedicated local Docker Compose project for the API and PostgreSQL. Verify that the API responds and the PostgreSQL service reports ready. Database schema work and deployment await separate approval.

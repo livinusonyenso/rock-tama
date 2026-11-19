@@ -16,7 +16,7 @@ Never change a decision's status without the owner's explicit say-so. Add a date
 | D-008 | Icons: `lucide-react` for standard UI icons; custom SVG only for distinctive brand/decorative icons when no suitable Lucide icon exists | **APPROVED 2026-11-14** | Install in M2 when first used |
 | D-009 | All images via `MediaFrame` (fixed aspect-ratio box; placeholder ↔ `next/image`) | PROPOSED | Prevents layout collapse/CLS |
 | D-010 | Light-only site: remove starter dark-mode tokens | **APPROVED 2026-11-14** (implemented M1) | Implemented with `color-scheme: light` + `dark:` re-bound to a never-set `.dark` class (D-018) |
-| D-011 | Backend (when approved): Server Actions + Route Handlers in the same Next.js app; logic in `lib/server/` | PROPOSED, deferred | See `ECOMMERCE_REQUIREMENTS.md` |
+| D-011 | Backend (when approved): Server Actions + Route Handlers in the same Next.js app; logic in `lib/server/` | **SUPERSEDED by [D-130](#d-130--backend-architecture)** (2026-11-19) | Originally proposed and deferred. See `ECOMMERCE_REQUIREMENTS.md`. |
 | D-012 | No state-management library; React state/context only if needed by the cart | PROPOSED | |
 | D-013 | Quality, lab and certification claims render only when the owner confirms evidence (content flag); layout space can be reserved | **APPROVED 2026-11-14** (owner: "do not publish unsupported technical or scientific claims") | |
 | D-014 | Header not sticky in v1 | PROPOSED | Not shown in reference |
@@ -198,3 +198,11 @@ Receipt download/signed-in checkout [OWNER AUTHORISED 2026-11-18]: verified succ
 
 
 Backend direction/learning guide [OWNER REQUESTED 2026-11-18]: user chose Node.js + Express + PostgreSQL + Docker Compose + GitHub Actions and requested a step-by-step Markdown guide. Created NODE_EXPRESS_POSTGRES_DOCKER_GITHUB_ACTIONS_GUIDE.md with separate api package, two Compose files, health/migration/role setup, Next standalone container, development mode and CI-only workflow. This turn is documentation only: no stack implementation, package install, database creation, push or deploy.18 complete examples extracted; applicable syntax checks and both Compose models validated; runtime/CI execution remains future work.
+
+## D-130 — Backend architecture
+
+**APPROVED 2026-11-19.** The owner approved a standalone Express 5 backend in the existing `backend/` directory, with PostgreSQL to run through Docker Compose in a later task. This supersedes the deferred backend proposal in D-011 and establishes `backend/` as the project path for the learning guide’s `api/` examples.
+
+Phase 1, Task 1 covers only the Node.js service and `GET /health`. The backend targets Node.js 26 Lithium, which entered Active LTS at v26.13.0. The workstation’s Node.js v26.11.0 was released during the Current phase. The backend baseline is v26.13.1. [Node.js LTS release notes](https://nodejs.org/en/blog/release/v26.13.0) · [Node.js v26.13.1 release notes](https://nodejs.org/en/blog/release/v26.13.1/)
+
+PostgreSQL, Docker Compose, ECR and deployment require separate owner approval after review of the backend foundation.

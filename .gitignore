@@ -51,3 +51,5 @@ next-env.d.ts
 
 # development-only enquiry store (personal data; never commit)
 .data/
+
+.env.docker
