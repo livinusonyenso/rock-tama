@@ -190,4 +190,4 @@ Before public rollout, verify email ownership and define account recovery, appro
 
 ## Architecture Explorer
 
-The [Architecture Explorer artifact](https://claude.ai/artifact/DYcaeT9pZKX3radGjcTn3t) (version 4, 20 Nov 2026) shows C1, C2, C3A and the C3B gateway: the request flows from the Next.js forms through the gateway to Express and PostgreSQL, with code excerpts copied from these files. CI and AWS remain marked as proposed or not started.
+The earlier C3B handoff records version 4 of the [Architecture Explorer artifact](https://claude.ai/artifact/DYcaeT9pZKX3radGjcTn3t) as showing C1, C2, C3A and the C3B gateway. The editable artifact was unavailable during final C3B verification, so the work in this pass is recorded here and in [Progress](PROGRESS.md).
