@@ -1,7 +1,7 @@
-# Database connectivity for the API (D-131). The API connects as rocktama_api: a non-superuser that
-# can read and write application tables but cannot create, alter or drop them.
+# Database connectivity for the API (D-131, D-132). The API connects as rocktama_api.
 # The role is created by db-bootstrap in compose.migrate.yml, so always include that file too.
 services:
   api:
     environment:
       DATABASE_URL: postgresql://rocktama_api:${API_DB_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}
+      AUTH_ORIGIN: ${AUTH_ORIGIN:-http://127.0.0.1:4000}

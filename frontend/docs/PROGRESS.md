@@ -1,11 +1,11 @@
 # Progress
 
-_Last updated: 2026-11-19_
+_Last updated: 2026-11-20_
 
 ## Current state
 
-- **DevOps phase:** Phase C1 (secure database foundation) implemented and verified locally on 2026-11-19. Owner review pending; C2 (authentication schema and endpoints) not started.
-- **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend in `backend/`; [D-131](DECISIONS.md#d-131--database-roles-and-start-up-order) records the database roles and the bootstrap → migrate → API start-up order.
+- **DevOps phase:** Phase C2 database-backed distributor authentication implemented and verified locally on 2026-11-20. Owner review pending before frontend form integration.
+- **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend, [D-131](DECISIONS.md#d-131--database-roles-and-start-up-order) records the C1 role split and startup order, and [D-132](DECISIONS.md#d-132--postgresql-backed-distributor-authentication) records C2 authentication.
 - **Frontend milestones:** M1 Foundation approved on 2026-11-14. See the entries below for subsequent frontend implementation and verification.
 
 ## Completed
@@ -232,3 +232,15 @@ Scope approved by the owner: C1 only ([D-131](DECISIONS.md#d-131--database-roles
 **Incident:** the first bootstrap version bind-mounted the SQL from `~/Desktop`; Docker Desktop stalled every container start until the owner approved the macOS folder-access prompt. Replaced with a built image (no bind mount, also portable to ECS). An empty anonymous volume from that first container remains attached to `rocktama-db-bootstrap-1`; it is harmless.
 
 **Next proposed DevOps task:** C2: `002_auth.sql` (users, sessions) and the register/login/logout/me endpoints, after owner approval of the Phase B design (including the `argon2` dependency).
+
+## DevOps Phase C2 — Database-backed distributor authentication — 2026-11-20
+
+Implemented `002_auth.sql` and the register, login, logout and current-user endpoints in [D-132](DECISIONS.md#d-132--postgresql-backed-distributor-authentication). Pending accounts can sign in and see their own status. The C1 migrator owns the auth schema, and the API role cannot approve users or alter the schema. See the [authentication guide](BACKEND_AUTHENTICATION.md) for the flow, contracts and test commands.
+
+**Review fixes (20 Nov):** the Origin check now covers every method except GET, HEAD and OPTIONS, not only POST. A new integration test proves distributor access follows the stored status on every request. Unexpected auth errors now log their error code only.
+
+**Verified:** 12 unit tests and 20 integration tests passed against local Compose PostgreSQL 18.7, including the C1 role suite. Live Docker API smoke passed for register, login, current user, logout and revocation. The migrator applied `002_auth.sql`, a repeat run skipped both applied migrations, and the existing `001_initial.sql` checksum and timestamp match the pre-C2 values. The existing PostgreSQL container and data volume were preserved. Frontend lint and type checks passed.
+
+**Architecture Explorer:** updated to version 2 at the same link, showing C1 and C2 as verified and C3, CI and AWS as planned.
+
+**Next proposed task:** Owner review of C2, then connect the Next.js account forms in a separate task. Public rollout work includes email ownership verification, recovery, approval and intended HTTPS proxy verification.

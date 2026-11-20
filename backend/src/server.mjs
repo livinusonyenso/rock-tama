@@ -5,7 +5,8 @@ import { createShutdown } from "./shutdown.mjs";
 const host = "0.0.0.0";
 const port = Number(process.env.PORT || "4000");
 
-const app = createApp({ db: pool });
+if (!process.env.AUTH_ORIGIN) throw new Error("AUTH_ORIGIN is required");
+const app = createApp({ db: pool, authOrigin: process.env.AUTH_ORIGIN });
 
 const server = app.listen(port, host);
 

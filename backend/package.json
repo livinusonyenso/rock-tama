@@ -8,9 +8,11 @@
   "scripts": {
     "start": "node src/server.mjs",
     "test": "node --test \"test/*.test.mjs\"",
-    "test:integration": "node --test \"test/integration/*.test.mjs\""
+    "test:integration": "node --test \"test/integration/*.test.mjs\"",
+    "test:compose": "node --env-file=../.env.docker test/run-compose-integration.mjs"
   },
   "dependencies": {
+    "argon2": "^0.45.2",
     "express": "^5.3.0",
     "pg": "^8.23.1"
   }

@@ -1,6 +1,7 @@
 import express from "express";
+import { createAuthRouter } from "./auth/router.mjs";
 
-export function createApp({ db } = {}) {
+export function createApp({ db, authOrigin } = {}) {
   const app = express();
 
   app.disable("x-powered-by");
@@ -29,6 +30,11 @@ export function createApp({ db } = {}) {
       });
     }
   });
+
+  if (authOrigin !== undefined) {
+    if (!db) throw new Error("Authentication requires a database");
+    app.use("/api/v1/auth", createAuthRouter({ db, origin: authOrigin }));
+  }
 
   return app;
 }

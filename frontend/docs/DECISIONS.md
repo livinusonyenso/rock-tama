@@ -216,3 +216,12 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - **Start-up order:** `db` healthy → `db-bootstrap` exits 0 → `migrate` exits 0 → `api`. Always start with `compose.yml` + `compose.db.yml` + `compose.migrate.yml`.
 - **Shutdown and image:** the API handles SIGTERM/SIGINT; the base image is pinned to `node:26.13.1-bookworm-slim` by multi-arch digest.
 - **AWS mapping (not built):** the same split applies to RDS. Bootstrap and migrate become one-off ECS tasks, and passwords come from Secrets Manager.
+
+## D-132 — PostgreSQL-backed distributor authentication
+
+**APPROVED 2026-11-20 (Phase C2).** Add registration, login, logout and current-user endpoints under `/api/v1/auth`. Public registration creates a pending distributor. A pending session can read its own user and log out. Account approval and administrator access remain outside customer registration.
+
+- `002_auth.sql` adds a dedicated `auth` schema owned by `rocktama_migrator`. The API role can insert the allowed registration fields, read users and manage session and rate-limit records. Role and status are set by database defaults, with no API grants to set or change either.
+- Use Argon2id for passwords, random 256-bit tokens and SHA-256 session-token hashes. Sessions expire after eight hours and successful logout revokes the stored record. Cookies are HttpOnly and SameSite=Strict. TLS uses the `Secure` flag and `__Host-` prefix, and the local Compose origin uses the HTTP loopback exception.
+- State-changing requests require the exact configured `Origin`. PostgreSQL supplies atomic login and registration rate limits, and responses use a common error format. Login returns the same error for wrong passwords and unknown emails.
+- The [Phase C2 guide](BACKEND_AUTHENTICATION.md) documents the contracts, verification and remaining public rollout work. Frontend form integration and AWS deployment are planned separately.

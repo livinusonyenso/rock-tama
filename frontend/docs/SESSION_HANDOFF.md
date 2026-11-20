@@ -1,8 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-19 (DevOps Phase C1)_
+_Last updated: 2026-11-20 (DevOps Phase C2)_
 
-**Backend (D-130, D-131):** Express API in `backend/` with Compose PostgreSQL. Start with `docker compose --env-file .env.docker -f compose.yml -f compose.db.yml -f compose.migrate.yml up --build -d --wait` (db → db-bootstrap → migrate → api). The API connects as `rocktama_api` (no DDL), migrations run as `rocktama_migrator`, and `rocktama_app` is the superuser for bootstrap only. Tests: `npm test` (unit) and `npm run test:integration` (needs `API_DATABASE_URL` and `MIGRATOR_DATABASE_URL`) in `backend/`. Only `/health` and `/health/ready` exist; C2 auth awaits approval. Never run `down --volumes`.
+**Backend (D-130, D-131, D-132):** Express API in `backend/` with Compose PostgreSQL. Start with `docker compose --env-file .env.docker -f compose.yml -f compose.db.yml -f compose.migrate.yml up --build -d --wait` (db → db-bootstrap → migrate → api). The API connects as `rocktama_api` (no DDL), migrations run as `rocktama_migrator`, and `rocktama_app` is the superuser for bootstrap only. Tests: `npm test` (unit) and `npm run test:compose` (real PostgreSQL, reads `.env.docker`) in `backend/`. Routes: `/health`, `/health/ready` and C2 `/api/v1/auth/{register,login,logout,me}` (see `BACKEND_AUTHENTICATION.md`). Registration creates pending distributors only. The Next.js forms are not connected yet (C3, needs approval). Never run `down --volumes`.
 
 **Admin (D-128):** `/auth/admin` (demo login on dev/staging) → `/admin` dashboard with labelled demo data (`content/admin-demo.ts`); proxy-protected; `SiteChrome` hides storefront chrome there. Needs `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET` for launch.
 
