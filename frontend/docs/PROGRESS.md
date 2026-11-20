@@ -285,3 +285,15 @@ Scope: [D-134](DECISIONS.md#d-134--nextjs-connected-to-real-distributor-authenti
 **Not changed:** checkout, Paystack, receipts, wholesale. Checkout prefill still follows the demo session.
 
 **Next proposed task:** a reviewed removal of the demo distributor login, and moving checkout prefill to `/me`, each with approval. AWS backend deployment planning follows.
+
+## AWS backend deployment plan prepared — 2026-11-20
+
+[AWS_BACKEND_DEPLOYMENT_PLAN.md](AWS_BACKEND_DEPLOYMENT_PLAN.md) recommends one `t4g.small` EC2 instance running Docker Compose (Caddy, the API, Postgres on encrypted EBS, Parameter Store secrets, SSM access with no SSH). That is about $17–19 per month, against about $50–55 for ECS, an ALB and RDS. Until a domain exists, HTTPS uses an sslip.io hostname.
+
+**Verified locally:**
+- The API image builds and runs as linux/arm64 and linux/amd64: Argon2 works, it runs with a read-only root filesystem, `--cap-drop ALL` and `no-new-privileges`, and it served `/health`, `/health/ready`, `/me` (401) and Origin rejection (403) against the real database.
+- `docker stop` takes 0.17 s.
+
+**Not checked:** the ECR configuration (the AWS session had expired; `aws login --profile rocktama-dev` is needed). No AWS resources were created.
+
+**Next:** owner decisions in §8 of the plan, then stage 1 (`deploy/` files and a local rehearsal) after approval.
