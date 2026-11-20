@@ -22,17 +22,34 @@ export function createSessionToken() {
   return randomBytes(32).toString("base64url");
 }
 
-export function authCookieConfig(origin) {
-  const url = URL.parse(origin);
-  const secure = url?.protocol === "https:";
-  const local = url?.protocol === "http:" && loopbackHosts.has(url.hostname);
-  if (!url || url.origin !== origin || (!secure && !local)) {
-    throw new Error("AUTH_ORIGIN must be an exact HTTPS origin or an HTTP loopback origin");
+/**
+ * AUTH_ORIGIN (D-132, D-134): one or more exact browser origins, comma-separated, for example the storefront
+ * reached through the Next.js gateway. All must be HTTPS, or all must be HTTP loopback for local work, so one
+ * cookie policy fits every origin. SameSite=Lax keeps the session on top-level navigation from other sites
+ * (an email link); state-changing requests are still bound to these origins by the router.
+ */
+export function authCookieConfig(setting) {
+  const entries = String(setting ?? "").split(",").map((entry) => entry.trim()).filter(Boolean);
+  const origins = new Set();
+  const schemes = new Set();
+  for (const origin of entries) {
+    const url = URL.parse(origin);
+    const secure = url?.protocol === "https:";
+    const local = url?.protocol === "http:" && loopbackHosts.has(url.hostname);
+    if (!url || url.origin !== origin || (!secure && !local)) {
+      throw new Error("AUTH_ORIGIN entries must be exact HTTPS origins or HTTP loopback origins");
+    }
+    origins.add(origin);
+    schemes.add(url.protocol);
   }
+  if (origins.size === 0) throw new Error("AUTH_ORIGIN must list at least one origin");
+  if (schemes.size !== 1) throw new Error("AUTH_ORIGIN entries must all be HTTPS or all be HTTP loopback");
+  const secure = schemes.has("https:");
   return {
     name: secure ? "__Host-rocktama_session" : "rocktama_session",
-    options: { httpOnly: true, secure, sameSite: "strict", path: "/" },
+    options: { httpOnly: true, secure, sameSite: "lax", path: "/" },
     lifetime: cookieLifetime,
+    origins,
   };
 }
 

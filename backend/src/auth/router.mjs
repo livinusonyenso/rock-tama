@@ -20,9 +20,12 @@ const safeMethods = new Set(["GET", "HEAD", "OPTIONS"]);
 const dummyHash = await hashPassword(createSessionToken());
 
 function sendUser(response, status, user) {
-  const { id, email, name, company, role, status: accountStatus } = user;
+  const { id, email, name, company, phone, location, role, status: accountStatus } = user;
   return response.status(status).json({
-    user: { id, email, name, company, role, status: accountStatus, canAccessDistributorFeatures: canAccessDistributorFeatures(user) },
+    user: {
+      id, email, name, company, phone: phone ?? null, location: location ?? null, role, status: accountStatus,
+      canAccessDistributorFeatures: canAccessDistributorFeatures(user),
+    },
   });
 }
 
@@ -72,8 +75,8 @@ export function createAuthRouter({ db, origin }) {
   router.use((request, response, next) => {
     response.set("Cache-Control", "no-store");
     // CSRF: every state-changing method needs the exact storefront Origin, including login before a
-    // session exists. A same-origin Next.js rewrite forwards the browser's Origin unchanged.
-    if (!safeMethods.has(request.method) && request.get("origin") !== origin) {
+    // session exists. The Next.js gateway forwards the browser's Origin unchanged (D-134).
+    if (!safeMethods.has(request.method) && !cookie.origins.has(request.get("origin"))) {
       return fail(response, 403, "origin_forbidden", "The request origin is not allowed.");
     }
     next();
@@ -85,7 +88,7 @@ export function createAuthRouter({ db, origin }) {
       return tooManyAttempts(response, seconds);
     }
     const registration = validateRegistration(request.body);
-    if (!registration) return fail(response, 400, "invalid_input", "Provide a valid email, name, company and 15–128 character password.");
+    if (!registration) return fail(response, 400, "invalid_input", "Provide a valid email, name, company, phone, location, consent and 15–128 character password.");
 
     return runPasswordJob(response, async () => {
       // New and already-registered emails take the same path and get the same response, so registration

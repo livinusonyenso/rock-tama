@@ -17,7 +17,10 @@ const password = "C2 disposable integration password";
 const received = { registration: { status: "received" } };
 
 function registration() {
-  return { email: `${randomUUID()}@example.test`, password, name: "Ada Okafor", company: "Example Supplies" };
+  return {
+    email: `${randomUUID()}@example.test`, password, name: "Ada Okafor", company: "Example Supplies",
+    phone: "+234 803 123 4567", location: "Enugu, Enugu State", consent: true,
+  };
 }
 
 // Cleanups run last-in, first-out, so fixtures are removed before their connection closes.
@@ -118,10 +121,15 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
       assert.equal(result.status, 202);
       assert.deepEqual(result.body, received);
       assert.equal(result.headers.get("set-cookie"), null);
-      const { rows } = await db.query("SELECT id, email, name, company, role, status, password_hash FROM auth.users WHERE email = $1", [email]);
+      const { rows } = await db.query(
+        `SELECT id, email, name, company, phone, location, role, status, password_hash,
+                consented_at BETWEEN statement_timestamp() - INTERVAL '1 minute' AND statement_timestamp() AS consent_recorded
+         FROM auth.users WHERE email = $1`, [email]);
       assert.equal(rows.length, 1);
-      const { password_hash: passwordHash, ...stored } = rows[0];
-      assert.deepEqual(stored, { id: stored.id, email, name: fields.name, company: fields.company, role: "distributor", status: "pending" });
+      const { password_hash: passwordHash, consent_recorded: consentRecorded, ...stored } = rows[0];
+      assert.deepEqual(stored, { id: stored.id, email, name: fields.name, company: fields.company,
+        phone: fields.phone, location: fields.location, role: "distributor", status: "pending" });
+      assert.equal(consentRecorded, true);
       assert.match(passwordHash, /^\$argon2id\$/);
       assert.equal(await verifyPassword(passwordHash, password), true);
       assert.equal((await db.query("SELECT 1 FROM auth.sessions WHERE user_id = $1", [stored.id])).rowCount, 0);
@@ -140,6 +148,8 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
     await t.test("invalid input and privilege injection return safe errors", async () => {
       assertError(await request("register", { body: { ...fields, email: "invalid" } }), 400, "invalid_input");
       assertError(await request("register", { body: { ...fields, role: "admin", status: "approved" } }), 400, "invalid_input");
+      assertError(await request("register", { body: { ...fields, consent: false } }), 400, "invalid_input");
+      assertError(await request("register", { body: { ...fields, phone: "not a phone" } }), 400, "invalid_input");
       assertError(await request("register", { headers: { origin, "content-type": "application/json" }, raw: "{" }), 400, "invalid_input");
       assertError(await request("register", { body: { ...fields, name: "x".repeat(9000) } }), 413, "request_too_large");
       assertError(await request("login", { headers: { origin }, raw: "email=invalid" }), 415, "unsupported_media_type");
@@ -167,7 +177,7 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
       assert.deepEqual(result.body.user, user);
       const setCookie = result.headers.get("set-cookie");
       assert.match(setCookie, /^rocktama_session=[A-Za-z0-9_-]{43};/);
-      for (const attribute of ["HttpOnly", "SameSite=Strict", "Path=/", "Max-Age=28800"]) assert.ok(setCookie.includes(attribute));
+      for (const attribute of ["HttpOnly", "SameSite=Lax", "Path=/", "Max-Age=28800"]) assert.ok(setCookie.includes(attribute));
       cookie = setCookie.split(";", 1)[0];
       cookieHash = hashValue(cookie.slice("rocktama_session=".length));
       const { rows } = await db.query(
@@ -181,6 +191,7 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
       const result = await request("me", { method: "GET", headers: { cookie } });
       assert.equal(result.status, 200);
       assert.equal(result.headers.get("cache-control"), "no-store");
+      assert.equal(result.headers.get("access-control-allow-origin"), null, "no CORS: browsers reach the API only through the same-origin gateway");
       assert.deepEqual(result.body.user, user);
       assert.equal(result.body.user.canAccessDistributorFeatures, false);
       const fake = await request("me", { method: "GET", headers: { cookie: `rocktama_session=${createSessionToken()}` } });
@@ -317,6 +328,7 @@ test("the migrator owns auth objects and only it can change privileges or schema
     "UPDATE auth.users SET status = 'approved' WHERE false",
     "UPDATE auth.users SET role = 'admin' WHERE false",
     "UPDATE auth.users SET password_hash = 'x' WHERE false",
+    "UPDATE auth.users SET phone = 'x', location = 'x', consented_at = now() WHERE false",
     "DELETE FROM auth.users WHERE false",
     "UPDATE auth.sessions SET expires_at = now() WHERE false",
     "ALTER TABLE auth.users ADD COLUMN c2_must_not_exist integer",
@@ -330,7 +342,7 @@ test("the migrator owns auth objects and only it can change privileges or schema
       await db.query("ROLLBACK");
     }
   }
-  for (const file of ["002_auth.sql", "003_auth_login_limits.sql"]) {
+  for (const file of ["002_auth.sql", "003_auth_login_limits.sql", "004_distributor_profile.sql"]) {
     const migration = await readFile(new URL(`../../migrations/${file}`, import.meta.url));
     const { rows: checksums } = await db.query("SELECT checksum FROM public.schema_migrations WHERE name = $1", [file]);
     assert.deepEqual(checksums, [{ checksum: createHash("sha256").update(migration).digest("hex") }], file);

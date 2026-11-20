@@ -4,7 +4,7 @@ _Last updated: 2026-11-20_
 
 ## Current state
 
-- **DevOps phase:** Phase C3A authentication hardening implemented and verified locally on 2026-11-20 ([D-133](DECISIONS.md#d-133--authentication-hardening-c3a)). Owner review pending before C3B (connecting the Next.js forms).
+- **DevOps phase:** Phase C3B (Next.js connected to real distributor authentication) implemented and verified locally on 2026-11-20 ([D-134](DECISIONS.md#d-134--nextjs-connected-to-real-distributor-authentication-c3b)). Owner review pending before removing the demo distributor login.
 - **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend, [D-131](DECISIONS.md#d-131--database-roles-and-start-up-order) records the C1 role split and startup order, and [D-132](DECISIONS.md#d-132--postgresql-backed-distributor-authentication) records C2 authentication.
 - **Frontend milestones:** M1 Foundation approved on 2026-11-14. See the entries below for subsequent frontend implementation and verification.
 
@@ -264,3 +264,24 @@ Scope: [D-133](DECISIONS.md#d-133--authentication-hardening-c3a). Registration n
 **Incident:** the first integration run closed database connections before fixture cleanup, leaving 4 test users. They were deleted by exact email, and the cleanup now runs last-in, first-out.
 
 **Next proposed task:** C3B — connect the Next.js login and register forms through a same-origin route, choose the trusted-proxy topology and the SameSite policy, and set `DEMO_AUTH=enabled` on Vercel staging if the demos should stay visible there.
+
+## DevOps Phase C3B — Next.js connected to real distributor authentication — 2026-11-20
+
+Scope: [D-134](DECISIONS.md#d-134--nextjs-connected-to-real-distributor-authentication-c3b). A same-origin gateway (`app/api/v1/auth/[action]/route.ts` → `lib/server/auth-gateway.ts`) forwards only the four auth endpoints to the server-only `API_URL`. `lib/server/api.ts` `currentAccount()` serves Server Components. The real login and registration forms, the real dashboard with a pending-review state, the logout button and `/account` routing are connected. Migration `004_distributor_profile.sql` stores phone, location and consent. The cookie is now `SameSite=Lax`, and `AUTH_ORIGIN` accepts a list of exact origins.
+
+**Measured:** with an echo API, Next.js passes a client-written `X-Forwarded-For` through unchanged and fills it in only when missing. The gateway therefore forwards no client address unless `AUTH_CLIENT_IP_SOURCE=x-forwarded-for` is set behind a proxy that writes that header.
+
+**Verified:**
+- Backend unit 17/17 and integration 26/26 on real PostgreSQL. Migration 004 applied; 001–003 skipped by checksum.
+- Frontend `tsc`, lint, production build, and the new `auth-gateway-check`. The admin, demo, deployment, receipt, payment, pricing and certification scripts pass.
+- Browser: the 10 new auth journeys pass 67/67 against the Compose API (register, duplicate, wrong password, pending dashboard, `/account` routing, logout, expired cookie, unauthenticated access, rate limit, and gateway security: Origin, cookie lifecycle, spoofed `X-Forwarded-For`, direct API, bundle scan).
+- Full `verify:visual` (`.verification/2026-11-20T13-06-43`): 2083 passed, 33 failed, 7 incomplete. All 405 auth, account, dashboard, admin, checkout and receipt checks pass. The 33 failures are the known pre-existing ones (21 stale hero/testimonials predicates, 2 V-013 enlarged-text overflow, 10 old header and mobile-nav baselines).
+- Checkout journeys now start as fresh guests, which removed the C3A order dependence. 15 local test accounts (`rocktama-c3b-…@example.test`) were removed after the runs.
+
+**Incidents:**
+- Locally every request reaches Express from one gateway address. The first suite runs exhausted the shared registration limit (10 per hour). The journeys now share one account (3 registrations and about 11 failed logins per run), and the two local IP counters were cleared once.
+- The verifier runs journeys page by page. All auth journeys now share one page so their order holds.
+
+**Not changed:** checkout, Paystack, receipts, wholesale. Checkout prefill still follows the demo session.
+
+**Next proposed task:** a reviewed removal of the demo distributor login, and moving checkout prefill to `/me`, each with approval. AWS backend deployment planning follows.

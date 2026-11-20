@@ -1,7 +1,7 @@
 export function checkoutPrefillJourneys(){
  const base={page:"checkout",kind:"functional",viewports:["mobile","desktop"]};
  const seed={evaluate:"localStorage.setItem('rocktama.basket.v1',JSON.stringify([{variantId:'750-single',quantity:1}]));window.dispatchEvent(new Event('rocktama:basket'));true"};
- const login=[{clearCookies:true},{navigate:"/account/login"},{waitFor:"!document.querySelector('main button[type=submit]').disabled"},{type:{selector:'#auth-email',text:'saved@example.com'}},{type:{selector:'#auth-password',text:'demo'}},{click:'main button[type=submit]'},{waitFor:"location.pathname==='/account/dashboard'"},{navigate:"/checkout"},seed,{waitFor:"document.querySelector('#checkout-email')?.value==='saved@example.com'"}];
+ const login=[{clearCookies:true},{navigate:"/account/login"},{waitFor:"document.querySelector('[data-demo-login]')?.disabled===false"},{type:{selector:'#auth-email',text:'saved@example.com'}},{type:{selector:'#auth-password',text:'demo'}},{click:'[data-demo-login]'},{waitFor:"location.pathname==='/account/dashboard'"},{navigate:"/checkout"},seed,{waitFor:"document.querySelector('#checkout-email')?.value==='saved@example.com'"}];
  const fill=Object.entries({name:'Saved Buyer',phone:'+2348031234567',address:'12 Saved Street',city:'Enugu',state:'Enugu'}).map(([field,text])=>({type:{selector:`#checkout-${field}`,text}}));
  const save=[...login,...fill,{check:'input[name=consent]'},{click:'[data-checkout-submit]'},{waitFor:"location.pathname==='/checkout/pay' && !!document.querySelector('[data-payment-page=ready]')"},{navigate:'/checkout'},{waitFor:"!!document.querySelector('[data-saved-checkout-details]')"}];
  return [

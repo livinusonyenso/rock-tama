@@ -49,5 +49,6 @@ export function checkoutJourneys(){
  ];
  const paid=journeys.find(j=>j.name==="checkout-pay-success");
  journeys.push({...paid,name:"checkout-receipt-email",viewports:["mobile"],deliveries:["resend-mock"],expect:[{name:"email provider accepts separate customer receipt and merchant notification",server:async({mock})=>{const recipient=mock.requests.filter(r=>r.body?.to?.includes("checkout@example.com")&&r.body?.subject?.includes("payment receipt"));return recipient.length===1 && recipient[0].body.text.includes("₦23,300.00") && recipient[0].body.text.includes("TEST RECEIPT") && Buffer.from(recipient[0].body.attachments[0].content,"base64").subarray(0,8).toString()==="%PDF-1.4" && mock.requests.some(r=>r!==recipient[0]&&r.body?.text?.includes(name)&&r.body?.text?.includes("TEST PAYMENT"))}}]});
- return journeys;
+ // Each journey starts as a fresh guest: earlier journeys (demo login, saved checkout details) must not leak in.
+ return journeys.map(j=>j.actions?{...j,actions:[{clearCookies:true},{navigate:"/checkout"},...j.actions]}:j);
 }

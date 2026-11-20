@@ -15,6 +15,15 @@ function normalizeEmail(value) {
   return email;
 }
 
+// Same rule as checkout (frontend/lib/checkout-details.ts), with whitespace collapsed for storage.
+const phonePattern = /^\+?[0-9 ()-]{7,20}$/;
+
+function normalizePhone(value) {
+  if (typeof value !== "string" || value.length > 40) return null;
+  const phone = value.trim().replace(/\s+/g, " ");
+  return phonePattern.test(phone) ? phone : null;
+}
+
 function validPassword(value, minimum) {
   if (typeof value !== "string" || value.length > 256 || /\p{Cs}/u.test(value)) return false;
   const length = [...value].length;
@@ -29,12 +38,16 @@ function normalizeLabel(value, maximum) {
 }
 
 export function validateRegistration(body) {
-  if (!exactFields(body, ["email", "password", "name", "company"])) return null;
+  if (!exactFields(body, ["email", "password", "name", "company", "phone", "location", "consent"])) return null;
   const email = normalizeEmail(body.email);
   const name = normalizeLabel(body.name, 100);
   const company = normalizeLabel(body.company, 150);
-  if (!email || !name || !company || !validPassword(body.password, 15)) return null;
-  return { email, password: body.password, name, company };
+  const phone = normalizePhone(body.phone);
+  const location = normalizeLabel(body.location, 80);
+  // Consent must be an explicit true; the form's required checkbox sends it.
+  if (!email || !name || !company || !phone || !location || [...location].length < 2) return null;
+  if (body.consent !== true || !validPassword(body.password, 15)) return null;
+  return { email, password: body.password, name, company, phone, location };
 }
 
 export function validateLogin(body) {

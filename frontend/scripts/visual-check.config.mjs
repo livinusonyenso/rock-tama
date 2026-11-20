@@ -1,6 +1,7 @@
 import {checkoutPrefillJourneys} from "./checkout-prefill.config.mjs";
 import {distributorDashboardJourneys} from "./distributor-dashboard.config.mjs";
 import {distributorAccountJourneys} from "./distributor-account.config.mjs";
+import {distributorAuthJourneys} from "./distributor-auth.config.mjs";
 import {checkoutJourneys} from "./checkout-check.config.mjs";
 import {adminJourneys} from "./admin-check.config.mjs";
 // Configuration for scripts/visual-check.mjs (D-040).
@@ -309,6 +310,7 @@ const config = {
     ...adminJourneys(),
     ...distributorAccountJourneys(),
     ...distributorDashboardJourneys(),
+    ...distributorAuthJourneys(),
     // ---- /shop (F2) ----
     { name: "shop-page", page: "shop", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
     { name: "product-page", page: "product", selector: "main", viewports: ["mobile", "tablet", "desktop"] },
@@ -410,7 +412,9 @@ const config = {
   regression: { pixelTolerance: 16, maxDiffRatio: 0.005 },
 
   // Console messages matching these patterns are not treated as errors.
-  ignoreConsole: [],
+  // Expected outcomes of wrong passwords and rate limits in the auth journeys (D-134): Chrome logs every 401/429
+  // fetch response as a resource error. Only the login endpoint, only these two statuses.
+  ignoreConsole: [/^Failed to load resource: the server responded with a status of (401|429) \([A-Za-z ]+\) \(https?:\/\/[^/]+\/api\/v1\/auth\/login\)$/],
 };
 
 export default config;

@@ -297,13 +297,16 @@ function serverEnv() {
   if (args.delivery === "unconfigured") env.VERCEL = "1"; // hosted platform without delivery config
   // `next start` is a production server: demo sign-ins need an explicit opt-in (D-133).
   env.DEMO_AUTH = "enabled";
+  // The same-origin auth gateway forwards to the local Compose API (D-134). Its AUTH_ORIGIN allows :3100.
+  env.API_URL ??= "http://127.0.0.1:4000";
   return env;
 }
 
 async function main() {
   const chrome = CHROME_CANDIDATES.find((p) => existsSync(p));
   if (!chrome) fatal("Chrome/Chromium not found. Set CHROME_PATH.");
-  const baseUrl = args.url ?? `http://127.0.0.1:${config.port}`;
+  const port = process.env.ROCKTAMA_VERIFY_PORT ?? String(config.port);
+  const baseUrl = args.url ?? `http://127.0.0.1:${port}`;
 
   console.log(`visual-check → ${rel(RUN_DIR)} (kind: ${args.kind}, delivery: ${args.delivery})`);
   if (args.delivery === "resend-mock") {
@@ -311,7 +314,7 @@ async function main() {
     process.on("exit", () => mockServer.close());
   }
   if (!args.url) {
-    if (await reachable(baseUrl)) fatal(`Port ${config.port} is already in use. Stop that server or pass --url.`);
+    if (await reachable(baseUrl)) fatal(`Port ${port} is already in use. Stop that server or pass --url.`);
     if (args.build) {
       console.log("  building (next build)…");
       // Pages decide whether to show the demo logins when they are prerendered, so the build needs the
@@ -320,7 +323,7 @@ async function main() {
       const code = await new Promise((r) => build.on("exit", r));
       if (code !== 0) fatal(`next build failed (exit ${code}). See ${rel(join(RUN_DIR, "build.log"))}`);
     }
-    start(join(ROOT, "node_modules/.bin/next"), ["start", "-p", String(config.port)], join(RUN_DIR, "server.log"), serverEnv());
+    start(join(ROOT, "node_modules/.bin/next"), ["start", "-H", "127.0.0.1", "-p", port], join(RUN_DIR, "server.log"), serverEnv());
     await until(() => reachable(baseUrl), "the production server");
   }
 

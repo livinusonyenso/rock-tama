@@ -9,13 +9,16 @@ const registration = {
   email: " Owner+Shop@Example.test ",
   name: " Ada Okafor ",
   company: " Ada's Water Supply ",
+  phone: " +234  803 123 4567 ",
+  location: " Enugu, Enugu State ",
+  consent: true,
   password: " a long unique password ",
 };
 
 test("registration normalizes identity fields and preserves the password", () => {
   assert.deepEqual(validateRegistration(registration), {
     email: "owner+shop@example.test", name: "Ada Okafor", company: "Ada's Water Supply",
-    password: registration.password,
+    phone: "+234 803 123 4567", location: "Enugu, Enugu State", password: registration.password,
   });
   assert.equal(validateLogin({ email: registration.email, password: "wrong" }).email, "owner+shop@example.test");
 });
@@ -26,6 +29,9 @@ test("validation rejects malformed fields, short passwords and privilege injecti
     { ...registration, name: " \u0000 " }, { ...registration, company: "a".repeat(151) },
     { ...registration, password: "short" }, { ...registration, password: "🐟".repeat(129) },
     { ...registration, role: "admin" }, { ...registration, status: "approved" },
+    { ...registration, phone: "call me" }, { ...registration, phone: "12345" }, { ...registration, location: "E" },
+    { ...registration, consent: "yes" }, { ...registration, consent: false }, (({ consent, ...rest }) => rest)(registration),
+    { ...registration, confirmPassword: registration.password },
   ]) assert.equal(validateRegistration(invalid), null);
   assert.equal(validateLogin({ email: registration.email, password: "" }), null);
 });
@@ -53,8 +59,13 @@ test("session tokens are random, hashed to 32 bytes and accepted from only one n
 test("cookies require HTTPS except on configured loopback and reject non-origin URLs", () => {
   const https = authCookieConfig("https://shop.example.test");
   assert.equal(https.name, "__Host-rocktama_session");
-  assert.deepEqual(https.options, { httpOnly: true, secure: true, sameSite: "strict", path: "/" });
+  assert.deepEqual(https.options, { httpOnly: true, secure: true, sameSite: "lax", path: "/" });
   assert.equal(authCookieConfig("http://127.0.0.1:4000").options.secure, false);
+  const local = authCookieConfig("http://localhost:3000, http://127.0.0.1:3100");
+  assert.deepEqual([...local.origins], ["http://localhost:3000", "http://127.0.0.1:3100"]);
+  assert.equal(local.name, "rocktama_session");
+  assert.throws(() => authCookieConfig("https://shop.example.test,http://localhost:3000"), /all be HTTPS/);
+  assert.throws(() => authCookieConfig(""), /at least one/);
   assert.throws(() => authCookieConfig("http://shop.example.test"), /AUTH_ORIGIN/);
   assert.throws(() => authCookieConfig("https://shop.example.test/path"), /AUTH_ORIGIN/);
 });
