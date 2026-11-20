@@ -249,3 +249,17 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - **Profile (`004_distributor_profile.sql`):** adds `phone`, `location` and `consented_at` to `auth.users`, nullable for earlier accounts and required by the API for every new registration. The API role may insert them only. `GET /me` returns phone and location. `confirmPassword` stays in the browser.
 - **UI:** real login and registration (an identical "Application received" message for new and existing emails), the real dashboard with a pending-review state and the database profile, logout through the API, and `/account` routing by real session. The demo stays behind a separate "Open demo dashboard" button where `DEMO_AUTH` allows it, until a separately reviewed removal.
 - **Not changed:** checkout prefill still follows the demo session; moving it to `/me` needs separate approval.
+
+## D-135 — Local production rehearsal topology (D1)
+
+**APPROVED 2026-11-20 (Phase D1).** The owner approved a local, production-style rehearsal before any AWS resource exists.
+
+- A separate Compose project, `rocktama-d1` (`deploy/compose.rehearsal.yml`, driven by `deploy/d1.sh`), never touches the development project or its volume.
+- **Caddy** terminates TLS (`tls internal` for `api.rocktama.localhost` and `shop.rocktama.localhost`) and is the only service with a host port, `127.0.0.1:8443`. PostgreSQL is reachable only on the internal `data` network. The API and Next.js are reachable only from Caddy on `edge`.
+- **Secrets are files** (`.d1/`, git-ignored, directory mode 700): `DATABASE_URL_FILE` for the API and migrations; `*_PASSWORD_FILE` plus psql `\getenv` for bootstrap, so passwords never appear in process arguments or logs.
+- **Images:**
+  - `backend/db/Dockerfile` is a self-running bootstrap image.
+  - `backend/Dockerfile` adds a `tests` target, and its default target is unchanged.
+  - `frontend/Dockerfile` builds Next.js standalone output (opt-in via `ROCKTAMA_STANDALONE=1`). It runs with `DEPLOY_MODE=staging`, no demo login and no payment keys.
+- **Client IP:** Caddy (`172.29.44.2`) and Next.js (`172.29.44.3`) are the only trusted proxies (`TRUST_PROXY`). Next.js uses `AUTH_CLIENT_IP_SOURCE=x-forwarded-for` because Caddy rewrites that header at the edge. Automatic addresses are confined to `172.29.44.128/25`, so the fixed addresses cannot be taken.
+- **EC2 (D2)** reuses this topology with ECR images pinned by digest, a publicly trusted certificate, ports 80 and 443, encrypted EBS and Parameter Store secrets written to files.

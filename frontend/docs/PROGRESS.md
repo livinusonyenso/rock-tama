@@ -299,3 +299,22 @@ Scope: [D-134](DECISIONS.md#d-134--nextjs-connected-to-real-distributor-authenti
 **Not checked:** the ECR configuration (the AWS session had expired; `aws login --profile rocktama-dev` is needed). No AWS resources were created.
 
 **Next:** owner decisions in §8 of the plan, then stage 1 (`deploy/` files and a local rehearsal) after approval.
+
+## DevOps Phase D1 — Local production rehearsal — 2026-11-20
+
+Scope: [D-135](DECISIONS.md#d-135--local-production-rehearsal-topology-d1). The D1 files were first drafted, uncommitted, by another agent session. This session reviewed every file, reran everything, and fixed what failed. Results and commands are in [AWS_BACKEND_DEPLOYMENT_PLAN.md](AWS_BACKEND_DEPLOYMENT_PLAN.md#d1-results--2026-11-20-verified-in-d1).
+
+**Verified:**
+- A fresh first boot on an empty volume (throwaway project, removed afterwards).
+- Stack health, with only Caddy on `127.0.0.1:8443`, and TLS trusted only with the rehearsal CA.
+- Backend unit 17/17 and integration 26/26 on the private network.
+- `verify-d1.mjs`: all five stages, including restart, PostgreSQL replacement, backup and restore, a failing-image gate and rollback.
+- `verify-d1-browser.mjs` in Chrome: real-form login and logout, and SameSite=Lax cookie attachment checked directly.
+- The storefront regression: 517/517.
+- The development stack is byte-for-byte unchanged against the baseline, and no password appears in any log.
+
+**Fixed:** Caddy's reserved IP being taken by the API (`ip_range`); a port check that depended on the Compose version; a browser check broken by Opaque Response Blocking.
+
+**Corrected record:** the C3B gateway's streaming body limit and redirect guard (D-134) were committed in `7b64dd7` and are tested by `auth-gateway-check.mjs`. An earlier report said the documentation and code disagreed. That statement was wrong.
+
+**Next proposed task:** D2. Sign in to AWS, check ECR and IAM permissions read-only, and add a budget alert; then the owner approves the billable stages one at a time.
