@@ -295,6 +295,8 @@ function serverEnv() {
     });
   }
   if (args.delivery === "unconfigured") env.VERCEL = "1"; // hosted platform without delivery config
+  // `next start` is a production server: demo sign-ins need an explicit opt-in (D-133).
+  env.DEMO_AUTH = "enabled";
   return env;
 }
 
@@ -312,7 +314,9 @@ async function main() {
     if (await reachable(baseUrl)) fatal(`Port ${config.port} is already in use. Stop that server or pass --url.`);
     if (args.build) {
       console.log("  building (next build)…");
-      const build = start(join(ROOT, "node_modules/.bin/next"), ["build"], join(RUN_DIR, "build.log"));
+      // Pages decide whether to show the demo logins when they are prerendered, so the build needs the
+      // same explicit DEMO_AUTH opt-in as `next start` (D-133). Request-time checks still read the server env.
+      const build = start(join(ROOT, "node_modules/.bin/next"), ["build"], join(RUN_DIR, "build.log"), { ...process.env, DEMO_AUTH: "enabled" });
       const code = await new Promise((r) => build.on("exit", r));
       if (code !== 0) fatal(`next build failed (exit ${code}). See ${rel(join(RUN_DIR, "build.log"))}`);
     }

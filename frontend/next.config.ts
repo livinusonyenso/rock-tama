@@ -102,7 +102,19 @@ function paymentProblem(): string | null {
  */
 function adminProblem(): string | null {
   const missing = ["ADMIN_EMAIL", "ADMIN_PASSWORD", "ADMIN_SESSION_SECRET"].filter((name) => !process.env[name]);
-  return missing.length ? `admin portal not secured (missing ${missing.join(", ")})` : null;
+  if (missing.length) return `admin portal not secured (missing ${missing.join(", ")})`;
+  if ((process.env.ADMIN_SESSION_SECRET ?? "").trim().length < 32) return "admin portal not secured (ADMIN_SESSION_SECRET must be at least 32 characters)";
+  return null;
+}
+
+/**
+ * Demo sign-ins (D-133) are refused at runtime under DEPLOY_MODE=production on every host. Also fail the
+ * build when a production deployment explicitly asks for them, so the conflict is caught before launch.
+ */
+function assertDemoAuthNotInProduction() {
+  if (process.env.DEPLOY_MODE === "production" && process.env.DEMO_AUTH === "enabled") {
+    throw new Error("Production deployment blocked: DEMO_AUTH=enabled is not allowed with DEPLOY_MODE=production.");
+  }
 }
 
 function assertAdminReady() {
@@ -136,6 +148,7 @@ export default function config(phase: string): NextConfig {
     assertNoLaunchPlaceholders();
     assertPaymentsReady();
     assertAdminReady();
+    assertDemoAuthNotInProduction();
   }
   if (!stagingMode()) return nextConfig;
   return {

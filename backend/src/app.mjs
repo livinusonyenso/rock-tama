@@ -1,10 +1,12 @@
 import express from "express";
 import { createAuthRouter } from "./auth/router.mjs";
 
-export function createApp({ db, authOrigin } = {}) {
+export function createApp({ db, authOrigin, trustProxy = false } = {}) {
   const app = express();
 
   app.disable("x-powered-by");
+  // Who may set X-Forwarded-For (D-133). false: request.ip is the TCP peer. See src/trust-proxy.mjs.
+  app.set("trust proxy", trustProxy);
 
   app.get("/health", (_request, response) => {
     response.status(200).json({ status: "ok" });

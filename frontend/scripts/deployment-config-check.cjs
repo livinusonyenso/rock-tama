@@ -10,7 +10,7 @@ const config = require(path.join(root, 'next.config.ts')).default;
 const { claims } = require(path.join(root, 'content/claims.ts'));
 const launch = require(path.join(root, 'content/launch.ts'));
 const { PHASE_PRODUCTION_BUILD } = require('next/constants');
-const keys = ['VERCEL_ENV','DEPLOY_MODE','ENQUIRY_DELIVERY','RESEND_API_KEY','ENQUIRY_TO','ENQUIRY_FROM','PAYSTACK_SECRET_KEY','ADMIN_EMAIL','ADMIN_PASSWORD','ADMIN_SESSION_SECRET'];
+const keys = ['VERCEL_ENV','DEPLOY_MODE','ENQUIRY_DELIVERY','RESEND_API_KEY','ENQUIRY_TO','ENQUIRY_FROM','PAYSTACK_SECRET_KEY','ADMIN_EMAIL','ADMIN_PASSWORD','ADMIN_SESSION_SECRET','DEMO_AUTH'];
 const originalEnv = Object.fromEntries(keys.map(key => [key, process.env[key]]));
 const originalStatuses = Object.fromEntries(Object.entries(claims).map(([key, value]) => [key, value.status]));
 const originalWarn = console.warn;
@@ -41,10 +41,19 @@ const reset = () => { for (const key of keys) delete process.env[key]; process.e
     process.env.PAYSTACK_SECRET_KEY = 'sk_live_fixture';
     assert.throws(() => config(PHASE_PRODUCTION_BUILD), /admin portal not secured/);
     Object.assign(process.env, { ADMIN_EMAIL: 'admin@example.com', ADMIN_PASSWORD: 'fixture', ADMIN_SESSION_SECRET: 'fixture' });
+    assert.throws(() => config(PHASE_PRODUCTION_BUILD), /ADMIN_SESSION_SECRET must be at least 32 characters/);
+    process.env.ADMIN_SESSION_SECRET = 'fixture-secret-that-is-32-chars!';
     assert.equal(config(PHASE_PRODUCTION_BUILD).headers, undefined);
+    // D-133: demo sign-ins can never be requested for a strict launch, on any host.
+    process.env.DEMO_AUTH = 'enabled';
+    assert.throws(() => config(PHASE_PRODUCTION_BUILD), /DEMO_AUTH=enabled is not allowed/);
+    delete process.env.VERCEL_ENV;
+    assert.throws(() => config(PHASE_PRODUCTION_BUILD), /DEMO_AUTH=enabled is not allowed/);
+    process.env.VERCEL_ENV = 'production';
+    delete process.env.DEMO_AUTH;
     delete process.env.DEPLOY_MODE;
     assert.equal(config(PHASE_PRODUCTION_BUILD).headers, undefined);
-    console.log('PASS: staging warnings and noindex, all five strict launch gates, and indexing for a ready launch.');
+    console.log('PASS: staging warnings and noindex, all six strict launch gates (incl. admin secret length and DEMO_AUTH), and indexing for a ready launch.');
   } finally {
     console.warn = originalWarn;
     launch.launchPlaceholders = originalLaunchPlaceholders;

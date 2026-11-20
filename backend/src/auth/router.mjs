@@ -1,33 +1,29 @@
 import express from "express";
+import { canAccessDistributorFeatures, createSessionGuards, fail, unauthenticated } from "./access.mjs";
 import {
   authCookieConfig, createSessionToken, hashPassword, hashValue, readSessionToken, verifyPassword,
 } from "./security.mjs";
 import {
-  consumeAttempt, deleteActiveSession, findSessionUser, findUserForLogin,
-  insertPendingUser, insertSession, pruneExpiredAuthRows,
+  clearLimit, consumeAttempt, deleteActiveSession, findBlockingLimit, findUserForLogin,
+  insertPendingUser, insertSession, pruneExpiredAuthRows, recordFailures,
 } from "./store.mjs";
 import { validateLogin, validateRegistration } from "./validation.mjs";
 
-const registrationWindow = 3600;
-const loginWindow = 900;
+const registrationLimit = { limit: 10, seconds: 3600 };
+// Login limits count failed attempts only (D-133). A correct password never adds to them.
+const loginLimits = {
+  ip: { scope: "login_ip", limit: 30, seconds: 900 },
+  emailAndIp: { scope: "login_email_ip", limit: 5, seconds: 900 },
+  email: { scope: "login_email", limit: 100, seconds: 3600 },
+};
 const safeMethods = new Set(["GET", "HEAD", "OPTIONS"]);
 const dummyHash = await hashPassword(createSessionToken());
 
-function fail(response, status, code, message) {
-  return response.status(status).json({ error: { code, message } });
-}
-
-function sendUser(response, status, { id, email, name, company, role, status: accountStatus }) {
+function sendUser(response, status, user) {
+  const { id, email, name, company, role, status: accountStatus } = user;
   return response.status(status).json({
-    user: {
-      id, email, name, company, role, status: accountStatus,
-      canAccessDistributorFeatures: role === "distributor" && accountStatus === "approved",
-    },
+    user: { id, email, name, company, role, status: accountStatus, canAccessDistributorFeatures: canAccessDistributorFeatures(user) },
   });
-}
-
-function unauthenticated(response) {
-  return fail(response, 401, "authentication_required", "An active session is required.");
 }
 
 function requireJson(request, response, next) {
@@ -37,9 +33,15 @@ function requireJson(request, response, next) {
   next();
 }
 
+function tooManyAttempts(response, retryAfter) {
+  response.set("Retry-After", String(retryAfter));
+  return fail(response, 429, "rate_limited", "Too many attempts. Try again later.");
+}
+
 export function createAuthRouter({ db, origin }) {
   const router = express.Router();
   const cookie = authCookieConfig(origin);
+  const { requireSession } = createSessionGuards({ db, cookie });
   const parseJson = express.json({ limit: "8kb", inflate: false });
   let nextPruneAt = 0;
   let passwordJobs = 0;
@@ -47,13 +49,6 @@ export function createAuthRouter({ db, origin }) {
   function sessionHash(request) {
     const token = readSessionToken(request.get("cookie"), cookie.name);
     return token ? hashValue(token) : null;
-  }
-
-  async function rateLimit(response, scope, key, limit, seconds) {
-    if (await consumeAttempt(db, scope, hashValue(key), limit, seconds)) return false;
-    response.set("Retry-After", String(seconds));
-    fail(response, 429, "rate_limited", "Too many attempts. Try again later.");
-    return true;
   }
 
   async function runPasswordJob(response, job) {
@@ -76,7 +71,8 @@ export function createAuthRouter({ db, origin }) {
 
   router.use((request, response, next) => {
     response.set("Cache-Control", "no-store");
-    // Fail closed for every state-changing method, including login before a session exists.
+    // CSRF: every state-changing method needs the exact storefront Origin, including login before a
+    // session exists. A same-origin Next.js rewrite forwards the browser's Origin unchanged.
     if (!safeMethods.has(request.method) && request.get("origin") !== origin) {
       return fail(response, 403, "origin_forbidden", "The request origin is not allowed.");
     }
@@ -84,29 +80,45 @@ export function createAuthRouter({ db, origin }) {
   });
 
   router.post("/register", requireJson, parseJson, async (request, response) => {
-    if (await rateLimit(response, "register_ip", request.ip, 10, registrationWindow)) return;
+    const { limit, seconds } = registrationLimit;
+    if (!await consumeAttempt(db, "register_ip", hashValue(request.ip), limit, seconds)) {
+      return tooManyAttempts(response, seconds);
+    }
     const registration = validateRegistration(request.body);
     if (!registration) return fail(response, 400, "invalid_input", "Provide a valid email, name, company and 15–128 character password.");
 
     return runPasswordJob(response, async () => {
+      // New and already-registered emails take the same path and get the same response, so registration
+      // does not reveal which emails have accounts. An existing account is never modified.
       const passwordHash = await hashPassword(registration.password);
-      const user = await insertPendingUser(db, registration, passwordHash);
-      if (!user) return fail(response, 409, "registration_conflict", "Unable to register with that email.");
-      return sendUser(response, 201, user);
+      await insertPendingUser(db, registration, passwordHash);
+      return response.status(202).json({ registration: { status: "received" } });
     });
   });
 
   router.post("/login", requireJson, parseJson, async (request, response) => {
-    if (await rateLimit(response, "login_ip", request.ip, 30, loginWindow)) return;
     const credentials = validateLogin(request.body);
     if (!credentials) return fail(response, 400, "invalid_input", "Provide a valid email and password.");
-    if (await rateLimit(response, "login_email", credentials.email, 5, loginWindow)) return;
+
+    const { ip, emailAndIp, email } = loginLimits;
+    const buckets = [
+      { ...ip, keyHash: hashValue(request.ip) },
+      { ...emailAndIp, keyHash: hashValue(`${credentials.email}\n${request.ip}`) },
+      { ...email, keyHash: hashValue(credentials.email) },
+    ];
+    const blocked = await findBlockingLimit(db, buckets);
+    if (blocked) return tooManyAttempts(response, blocked.retryAfter);
 
     return runPasswordJob(response, async () => {
       const user = await findUserForLogin(db, credentials.email);
       const matches = await verifyPassword(user?.password_hash ?? dummyHash, credentials.password);
-      if (!user || !matches) return fail(response, 401, "invalid_credentials", "Email or password is incorrect.");
+      if (!user || !matches) {
+        await recordFailures(db, buckets);
+        return fail(response, 401, "invalid_credentials", "Email or password is incorrect.");
+      }
 
+      // Success clears this email-and-IP bucket only; the IP and account-wide counters keep running.
+      await clearLimit(db, buckets[1].scope, buckets[1].keyHash);
       const token = createSessionToken();
       await insertSession(db, user.id, hashValue(token), sessionHash(request));
       response.cookie(cookie.name, token, { ...cookie.options, maxAge: cookie.lifetime });
@@ -122,12 +134,7 @@ export function createAuthRouter({ db, origin }) {
     return response.status(204).end();
   });
 
-  router.get("/me", async (request, response) => {
-    const hash = sessionHash(request);
-    const user = hash && await findSessionUser(db, hash);
-    if (!user) return unauthenticated(response);
-    return sendUser(response, 200, user);
-  });
+  router.get("/me", requireSession, (_request, response) => sendUser(response, 200, response.locals.user));
 
   router.use((_request, response) => fail(response, 404, "not_found", "Authentication endpoint not found."));
   router.use((error, _request, response, next) => {

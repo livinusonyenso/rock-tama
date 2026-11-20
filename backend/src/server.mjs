@@ -1,12 +1,14 @@
 import { createApp } from "./app.mjs";
 import { pool } from "./db.mjs";
 import { createShutdown } from "./shutdown.mjs";
+import { parseTrustProxy } from "./trust-proxy.mjs";
 
 const host = "0.0.0.0";
 const port = Number(process.env.PORT || "4000");
 
 if (!process.env.AUTH_ORIGIN) throw new Error("AUTH_ORIGIN is required");
-const app = createApp({ db: pool, authOrigin: process.env.AUTH_ORIGIN });
+const trustProxy = parseTrustProxy(process.env.TRUST_PROXY); // throws on unsafe values: fail closed
+const app = createApp({ db: pool, authOrigin: process.env.AUTH_ORIGIN, trustProxy });
 
 const server = app.listen(port, host);
 

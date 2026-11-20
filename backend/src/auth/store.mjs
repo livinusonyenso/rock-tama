@@ -59,6 +59,42 @@ export async function consumeAttempt(db, scope, keyHash, limit, seconds) {
   return rowCount === 1;
 }
 
+/**
+ * Failure-based limits (D-133). Each entry is { scope, keyHash, limit, seconds }. Returns the first entry
+ * whose unexpired counter has reached its limit, with the seconds until it resets, or null.
+ */
+export async function findBlockingLimit(db, entries) {
+  const { rows } = await db.query(
+    `SELECT scope, attempts, GREATEST(1, ceil(extract(epoch FROM expires_at - statement_timestamp())))::integer AS retry_after
+     FROM auth.rate_limits
+     WHERE expires_at > statement_timestamp()
+       AND (scope, key_hash) IN (SELECT * FROM unnest($1::text[], $2::bytea[]))`,
+    [entries.map((entry) => entry.scope), entries.map((entry) => entry.keyHash)],
+  );
+  for (const entry of entries) {
+    const row = rows.find((candidate) => candidate.scope === entry.scope);
+    if (row && row.attempts >= entry.limit) return { scope: entry.scope, retryAfter: row.retry_after };
+  }
+  return null;
+}
+
+/** Count one failed login in every bucket. A bucket restarts its window once it has expired. */
+export async function recordFailures(db, entries) {
+  await db.query(
+    `INSERT INTO auth.rate_limits AS r (scope, key_hash, attempts, expires_at)
+     SELECT scope, key_hash, 1, statement_timestamp() + seconds * INTERVAL '1 second'
+     FROM unnest($1::text[], $2::bytea[], $3::integer[]) AS f (scope, key_hash, seconds)
+     ON CONFLICT (scope, key_hash) DO UPDATE SET
+       attempts = CASE WHEN r.expires_at <= statement_timestamp() THEN 1 ELSE r.attempts + 1 END,
+       expires_at = CASE WHEN r.expires_at <= statement_timestamp() THEN EXCLUDED.expires_at ELSE r.expires_at END`,
+    [entries.map((entry) => entry.scope), entries.map((entry) => entry.keyHash), entries.map((entry) => entry.seconds)],
+  );
+}
+
+export async function clearLimit(db, scope, keyHash) {
+  await db.query("DELETE FROM auth.rate_limits WHERE scope = $1 AND key_hash = $2", [scope, keyHash]);
+}
+
 export async function pruneExpiredAuthRows(db) {
   // Bound each cleanup batch. Rate-limit rows can be renewed, so lock them before deleting.
   await db.query(`

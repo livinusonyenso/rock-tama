@@ -23,7 +23,7 @@ export default function AdminLoginPage() {
           <p className="mt-1 text-sm text-ink-700">Manage sales, orders, inventory and wholesale.</p>
         </div>
         <div className="mt-6">
-          {credentials ? <LoginForm /> : <p role="alert" className="rounded-button border border-error p-3 text-sm text-error">Admin sign-in isn’t configured. Set ADMIN_EMAIL and ADMIN_PASSWORD.</p>}
+          {credentials ? <LoginForm /> : <p role="alert" className="rounded-button border border-error p-3 text-sm text-error">Admin sign-in isn’t configured. Set ADMIN_EMAIL, ADMIN_PASSWORD and ADMIN_SESSION_SECRET (at least 32 characters).</p>}
         </div>
         {credentials?.demo && (
           <div data-demo-login className="mt-5 rounded-button border border-gold-700/50 bg-cream-200 p-3 text-sm">

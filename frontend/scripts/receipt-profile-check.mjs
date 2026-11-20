@@ -7,10 +7,11 @@ import {z} from "zod";
 let now=100000,verified=true,connections=0;const data=new Map(),flags=new Map();
 const jar={get:key=>data.has(key)?{value:data.get(key)}:undefined,set:(key,value,options)=>{data.set(key,value);flags.set(key,options)},delete:key=>data.delete(key)};
 const platform={'server-only':{},'next/headers':{cookies:async()=>jar},'next/server':{connection:async()=>{connections++}}};
-function load(file,imports){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText,{exports,require:name=>{if(name in imports)return imports[name];throw Error(name)},Buffer,Date:{now:()=>now},process:{env:{NODE_ENV:'production'}},JSON,Response,Request,FormData});return exports;}
+function load(file,imports){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText,{exports,require:name=>{if(name in imports)return imports[name];throw Error(name)},Buffer,Date:{now:()=>now},process:{env:{NODE_ENV:'production',DEMO_AUTH:'enabled'}},JSON,Response,Request,FormData});return exports;}
 const token=load('lib/server/payments/token.ts',{'server-only':{},'node:crypto':{createHmac,timingSafeEqual}});
 const details=load('lib/checkout-details.ts',{zod:{z}});
-const demo=load('lib/account/demo.ts',{});
+// A staging server with demo sign-ins explicitly enabled (D-133).
+const demo=load('lib/account/demo.ts',{'@/lib/demo-auth':load('lib/demo-auth.ts',{})});
 const session={paymentTokenSecret:()=>"test-signing-secret"};
 const profile=load('lib/server/checkout-profile.ts',{...platform,'@/lib/account/demo':demo,'@/lib/checkout-details':details,'@/lib/server/payments/token':token,'@/lib/server/payments/order-session':session});
 const customer={name:'Demo Buyer',email:'buyer@example.com',phone:'+2348031234567',address:'12 Example Street',city:'Enugu',state:'Enugu'};

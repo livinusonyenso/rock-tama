@@ -4,7 +4,7 @@ _Last updated: 2026-11-20_
 
 ## Current state
 
-- **DevOps phase:** Phase C2 database-backed distributor authentication implemented and verified locally on 2026-11-20. Owner review pending before frontend form integration.
+- **DevOps phase:** Phase C3A authentication hardening implemented and verified locally on 2026-11-20 ([D-133](DECISIONS.md#d-133--authentication-hardening-c3a)). Owner review pending before C3B (connecting the Next.js forms).
 - **Architecture:** [D-130](DECISIONS.md#d-130--backend-architecture) records the Express backend, [D-131](DECISIONS.md#d-131--database-roles-and-start-up-order) records the C1 role split and startup order, and [D-132](DECISIONS.md#d-132--postgresql-backed-distributor-authentication) records C2 authentication.
 - **Frontend milestones:** M1 Foundation approved on 2026-11-14. See the entries below for subsequent frontend implementation and verification.
 
@@ -244,3 +244,23 @@ Implemented `002_auth.sql` and the register, login, logout and current-user endp
 **Architecture Explorer:** updated to version 2 at the same link, showing C1 and C2 as verified and C3, CI and AWS as planned.
 
 **Next proposed task:** Owner review of C2, then connect the Next.js account forms in a separate task. Public rollout work includes email ownership verification, recovery, approval and intended HTTPS proxy verification.
+
+## DevOps Phase C3A — Authentication security hardening — 2026-11-20
+
+Scope: [D-133](DECISIONS.md#d-133--authentication-hardening-c3a). Registration no longer reveals existing emails, and login limits count failures only (per IP, per email-and-IP, per account). `TRUST_PROXY` is an explicit allow-list, there are session guards for approved-distributor routes, stale cookies are cleared, and demo/admin sign-ins fail closed. Migration `003_auth_login_limits.sql` was applied by the migrate job; 001 and 002 were skipped by checksum.
+
+**Investigated:** in local Compose, every request reaches Express from the gateway `172.18.0.1`, and a spoofed `X-Forwarded-For` was ignored. Both were observed by matching the stored rate-limit key hashes.
+
+**Verified:** backend unit 17/17 and real-PostgreSQL integration 26/26. Live Docker smoke: identical 202 for new and duplicate registration; pending login and `/me`; five failures then 429 with `Retry-After: 900`; stale cookie cleared. `TRUST_PROXY=true|*|2` stops the container. Frontend `tsc`, lint, `distributor-demo-check`, new `admin-auth-check` (10 cases), `deployment-config-check` and the payment/receipt/pricing/certification scripts all pass. A standalone `next build` without `DEMO_AUTH` passes and prerenders `/auth/admin` and `/account/login` with no demo login (fail closed).
+
+**Visual (`npm run verify:visual`, run `.verification/2026-11-20T12-13-47`):** 2009 passed, 44 failed, 7 incomplete (no baseline yet).
+- All 221 account, dashboard and admin checks pass.
+- 21 failures are stale predicates: the hero check expects exactly 5 slides on the page, but the D-107 range galleries add 16 more; the testimonials check expects the pre-D-119 six-slide slider, while the page renders 12 quotes in two loop groups.
+- 2 are the known V-013 overflow at 200% text size. 10 are header and mobile-nav baseline differences carried over from the navbar cleanup. C3A changed no component, content or header file.
+- 10 checkout failures (`#checkout-name` not found) and 1 font-timing check come from order dependence. Checkout scenarios run after dashboard scenarios that now log into the demo, and they don't clear cookies, so they inherit a demo session and saved profile. In isolation (`--no-build`, the same 9 scenarios at mobile and desktop) 50/50 pass. Follow-up: give the checkout scenarios `{clearCookies:true}`.
+
+**Harness fixes during verification:** the first run failed every demo-login check because pages are prerendered at build time and the build step lacked `DEMO_AUTH`. `visual-check.mjs` now passes the opt-in to the build as well as to `next start`. A real admin login now always gets a Secure cookie on a production server; only the demo credentials on a non-Vercel `next start` omit it.
+
+**Incident:** the first integration run closed database connections before fixture cleanup, leaving 4 test users. They were deleted by exact email, and the cleanup now runs last-in, first-out.
+
+**Next proposed task:** C3B — connect the Next.js login and register forms through a same-origin route, choose the trusted-proxy topology and the SameSite policy, and set `DEMO_AUTH=enabled` on Vercel staging if the demos should stay visible there.

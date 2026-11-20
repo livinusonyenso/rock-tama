@@ -5,3 +5,5 @@ services:
     environment:
       DATABASE_URL: postgresql://rocktama_api:${API_DB_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}
       AUTH_ORIGIN: ${AUTH_ORIGIN:-http://127.0.0.1:4000}
+      # Empty by default: no proxy sits in front of the API locally, so X-Forwarded-For is ignored (D-133).
+      TRUST_PROXY: ${TRUST_PROXY:-}

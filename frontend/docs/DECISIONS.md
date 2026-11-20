@@ -225,3 +225,16 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - Use Argon2id for passwords, random 256-bit tokens and SHA-256 session-token hashes. Sessions expire after eight hours and successful logout revokes the stored record. Cookies are HttpOnly and SameSite=Strict. TLS uses the `Secure` flag and `__Host-` prefix, and the local Compose origin uses the HTTP loopback exception.
 - State-changing requests require the exact configured `Origin`. PostgreSQL supplies atomic login and registration rate limits, and responses use a common error format. Login returns the same error for wrong passwords and unknown emails.
 - The [Phase C2 guide](BACKEND_AUTHENTICATION.md) documents the contracts, verification and remaining public rollout work. Frontend form integration and AWS deployment are planned separately.
+
+## D-133 — Authentication hardening (C3A)
+
+**APPROVED 2026-11-20 (Phase C3A).** Hardens D-132 before the Next.js forms are connected. Refines the demo-login rules of D-128 and the distributor demo.
+
+- **Registration:** `POST /register` returns `202 {"registration":{"status":"received"}}` for new and existing emails alike (previously `201 {user}` or `409`). Existing accounts are never modified.
+- **Login limits count failures only:** 30 per IP and 5 per email-and-IP per 15 minutes, 100 per email per hour across all IPs. A successful login clears its email-and-IP bucket. `003_auth_login_limits.sql` adds the `login_email_ip` scope.
+- **Client IP:** `TRUST_PROXY` is an explicit allow-list (IPs, CIDRs, `loopback`/`linklocal`/`uniquelocal`), empty by default. `true`, `*`, hop counts and `/0` stop start-up.
+- **Authorisation:** `requireSession` and `requireApprovedDistributor` in `backend/src/auth/access.mjs` gate future approved-distributor routes. Pending accounts get `403 distributor_approval_required`. An invalid session cookie is cleared on `401`.
+- **Demo sign-ins fail closed** (`frontend/lib/demo-auth.ts`): never with `DEPLOY_MODE=production` on any host. On by default only under `next dev`. Production servers (`next start`, Vercel staging, Docker, AWS) need `DEMO_AUTH=enabled`. The build fails if `DEMO_AUTH=enabled` and `DEPLOY_MODE=production` are both set.
+- **Admin secret:** real admin credentials require `ADMIN_SESSION_SECRET` of at least 32 characters. There is no fallback to `PAYMENT_TOKEN_SECRET`, `PAYSTACK_SECRET_KEY` or the public demo secret. The admin cookie is Secure on every production server except the local demo.
+- **Build time vs request time:** whether a page *shows* the demo login is decided when it is prerendered, so `DEMO_AUTH` must be present at build time to display it. Every security decision (`startDemoSession`, `checkCredentials`, `parseDemoSession`, the admin cookie check in `proxy.ts`) reads the server environment at request time.
+- **Consequence:** Vercel staging must set `DEMO_AUTH=enabled` to keep showing the demo logins and the demo-linked checkout prefill. Payment, checkout and receipt code is unchanged.
