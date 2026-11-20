@@ -1,6 +1,8 @@
 # Session Handoff
 
-_Last updated: 2026-11-20 (DevOps Phase D1)_
+_Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
+
+**D2 (D-136):** EC2 staging is prepared but **not created**. `deploy/build-release.sh <registry>` builds four arm64 images tagged with the full SHA. `deploy/compose.staging.yml` and `deploy/ec2/*.sh` run on the instance; `deploy/smoke-staging.mjs` verifies from the Mac. Follow `docs/AWS_STAGING_RUNBOOK.md` steps D2-1 to D2-10, each with owner approval. The account is on the AWS Free plan ($100 credits, expiry 2027-05-18).
 
 **D1 rehearsal (D-135):** `./deploy/d1.sh init`, then `./deploy/d1.sh --profile frontend up -d --wait`, then `./deploy/d1.sh ca`. This starts a separate `rocktama-d1` project: HTTPS on `https://api.rocktama.localhost:8443` and `https://shop.rocktama.localhost:8443` with a local CA, PostgreSQL private, secrets in git-ignored `.d1/`. Verify with `node deploy/verify-d1.mjs` and `node deploy/verify-d1-browser.mjs`. It never touches the development project. D2 (AWS) needs owner approval stage by stage.
 

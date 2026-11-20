@@ -318,3 +318,22 @@ Scope: [D-135](DECISIONS.md#d-135--local-production-rehearsal-topology-d1). The 
 **Corrected record:** the C3B gateway's streaming body limit and redirect guard (D-134) were committed in `7b64dd7` and are tested by `auth-gateway-check.mjs`. An earlier report said the documentation and code disagreed. That statement was wrong.
 
 **Next proposed task:** D2. Sign in to AWS, check ECR and IAM permissions read-only, and add a budget alert; then the owner approves the billable stages one at a time.
+
+## DevOps Phase D2 — AWS preflight and release preparation — 2026-11-20
+
+Scope: [D-136](DECISIONS.md#d-136--ec2-staging-topology-and-release-process-d2); runbook in [AWS_STAGING_RUNBOOK.md](AWS_STAGING_RUNBOOK.md). **No AWS resource was created and no image was pushed.**
+
+**Verified, read-only:**
+- Identity: account 638486126885, `AccountFullAccessRole`, eu-north-1.
+- Account plan: the Free plan, with $100 credits and expiry 2027-05-18.
+- ECR: `rocktama/api` has immutable tags, but scan on push is off and there's no lifecycle policy.
+- Network: the default VPC only, and no billable resources.
+- Instance types: `t4g.small` and `t4g.medium` are offered in all three AZs.
+- Permissions: EC2 dry-runs allowed; IAM, ECR, SSM, DLM and Budgets allowed in eu-north-1 (the earlier denials were a simulator region artefact).
+- Prices: from the AWS Price List API.
+
+**Measured:** cgroup memory peaks: api 129.5 MiB, web 118.5, db 75.4, caddy 32.7, migrate 18.8, bootstrap 7.4. A burst of 20 logins stayed inside the 4-hash cap. Recommendation: `t4g.small`.
+
+**Built and audited:** four linux/arm64 release images at `c0bc972`. 0 secret values, no stray files, no development dependencies. `compose.staging.yml` and `Caddyfile.staging` validated; the instance policy passes IAM Access Analyzer; `smoke-staging.mjs` passes against D1.
+
+**Next:** the owner approves D2-1 onward, one step at a time. Consider upgrading to a paid plan before production use.

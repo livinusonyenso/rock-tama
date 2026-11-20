@@ -27,6 +27,8 @@ The backend is ready for a **local production-topology rehearsal**. Approve the 
 | RDS alternative | Require `rds.force_ssl=1`, the AWS CA bundle and `verify-full` for bootstrap, migrations and runtime. Verify the session in `pg_stat_ssl`. RDS has `rds_superuser` privileges. A rolled-back local rehearsal as a role with `CREATEROLE` showed the bootstrap fails at `ALTER ROLE … NOSUPERUSER`. An RDS-specific bootstrap and role-switching rehearsal are prerequisites. [RDS PostgreSQL TLS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html) · [RDS administrator privileges](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.PostgreSQL.CommonDBATasks.Roles.rds_superuser.html) |
 | ECR | Use distinct API and bootstrap repositories, immutable Git-SHA tags and digest-pinned deployments. Publish Linux `arm64` for Graviton or a verified multi-architecture index. Verify registry scanning configuration and both repositories’ scan findings. Separate publisher and EC2 pull permissions. [ECR multi-architecture image publishing](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-multi-architecture-image.html) |
 
+> **D2 update (2026-11-20):** the owner chose one EC2 instance for Next.js, Express, Caddy and PostgreSQL. The verified permissions, measured memory, exact costs and the step-by-step publishing plan are in [AWS_STAGING_RUNBOOK.md](AWS_STAGING_RUNBOOK.md). Where the two differ, the runbook takes precedence.
+
 ## 1. Recommendation
 
 **One small EC2 instance running Docker Compose:**

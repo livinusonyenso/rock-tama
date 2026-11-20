@@ -41,7 +41,18 @@ printf '[Unit]\nRequiresMountsFor=/srv/rocktama\n' > /etc/systemd/system/docker.
 systemctl daemon-reload
 systemctl enable --now docker
 
-# 5. /opt/rocktama holds release files and secrets.
+# 5. A 1 GiB swap file: insurance against short memory spikes on a 2 GiB instance (measured app peak ≈ 360 MiB).
+if [ ! -f /swapfile ]; then fallocate -l 1G /swapfile && chmod 600 /swapfile && mkswap /swapfile; fi
+grep -q '^/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+swapon --show | grep -q /swapfile || swapon /swapfile
+
+# 6. Nightly logical backup on the data volume, one file per weekday (7 kept). EBS snapshots cover the volume.
+cat > /etc/cron.d/rocktama-backup <<'CRON'
+15 2 * * * root umask 077; docker exec rocktama-db-1 pg_dump -U rocktama_bootstrap -Fc rocktama > /srv/rocktama/backups/daily-$(date +\%u).dump.tmp && mv /srv/rocktama/backups/daily-$(date +\%u).dump.tmp /srv/rocktama/backups/daily-$(date +\%u).dump
+CRON
+chmod 0644 /etc/cron.d/rocktama-backup
+
+# 7. /opt/rocktama holds release files and secrets.
 install -d -m 0755 /opt/rocktama /opt/rocktama/releases
 install -d -m 0700 /opt/rocktama/secrets
 echo "rocktama host prepared: $(docker --version); data on $device ($uuid)"

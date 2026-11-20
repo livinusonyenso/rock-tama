@@ -263,3 +263,22 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
   - `frontend/Dockerfile` builds Next.js standalone output (opt-in via `ROCKTAMA_STANDALONE=1`). It runs with `DEPLOY_MODE=staging`, no demo login and no payment keys.
 - **Client IP:** Caddy (`172.29.44.2`) and Next.js (`172.29.44.3`) are the only trusted proxies (`TRUST_PROXY`). Next.js uses `AUTH_CLIENT_IP_SOURCE=x-forwarded-for` because Caddy rewrites that header at the edge. Automatic addresses are confined to `172.29.44.128/25`, so the fixed addresses cannot be taken.
 - **EC2 (D2)** reuses this topology with ECR images pinned by digest, a publicly trusted certificate, ports 80 and 443, encrypted EBS and Parameter Store secrets written to files.
+
+## D-136 — EC2 staging topology and release process (D2)
+
+**APPROVED 2026-11-20 for preparation (Phase D2).** The owner chose one EC2 instance running Next.js, Express, Caddy and PostgreSQL in separate containers on private networks. Creating resources and publishing images need separate approval for each step ([runbook](AWS_STAGING_RUNBOOK.md)).
+
+- **Instance:** `t4g.small` (2 GiB), sized from measured peaks (application ≈ 357 MiB, idle ≈ 265 MiB). It has a 1 GiB swap file and runs with `CpuCredits=standard`. `t4g.medium` isn't launchable on the account's Free plan.
+- **Images:** four linux/arm64 images (`rocktama/api`, `web`, `db-bootstrap`, `edge`), each tagged with the full Git SHA in immutable ECR repositories, with scan on push and a keep-10 lifecycle policy. The edge image carries the release's compose file and EC2 scripts, so the host needs neither Git nor S3. PostgreSQL comes from Docker Hub, pinned by digest.
+- **Host:**
+  - Ubuntu 24.04 arm64; IMDSv2 required.
+  - Ports 80 and 443 only; access through Session Manager.
+  - An encrypted gp3 data volume mounted at `/srv/rocktama`, which Docker requires before it starts, and which is kept when the instance is terminated.
+  - Secrets from `/rocktama/staging/*` SecureStrings, written to root-only files.
+  - The instance role may only pull `rocktama/*` and read those three parameters.
+- **TLS and hostnames:** `shop.<ip>.sslip.io` and `api.<ip>.sslip.io` with certificates obtained by Caddy, until a custom domain exists.
+- **Operations:**
+  - `deploy.sh <sha>`: pull everything, take a backup, then start with health gates. `deploy.sh rollback` redeploys the previous release.
+  - Backups: nightly and per-deploy `pg_dump`, plus daily EBS snapshots through DLM.
+  - Migrations stay forward-only and compatible with the previous release.
+- **Account plan risk:** the Free plan ($100 credits, expiring 2027-05-18) suspends the account when the credits or the time run out. Upgrade to a paid plan before relying on the site.
