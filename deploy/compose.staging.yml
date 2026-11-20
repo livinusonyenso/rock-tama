@@ -1,0 +1,171 @@
+# EC2 staging stack (D-136). The D1 topology (D-135) with release images from ECR, a public certificate and
+# data on the encrypted EBS data volume. Run only through deploy/ec2/deploy.sh, which supplies:
+#   /opt/rocktama/release.env  REGISTRY, RELEASE (full Git SHA), SHOP_HOST, API_HOST
+#   /opt/rocktama/secrets/     password and connection-URL files written by deploy/ec2/fetch-secrets.sh
+#   /srv/rocktama/             the mounted EBS data volume (postgres/, caddy/)
+# Memory limits come from D2 measurements (peak: api 130 MiB, web 119, db 75, caddy 33, migrate 19).
+name: rocktama
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: '3'
+
+services:
+  caddy:
+    image: ${REGISTRY:?}/rocktama/edge:${RELEASE:?}
+    environment:
+      SHOP_HOST: ${SHOP_HOST:?}
+      API_HOST: ${API_HOST:?}
+    ports: ['80:80', '443:443']
+    networks:
+      edge:
+        ipv4_address: 172.30.10.2
+    volumes:
+      - /srv/rocktama/caddy/data:/data
+      - /srv/rocktama/caddy/config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -q, --spider, 'http://127.0.0.1:8080/health']
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    mem_limit: 128m
+    restart: unless-stopped
+    logging: *logging
+
+  web:
+    image: ${REGISTRY:?}/rocktama/web:${RELEASE:?}
+    environment:
+      API_URL: http://api:4000
+      # Caddy rewrites X-Forwarded-For at the edge, so its right-most entry is the real client.
+      AUTH_CLIENT_IP_SOURCE: x-forwarded-for
+      DEPLOY_MODE: staging
+      PAYSTACK_SECRET_KEY: ''
+    networks:
+      edge:
+        ipv4_address: 172.30.10.3
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/account/login').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    restart: unless-stopped
+    logging: *logging
+
+  api:
+    image: ${REGISTRY:?}/rocktama/api:${RELEASE:?}
+    environment:
+      DATABASE_URL_FILE: /run/secrets/api_url
+      AUTH_ORIGIN: https://${SHOP_HOST:?},https://${API_HOST:?}
+      TRUST_PROXY: 172.30.10.2,172.30.10.3
+    secrets: [api_url]
+    networks: [edge, data]
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4000/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    stop_grace_period: 12s
+    mem_limit: 384m
+    restart: unless-stopped
+    logging: *logging
+
+  db:
+    image: postgres:18-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    environment:
+      POSTGRES_DB: rocktama
+      POSTGRES_USER: rocktama_bootstrap
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap_password
+    # Suppress statement text on SQL errors: bootstrap ALTER ROLE statements contain credentials.
+    command: [postgres, -c, log_min_error_statement=panic]
+    secrets: [bootstrap_password]
+    volumes: [/srv/rocktama/postgres:/var/lib/postgresql]
+    networks: [data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -h 127.0.0.1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    shm_size: 128m
+    mem_limit: 512m
+    restart: unless-stopped
+    logging: *logging
+
+  db-bootstrap:
+    image: ${REGISTRY:?}/rocktama/db-bootstrap:${RELEASE:?}
+    environment:
+      PGHOST: db
+      PGUSER: rocktama_bootstrap
+      PGDATABASE: rocktama
+      PGPASSWORD_FILE: /run/secrets/bootstrap_password
+      MIGRATOR_PASSWORD_FILE: /run/secrets/migrator_password
+      API_DB_PASSWORD_FILE: /run/secrets/api_password
+    secrets: [bootstrap_password, migrator_password, api_password]
+    networks: [data]
+    depends_on:
+      db:
+        condition: service_healthy
+    tmpfs: [/var/lib/postgresql]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    restart: 'no'
+    logging: *logging
+
+  migrate:
+    image: ${REGISTRY:?}/rocktama/api:${RELEASE:?}
+    command: [node, src/migrate.mjs]
+    environment:
+      DATABASE_URL_FILE: /run/secrets/migrator_url
+    secrets: [migrator_url]
+    networks: [data]
+    depends_on:
+      db-bootstrap:
+        condition: service_completed_successfully
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    restart: 'no'
+    logging: *logging
+
+networks:
+  edge:
+    ipam:
+      # Fixed addresses (Caddy .2, Next.js .3) stay below .128; automatic addresses come from the upper half.
+      config: [{subnet: 172.30.10.0/24, ip_range: 172.30.10.128/25}]
+  data:
+    internal: true
+
+secrets:
+  bootstrap_password:
+    file: /opt/rocktama/secrets/bootstrap-password
+  migrator_password:
+    file: /opt/rocktama/secrets/migrator-password
+  api_password:
+    file: /opt/rocktama/secrets/api-password
+  migrator_url:
+    file: /opt/rocktama/secrets/migrator-url
+  api_url:
+    file: /opt/rocktama/secrets/api-url
