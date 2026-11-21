@@ -250,6 +250,10 @@ D1 rehearsed a dump restore into a separate database. Restore into a scratch dat
 
 Use AWS Systems Manager on the existing `t3.small`. Namecheap already points the apex and `api` to `13.51.251.222`, with `www` as a CNAME to the apex. The current address is auto-assigned. Check it after starting a stopped instance and update the two A records if it changes. The approved 8 GiB root EBS volume is persistent and unencrypted. Keep only disposable staging data there. The host has no existing Docker containers or database volumes in the pre-deployment inventory.
 
+**Verified deployment:** release `ae9f78966be654cfbfc60af03625d00e88fd2b31` runs on `i-0ad28bbea578fa416`. PostgreSQL, API, Next.js and Caddy reported healthy. Bootstrap and migrations exited successfully, with `001`–`004` recorded. The storefront and product pages returned 200, `www` returned a 308 to the apex, and the API readiness probe returned `{"status":"ok","database":"ready"}` over publicly trusted TLS. HTTP and Chrome checks passed for registration, login, pending distributor access and logout with synthetic accounts. Staging is `noindex` with no Paystack key. Ports 3000, 4000 and 5432 are closed to the public. The existing SSH rule remains in place.
+
+On first deployment, create `/opt/rocktama/data/postgres` on the approved disk. The PostgreSQL image's `postgres` user must own this mount directory so it can create `18/docker`. A root-owned mode `0700` mount prevented initialization on this host. Determine UID and GID with `id` in the exact database image and set ownership on the mount directory only. Keep the host parent directory root-only. The bootstrap job uses the secrets generated on the host by `fetch-secrets.sh --local-init` and reuses those files on future runs.
+
 **Release and publish after approval.** Build the three missing images for `linux/amd64`. The existing API tag `03ededb34f11` resolves to the AMD64 index below. Pin it by digest for both Express and migration; use the full, clean Git SHA for the three new images.
 
 ```bash
