@@ -20,6 +20,11 @@
 	reverse_proxy api:4000
 }
 
+www.{$SHOP_HOST} {
+	header Strict-Transport-Security "max-age=86400"
+	redir https://{$SHOP_HOST}{uri} 308
+}
+
 http://127.0.0.1:8080 {
 	bind 127.0.0.1
 	respond /health 200

@@ -14,6 +14,7 @@ import { parseArgs } from "node:util";
 
 const { values: opt } = parseArgs({ options: {
   shop: { type: "string" }, api: { type: "string" }, ip: { type: "string" },
+  www: { type: "string" }, "allow-existing-ssh": { type: "boolean" },
   connect: { type: "string" }, port: { type: "string", default: "443" }, ca: { type: "string" },
 } });
 if (!opt.shop || !opt.api) throw new Error("--shop and --api are required");
@@ -48,19 +49,27 @@ const pass = (message) => console.log(`PASS ${message}`);
 // 1. TLS and health. A failed certificate check throws here.
 assert.equal((await call(opt.api, "/health")).status, 200);
 assert.equal(JSON.parse((await call(opt.api, "/health/ready")).text).database, "ready");
-for (const path of ["/", "/account/login", "/account/register"]) assert.equal((await call(opt.shop, path)).status, 200, path);
-pass("certificate trusted for both hosts; API ready; storefront pages 200");
+for (const path of ["/", "/shop", "/shop/750ml-glass-bottle", "/account/login", "/account/register"]) {
+  assert.equal((await call(opt.shop, path)).status, 200, path);
+}
+if (opt.www) {
+  const redirect = await call(opt.www, "/shop?source=smoke");
+  assert.equal(redirect.status, 308);
+  assert.equal(redirect.headers.location, `${origin(opt.shop)}/shop?source=smoke`);
+}
+pass("trusted HTTPS; API ready; storefront and product pages 200; WWW redirect checked when configured");
 
 // 2. Network exposure and HTTP redirect (only against a real public IP).
 if (opt.ip) {
-  for (const closed of [22, 3000, 4000, 5432]) assert.equal(await reachable(opt.ip, closed), false, `port ${closed} must be closed`);
+  const closedPorts = opt["allow-existing-ssh"] ? [3000, 4000, 5432] : [22, 3000, 4000, 5432];
+  for (const closed of closedPorts) assert.equal(await reachable(opt.ip, closed), false, `port ${closed} must be closed`);
   for (const open of [80, 443]) assert.equal(await reachable(opt.ip, open), true, `port ${open} must be open`);
   const redirect = await new Promise((resolve, reject) => {
     httpRequest({ hostname: opt.ip, port: 80, path: "/account/login", headers: { host: opt.shop } }, (res) => { res.resume(); resolve(res); })
       .on("error", reject).end();
   });
   assert.ok([301, 308].includes(redirect.statusCode) && redirect.headers.location === `https://${opt.shop}/account/login`);
-  pass("only 80 and 443 reachable; HTTP redirects to HTTPS");
+  pass(`80 and 443 reachable, ${closedPorts.join(", ")} closed; HTTP redirects to HTTPS`);
 }
 
 // 3. Auth directly on the API host and through the storefront gateway.
@@ -82,6 +91,11 @@ async function lifecycle(host) {
   const me = await call(host, "/api/v1/auth/me", { headers: { cookie } });
   assert.equal(me.status, 200);
   assert.equal(JSON.parse(me.text).user.status, "pending");
+  if (host === opt.shop) {
+    const dashboard = await call(host, "/account/dashboard", { headers: { cookie } });
+    assert.equal(dashboard.status, 200);
+    assert.match(dashboard.text, /Application pending review/);
+  }
   assert.equal((await call(host, "/api/v1/auth/logout", { method: "POST", headers: { cookie } })).status, 403, "logout without Origin");
   assert.equal((await call(host, "/api/v1/auth/logout", { method: "POST", headers: { ...headers, cookie } })).status, 204);
   assert.equal((await call(host, "/api/v1/auth/me", { headers: { cookie } })).status, 401);

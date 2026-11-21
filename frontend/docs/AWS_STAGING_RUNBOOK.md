@@ -2,6 +2,8 @@
 
 _Prepared 2026-11-20 (D2 preflight, D-136). **Nothing here has been created in AWS.** Every step marked 💲 creates a resource or a charge and needs the owner's approval first._
 
+**Existing host procedure (2026-11-21):** the deployment now targets the already running x86-64 Amazon Linux instance `i-0ad28bbea578fa416`. Use the [existing host instructions](#existing-host-instructions--2026-11-21) below. The Graviton provisioning steps are retained as the earlier plan.
+
 Architecture (owner decision, D-136): **one `t4g.small` instance in eu-north-1** running Docker Compose: Caddy (HTTPS) → Next.js and Express → PostgreSQL. Secrets come from SSM Parameter Store, data lives on an encrypted EBS data volume, images come from ECR, and there's no SSH.
 
 ---
@@ -243,3 +245,48 @@ D1 rehearsed a dump restore into a separate database. Restore into a scratch dat
 - Release the Elastic IP; an unattached one still costs $3.65 per month.
 - Delete the data volume and its snapshots.
 - Delete the DLM policy, the ECR images, the parameters, the security group, the role and the instance profile.
+
+## Existing host instructions — 2026-11-21
+
+Use AWS Systems Manager on the existing `t3.small`. Namecheap already points the apex and `api` to `13.51.251.222`, with `www` as a CNAME to the apex. The current address is auto-assigned. Check it after starting a stopped instance and update the two A records if it changes. The approved 8 GiB root EBS volume is persistent and unencrypted. Keep only disposable staging data there. The host has no existing Docker containers or database volumes in the pre-deployment inventory.
+
+**Release and publish after approval.** Build the three missing images for `linux/amd64`. The existing API tag `03ededb34f11` resolves to the AMD64 index below. Pin it by digest for both Express and migration; use the full, clean Git SHA for the three new images.
+
+```bash
+export AWS_PROFILE=rocktama-dev AWS_REGION=eu-north-1
+REG=638486126885.dkr.ecr.eu-north-1.amazonaws.com
+SHA=$(git rev-parse HEAD)
+RELEASE_PLATFORM=linux/amd64 deploy/build-release.sh "$REG" web db-bootstrap edge
+aws ecr get-login-password | docker login --username AWS --password-stdin "$REG"
+for image in web db-bootstrap edge; do docker push "$REG/rocktama/$image:$SHA"; done
+```
+
+**Operate the existing stack.** In an SSM shell, run `sudo -i`. The release bundle supplies Compose and the deployment scripts. The current release file is the source of truth for status and logs.
+
+```bash
+cd /opt/rocktama
+SHA=$(cat current-release)
+stack() { docker compose --project-name rocktama --env-file "releases/$SHA/release.env" -f "releases/$SHA/compose.staging.yml" "$@"; }
+stack ps -a
+stack logs --tail=100 api web caddy
+stack restart api web caddy
+stack stop caddy web api db
+```
+
+`stack stop` preserves PostgreSQL and Caddy files under `/opt/rocktama/data`, and the EC2 instance keeps running. To stop the EC2 instance itself from your terminal, run `aws ec2 stop-instances --instance-ids i-0ad28bbea578fa416 --profile rocktama-dev --region eu-north-1` when you intend to take staging offline. EBS storage and ECR images persist and can continue to incur charges. Check the address after starting the instance again.
+
+For an update, publish the approved AMD64 release, authenticate the host Docker client to ECR using its instance role, and invoke `releases/$SHA/ec2/deploy.sh NEW_SHA`. Publish the API under the new full SHA when API code changes. If the API remains unchanged, pass the reviewed digest as the script’s second argument. Existing database data is backed up before an update. Backups are retained for review on this host, so check available disk space before updating.
+
+```text
+638486126885.dkr.ecr.eu-north-1.amazonaws.com/rocktama/api@sha256:a8a0f1379440db43071b02f8d61e103ec6e3ce58f4f6ffddfacc990fa4b3459d
+```
+
+**Verify public HTTPS and auth** from the repository root. These checks create disposable `example.test` accounts and never use payment credentials. The optional flag acknowledges the host’s pre-existing SSH rule. Omit it after SSH ingress is removed through a separately approved change.
+
+```bash
+node deploy/smoke-staging.mjs --shop rocktamanaturalsprings.com \
+  --www www.rocktamanaturalsprings.com --api api.rocktamanaturalsprings.com \
+  --ip 13.51.251.222 --allow-existing-ssh
+node deploy/verify-d1-browser.mjs --shop https://rocktamanaturalsprings.com \
+  --api https://api.rocktamanaturalsprings.com
+```

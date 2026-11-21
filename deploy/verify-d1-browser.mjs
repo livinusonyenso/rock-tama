@@ -8,10 +8,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { connect } from "node:tls";
 import { setTimeout as sleep } from "node:timers/promises";
+import { parseArgs } from "node:util";
 
-const shop = "https://shop.rocktama.localhost:8443";
-const api = "https://api.rocktama.localhost:8443";
-const ca = readFileSync(".d1/ca.pem");
+const { values: opt } = parseArgs({ options: { shop: { type: "string" }, api: { type: "string" } } });
+const publicTest = Boolean(opt.shop || opt.api);
+if (publicTest && (!opt.shop || !opt.api)) throw new Error("Pass both --shop and --api");
+const shop = opt.shop ?? "https://shop.rocktama.localhost:8443";
+const api = opt.api ?? "https://api.rocktama.localhost:8443";
+for (const origin of [shop, api]) {
+  const url = new URL(origin);
+  if (url.protocol !== "https:" || url.origin !== origin) throw new Error("Expected an exact HTTPS origin");
+}
+const ca = publicTest ? undefined : readFileSync(".d1/ca.pem");
 
 function verifiedPin(origin) {
   return new Promise((resolve, reject) => {
@@ -35,12 +43,12 @@ async function until(test) {
   throw new Error("Timed out waiting for a D1 browser check");
 }
 
-const pins = await Promise.all([verifiedPin(shop), verifiedPin(api)]);
+const trust = publicTest ? [] : [`--ignore-certificate-errors-spki-list=${(await Promise.all([verifiedPin(shop), verifiedPin(api)])).join(",")}`];
 const profile = mkdtempSync(join(tmpdir(), "rocktama-d1-chrome-"));
 const binary = process.env.CHROME_PATH ?? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 // Trust only the two leaf keys already verified by Node against the D1 CA, in this disposable profile.
 const chrome = spawn(binary, ["--headless=new", "--no-first-run", "--disable-background-networking",
-  "--remote-debugging-port=0", `--user-data-dir=${profile}`, `--ignore-certificate-errors-spki-list=${pins.join(",")}`,
+  "--remote-debugging-port=0", `--user-data-dir=${profile}`, ...trust,
   "about:blank"], { stdio: "ignore" });
 let launchError;
 chrome.on("error", (error) => { launchError = error; });

@@ -2,7 +2,7 @@
 # data on the encrypted EBS data volume. Run only through deploy/ec2/deploy.sh, which supplies:
 #   /opt/rocktama/release.env  REGISTRY, RELEASE (full Git SHA), SHOP_HOST, API_HOST
 #   /opt/rocktama/secrets/     password and connection-URL files written by deploy/ec2/fetch-secrets.sh
-#   /srv/rocktama/             the mounted EBS data volume (postgres/, caddy/)
+#   DATA_ROOT                  persistent storage (postgres/, caddy/, backups/)
 # Memory limits come from D2 measurements (peak: api 130 MiB, web 119, db 75, caddy 33, migrate 19).
 name: rocktama
 
@@ -23,8 +23,8 @@ services:
       edge:
         ipv4_address: 172.30.10.2
     volumes:
-      - /srv/rocktama/caddy/data:/data
-      - /srv/rocktama/caddy/config:/config
+      - ${DATA_ROOT:-/srv/rocktama}/caddy/data:/data
+      - ${DATA_ROOT:-/srv/rocktama}/caddy/config:/config
     depends_on:
       api:
         condition: service_healthy
@@ -65,7 +65,7 @@ services:
     logging: *logging
 
   api:
-    image: ${REGISTRY:?}/rocktama/api:${RELEASE:?}
+    image: ${API_IMAGE:-${REGISTRY:?}/rocktama/api:${RELEASE:?}}
     environment:
       DATABASE_URL_FILE: /run/secrets/api_url
       AUTH_ORIGIN: https://${SHOP_HOST:?},https://${API_HOST:?}
@@ -91,7 +91,7 @@ services:
     logging: *logging
 
   db:
-    image: postgres:18-alpine@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+    image: postgres:18.7-alpine@sha256:ff64c9e3bdf8e2120107d3559de8db314e8305f7e38c5105903c6295876738ff
     environment:
       POSTGRES_DB: rocktama
       POSTGRES_USER: rocktama_bootstrap
@@ -99,7 +99,12 @@ services:
     # Suppress statement text on SQL errors: bootstrap ALTER ROLE statements contain credentials.
     command: [postgres, -c, log_min_error_statement=panic]
     secrets: [bootstrap_password]
-    volumes: [/srv/rocktama/postgres:/var/lib/postgresql]
+    volumes:
+      - type: bind
+        source: ${DATA_ROOT:-/srv/rocktama}/postgres
+        target: /var/lib/postgresql
+        bind:
+          create_host_path: false
     networks: [data]
     healthcheck:
       test: [CMD-SHELL, 'pg_isready -h 127.0.0.1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
@@ -134,7 +139,7 @@ services:
     logging: *logging
 
   migrate:
-    image: ${REGISTRY:?}/rocktama/api:${RELEASE:?}
+    image: ${API_IMAGE:-${REGISTRY:?}/rocktama/api:${RELEASE:?}}
     command: [node, src/migrate.mjs]
     environment:
       DATABASE_URL_FILE: /run/secrets/migrator_url
