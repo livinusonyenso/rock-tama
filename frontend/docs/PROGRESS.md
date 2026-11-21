@@ -337,3 +337,7 @@ Scope: [D-136](DECISIONS.md#d-136--ec2-staging-topology-and-release-process-d2);
 **Built and audited:** four linux/arm64 release images at `c0bc972`. 0 secret values, no stray files, no development dependencies. `compose.staging.yml` and `Caddyfile.staging` validated; the instance policy passes IAM Access Analyzer; `smoke-staging.mjs` passes against D1.
 
 **Next:** the owner approves D2-1 onward, one step at a time. Consider upgrading to a paid plan before production use.
+
+## 2026-11-21: staging update df7a850
+
+Deployed the franchise page and header/layout overflow fixes to `i-0ad28bbea578fa416`. Lint and tsc pass, and the Next.js production build succeeded inside the amd64 web image. web/db-bootstrap/edge were pushed to ECR under the full SHA; the API is unchanged, pinned by digest. SSM `deploy.sh` backed up the database first; all services are healthy. Public smoke test passed (HTTPS, ports, auth lifecycle), and `/franchise` returns 200. `npm run verify:visual` was not run for this change. Rollback: `deploy.sh rollback` returns to `ae9f789`.
