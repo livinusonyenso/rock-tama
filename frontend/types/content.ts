@@ -13,6 +13,7 @@ export type RouteKey =
   | "productCartons"
   | "customLabels"
   | "wholesale"
+  | "franchise"
   | "ourStory"
   | "quality"
   | "contact"

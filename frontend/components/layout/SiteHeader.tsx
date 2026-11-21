@@ -27,27 +27,28 @@ const navItemClass = [
 
 /**
  * Main site header (UI_BREAKDOWN §02). Server Component; NavLink and MobileNav
- * are the only client islands. Below lg: logo · cart · menu button (D-053).
+ * are the only client islands. The drawer also replaces the inline menu
+ * when enlarged text leaves insufficient room for the desktop links.
  */
 export function SiteHeader({ cartCount }: SiteHeaderProps) {
   const homeHref = resolveHref("home");
-  const logo = <Logo variant="header" className="h-12 xl:h-16" />;
+  const logo = <Logo variant="header" className="h-[48px] xl:h-[64px]" />;
 
   return (
     <header className="border-b border-line-light bg-ivory-100">
       {/* xl:pl-header-inset: fluid left inset, 32px at 1280 → 92px at 1440 as measured in the reference (V-008) */}
-      <Container size="wide" className="flex h-header-sm items-center justify-between gap-6 lg:h-header xl:pl-header-inset">
+      <Container size="wide" className="@container/header flex h-header-sm items-center justify-between gap-2 sm:gap-6 lg:h-header xl:pl-header-inset">
         {homeHref ? (
-          <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring shrink-0">
+          <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring min-w-0">
             {logo}
           </Link>
         ) : (
           logo
         )}
 
-        <div className="flex items-center">
-          <nav aria-label="Main" className="hidden lg:block">
-            <ul className="flex items-center gap-8 xl:gap-12">
+        <div className="flex shrink-0 items-center">
+          <nav aria-label="Main" className="hidden lg:@min-[58rem]/header:block">
+            <ul className="flex items-center gap-5 xl:gap-8">
               {mainNav.map((item) => {
                 const children = resolveNavChildren(item);
                 const parentHref = resolveHref(item.route);
@@ -68,18 +69,18 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
             </ul>
           </nav>
 
-          <span aria-hidden="true" className="hidden h-7 w-0.5 bg-gold-600 lg:ml-8 lg:mr-6 lg:block xl:ml-10 xl:mr-9" />
+          <span aria-hidden="true" className="hidden h-7 w-0.5 bg-gold-600 lg:ml-8 lg:mr-6 lg:@min-[58rem]/header:block xl:ml-10 xl:mr-9" />
 
           <ul className="flex items-center gap-5 xl:mr-2 xl:gap-7">
             {headerActions.map((action) => (
-              // Account moves into the mobile drawer below lg; the cart stays.
-              <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:block"}>
+              // Account moves into the drawer; the cart stays in the header.
+              <li key={action.id} className={action.id === "cart" ? undefined : "hidden lg:@min-[58rem]/header:block"}>
                 <HeaderActionItem action={action} href={resolveHref(action.route)} cartCount={cartCount} />
               </li>
             ))}
           </ul>
 
-          <div className="ml-4 lg:hidden">
+          <div className="ml-4 lg:@min-[58rem]/header:hidden">
             <MobileNav
               label={navigationCopy.menu}
               closeLabel={navigationCopy.closeMenu}

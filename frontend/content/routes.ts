@@ -13,6 +13,7 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   productCartons: { status: "live", path: "/shop/carton-packs" }, // F2
   customLabels: { status: "live", path: "/custom-labels" },
   wholesale: { status: "live", path: "/wholesale" }, // F1: working enquiry flow
+  franchise: { status: "live", path: "/franchise" },
   ourStory: { status: "planned", path: "/our-story", interimSection: "origin" },
   quality: { status: "planned", path: "/quality", interimSection: "quality" },
   contact: { status: "live", path: "/contact" }, // D-111: WhatsApp + email (placeholders until supplied)

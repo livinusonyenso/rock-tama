@@ -32,7 +32,7 @@ export function ContactChannels({ headingLevel: Heading = "h2", withWholesale = 
           {contact.placeholderNotice}
         </p>
       )}
-      <ul className="grid gap-6 md:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {channels.map((channel) => (
           <li key={channel.id} data-channel={channel.id}>
             <article aria-labelledby={`contact-${channel.id}`} className="flex h-full flex-col rounded-card border border-line-card bg-cream-200 p-6 shadow-card lg:p-8">

@@ -36,7 +36,7 @@ export function ProductRangeSection() {
           />
         </Reveal>
         {/* Four media-side cards need wide-desktop space to keep full-size CTAs inside their cards. */}
-        <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:mt-4 min-[87.5rem]:grid-cols-4 lg:gap-2.5">
+        <ul className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:mt-4 min-[87.5rem]:grid-cols-4 lg:gap-2.5">
           {cards.map(({ product, ctaLabel }, index) => {
             const href = productHref(product);
             return (

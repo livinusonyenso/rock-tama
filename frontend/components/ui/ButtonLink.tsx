@@ -23,7 +23,7 @@ export function ButtonLink({ href, variant, size = "md", surface = "dark", icon,
   const content = (
     <>
       {icon && <Icon name={icon} strokeWidth={1.75} className="size-5 shrink-0 lg:size-6" />}
-      <span>{children}</span>
+      <span className="min-w-0 whitespace-normal wrap-anywhere">{children}</span>
       {trailingIcon && <Icon name={trailingIcon} strokeWidth={2} className="-ml-1.5 size-4 shrink-0" />}
     </>
   );

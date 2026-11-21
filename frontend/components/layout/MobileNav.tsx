@@ -16,7 +16,7 @@ type MobileNavProps = {
 };
 
 /**
- * Mobile navigation drawer (below lg). A native modal <dialog> provides the
+ * Compact navigation drawer. A native modal <dialog> provides the
  * accessibility behaviour: background inert, focus moved in and contained,
  * Escape closes, top-layer stacking. This component only adds the trigger,
  * aria-expanded sync, focus return, backdrop/link closing, and closing when the
@@ -29,22 +29,22 @@ export function MobileNav({ label, closeLabel, openIcon, closeIcon, children }: 
 
   useEffect(() => {
     const dialog = dialogRef.current;
-    if (!dialog) return;
+    const button = buttonRef.current;
+    if (!dialog || !button) return;
 
     const onClose = () => {
       setOpen(false);
       buttonRef.current?.focus();
     };
-    const desktop = window.matchMedia("(min-width: 64rem)");
-    const onBreakpoint = (event: MediaQueryListEvent) => {
-      if (event.matches && dialog.open) dialog.close();
-    };
+    const drawerVisibility = new ResizeObserver(() => {
+      if (dialog.open && button.getClientRects().length === 0) dialog.close();
+    });
 
     dialog.addEventListener("close", onClose);
-    desktop.addEventListener("change", onBreakpoint);
+    drawerVisibility.observe(button);
     return () => {
       dialog.removeEventListener("close", onClose);
-      desktop.removeEventListener("change", onBreakpoint);
+      drawerVisibility.disconnect();
     };
   }, []);
 
@@ -71,7 +71,7 @@ export function MobileNav({ label, closeLabel, openIcon, closeIcon, children }: 
         aria-expanded={open}
         aria-controls={DIALOG_ID}
         onClick={openMenu}
-        className="focus-ring -mr-2 flex size-11 items-center justify-center text-forest-heading hover:text-gold-700"
+        className="focus-ring -mr-2 flex size-[44px] items-center justify-center text-forest-heading hover:text-gold-700"
       >
         {openIcon}
       </button>

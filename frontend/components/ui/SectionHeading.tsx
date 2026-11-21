@@ -24,13 +24,13 @@ export function SectionHeading({ id, eyebrow, title, description, align = "cente
         className={`font-semibold uppercase tracking-eyebrow ${tone === "light" ? "text-gold-700" : "text-gold-500"} ${eyebrowLines ? "flex items-center justify-center gap-3 text-base" : trailingRule ? "flex items-center gap-3 text-eyebrow" : "text-eyebrow"}`}
       >
         {eyebrowLines && <span aria-hidden="true" className="h-px w-12 bg-gold-600" />}
-        {eyebrow}
+        <span className="min-w-0 wrap-anywhere">{eyebrow}</span>
         {trailingRule && <span aria-hidden="true" className="h-px w-12 bg-gold-600" />}
         {eyebrowLines && <span aria-hidden="true" className="h-px w-12 bg-gold-600" />}
       </p>
       <h2
         id={id}
-        className={`${size === "compact" ? "mt-1 text-3xl leading-tight wrap-anywhere" : `${eyebrowLines ? "mt-1.5" : "mt-3"} text-4xl lg:text-section`} font-serif font-bold uppercase ${tone === "light" ? "text-ink-900" : "text-on-dark"}`}
+        className={`${size === "compact" ? "mt-1 text-3xl leading-tight" : `${eyebrowLines ? "mt-1.5" : "mt-3"} text-4xl lg:text-section`} font-serif font-bold uppercase wrap-anywhere ${tone === "light" ? "text-ink-900" : "text-on-dark"}`}
       >
         {title}
       </h2>
