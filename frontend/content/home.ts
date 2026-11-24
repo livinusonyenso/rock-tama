@@ -53,3 +53,15 @@ export const homeSupply = {
   description: "Discuss your water supply requirements for hotels, offices, retail and events.",
   cta: { label: "Request Wholesale", route: "wholesale" },
 } as const;
+
+/** Standalone pages for the nav (D-140): each renders one homepage section on its own. */
+export const sectionPages = {
+  ourStory: {
+    title: "Our Story",
+    description: "Where ROCK-TAMA natural spring water comes from: Nanka, Anambra State, Nigeria.",
+  },
+  quality: {
+    title: "Quality & Safety",
+    description: "How ROCK-TAMA looks after the quality and safety of its natural spring water.",
+  },
+} as const;

@@ -1,6 +1,6 @@
 # Session Handoff
 
-**Account roles (D-137), 2026-11-24:** registration is step-by-step on phones (D-139). step 1 (backend roles, migration 005) and step 2 (registration picker, role routing, `/driver` and customer dashboards) done and committed; not deployed. Deploy the API (with migration 005) before or together with the web image. Next: `/admin` on Express admin sessions, then step 3 (mock order-to-driver assignment).
+**Account roles (D-137), 2026-11-24:** registration is step-by-step on phones (D-139); nav routes to pages only, with new `/our-story` and `/quality` (D-140). step 1 (backend roles, migration 005) and step 2 (registration picker, role routing, `/driver` and customer dashboards) done and committed; not deployed. Deploy the API (with migration 005) before or together with the web image. Next: `/admin` on Express admin sessions, then step 3 (mock order-to-driver assignment).
 
 _Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
 
@@ -61,7 +61,7 @@ _Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
 
 **Git:** `main`, remote `origin`. Commit after each verified task; **never push without the owner's explicit approval.**
 
-**Current §6 files:** `components/home/OriginSection.tsx`, `components/brand/AfricaMap.tsx`, `homeOrigin` in `content/home.ts`, shared MediaFrame/SectionHeading/IconFeature extensions and map-pin/leaf/layers icons. `origin.built=true`; Our Story resolves to `/#origin`. No /our-story page created. Licensed geometry generator at `scripts/generate-africa-map.py`; exact source and coordinate provenance in ASSET_SPECIFICATIONS.
+**Current §6 files:** `components/home/OriginSection.tsx`, `components/brand/AfricaMap.tsx`, `homeOrigin` in `content/home.ts`, shared MediaFrame/SectionHeading/IconFeature extensions and map-pin/leaf/layers icons. `origin.built=true`; Our Story and Quality now have their own pages, `/our-story` and `/quality` (D-140). Licensed geometry generator at `scripts/generate-africa-map.py`; exact source and coordinate provenance in ASSET_SPECIFICATIONS.
 
 **Verification recovery:** see `docs/verification/home-6-origin-review/RECOVERY_REPORT.md`. Minimal loopback bind passes escalated but Turbopack worker still EPERM. Plain Webpack output was unstyled and rejected. A temporary Webpack hook using the installed Tailwind loader enabled accurate Chrome checks; `next.config.ts`, package files and default scripts are unchanged. Default Turbopack must still be checked in normal Terminal; commands in report.
 
@@ -135,7 +135,7 @@ Latest distributor demo: owner superseded disabled login with temporary any-emai
 Latest payment fix: Date.now in token.ts was reached during Next partial prerender. readPendingOrder now awaits connection; TestPayment and PaymentResult do likewise inside their existing Suspense boundaries. Shared signature and expiry checks stay unchanged. Actual dev13checks pass, token boundary/tamper script scripts/payment-token-check.mjs passes, lint/types/diagnostic Webpack pass. Initial test-gateway reproduction retained. See verification/payment-token-runtime/REVIEW.md. Do not remove/cache expiry checks to fix prerender errors.
 
 
-Latest navbar decision2026-11-18: Search omitted from headerActions until /search works; planned route/icon stays available. Desktop and drawer share data. Keep Wholesale/Contact dedicated and Our Story/Quality temporary homepage anchors; no new pages authorised in this cleanup. Menu order retained. Lint/types +82livechecks pass;9old image baselines differ (no automatic approval), screenshots inspected. Evidence verification/navbar-cleanup/REVIEW.md. No push/deploy.
+Latest navbar decision2026-11-18: Search omitted from headerActions until /search works; planned route/icon stays available. Desktop and drawer share data. Keep Wholesale/Contact dedicated; Our Story/Quality are now their own pages (D-140), no nav anchors; no new pages authorised in this cleanup. Menu order retained. Lint/types +82livechecks pass;9old image baselines differ (no automatic approval), screenshots inspected. Evidence verification/navbar-cleanup/REVIEW.md. No push/deploy.
 
 
 Latest receipt change: receipt.ts builds plaintext/HTML and sends to checkout customer email after verified paid status; complete.ts independently tracks merchant/receipt success and in-flight confirmations. Receipt Idempotency-Key stable per payment, Resend24h protection; no durable outbox yet. Webhook500 triggers retries, payment status stays independent. .data/payment-receipts local previews. User-supplied Paystack test keys only in ignored .env.local; API403 so unverified. Resend credentials/sender missing, real emails not sent. Verifier explicitly blanks PAYSTACK_SECRET_KEY on its managed server to avoid .env.local leaks into tests.19+7 browser checks, logic checks/lint/types/diagnostic build pass. Guide PAYMENT_RECEIPTS.md. No push/deploy.

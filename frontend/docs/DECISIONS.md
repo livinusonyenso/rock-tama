@@ -313,3 +313,12 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - Next checks the current step (browser rules, then the same per-field checks as before) and stays put with a message on failure. Back keeps everything typed. Enter on an earlier step acts as Next. On send, any problem jumps to its step.
 - It is still one form: other steps are only hidden, so the API payload is unchanged and the API still validates everything. Tablet and desktop keep the full single-page form. No animation (instant step switch).
 - Without JavaScript phones see step 1 only, but registration already needs JavaScript (the submit button stays disabled and the noscript message explains).
+
+## D-140 — Our Story and Quality get their own pages
+
+**APPROVED 2026-11-24 (owner: "render only it on click from nav bar instead of scrolling down, all the navbar should route and not scroll"; approved the briefing, sections kept on the homepage).**
+
+- `/our-story` renders only `OriginSection`; `/quality` renders only `QualitySection` inside `WaterBand`. Each has its own metadata (`sectionPages` in `content/home.ts`) and a visually hidden page `h1`.
+- `ourStory` and `quality` are now `live` in `content/routes.ts`, so header, drawer and footer links resolve to the pages; no nav link scrolls to a homepage anchor. Supersedes the interim `/#origin` and `/#quality` anchors (navbar decision 2026-11-18).
+- The homepage keeps both sections, so old `/#origin` links still work.
+- The pages are short (one homepage strip each). Fuller page content needs owner-supplied facts.

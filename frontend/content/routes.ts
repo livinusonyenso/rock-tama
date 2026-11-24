@@ -14,12 +14,16 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   customLabels: { status: "live", path: "/custom-labels" },
   wholesale: { status: "live", path: "/wholesale" }, // F1: working enquiry flow
   franchise: { status: "live", path: "/franchise" },
-  ourStory: { status: "planned", path: "/our-story", interimSection: "origin" },
-  quality: { status: "planned", path: "/quality", interimSection: "quality" },
+  ourStory: { status: "live", path: "/our-story" }, // D-140: own page (was the /#origin homepage anchor)
+  quality: { status: "live", path: "/quality" }, // D-140: own page (was the /#quality homepage anchor)
   contact: { status: "live", path: "/contact" }, // D-111: WhatsApp + email (placeholders until supplied)
   search: { status: "planned", path: "/search" },
   account: { status: "live", path: "/account" },
-  accountDashboard: { status: "live", path: "/account/dashboard" }, // customers and distributors (D-137)
+  accountDashboard: { status: "live", path: "/account/dashboard" }, // distributor dashboard and customer redirect
+  accountDashboardOverview: { status: "live", path: "/account/dashboard/overview" },
+  accountDashboardOrders: { status: "live", path: "/account/dashboard/orders" },
+  accountDashboardProfile: { status: "live", path: "/account/dashboard/profile" },
+  accountDashboardSupport: { status: "live", path: "/account/dashboard/support" },
   driverDashboard: { status: "live", path: "/driver" }, // D-137
   admin: { status: "live", path: "/admin" },
   deliveryReturns: { status: "planned", path: "/delivery-returns" },

@@ -78,6 +78,8 @@ const config = {
     { name: "shop", path: "/shop" },
     { name: "product", path: "/shop/750ml-glass-bottle" },
     { name: "contact", path: "/contact" },
+    { name: "ourStory", path: "/our-story" },
+    { name: "quality", path: "/quality" },
     { name: "admin-login", path: "/auth/admin" },
     { name: "accountLogin", path: "/account/login" },
     { name: "accountRegister", path: "/account/register" },
@@ -831,19 +833,16 @@ function functionalJourneys() {
     },
     {...base,"name": "testimonials-no-js", "page": "home", "actions": [], "expect": [{"name": "testimonials-no-js", "js": "document.querySelectorAll('#testimonials ul:not([aria-hidden]) blockquote').length===6 && !document.querySelector('#testimonials button') && document.querySelector('#testimonials [tabindex]').scrollWidth>document.querySelector('#testimonials [tabindex]').clientWidth && getComputedStyle(document.querySelector('[data-testimonial-copy]')).display==='none'"}], "javascript": false},
     {...base,"name": "testimonials-reduced-motion", "page": "home", "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); true"}], "expect": [{"name": "testimonials-reduced-motion", "js": "!document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating && getComputedStyle(document.querySelector('[data-testimonial-track]')).animationName==='none' && getComputedStyle(document.querySelector('[data-testimonial-copy]')).display==='none'"}], "media": [{"name": "prefers-reduced-motion", "value": "reduce"}]},
-    // Our Story jumps to #origin, right above the testimonials; scrolling on with a wheel/trackpad passed over the
+    // Scrolling down the homepage from Origin (right above the testimonials) with a wheel/trackpad passed over the
     // cards and froze the marquee for good. Only sideways scrolling or arrow keys may stop it.
-    ...[["desktop","laptop"],["mobile","tablet"]].map((viewports)=>({...base,"name": `testimonials-after-our-story-${viewports[0]}`, "page": "home", viewports,
+    ...[["desktop","laptop"],["mobile","tablet"]].map((viewports)=>({...base,"name": `testimonials-after-origin-${viewports[0]}`, "page": "home", viewports,
       "actions": [
-        {"evaluate": "(()=>{const visible=a=>a.getClientRects().length>0;if(![...document.querySelectorAll('header a[href=\"/#origin\"]')].some(visible))document.querySelector('button[aria-controls=\"mobile-nav\"]').click();return true})()"},
-        {"wait": 400},
-        {"evaluate": "[...document.querySelectorAll('a[href=\"/#origin\"]')].find(a=>a.getClientRects().length>0&&a.closest('header,dialog')).click(); true"},
-        {"waitFor": "location.hash==='#origin'"}, {"wait": 800},
+        {"evaluate": "document.querySelector('#origin').scrollIntoView({block:'start',behavior:'instant'}); true"}, {"wait": 800},
         {"evaluate": "(()=>{const v=document.querySelector('#testimonials [tabindex]');for(let i=0;i<6;i++)v.dispatchEvent(new WheelEvent('wheel',{deltaY:120,bubbles:true,cancelable:true}));v.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true}));return true})()"},
         {"moveTo": {"x": 2, "y": 2}}, {"wait": 300},
         {"evaluate": "window.__marqueeX=new DOMMatrix(getComputedStyle(document.querySelector('[data-testimonial-track]')).transform).m41; true"},
         {"wait": 600}],
-      "expect": [{"name": "after Our Story, vertical page scrolling and Tab over the testimonials keep them moving", "js": "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped && new DOMMatrix(getComputedStyle(document.querySelector('[data-testimonial-track]')).transform).m41>window.__marqueeX+2"}]})),
+      "expect": [{"name": "from Origin, vertical page scrolling and Tab over the testimonials keep them moving", "js": "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselRotating==='true' && !document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped && new DOMMatrix(getComputedStyle(document.querySelector('[data-testimonial-track]')).transform).m41>window.__marqueeX+2"}]})),
     {...base,"name": "testimonials-sideways-stops", "page": "home", "viewports": ["desktop"],
       "actions": [{"evaluate": "document.querySelector('#testimonials').scrollIntoView({block:'start',behavior:'instant'}); document.querySelector('#testimonials [tabindex]').dispatchEvent(new WheelEvent('wheel',{deltaX:120,deltaY:10,bubbles:true})); true"}, {"wait": 200}],
       "expect": [{"name": "a sideways scroll over the cards still stops the movement (visitor takes control)", "js": "document.querySelector('#testimonials [aria-roledescription=carousel]').dataset.carouselStopped==='true'"}]},
@@ -882,17 +881,17 @@ function functionalJourneys() {
     },
     {
       ...base, name: "origin-no-js", page: "home", viewports: ["mobile", "desktop"], javascript: false,
-      expect: [{name:"origin server-rendered and visible without JS; story link real",js:"!document.querySelector('#origin [data-reveal]') && document.querySelectorAll('#origin li').length===3 && !!document.querySelector('header a[href=\"/#origin\"]')"}],
+      expect: [{name:"origin server-rendered and visible without JS; story link real",js:"!document.querySelector('#origin [data-reveal]') && document.querySelectorAll('#origin li').length===3 && !!document.querySelector('header a[href=\"/our-story\"]')"}],
     },
     {
       ...base, name: "origin-desktop-navigation", page: "shop", viewports: ["desktop"],
-      actions: [{press:"Tab"},{evaluate:"const a=document.querySelector('header nav a[href=\"/#origin\"]'); a.focus(); sessionStorage.setItem('originFocus',getComputedStyle(a).outlineStyle); true"},{press:"Enter"},{waitFor:"location.pathname==='/' && location.hash==='#origin' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
-      expect: [{name:"keyboard Our Story reaches built origin from shop; focus ring present",js:"sessionStorage.getItem('originFocus')==='solid' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && document.querySelector('#origin').getBoundingClientRect().bottom>0"}],
+      actions: [{press:"Tab"},{evaluate:"const a=document.querySelector('header nav a[href=\"/our-story\"]'); a.focus(); sessionStorage.setItem('originFocus',getComputedStyle(a).outlineStyle); true"},{press:"Enter"},{waitFor:"location.pathname==='/our-story' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
+      expect: [{name:"keyboard Our Story opens the Our Story page (D-140), not a homepage scroll; focus ring present",js:"sessionStorage.getItem('originFocus')==='solid' && location.hash==='' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && [...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelectorAll('section').length===1"}],
     },
     {
       ...base, name: "origin-mobile-navigation", page: "shop", viewports: ["mobile"],
-      actions: [{click:MENU_BUTTON_SELECTOR},{click:'#mobile-nav a[href="/#origin"]'},{waitFor:"location.pathname==='/' && location.hash==='#origin' && !document.getElementById('mobile-nav').open"}],
-      expect: [{name:"mobile Our Story reaches origin, closes drawer and releases scroll",js:"!document.getElementById('mobile-nav').open && getComputedStyle(document.documentElement).overflow!=='hidden' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
+      actions: [{click:MENU_BUTTON_SELECTOR},{click:'#mobile-nav a[href="/our-story"]'},{waitFor:"location.pathname==='/our-story' && !document.getElementById('mobile-nav').open"}],
+      expect: [{name:"mobile Our Story opens the Our Story page, closes drawer and releases scroll",js:"!document.getElementById('mobile-nav').open && getComputedStyle(document.documentElement).overflow!=='hidden' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
     },
     {
       ...base, kind: "visual", name: "origin-enlarged-text", page: "home", viewports: ["mobile","desktop"],
@@ -912,10 +911,23 @@ function functionalJourneys() {
       actions:[{click:'footer a[href="/shop/750ml-glass-bottle"]'},{waitFor:"location.pathname==='/shop/750ml-glass-bottle'"}],
       expect:[{name:"footer product link opens the storefront with the 750 ml bottle preselected",js:"(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='750 ml Glass Bottle' && m.querySelector('[data-pack=\"750-single\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})()"}],
     },
+    // D-140: every header and drawer link opens a page; none scrolls the homepage to an anchor.
+    {
+      ...base,name:"nav-routes-only",page:"home",viewports:["mobile","desktop"],
+      expect:[{name:"no header, drawer or footer link points at a homepage anchor (the footer social \"#\" placeholders, D-111, are not anchors); Our Story and Quality have their own pages",js:"(()=>{const links=[...document.querySelectorAll('header a[href],#mobile-nav a[href],footer a[href]')].map(a=>a.getAttribute('href'));return links.length>0 && !links.some(h=>/^\\/?#./.test(h)) && links.includes('/our-story') && links.includes('/quality')})()"}],
+    },
+    ...[["ourStory","origin"],["quality","quality"]].map(([page,id])=>({
+      ...base,name:`${page}-page`,page,viewports:["small","mobile","tablet","desktop"],
+      actions:[{evaluate:"window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}); true"},{wait:600}],
+      expect:[
+        {name:"the page renders only its own section, with a page heading",js:`(()=>{const m=document.querySelector('main');return m.querySelectorAll('section').length===1 && !!m.querySelector('section#${id}') && m.querySelector('h1')?.textContent.length>0 && !m.querySelector('#products,#testimonials,#contact,#hero')})()`},
+        {name:"section content visible (reveal finished) and no horizontal overflow",js:`[...document.querySelectorAll('#${id} [data-reveal]')].every(e=>e.dataset.reveal==='shown') && document.documentElement.scrollWidth<=innerWidth+1`},
+        {name:"the nav marks this page as current",js:"[...document.querySelectorAll('header nav a[aria-current=page]')].some(a=>a.getAttribute('href')===location.pathname)"}],
+    })),
     {
       ...base,name:"quality-navigation",page:"shop",viewports:["desktop"],
-      actions:[{click:'header nav a[href="/#quality"]'},{waitFor:"location.hash==='#quality' && document.querySelector('#quality')"}],
-      expect:[{name:"Quality header link reaches actual section",js:"location.pathname==='/' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#quality'))"}],
+      actions:[{click:'header nav a[href="/quality"]'},{waitFor:"location.pathname==='/quality' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#quality'))"}],
+      expect:[{name:"Quality header link opens the Quality page (D-140), not a homepage scroll",js:"location.hash==='' && [...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelectorAll('section').length===1"}],
     },
     {
       ...base,name:"remaining-reduced-motion",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],
