@@ -304,3 +304,12 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - Non-sensitive details are stored in `auth.users.profile` (JSONB, ≤ 4 KB, validated field by field in `validation.mjs`) and returned by `/me`.
 - **Driver ID numbers** go to `auth.driver_identities` in the same statement as the account. `rocktama_api` may INSERT but never SELECT, UPDATE or DELETE that table; the profile keeps only the ID type and last four characters. Reading full numbers for verification needs a separate, later-approved staff role. Database backups (`pg_dump`) include these numbers, so backups must stay private.
 - The pre-D-137 distributor payload (no `accountType`) is still accepted for older clients.
+
+## D-139 — Step-by-step registration on phones
+
+**APPROVED 2026-11-24 (owner: "on mobile instead of long form, lets also make it batch or step by step"; approved the briefing).**
+
+- Below 48rem (Tailwind `max-md`) registration shows one section at a time: "Step N of M · Title", a progress bar, Next and Back. Customer 3 steps, driver and distributor 5. The type picker and intro show on step 1 only; consent and the submit button on the last step only.
+- Next checks the current step (browser rules, then the same per-field checks as before) and stays put with a message on failure. Back keeps everything typed. Enter on an earlier step acts as Next. On send, any problem jumps to its step.
+- It is still one form: other steps are only hidden, so the API payload is unchanged and the API still validates everything. Tablet and desktop keep the full single-page form. No animation (instant step switch).
+- Without JavaScript phones see step 1 only, but registration already needs JavaScript (the submit button stays disabled and the noscript message explains).

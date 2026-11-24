@@ -102,6 +102,8 @@ export const accountCopy = {
     title: "Create your account",
     description: "Choose the account that fits you, then fill in your details.",
     pickerLabel: "I am registering as",
+    /** Phones show one section at a time (step-by-step registration); wider screens show the whole form. */
+    steps: { step: "Step", of: "of", next: "Next", back: "Back" },
   },
   types: {
     customer: {

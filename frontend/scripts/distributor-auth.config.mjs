@@ -18,11 +18,22 @@ export function distributorAuthJourneys(){
  const submitReady={waitFor:"document.querySelector('main button[type=submit]')?.disabled===false"};
  const choose=(field,value)=>({evaluate:`(()=>{const e=document.querySelector('#auth-${field}');const proto=e instanceof HTMLSelectElement?HTMLSelectElement.prototype:HTMLInputElement.prototype;Object.getOwnPropertyDescriptor(proto,'value').set.call(e,${JSON.stringify(value)});e.dispatchEvent(new Event(e instanceof HTMLSelectElement?'change':'input',{bubbles:true}));return true})()`});
  const typeAll=fields=>Object.entries(fields).map(([field,text])=>({type:{selector:`#auth-${field}`,text}}));
- const fillForm=(type,address,secret,{text={},chosen={},radios=[]})=>[{clearCookies:true},{navigate:`/account/register?type=${type}`},submitReady,
-  ...Object.entries(chosen).flatMap(([field,value])=>[choose(field,value),{wait:50}]),
-  ...typeAll({street:"12 Zik Avenue",city:"Enugu",...text,email:address,password:secret,confirmPassword:secret}),
-  choose("state","Enugu"),...radios.map(id=>({click:`#auth-${id}`})),
-  {check:"input[name=consent]"},{click:"main button[type=submit]"},{waitFor:`document.querySelector('[data-registration-received]')?.dataset.registrationReceived===${JSON.stringify(type)}`}];
+ // Fields per registration step, in order. Phones show one step at a time (Next between steps); wider screens show all
+ // steps at once, where `advance` does nothing because the Next button is hidden.
+ const about={customer:["name","phone"],driver:["name","phone","dateOfBirth"],distributor:["name","position","phone"]};
+ const address=["street","city","state"],signIn=["email","password","confirmPassword"];
+ const stepFields={customer:[about.customer,address,signIn],
+  driver:[about.driver,["idType","idNumber","licenceExpiry"],address,["vehicleType","plateNumber","operatingArea","availability"],signIn],
+  distributor:[about.distributor,["company","businessType","cacNumber"],address,["supplyAreas","monthlyVolume","hasStorage","hasVehicle"],signIn]};
+ const advance={evaluate:"(()=>{const next=document.querySelector('[data-step-next]');if(next&&next.offsetParent)next.click();return true})()"};
+ const fillForm=(type,address,secret,{text={},chosen={},radios=[]})=>{
+  const typed={street:"12 Zik Avenue",city:"Enugu",...text,email:address,password:secret,confirmPassword:secret};
+  const picked={...chosen,state:"Enugu"};
+  const fill=name=>name in picked?[choose(name,picked[name]),{wait:50}]:name in typed?[{type:{selector:`#auth-${name}`,text:typed[name]}}]:radios.filter(id=>id.startsWith(`${name}-`)).map(id=>({click:`#auth-${id}`}));
+  return [{clearCookies:true},{navigate:`/account/register?type=${type}`},submitReady,
+   ...stepFields[type].flatMap(fields=>[...fields.flatMap(fill),advance,{wait:50}]),
+   {check:"input[name=consent]"},{click:"main button[type=submit]"},{waitFor:`document.querySelector('[data-registration-received]')?.dataset.registrationReceived===${JSON.stringify(type)}`}];
+ };
  const register=(address,secret=password)=>fillForm("distributor",address,secret,{
   text:{name:"Ada Okafor",position:"Owner",phone:"+234 803 123 4567",company:"Okafor Water Supply",cacNumber:"RC 123456",supplyAreas:"Enugu and Nsukka"},
   chosen:{businessType:"wholesaler",monthlyVolume:"50_200"},radios:["hasStorage-yes","hasVehicle-no"]});
@@ -72,6 +83,29 @@ export function distributorAuthJourneys(){
   choose("idType","nin"),{wait:50},...typeAll({idNumber:"12345678901"}),choose("dateOfBirth","2015-01-01"),choose("vehicleType","motorcycle"),choose("availability","weekends"),choose("state","Anambra"),
   {check:"input[name=consent]"},{click:"main button[type=submit]"},{waitFor:"!!document.querySelector('main [role=alert]')"}],expect:[
   {name:"an under-18 driver is stopped before anything is sent",js:"document.querySelector('main [role=alert]').textContent==='Drivers must be between 18 and 80 years old.' && !document.querySelector('[data-registration-received]')"}]},
+ {...base,name:"auth-register-steps-start",selector:"main",viewports:["small","mobile"],actions:[{clearCookies:true},{navigate:"/account/register?type=driver"},submitReady,{click:"[data-step-next]"},{wait:200}],expect:[
+  {name:"phones show step 1 of 5 only, with the type picker; consent and submit wait for the last step",js:"document.querySelector('[data-register-progress]').dataset.registerProgress==='1/5' && document.querySelector('[data-register-progress]').textContent==='Step 1 of 5 · About you' && [...document.querySelectorAll('form [data-step]')].filter(f=>f.offsetParent).map(f=>f.dataset.step).join()==='0' && !!document.querySelector('[data-account-type-option]').offsetParent && !document.querySelector('main button[type=submit]').offsetParent && !document.querySelector('input[name=consent]').offsetParent && !document.querySelector('[data-step-back]')"},
+  {name:"Next with empty required fields stays on step 1 and sends nothing",js:"document.querySelector('[data-register-progress]').dataset.registerProgress==='1/5' && !document.querySelector('[data-registration-received]')"},
+  {name:"no horizontal overflow",js:"document.documentElement.scrollWidth<=innerWidth+1"}]},
+ {...base,name:"auth-register-steps-checks",selector:"main",viewports:["mobile"],actions:[{clearCookies:true},{navigate:"/account/register?type=driver"},submitReady,
+  ...typeAll({name:"Young Rider",phone:"+234 803 765 4321"}),choose("dateOfBirth","2015-01-01"),{click:"[data-step-next]"},{waitFor:"!!document.querySelector('main [role=alert]')"},
+  {evaluate:"window.__underage=document.querySelector('main [role=alert]').textContent+'|'+document.querySelector('[data-register-progress]').dataset.registerProgress;true"},
+  choose("dateOfBirth","1990-05-17"),{click:"[data-step-next]"},{waitFor:"document.querySelector('[data-register-progress]').dataset.registerProgress==='2/5'"},
+  {evaluate:"window.__focused=document.activeElement===document.querySelector('[data-register-progress]');window.__picker=!!document.querySelector('[data-account-type-option]').offsetParent;true"},
+  choose("idType","nin"),{wait:50},...typeAll({idNumber:"123"}),{click:"[data-step-next]"},{waitFor:"document.querySelector('main [role=alert]')?.textContent==='Your NIN has 11 digits.'"},
+  {click:"[data-step-back]"},{waitFor:"document.querySelector('[data-register-progress]').dataset.registerProgress==='1/5'"}],expect:[
+  {name:"an under-18 date of birth is caught on step 1, before moving on",js:"window.__underage==='Drivers must be between 18 and 80 years old.|1/5'"},
+  {name:"after Next, focus moves to the new step heading and the type picker is hidden",js:"window.__focused===true && window.__picker===false"},
+  {name:"a short NIN is caught on the Identification step",js:"!document.querySelector('[data-registration-received]')"},
+  {name:"Back returns to step 1 with what was typed kept and the error cleared",js:"document.querySelector('#auth-name').value==='Young Rider' && document.querySelector('#auth-dateOfBirth').value==='1990-05-17' && !document.querySelector('main [role=alert]') && document.querySelector('#auth-idNumber').value==='123'"}]},
+ {...base,name:"auth-register-steps-last",selector:"main",viewports:["mobile"],actions:[{clearCookies:true},{navigate:"/account/register"},submitReady,
+  ...typeAll({name:"Chidi Eze",phone:"+234 803 765 4321"}),{click:"[data-step-next]"},{waitFor:"document.querySelector('[data-register-progress]').dataset.registerProgress==='2/3'"},
+  ...typeAll({street:"12 Zik Avenue",city:"Enugu"}),choose("state","Enugu"),{click:"[data-step-next]"},{waitFor:"document.querySelector('[data-register-progress]').dataset.registerProgress==='3/3'"}],expect:[
+  {name:"the last step shows sign-in details, consent, Create account and Back; Next is gone",js:"document.querySelector('[data-register-progress]').textContent==='Step 3 of 3 · Sign-in details' && !!document.querySelector('#auth-email').offsetParent && !!document.querySelector('input[name=consent]').offsetParent && !!document.querySelector('main button[type=submit]').offsetParent && !!document.querySelector('[data-step-back]').offsetParent && !document.querySelector('[data-step-next]')"},
+  {name:"no horizontal overflow",js:"document.documentElement.scrollWidth<=innerWidth+1"}]},
+ {...base,name:"auth-register-desktop-full",selector:"main",viewports:["tablet","desktop"],actions:[{clearCookies:true},{navigate:"/account/register?type=distributor"},submitReady],expect:[
+  {name:"tablet and desktop keep the whole form on one page: all five sections, submit, no step controls",js:"[...document.querySelectorAll('form [data-step]')].filter(f=>f.offsetParent).length===5 && !!document.querySelector('main button[type=submit]').offsetParent && !!document.querySelector('input[name=consent]').offsetParent && !document.querySelector('[data-register-progress]').offsetParent && !document.querySelector('[data-step-next]').offsetParent"},
+  {name:"sections after the first keep their divider line",js:"getComputedStyle(document.querySelector('form [data-step=\"0\"]')).borderTopWidth==='0px' && getComputedStyle(document.querySelector('form [data-step=\"1\"]')).borderTopWidth==='1px'"}]},
  {...base,name:"auth-customer-journey",selector:"main",actions:[...registerAs("customer",customer),...login(customer),{waitFor:"location.pathname==='/account/dashboard' && !!document.querySelector('[data-dashboard-role=customer]')"}],expect:[
   {name:"a customer is usable immediately and lands on the customer dashboard with their real profile",js:"document.querySelector('[data-account-status]').dataset.accountStatus==='approved' && document.querySelector('#account-profile').textContent.includes('12 Zik Avenue, Enugu, Enugu') && document.querySelector('#account-profile').textContent.includes('Customer') && !document.querySelector('#auth-company')"}]},
  {...base,name:"auth-customer-blocked-from-driver",actions:[{clearCookies:true},...login(customer),{waitFor:"location.pathname==='/account/dashboard'"},{navigate:"/driver"},{waitFor:"location.pathname==='/account/dashboard'"}],expect:[
