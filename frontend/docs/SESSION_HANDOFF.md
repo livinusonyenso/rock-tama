@@ -1,6 +1,6 @@
 # Session Handoff
 
-**Account roles (D-137), 2026-11-24:** registration is step-by-step on phones (D-139); nav routes to pages only, with new `/our-story` and `/quality` (D-140). step 1 (backend roles, migration 005) and step 2 (registration picker, role routing, `/driver` and customer dashboards) done and committed; not deployed. Deploy the API (with migration 005) before or together with the web image. Next: `/admin` on Express admin sessions, then step 3 (mock order-to-driver assignment).
+**Account roles (D-137), 2026-11-24:** registration is step-by-step on phones (D-139); nav routes to pages only, with new `/our-story` and `/quality` (D-140), each with a page header and closing panel (D-141). step 1 (backend roles, migration 005) and step 2 (registration picker, role routing, `/driver` and customer dashboards) done and committed; not deployed. Deploy the API (with migration 005) before or together with the web image. Next: `/admin` on Express admin sessions, then step 3 (mock order-to-driver assignment).
 
 _Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
 

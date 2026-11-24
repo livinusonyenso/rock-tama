@@ -1,3 +1,4 @@
+import type { PageCalloutContent } from "@/components/ui/PageCallout";
 import { storefrontMedia } from "@/content/media";
 import { site } from "@/content/site";
 import type { HomeOriginContent, HomeProductsContent } from "@/types/content";
@@ -54,14 +55,35 @@ export const homeSupply = {
   cta: { label: "Request Wholesale", route: "wholesale" },
 } as const;
 
-/** Standalone pages for the nav (D-140): each renders one homepage section on its own. */
+/**
+ * Standalone pages for the nav (D-140, D-141): page header, the homepage section, then a closing panel that only
+ * points to working pages. No new story or quality claims: those need owner-supplied facts and evidence.
+ */
 export const sectionPages = {
   ourStory: {
+    eyebrow: "About ROCK-TAMA",
     title: "Our Story",
     description: "Where ROCK-TAMA natural spring water comes from: Nanka, Anambra State, Nigeria.",
+    callout: {
+      heading: "Taste it for yourself",
+      text: "Order ROCK-TAMA natural spring water for your home, or talk to us about supply for your business.",
+      actions: [
+        { label: "Shop now", route: "shop", variant: "primary" },
+        { label: "Wholesale supply", route: "wholesale", variant: "outline-light" },
+      ],
+    },
   },
   quality: {
+    eyebrow: "Our standards",
     title: "Quality & Safety",
     description: "How ROCK-TAMA looks after the quality and safety of its natural spring water.",
+    callout: {
+      heading: "Questions about our water?",
+      text: "Ask us anything about ROCK-TAMA natural spring water and we will get back to you.",
+      actions: [
+        { label: "Contact us", route: "contact", variant: "primary" },
+        { label: "Shop now", route: "shop", variant: "outline-light" },
+      ],
+    },
   },
-} as const;
+} as const satisfies Record<string, { eyebrow: string; title: string; description: string; callout: PageCalloutContent }>;

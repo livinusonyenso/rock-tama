@@ -886,7 +886,7 @@ function functionalJourneys() {
     {
       ...base, name: "origin-desktop-navigation", page: "shop", viewports: ["desktop"],
       actions: [{press:"Tab"},{evaluate:"const a=document.querySelector('header nav a[href=\"/our-story\"]'); a.focus(); sessionStorage.setItem('originFocus',getComputedStyle(a).outlineStyle); true"},{press:"Enter"},{waitFor:"location.pathname==='/our-story' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#origin'))"}],
-      expect: [{name:"keyboard Our Story opens the Our Story page (D-140), not a homepage scroll; focus ring present",js:"sessionStorage.getItem('originFocus')==='solid' && location.hash==='' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && [...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelectorAll('section').length===1"}],
+      expect: [{name:"keyboard Our Story opens the Our Story page (D-140), not a homepage scroll; focus ring present",js:"sessionStorage.getItem('originFocus')==='solid' && location.hash==='' && [...document.querySelectorAll('main')].filter(m=>m.checkVisibility()).length===1 && !![...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelector('section#origin,section#quality')"}],
     },
     {
       ...base, name: "origin-mobile-navigation", page: "shop", viewports: ["mobile"],
@@ -916,18 +916,21 @@ function functionalJourneys() {
       ...base,name:"nav-routes-only",page:"home",viewports:["mobile","desktop"],
       expect:[{name:"no header, drawer or footer link points at a homepage anchor (the footer social \"#\" placeholders, D-111, are not anchors); Our Story and Quality have their own pages",js:"(()=>{const links=[...document.querySelectorAll('header a[href],#mobile-nav a[href],footer a[href]')].map(a=>a.getAttribute('href'));return links.length>0 && !links.some(h=>/^\\/?#./.test(h)) && links.includes('/our-story') && links.includes('/quality')})()"}],
     },
-    ...[["ourStory","origin"],["quality","quality"]].map(([page,id])=>({
+    // D-141: page header like Franchise/Contact, the shared section, then a closing panel linking to working pages.
+    ...[["ourStory","origin","Our Story","our-story-callout","/shop,/wholesale"],["quality","quality","Quality & Safety","quality-callout","/contact,/shop"]].map(([page,id,title,callout,links])=>({
       ...base,name:`${page}-page`,page,viewports:["small","mobile","tablet","desktop"],
       actions:[{evaluate:"window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}); true"},{wait:600}],
       expect:[
-        {name:"the page renders only its own section, with a page heading",js:`(()=>{const m=document.querySelector('main');return m.querySelectorAll('section').length===1 && !!m.querySelector('section#${id}') && m.querySelector('h1')?.textContent.length>0 && !m.querySelector('#products,#testimonials,#contact,#hero')})()`},
+        {name:"page header with one visible h1 naming the page, its section, then the closing panel; no other homepage sections",js:`(()=>{const m=document.querySelector('main');const h=m.querySelectorAll('h1');return h.length===1 && h[0].textContent===${JSON.stringify(title)} && h[0].checkVisibility() && m.getAttribute('aria-labelledby')===h[0].id && !!m.querySelector('section#${id}') && m.querySelector('section#${id}').compareDocumentPosition(m.querySelector('[aria-labelledby=${callout}]'))===4 && !m.querySelector('#products,#testimonials,#contact,#hero')})()`},
+        {name:"closing panel button text is readable on the panel (contrast at least 4.5:1)",js:`(()=>{const lum=c=>{const v=c.match(/[\\d.]+/g).slice(0,3).map(Number).map(x=>{x/=255;return x<=0.03928?x/12.92:((x+0.055)/1.055)**2.4});return 0.2126*v[0]+0.7152*v[1]+0.0722*v[2]};const panel=lum(getComputedStyle(document.querySelector('[aria-labelledby=${callout}]')).backgroundColor);return [...document.querySelectorAll('[aria-labelledby=${callout}] a')].filter(a=>getComputedStyle(a).backgroundImage==='none').every(a=>{const t=lum(getComputedStyle(a).color);return (Math.max(t,panel)+0.05)/(Math.min(t,panel)+0.05)>=4.5})})()`},
+        {name:"closing panel links to working pages only",js:`[...document.querySelectorAll('[aria-labelledby=${callout}] a')].map(a=>a.getAttribute('href')).join()===${JSON.stringify(links)} && !document.querySelector('[aria-labelledby=${callout}] [data-pending]')`},
         {name:"section content visible (reveal finished) and no horizontal overflow",js:`[...document.querySelectorAll('#${id} [data-reveal]')].every(e=>e.dataset.reveal==='shown') && document.documentElement.scrollWidth<=innerWidth+1`},
         {name:"the nav marks this page as current",js:"[...document.querySelectorAll('header nav a[aria-current=page]')].some(a=>a.getAttribute('href')===location.pathname)"}],
     })),
     {
       ...base,name:"quality-navigation",page:"shop",viewports:["desktop"],
       actions:[{click:'header nav a[href="/quality"]'},{waitFor:"location.pathname==='/quality' && [...document.querySelectorAll('main')].some(m=>m.checkVisibility() && m.querySelector('#quality'))"}],
-      expect:[{name:"Quality header link opens the Quality page (D-140), not a homepage scroll",js:"location.hash==='' && [...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelectorAll('section').length===1"}],
+      expect:[{name:"Quality header link opens the Quality page (D-140), not a homepage scroll",js:"location.hash==='' && !![...document.querySelectorAll('main')].find(m=>m.checkVisibility()).querySelector('section#origin,section#quality')"}],
     },
     {
       ...base,name:"remaining-reduced-motion",page:"home",viewports:["mobile","desktop"],media:[{name:"prefers-reduced-motion",value:"reduce"}],

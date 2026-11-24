@@ -322,3 +322,10 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - `ourStory` and `quality` are now `live` in `content/routes.ts`, so header, drawer and footer links resolve to the pages; no nav link scrolls to a homepage anchor. Supersedes the interim `/#origin` and `/#quality` anchors (navbar decision 2026-11-18).
 - The homepage keeps both sections, so old `/#origin` links still work.
 - The pages are short (one homepage strip each). Fuller page content needs owner-supplied facts.
+
+## D-141 — Page headers and closing panels on Our Story and Quality
+
+**APPROVED 2026-11-24 (owner: "just like wholesale and franchise, we need to make our story and quality have header and maybe add more content"; approved the briefing).**
+
+- Both pages use the shared `ShopPageHeader` (as Franchise and Contact) as their real `h1`, then the homepage section, then a new `PageCallout` (`components/ui/`) linking to working pages: Our Story → Shop, Wholesale; Quality → Contact, Shop. Wording in `sectionPages` (`content/home.ts`).
+- No new story or quality claims. Longer content waits for owner facts: founding story and people, the Nanka site (photos), testing laboratory and frequency, NAFDAC number, and a current lab report to verify the existing claims.
