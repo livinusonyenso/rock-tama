@@ -345,3 +345,7 @@ Deployed the franchise page and header/layout overflow fixes to `i-0ad28bbea578f
 ## 2026-11-24: account roles, step 1 (backend, D-137)
 
 Migration `005_account_roles.sql` (additive): roles customer/driver/distributor/admin, company required only for distributors, `vehicle_type` for drivers, and a trigger that refuses self-registered admins and sets the starting status per role. Registration accepts `accountType` (distributor by default, so the live form keeps working); `/me` returns `vehicleType` and a nullable `company`; `requireRole()` guard; `src/create-admin.mjs` operator script (password on stdin). Verified: backend unit 20/20, PostgreSQL integration 28/28 (new: per-role status, admin refused through the API and through direct SQL as `rocktama_api`, admin script and admin login). Migration 005 applied to the existing local dev database. Not deployed. Next: step 2, role-based registration/login and the customer, driver and admin dashboards.
+
+## 2026-11-24: contact channels live
+
+Owner supplied the WhatsApp/phone number (+234 903 401 8849), confirmed the email is real and chose "Nanka, Anambra State" as the address. Contact cards (Contact page and homepage): WhatsApp (wa.me), Call Us (tel:), Email (mailto with subject) and Visit Us (Google Maps search built from `site.location`); none are placeholders, so they no longer block a strict launch in `content/launch.ts`. 2×2 grid from md, stacked on phones. Verified: tsc, lint, `verify:visual --section contact,home-contact` 161/161 with screenshots reviewed. Not deployed.

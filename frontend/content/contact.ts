@@ -12,7 +12,7 @@ export const contact = {
   metaDescription: "Contact ROCK-TAMA Natural Spring Water by WhatsApp or email for orders, delivery and wholesale questions.",
   eyebrow: "Contact Us",
   title: "Get in Touch",
-  description: "Questions about our water, an order or regular supply? Message us on WhatsApp or send an email.",
+  description: "Questions about our water, an order or regular supply? Message us on WhatsApp, call us or send an email.",
   whatsapp: {
     placeholder: false,
     title: "WhatsApp",
@@ -32,12 +32,17 @@ export const contact = {
     action: "Call Now",
   },
   email: {
-    placeholder: true,
+    placeholder: false,
     title: "Email",
     text: "For detailed questions, documents and business correspondence.",
     address: "rocktamanaturalspringwater@gmail.com",
     subject: "Enquiry from the ROCK-TAMA website",
     action: "Send an Email",
+  },
+  address: {
+    title: "Visit Us",
+    text: "Our spring water comes from Nanka in Anambra State.",
+    action: "Get Directions",
   },
   wholesale: {
     title: "Ordering in bulk?",

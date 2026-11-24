@@ -1,7 +1,7 @@
 import { Icon } from "@/components/icons/Icon";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { contact } from "@/content/contact";
-import { emailHref, phoneHref, whatsappHref } from "@/lib/contact";
+import { companyAddress, directionsHref, emailHref, phoneHref, whatsappHref } from "@/lib/contact";
 import { resolveHref } from "@/lib/navigation";
 import type { IconName } from "@/types/content";
 
@@ -15,7 +15,7 @@ type ContactChannelsProps = {
 };
 
 /**
- * WhatsApp + email cards and an optional wholesale pointer (D-111; homepage reuse D-117). Server Component. A placeholder channel shows its
+ * WhatsApp, call, email and address cards and an optional wholesale pointer (D-111; homepage reuse D-117). Server Component. A placeholder channel shows its
  * value but its action renders as non-interactive "Coming soon" (ButtonLink with href null).
  */
 export function ContactChannels({ headingLevel: Heading = "h2", withWholesale = true }: ContactChannelsProps) {
@@ -23,11 +23,12 @@ export function ContactChannels({ headingLevel: Heading = "h2", withWholesale = 
     { id: "whatsapp", icon: "message-circle", title: contact.whatsapp.title, value: contact.whatsapp.display, text: contact.whatsapp.text, action: contact.whatsapp.action, href: whatsappHref() },
     { id: "phone", icon: "phone", title: contact.phone.title, value: contact.phone.display, text: contact.phone.text, action: contact.phone.action, href: phoneHref() },
     { id: "email", icon: "mail", title: contact.email.title, value: contact.email.address, text: contact.email.text, action: contact.email.action, href: emailHref() },
+    { id: "address", icon: "map-pin", title: contact.address.title, value: companyAddress(), text: contact.address.text, action: contact.address.action, href: directionsHref() },
   ];
 
   return (
     <>
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {channels.map((channel) => (
           <li key={channel.id} data-channel={channel.id}>
             <article aria-labelledby={`contact-${channel.id}`} className="flex h-full flex-col rounded-card border border-line-card bg-cream-200 p-6 shadow-card lg:p-8">
