@@ -1,12 +1,34 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { vehicleTypes, type AccountRole, type VehicleType } from "@/content/accounts";
+import { vehicleTypes, type AccountRole, type Availability, type BusinessType, type IdType, type MonthlyVolume, type VehicleType } from "@/content/accounts";
 
 /**
  * Server-only access to the Express API (D-134). API_URL is read at request time and never reaches the
  * browser: it has no NEXT_PUBLIC_ prefix, and this module is server-only.
  */
 export const SESSION_COOKIE_NAMES = ["__Host-rocktama_session", "rocktama_session"] as const;
+
+/**
+ * Registration details from GET /me (D-138). Which keys exist depends on the role; accounts created before
+ * D-138 have none. Driver ID numbers are never returned: only their type and last four characters.
+ */
+export type AccountProfile = {
+  address?: { street: string; city: string; state: string };
+  dateOfBirth?: string;
+  idType?: IdType;
+  idLast4?: string;
+  licenceExpiry?: string | null;
+  plateNumber?: string;
+  operatingArea?: string;
+  availability?: Availability;
+  position?: string;
+  businessType?: BusinessType;
+  cacNumber?: string | null;
+  supplyAreas?: string;
+  monthlyVolume?: MonthlyVolume;
+  hasStorage?: boolean;
+  hasVehicle?: boolean;
+};
 
 /** The signed-in user from GET /me (D-137). company is set for distributors, vehicleType for drivers. */
 export type Account = {
@@ -19,6 +41,7 @@ export type Account = {
   role: AccountRole;
   status: "pending" | "approved";
   vehicleType: VehicleType | null;
+  profile: AccountProfile;
   canAccessDistributorFeatures: boolean;
 };
 
@@ -63,6 +86,10 @@ function isAccount(value: unknown): value is Account {
   if (vehicle !== null && !vehicleTypes.some((type) => type.value === vehicle)) return false;
   if ((user.role === "driver") !== (vehicle !== null)) return false;
   user.vehicleType = vehicle;
+  // Older APIs omit profile; anything other than a plain object is unexpected.
+  const profile = (user as { profile?: unknown }).profile ?? {};
+  if (typeof profile !== "object" || profile === null || Array.isArray(profile)) return false;
+  user.profile = profile as AccountProfile;
   return user.canAccessDistributorFeatures === (user.role === "distributor" && user.status === "approved");
 }
 

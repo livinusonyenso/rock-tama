@@ -1,7 +1,7 @@
 import {Icon} from "@/components/icons/Icon";
-import {vehicleTypes} from "@/content/accounts";
+import {availabilities,vehicleTypes} from "@/content/accounts";
 import type {Account} from "@/lib/server/api";
-import {AccountDashboardLayout,ProfileCard} from "./AccountDashboardLayout";
+import {AccountDashboardLayout,ProfileCard,formatAddress,optionLabel,rows} from "./AccountDashboardLayout";
 import styles from "./dashboard.module.css";
 
 /**
@@ -10,7 +10,9 @@ import styles from "./dashboard.module.css";
  */
 export function DriverDashboard({account}:{account:Account}){
  const approved=account.status==="approved";
- const vehicle=vehicleTypes.find(type=>type.value===account.vehicleType)?.label??"Not provided";
+ const {profile}=account;
+ // Only the ID type and last four characters ever reach the site (D-138).
+ const id=profile.idType&&profile.idLast4?`${profile.idType==="nin"?"NIN":"Driver’s licence"} •••• ${profile.idLast4}`:null;
  return <AccountDashboardLayout account={account} portal="Driver portal"
   links={[{href:"#dashboard-overview",label:"Overview",icon:"layers"},{href:"#my-deliveries",label:"My deliveries",icon:"truck"},{href:"#account-profile",label:"My profile",icon:"user"},{href:"/contact",label:"Help & support",icon:"message-circle"}]}
   help={{text:"Questions about your application or a delivery?",link:{href:"/contact",label:"Contact logistics team",icon:"message-circle"}}}>
@@ -19,6 +21,6 @@ export function DriverDashboard({account}:{account:Account}){
   <p className="mt-3 leading-relaxed text-ink-700">{approved?"Deliveries assigned to you will appear below with the customer’s area and the order details.":"Thank you for applying to deliver with ROCK-TAMA. Our logistics team reviews every driver before deliveries are assigned and will contact you by phone or email."}</p></div></section>
   <section id="my-deliveries" className={`${styles.card} mt-6 scroll-mt-8 p-5 sm:p-6`} aria-labelledby="deliveries-heading"><div className="flex items-center gap-3"><Icon name="truck" className="text-gold-700"/><h2 id="deliveries-heading" className="font-serif text-2xl font-bold text-forest-heading">My deliveries</h2></div>
   <p data-deliveries-empty className="mt-3 leading-relaxed text-ink-700">{approved?"No deliveries are assigned to you yet.":"Deliveries are assigned after your application is approved."}</p></section>
-  <ProfileCard rows={[["Name",account.name],["Email",account.email],["Phone",account.phone??"Not provided"],["Operating area",account.location??"Not provided"],["Vehicle",vehicle],["Account status",approved?"Approved driver":"Pending review"]]}/>
+  <ProfileCard rows={rows([["Name",account.name],["Email",account.email],["Phone",account.phone??"Not provided"],["Home address",formatAddress(profile.address)??account.location],["ID",id],["Licence expiry",profile.licenceExpiry],["Vehicle",optionLabel(vehicleTypes,account.vehicleType)],["Plate number",profile.plateNumber],["Delivery areas",profile.operatingArea],["Availability",optionLabel(availabilities,profile.availability)],["Account status",approved?"Approved driver":"Pending review"]])}/>
  </AccountDashboardLayout>;
 }

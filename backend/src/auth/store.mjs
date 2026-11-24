@@ -1,16 +1,26 @@
-const publicUserColumns = "id, email, name, company, phone, location, role, status, vehicle_type";
+const publicUserColumns = "id, email, name, company, phone, location, role, status, vehicle_type, profile";
 
 // consented_at is the database time of this request; the request body only carries the explicit consent flag.
 // The requested role is checked again, and the starting status chosen, by a database trigger (005).
-export async function insertRegisteredUser(db, { email, name, company, phone, location, role, vehicleType }, passwordHash) {
-  const { rows } = await db.query(
-    `INSERT INTO auth.users (email, name, company, phone, location, role, vehicle_type, consented_at, password_hash)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, statement_timestamp(), $8)
-     ON CONFLICT (email) DO NOTHING
-     RETURNING ${publicUserColumns}`,
-    [email, name, company, phone, location, role, vehicleType, passwordHash],
+// A driver's identity is written in the same statement, so an account never exists without it (or vice versa);
+// the API role cannot read that table back (006). An existing email inserts nothing at all.
+export async function insertRegisteredUser(db, registration, passwordHash) {
+  const { email, name, company, phone, location, role, vehicleType, profile, identity } = registration;
+  const values = [email, name, company, phone, location, role, vehicleType, JSON.stringify(profile ?? {}), passwordHash];
+  const user = `INSERT INTO auth.users (email, name, company, phone, location, role, vehicle_type, profile, consented_at, password_hash)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, statement_timestamp(), $9)
+     ON CONFLICT (email) DO NOTHING`;
+  if (!identity) {
+    const { rowCount } = await db.query(user, values);
+    return rowCount === 1;
+  }
+  const { rowCount } = await db.query(
+    `WITH created AS (${user} RETURNING id)
+     INSERT INTO auth.driver_identities (user_id, id_type, id_number, licence_expiry)
+     SELECT id, $10, $11, $12::date FROM created`,
+    [...values, identity.idType, identity.idNumber, identity.licenceExpiry],
   );
-  return rows[0];
+  return rowCount === 1;
 }
 
 export async function findUserForLogin(db, email) {
@@ -31,7 +41,7 @@ export async function insertSession(db, userId, tokenHash, previousHash) {
 
 export async function findSessionUser(db, tokenHash) {
   const { rows } = await db.query(
-    `SELECT u.id, u.email, u.name, u.company, u.phone, u.location, u.role, u.status, u.vehicle_type
+    `SELECT u.id, u.email, u.name, u.company, u.phone, u.location, u.role, u.status, u.vehicle_type, u.profile
      FROM auth.sessions AS s JOIN auth.users AS u ON u.id = s.user_id
      WHERE s.token_hash = $1 AND s.expires_at > statement_timestamp()`,
     [tokenHash],

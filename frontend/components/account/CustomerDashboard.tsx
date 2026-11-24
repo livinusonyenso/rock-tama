@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {Icon} from "@/components/icons/Icon";
 import type {Account} from "@/lib/server/api";
-import {AccountDashboardLayout,ProfileCard} from "./AccountDashboardLayout";
+import {AccountDashboardLayout,ProfileCard,formatAddress,rows} from "./AccountDashboardLayout";
 import styles from "./dashboard.module.css";
 
 /**
@@ -18,6 +18,6 @@ export function CustomerDashboard({account}:{account:Account}){
   <div className="mt-5 flex flex-wrap gap-3"><Link href="/shop" className={styles.primary}><Icon name="shopping-cart" className="size-5"/>Shop now</Link><Link href="/contact" className="flex min-h-12 items-center rounded-button border border-forest-850 px-5 text-sm font-semibold text-forest-850 focus-ring">Contact us</Link></div></div></section>
   <section id="my-orders" className={`${styles.card} mt-6 scroll-mt-8 p-5 sm:p-6`} aria-labelledby="orders-heading"><div className="flex items-center gap-3"><Icon name="package" className="text-gold-700"/><h2 id="orders-heading" className="font-serif text-2xl font-bold text-forest-heading">My orders</h2></div>
   <p className="mt-3 leading-relaxed text-ink-700">Your orders and their delivery status will appear here soon.</p></section>
-  <ProfileCard rows={[["Name",account.name],["Email",account.email],["Phone",account.phone??"Not provided"],["Delivery city and state",account.location??"Not provided"],["Account type","Customer"]]}/>
+  <ProfileCard rows={rows([["Name",account.name],["Email",account.email],["Phone",account.phone??"Not provided"],["Delivery address",formatAddress(account.profile.address)??account.location],["Account type","Customer"]])}/>
  </AccountDashboardLayout>;
 }

@@ -134,7 +134,7 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
       assert.match(passwordHash, /^\$argon2id\$/);
       assert.equal(await verifyPassword(passwordHash, password), true);
       assert.equal((await db.query("SELECT 1 FROM auth.sessions WHERE user_id = $1", [stored.id])).rowCount, 0);
-      user = { ...stored, vehicleType: null, canAccessDistributorFeatures: false };
+      user = { ...stored, vehicleType: null, profile: {}, canAccessDistributorFeatures: false };
     });
 
     await t.test("a duplicate email gets the same response and never changes the existing account", async () => {
@@ -321,7 +321,7 @@ test("the migrator owns auth objects and only it can change privileges or schema
   const migrator = await connection(t, migratorUrl);
   const { rows } = await migrator.query(`SELECT tablename, tableowner FROM pg_tables
     WHERE schemaname = 'auth' ORDER BY tablename`);
-  assert.deepEqual(rows, ["rate_limits", "sessions", "users"].map((tablename) => ({ tablename, tableowner: "rocktama_migrator" })));
+  assert.deepEqual(rows, ["driver_identities", "rate_limits", "sessions", "users"].map((tablename) => ({ tablename, tableowner: "rocktama_migrator" })));
 
   for (const sql of [
     "INSERT INTO auth.users (role) VALUES ('admin')",
@@ -343,40 +343,56 @@ test("the migrator owns auth objects and only it can change privileges or schema
       await db.query("ROLLBACK");
     }
   }
-  for (const file of ["002_auth.sql", "003_auth_login_limits.sql", "004_distributor_profile.sql", "005_account_roles.sql"]) {
+  for (const file of ["002_auth.sql", "003_auth_login_limits.sql", "004_distributor_profile.sql", "005_account_roles.sql", "006_account_profiles.sql"]) {
     const migration = await readFile(new URL(`../../migrations/${file}`, import.meta.url));
     const { rows: checksums } = await db.query("SELECT checksum FROM public.schema_migrations WHERE name = $1", [file]);
     assert.deepEqual(checksums, [{ checksum: createHash("sha256").update(migration).digest("hex") }], file);
   }
 });
 
+const address = { street: "12 Zik Avenue", city: "Awka", state: "Anambra" };
+function typed(accountType) {
+  const shared = { accountType, email: `${randomUUID()}@example.test`, password, name: "Chidi Eze", phone: "+234 803 765 4321", ...address, consent: true };
+  if (accountType === "driver") return { ...shared, dateOfBirth: "1990-05-17", idType: "nin", idNumber: "12345678901", licenceExpiry: "",
+    vehicleType: "van", plateNumber: "ABC123DE", operatingArea: "Awka, Nnewi", availability: "part_time" };
+  if (accountType === "distributor") return { ...shared, position: "Owner", company: "Eze Water Supply", businessType: "retailer",
+    cacNumber: "", supplyAreas: "Awka", monthlyVolume: "under_50", hasStorage: false, hasVehicle: true };
+  return shared;
+}
+
 test("account types: customers start approved, drivers and distributors pending, admins never self-register", { skip, timeout: 20_000 }, async (t) => {
   await inRuntimeTransaction(t, async (request, db) => {
-    const { company: _company, ...personal } = registration();
-    const stored = (email) => db.query("SELECT role, status, company, vehicle_type FROM auth.users WHERE email = $1", [email]).then((r) => r.rows);
+    const stored = (email) => db.query("SELECT role, status, company, vehicle_type, location, profile FROM auth.users WHERE email = $1", [email]).then((r) => r.rows);
 
-    const customer = { ...personal, email: `${randomUUID()}@example.test`, accountType: "customer" };
+    const customer = typed("customer");
     assert.equal((await request("register", { body: customer })).status, 202);
-    assert.deepEqual(await stored(customer.email), [{ role: "customer", status: "approved", company: null, vehicle_type: null }]);
+    assert.deepEqual(await stored(customer.email), [{ role: "customer", status: "approved", company: null, vehicle_type: null, location: "Awka, Anambra", profile: { address } }]);
 
-    const driver = { ...personal, email: `${randomUUID()}@example.test`, accountType: "driver", vehicleType: "van" };
+    const distributor = typed("distributor");
+    assert.equal((await request("register", { body: distributor })).status, 202);
+    const [storedDistributor] = await stored(distributor.email);
+    assert.deepEqual([storedDistributor.role, storedDistributor.status, storedDistributor.company, storedDistributor.profile.cacNumber, storedDistributor.profile.hasVehicle],
+      ["distributor", "pending", "Eze Water Supply", null, true]);
+
+    const driver = typed("driver");
     assert.equal((await request("register", { body: driver })).status, 202);
-    assert.deepEqual(await stored(driver.email), [{ role: "driver", status: "pending", company: null, vehicle_type: "van" }]);
+    const [storedDriver] = await stored(driver.email);
+    assert.deepEqual([storedDriver.role, storedDriver.status, storedDriver.vehicle_type, storedDriver.profile.idLast4], ["driver", "pending", "van", "8901"]);
+    assert.ok(!JSON.stringify(storedDriver).includes("12345678901"), "the full NIN is not in auth.users");
 
     const login = await request("login", { body: { email: driver.email, password } });
     assert.equal(login.status, 200);
     assert.equal(login.body.user.role, "driver");
-    assert.equal(login.body.user.vehicleType, "van");
-    assert.equal(login.body.user.company, null);
-    assert.equal(login.body.user.canAccessDistributorFeatures, false);
+    assert.equal(login.body.user.profile.idType, "nin");
+    assert.ok(!JSON.stringify(login.body).includes("12345678901"), "the full NIN is never returned");
     const cookie = login.headers.get("set-cookie").split(";", 1)[0];
-    assert.equal((await request("me", { method: "GET", headers: { cookie } })).body.user.status, "pending");
+    const me = await request("me", { method: "GET", headers: { cookie } });
+    assert.equal(me.body.user.status, "pending");
+    assert.equal(me.body.user.profile.plateNumber, "ABC123DE");
 
-    for (const body of [
-      { ...personal, accountType: "admin" },
-      { ...personal, accountType: "driver" },
-      { ...personal, accountType: "customer", vehicleType: "van" },
-    ]) assertError(await request("register", { body }), 400, "invalid_input");
+    for (const body of [{ ...typed("customer"), accountType: "admin" }, { ...typed("driver"), idNumber: "123" }, { ...typed("customer"), vehicleType: "van" }]) {
+      assertError(await request("register", { body }), 400, "invalid_input");
+    }
 
     // Even with direct SQL as the API role, the database refuses admins and chooses the status itself.
     const hash = await hashPassword(password);
@@ -389,12 +405,45 @@ test("account types: customers start approved, drivers and distributors pending,
     }
     const direct = `${randomUUID()}@example.test`;
     await db.query("INSERT INTO auth.users (email, name, role, vehicle_type, password_hash) VALUES ($1, 'x', 'driver', 'truck', $2)", [direct, hash]);
-    assert.deepEqual(await stored(direct), [{ role: "driver", status: "pending", company: null, vehicle_type: "truck" }]);
+    assert.equal((await stored(direct))[0].status, "pending");
     await db.query("SAVEPOINT attempt");
     await assert.rejects(db.query("INSERT INTO auth.users (email, name, role, password_hash) VALUES ($1, 'x', 'distributor', $2)",
       [`${randomUUID()}@example.test`, hash]), { code: "23514" }, "a distributor needs a company");
     await db.query("ROLLBACK TO SAVEPOINT attempt");
   });
+});
+
+test("driver ID numbers are write-only for the API, stored once, and checked by the database", { skip, timeout: 20_000 }, async (t) => {
+  const migrator = await connection(t, migratorUrl);
+  await inRuntimeTransaction(t, async (request, db) => {
+    const driver = typed("driver");
+    assert.equal((await request("register", { body: { ...driver, idType: "drivers_licence", idNumber: "abc-12345-aa67", licenceExpiry: "2030-01-31" } })).status, 202);
+    for (const sql of ["SELECT id_number FROM auth.driver_identities", "SELECT count(*) FROM auth.driver_identities",
+      "UPDATE auth.driver_identities SET id_number = 'X' WHERE false", "DELETE FROM auth.driver_identities WHERE false"]) {
+      await db.query("SAVEPOINT attempt");
+      await assert.rejects(db.query(sql), { code: "42501" }, sql);
+      await db.query("ROLLBACK TO SAVEPOINT attempt");
+    }
+    // A repeat registration for the same email adds no second identity and changes nothing.
+    assert.equal((await request("register", { body: { ...driver, idNumber: "99999999999" } })).status, 202);
+    await db.query("SAVEPOINT attempt");
+    await assert.rejects(db.query("INSERT INTO auth.driver_identities (user_id, id_type, id_number) SELECT id, 'nin', '123' FROM auth.users WHERE email = $1",
+      [driver.email]), { code: "23514" }, "the database rejects a malformed NIN");
+    await db.query("ROLLBACK TO SAVEPOINT attempt");
+    // The migrator (staff tooling later) can read it; this transaction's rows are visible only to its own session, so check the shape here.
+    const { rows } = await db.query("SELECT has_table_privilege('rocktama_api', 'auth.driver_identities', 'SELECT') AS can_read, has_any_column_privilege('rocktama_api', 'auth.driver_identities', 'INSERT') AS can_insert");
+    assert.deepEqual(rows, [{ can_read: false, can_insert: true }]);
+  });
+  // Outside the rolled-back transaction: a committed driver's identity is stored normalised and exactly once.
+  const driver = typed("driver");
+  await withTestApi(t, await connection(t, apiUrl), async (request) => {
+    assert.equal((await request("register", { body: driver })).status, 202);
+    assert.equal((await request("register", { body: { ...driver, idNumber: "99999999999" } })).status, 202);
+  });
+  onCleanup(t, () => migrator.query("DELETE FROM auth.users WHERE email = $1", [driver.email]));
+  const { rows } = await migrator.query(
+    "SELECT i.id_type, i.id_number, i.licence_expiry FROM auth.driver_identities i JOIN auth.users u ON u.id = i.user_id WHERE u.email = $1", [driver.email]);
+  assert.deepEqual(rows, [{ id_type: "nin", id_number: "12345678901", licence_expiry: null }]);
 });
 
 test("only the operator script creates admins, and an admin signs in like any account", { skip, timeout: 30_000 }, async (t) => {

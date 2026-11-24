@@ -20,11 +20,11 @@ const safeMethods = new Set(["GET", "HEAD", "OPTIONS"]);
 const dummyHash = await hashPassword(createSessionToken());
 
 function sendUser(response, status, user) {
-  const { id, email, name, company, phone, location, role, status: accountStatus, vehicle_type: vehicleType } = user;
+  const { id, email, name, company, phone, location, role, status: accountStatus, vehicle_type: vehicleType, profile } = user;
   return response.status(status).json({
     user: {
       id, email, name, company: company ?? null, phone: phone ?? null, location: location ?? null, role, status: accountStatus,
-      vehicleType: vehicleType ?? null,
+      vehicleType: vehicleType ?? null, profile: profile ?? {},
       canAccessDistributorFeatures: canAccessDistributorFeatures(user),
     },
   });

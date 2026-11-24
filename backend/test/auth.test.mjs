@@ -15,13 +15,12 @@ const registration = {
   password: " a long unique password ",
 };
 
-test("registration normalizes identity fields and preserves the password", () => {
+test("the pre-D-137 distributor form still registers a distributor (older clients)", () => {
   assert.deepEqual(validateRegistration(registration), {
     email: "owner+shop@example.test", name: "Ada Okafor", company: "Ada's Water Supply",
     phone: "+234 803 123 4567", location: "Enugu, Enugu State", password: registration.password,
-    role: "distributor", vehicleType: null,
+    role: "distributor", vehicleType: null, profile: {}, identity: null,
   });
-  assert.equal(validateRegistration({ ...registration, accountType: "distributor" }).role, "distributor");
   assert.equal(validateLogin({ email: registration.email, password: "wrong" }).email, "owner+shop@example.test");
 });
 
@@ -38,26 +37,79 @@ test("validation rejects malformed fields, short passwords and privilege injecti
   assert.equal(validateLogin({ email: registration.email, password: "" }), null);
 });
 
-const { company: _company, ...personal } = registration;
+// D-138 per-type forms. A fixed "today" keeps age and expiry checks deterministic.
+const today = new Date(Date.UTC(2026, 10, 24));
+const base = {
+  email: "Chidi@Example.test", password: registration.password, name: "Chidi Eze", phone: "+234 803 765 4321",
+  street: " 12 Zik Avenue ", city: "Awka", state: "Anambra", consent: true,
+};
+const customer = { ...base, accountType: "customer" };
+const driver = {
+  ...base, accountType: "driver", dateOfBirth: "1990-05-17", idType: "nin", idNumber: "123 4567 8901", licenceExpiry: "",
+  vehicleType: "tricycle", plateNumber: "abc-123de", operatingArea: "Awka, Nnewi", availability: "full_time",
+};
+const distributor = {
+  ...base, accountType: "distributor", position: "Managing Director", company: "Eze Water Supply", businessType: "wholesaler",
+  cacNumber: "rc 123456", supplyAreas: "Awka and Onitsha", monthlyVolume: "50_200", hasStorage: true, hasVehicle: false,
+};
 
-test("customers and drivers register without a company; drivers must give a vehicle type", () => {
-  assert.deepEqual(validateRegistration({ ...personal, accountType: "customer" }), {
-    email: "owner+shop@example.test", name: "Ada Okafor", company: null, phone: "+234 803 123 4567",
-    location: "Enugu, Enugu State", password: registration.password, role: "customer", vehicleType: null,
-  });
-  const driver = validateRegistration({ ...personal, accountType: "driver", vehicleType: "tricycle" });
-  assert.equal(driver.role, "driver");
-  assert.equal(driver.vehicleType, "tricycle");
+test("customers give a delivery address; the account location is its city and state", () => {
+  const result = validateRegistration(customer, today);
+  assert.equal(result.role, "customer");
+  assert.equal(result.location, "Awka, Anambra");
+  assert.deepEqual(result.profile, { address: { street: "12 Zik Avenue", city: "Awka", state: "Anambra" } });
+  assert.equal(result.identity, null);
+  assert.equal(result.company, null);
 });
 
-test("account types reject admin, unknown types and fields that belong to another type", () => {
+test("drivers: ID number goes only to the identity record; the profile keeps its type and last four", () => {
+  const result = validateRegistration(driver, today);
+  assert.deepEqual(result.identity, { idType: "nin", idNumber: "12345678901", licenceExpiry: null });
+  assert.equal(result.vehicleType, "tricycle");
+  assert.deepEqual(result.profile, {
+    address: { street: "12 Zik Avenue", city: "Awka", state: "Anambra" }, dateOfBirth: "1990-05-17", idType: "nin", idLast4: "8901",
+    licenceExpiry: null, plateNumber: "ABC123DE", operatingArea: "Awka, Nnewi", availability: "full_time",
+  });
+  assert.ok(!JSON.stringify(result.profile).includes("12345678901"), "the full NIN never enters the profile");
+  const licence = validateRegistration({ ...driver, idType: "drivers_licence", idNumber: "abc12345aa67", licenceExpiry: "2028-01-31" }, today);
+  assert.deepEqual(licence.identity, { idType: "drivers_licence", idNumber: "ABC12345AA67", licenceExpiry: "2028-01-31" });
+});
+
+test("drivers must be 18 to 80, with a valid, unexpired ID and the right expiry rule", () => {
   for (const invalid of [
-    { ...personal, accountType: "admin" }, { ...personal, accountType: "Customer" }, { ...personal, accountType: null },
-    { ...registration, accountType: "customer" }, { ...personal, accountType: "customer", vehicleType: "van" },
-    { ...personal, accountType: "driver" }, { ...personal, accountType: "driver", vehicleType: "helicopter" },
-    { ...personal, accountType: "driver", vehicleType: "van", company: "x" }, { ...registration, vehicleType: "van" },
-    { ...personal, accountType: "customer", role: "admin" }, personal,
-  ]) assert.equal(validateRegistration(invalid), null);
+    { dateOfBirth: "2009-11-25" }, { dateOfBirth: "1940-01-01" }, { dateOfBirth: "1990-02-30" }, { dateOfBirth: "17/05/1990" },
+    { idNumber: "1234567890" }, { idNumber: "1234567890A" }, { idType: "passport" },
+    { idType: "drivers_licence", idNumber: "ABC12345AA67", licenceExpiry: "" },
+    { idType: "drivers_licence", idNumber: "ABC12345AA67", licenceExpiry: "2026-11-23" },
+    { idType: "drivers_licence", idNumber: "AB12", licenceExpiry: "2028-01-31" },
+    { licenceExpiry: "2028-01-31" }, { plateNumber: "A1" }, { vehicleType: "helicopter" }, { availability: "sometimes" }, { operatingArea: "" },
+  ]) assert.equal(validateRegistration({ ...driver, ...invalid }, today), null, JSON.stringify(invalid));
+  assert.ok(validateRegistration({ ...driver, dateOfBirth: "2008-11-24" }, today), "18 today is allowed");
+  assert.ok(validateRegistration({ ...driver, idType: "drivers_licence", idNumber: "ABC12345AA67", licenceExpiry: "2026-11-24" }, today), "expires today is still valid");
+});
+
+test("distributors: business details, optional CAC number and yes/no answers", () => {
+  const result = validateRegistration(distributor, today);
+  assert.equal(result.company, "Eze Water Supply");
+  assert.deepEqual(result.profile, {
+    address: { street: "12 Zik Avenue", city: "Awka", state: "Anambra" }, position: "Managing Director", businessType: "wholesaler",
+    cacNumber: "RC123456", supplyAreas: "Awka and Onitsha", monthlyVolume: "50_200", hasStorage: true, hasVehicle: false,
+  });
+  assert.equal(validateRegistration({ ...distributor, cacNumber: "" }, today).profile.cacNumber, null);
+  for (const invalid of [
+    { cacNumber: "123456" }, { cacNumber: "XY123456" }, { businessType: "bank" }, { monthlyVolume: "lots" },
+    { hasStorage: "yes" }, { hasVehicle: null }, { company: "" }, { position: "" }, { supplyAreas: "" },
+  ]) assert.equal(validateRegistration({ ...distributor, ...invalid }, today), null, JSON.stringify(invalid));
+});
+
+test("account types reject admin, unknown types, missing fields and fields from another type", () => {
+  for (const invalid of [
+    { ...customer, accountType: "admin" }, { ...customer, accountType: "Customer" }, { ...customer, accountType: null },
+    { ...customer, company: "x" }, { ...customer, vehicleType: "van" }, (({ street, ...rest }) => rest)(customer),
+    { ...driver, company: "x" }, (({ idNumber, ...rest }) => rest)(driver), { ...distributor, idNumber: "12345678901" },
+    { ...customer, role: "admin" }, { ...customer, status: "approved" }, { ...customer, city: "A" },
+    { ...registration, accountType: "distributor" },
+  ]) assert.equal(validateRegistration(invalid, today), null, JSON.stringify(Object.keys(invalid)));
 });
 
 test("Argon2id produces uniquely salted, verifiable hashes with the configured cost", async () => {

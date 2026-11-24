@@ -2,7 +2,7 @@ import Link from "next/link";
 import type {ReactNode} from "react";
 import {Container} from "@/components/ui/Container";
 import {Icon} from "@/components/icons/Icon";
-import type {Account} from "@/lib/server/api";
+import type {Account,AccountProfile} from "@/lib/server/api";
 import type {IconName} from "@/types/content";
 import {LogoutButton} from "./LogoutButton";
 import styles from "./dashboard.module.css";
@@ -23,3 +23,12 @@ export function AccountDashboardLayout({account,portal,links,help,children}:{acc
 export function ProfileCard({rows}:{rows:[string,string][]}){
  return <section id="account-profile" className={`${styles.card} mt-6 scroll-mt-8 p-5 sm:p-6`} aria-labelledby="profile-heading"><div className="flex items-center gap-3"><Icon name="user" className="text-gold-700"/><h2 id="profile-heading" className="font-serif text-2xl font-bold text-forest-heading">My profile</h2></div><dl className="mt-5 grid gap-5 text-sm sm:grid-cols-2">{rows.map(([label,value])=><div key={label}><dt className="text-ink-500">{label}</dt><dd className="mt-1 break-words font-semibold">{value}</dd></div>)}</dl><p className="mt-5 border-t border-line-card pt-4 text-xs leading-relaxed text-ink-500">To change these details, contact our team.</p></section>;
 }
+
+/** "12 Zik Avenue, Awka, Anambra", or null for accounts registered before addresses were collected. */
+export function formatAddress(address:AccountProfile["address"]){return address?`${address.street}, ${address.city}, ${address.state}`:null;}
+
+/** The label for a stored option value, falling back to the value itself. */
+export function optionLabel(options:readonly {value:string;label:string}[],value:string|undefined|null){return value?options.find(option=>option.value===value)?.label??value:null;}
+
+/** Profile rows, dropping details this account does not have. */
+export function rows(entries:[string,string|null|undefined][]):[string,string][]{return entries.filter((entry):entry is [string,string]=>!!entry[1]);}

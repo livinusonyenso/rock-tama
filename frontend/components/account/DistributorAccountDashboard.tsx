@@ -2,6 +2,8 @@ import Link from "next/link";
 import {Container} from "@/components/ui/Container";
 import {Icon} from "@/components/icons/Icon";
 import type {DistributorAccount} from "@/lib/server/api";
+import {businessTypes,monthlyVolumes} from "@/content/accounts";
+import {formatAddress,optionLabel,rows} from "./AccountDashboardLayout";
 import {LogoutButton} from "./LogoutButton";
 import styles from "./dashboard.module.css";
 
@@ -11,7 +13,10 @@ import styles from "./dashboard.module.css";
  */
 export function DistributorAccountDashboard({account}:{account:DistributorAccount}){
  const approved=account.canAccessDistributorFeatures;
- const profile:[string,string][]=[["Name",account.name],["Business",account.company],["Email",account.email],["Phone",account.phone??"Not provided"],["City and state",account.location??"Not provided"],["Account status",approved?"Approved distributor":"Pending review"]];
+ const details=account.profile;
+ const yesNo=(value:boolean|undefined)=>value===undefined?null:value?"Yes":"No";
+ // Accounts registered before D-138 have no profile details; those rows are simply left out.
+ const profile=rows([["Contact person",account.name],["Position",details.position],["Business",account.company],["Type of business",optionLabel(businessTypes,details.businessType)],["CAC number",details.cacNumber],["Email",account.email],["Phone",account.phone??"Not provided"],["Business address",formatAddress(details.address)??account.location??"Not provided"],["Areas to supply",details.supplyAreas],["Expected monthly volume",optionLabel(monthlyVolumes,details.monthlyVolume)],["Storage space",yesNo(details.hasStorage)],["Own delivery vehicle",yesNo(details.hasVehicle)],["Account status",approved?"Approved distributor":"Pending review"]]);
  return <main id="main" className="flex-1 bg-ivory-50"><Container size="wide" className="py-6 lg:py-10"><div className={styles.layout}>
  <aside className={styles.sidebar} aria-label="Distributor dashboard navigation"><div className="flex items-center gap-3 border-b border-line-dark p-6"><span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-gold-600 bg-forest-700 font-serif text-2xl text-gold-500" aria-hidden="true">{(account.name[0]??"D").toUpperCase()}</span><div className="min-w-0"><p className="font-serif text-xl font-semibold">Distributor portal</p><p className="mt-1 truncate text-xs uppercase tracking-widest text-gold-500">{account.company}</p></div></div>
  <nav aria-label="Dashboard" className="grid gap-1 p-3"><a href="#dashboard-overview" className={styles.active}><Icon name="layers"/>Overview</a><a href="#account-profile"><Icon name="user"/>My profile</a><Link href="/shop"><Icon name="shopping-cart"/>Browse products</Link><Link href="/contact"><Icon name="message-circle"/>Help & support</Link></nav>

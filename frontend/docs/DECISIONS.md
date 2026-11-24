@@ -293,3 +293,14 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
 - Delivery: step 1 backend roles (this entry); step 2 role-based registration, login and dashboards (`/account/dashboard` for customers and distributors, `/driver`, `/admin`); step 3 mock order-to-driver assignment. No real-time matching, GPS or order database yet. The separate `/auth/admin` environment login is retired after step 2 moves `/admin` to Express admin sessions.
 - Deploy order: API before frontend. The change is backward compatible with the current storefront (distributor registration unchanged).
 - **Step 2 done (2026-11-24):** `/account/register` has an account-type picker (Customer default; `?type=driver` and `?type=distributor` are shareable links) with per-type fields and copy from `content/accounts.ts`. Login sends each role to `dashboardPath()` (`lib/account/roles.ts`): customers and distributors `/account/dashboard`, drivers `/driver`, admins `/admin`. Each dashboard re-checks the role on the server and redirects others to their own. `/admin` still uses its separate login until the admin step.
+
+## D-138 — Per-type registration forms and driver identity
+
+**APPROVED 2026-11-24 (owner: "the forms should be customised based on the type"; chose ID number only (no photo upload), CAC number optional, no guarantor or emergency contact).**
+
+- **Customer:** name, phone, delivery address (street, city, state), sign-in details.
+- **Driver:** name, phone, date of birth (18–80), ID type (NIN or driver's licence) and number, licence expiry (licence only, not expired), home address, vehicle type, plate number, delivery areas, availability.
+- **Distributor:** contact name and position, business name and type, optional CAC number (RC/BN/IT + digits), business address, areas to supply, expected monthly volume, storage space and own vehicle (yes/no).
+- Non-sensitive details are stored in `auth.users.profile` (JSONB, ≤ 4 KB, validated field by field in `validation.mjs`) and returned by `/me`.
+- **Driver ID numbers** go to `auth.driver_identities` in the same statement as the account. `rocktama_api` may INSERT but never SELECT, UPDATE or DELETE that table; the profile keeps only the ID type and last four characters. Reading full numbers for verification needs a separate, later-approved staff role. Database backups (`pg_dump`) include these numbers, so backups must stay private.
+- The pre-D-137 distributor payload (no `accountType`) is still accepted for older clients.

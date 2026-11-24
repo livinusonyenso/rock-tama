@@ -18,6 +18,44 @@ export const vehicleTypes: readonly { value: VehicleType; label: string }[] = [
   { value: "truck", label: "Truck" },
 ];
 
+export type IdType = "drivers_licence" | "nin";
+export type Availability = "full_time" | "part_time" | "weekends";
+export type BusinessType = "retailer" | "supermarket" | "hotel_restaurant" | "wholesaler" | "sub_distributor" | "other";
+export type MonthlyVolume = "under_50" | "50_200" | "200_500" | "over_500";
+
+type Option<T extends string> = { value: T; label: string };
+
+/** Options shared by the registration forms and dashboards (D-138). Values match the Express API. */
+export const idTypes: readonly Option<IdType>[] = [
+  { value: "nin", label: "National Identification Number (NIN)" },
+  { value: "drivers_licence", label: "Driver’s licence" },
+];
+export const availabilities: readonly Option<Availability>[] = [
+  { value: "full_time", label: "Full-time" },
+  { value: "part_time", label: "Part-time" },
+  { value: "weekends", label: "Weekends only" },
+];
+export const businessTypes: readonly Option<BusinessType>[] = [
+  { value: "retailer", label: "Shop or retailer" },
+  { value: "supermarket", label: "Supermarket" },
+  { value: "hotel_restaurant", label: "Hotel, restaurant or caterer" },
+  { value: "wholesaler", label: "Wholesaler" },
+  { value: "sub_distributor", label: "Sub-distributor" },
+  { value: "other", label: "Other" },
+];
+export const monthlyVolumes: readonly Option<MonthlyVolume>[] = [
+  { value: "under_50", label: "Under 50 cartons a month" },
+  { value: "50_200", label: "50–200 cartons a month" },
+  { value: "200_500", label: "200–500 cartons a month" },
+  { value: "over_500", label: "Over 500 cartons a month" },
+];
+/** Nigeria's 36 states and the FCT. */
+export const nigerianStates: readonly string[] = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo",
+  "Ekiti", "Enugu", "FCT (Abuja)", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos",
+  "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+];
+
 /** The left-hand panel of the account pages. */
 export type AccountPanel = {
   eyebrow: string;
@@ -33,8 +71,8 @@ type AccountTypeCopy = {
   summary: string;
   icon: IconName;
   panel: AccountPanel;
-  /** Label for the location field: where they want delivery, operate, or trade. */
-  locationLabel: string;
+  /** Heading of the address section: delivery, home or business address. */
+  addressLegend: string;
   submit: string;
   consent: string;
   intro: string;
@@ -82,7 +120,7 @@ export const accountCopy = {
         ],
         note: "Customer accounts can be used as soon as you register.",
       },
-      locationLabel: "Delivery city and state",
+      addressLegend: "Delivery address",
       submit: "Create customer account",
       consent: "I agree that ROCK-TAMA may use these details to manage my account and contact me about my orders.",
       intro: "Your customer account is ready to use as soon as you register.",
@@ -107,9 +145,9 @@ export const accountCopy = {
         ],
         note: "Registering is an application. Our team confirms each driver before any deliveries are assigned.",
       },
-      locationLabel: "City and state you operate in",
+      addressLegend: "Home address",
       submit: "Apply as a driver",
-      consent: "I agree that ROCK-TAMA may use these details to review my driver application and contact me about deliveries.",
+      consent: "I agree that ROCK-TAMA may use these details, including my ID number, to verify my identity, review my driver application and contact me about deliveries. My ID number is stored securely and used only for verification.",
       intro: "Driver applications are reviewed by our logistics team before deliveries are assigned.",
       received: {
         heading: "Application received",
@@ -132,7 +170,7 @@ export const accountCopy = {
         ],
         note: "Creating an account is separate from distributor approval. Our team confirms eligibility and commercial terms.",
       },
-      locationLabel: "City and state",
+      addressLegend: "Business address",
       submit: "Create distributor account",
       consent: "I agree that ROCK-TAMA may use these details to manage my distributor account and contact me about my application.",
       intro: "New applications are reviewed by our team before distributor access is granted.",
