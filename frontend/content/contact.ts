@@ -13,7 +13,6 @@ export const contact = {
   eyebrow: "Contact Us",
   title: "Get in Touch",
   description: "Questions about our water, an order or regular supply? Message us on WhatsApp or send an email.",
-  placeholderNotice: "The email address is a placeholder. The real email will be added before launch.",
   whatsapp: {
     placeholder: false,
     title: "WhatsApp",
@@ -23,6 +22,14 @@ export const contact = {
     number: enquiryWhatsAppNumber,
     greeting: "Hello ROCK-TAMA, I would like to ask about your spring water.",
     action: "Chat on WhatsApp",
+  },
+  phone: {
+    title: "Call Us",
+    text: "Speak to our team about orders, delivery and availability.",
+    display: "+234 903 401 8849",
+    /** tel: link target in international format. */
+    tel: `+${enquiryWhatsAppNumber}`,
+    action: "Call Now",
   },
   email: {
     placeholder: true,

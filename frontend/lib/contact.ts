@@ -12,6 +12,11 @@ export function whatsappHref(): string | null {
   return whatsappChatHref(number, greeting);
 }
 
+/** tel: link so phones open the dialler. */
+export function phoneHref(): string {
+  return `tel:${contact.phone.tel}`;
+}
+
 /** mailto link with a subject, or null while the address is a placeholder. */
 export function emailHref(): string | null {
   const { placeholder, address, subject } = contact.email;

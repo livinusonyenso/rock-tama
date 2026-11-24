@@ -1,7 +1,7 @@
 import { Icon } from "@/components/icons/Icon";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { contact } from "@/content/contact";
-import { emailHref, whatsappHref } from "@/lib/contact";
+import { emailHref, phoneHref, whatsappHref } from "@/lib/contact";
 import { resolveHref } from "@/lib/navigation";
 import type { IconName } from "@/types/content";
 
@@ -21,18 +21,13 @@ type ContactChannelsProps = {
 export function ContactChannels({ headingLevel: Heading = "h2", withWholesale = true }: ContactChannelsProps) {
   const channels: Channel[] = [
     { id: "whatsapp", icon: "message-circle", title: contact.whatsapp.title, value: contact.whatsapp.display, text: contact.whatsapp.text, action: contact.whatsapp.action, href: whatsappHref() },
+    { id: "phone", icon: "phone", title: contact.phone.title, value: contact.phone.display, text: contact.phone.text, action: contact.phone.action, href: phoneHref() },
     { id: "email", icon: "mail", title: contact.email.title, value: contact.email.address, text: contact.email.text, action: contact.email.action, href: emailHref() },
   ];
-  const showNotice = contact.whatsapp.placeholder || contact.email.placeholder;
 
   return (
     <>
-      {showNotice && (
-        <p data-contact-placeholder="" className="mb-6 rounded-card border border-gold-600/60 bg-cream-200 px-4 py-3 text-sm text-ink-900">
-          {contact.placeholderNotice}
-        </p>
-      )}
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {channels.map((channel) => (
           <li key={channel.id} data-channel={channel.id}>
             <article aria-labelledby={`contact-${channel.id}`} className="flex h-full flex-col rounded-card border border-line-card bg-cream-200 p-6 shadow-card lg:p-8">

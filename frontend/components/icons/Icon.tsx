@@ -2,6 +2,7 @@ import type { ComponentType, SVGProps } from "react";
 import {
   ArrowRight,
   MapPin,
+  Phone,
   Leaf,
   House,
   Package,
@@ -60,6 +61,7 @@ type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { strokeWidth?: num
 // without an icon here is a compile error.
 const icons: Record<IconName, IconComponent> = {
   "map-pin": MapPin,
+  phone: Phone,
   leaf: Leaf,
   layers: Layers,
   truck: Truck,

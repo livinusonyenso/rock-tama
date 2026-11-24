@@ -77,6 +77,7 @@ export type IconName =
   | "layers"
   | "mail"
   | "message-circle"
+  | "phone"
   | "quote"
   | "instagram"
   | "facebook"
