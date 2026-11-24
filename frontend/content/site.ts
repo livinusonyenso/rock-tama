@@ -1,4 +1,6 @@
 import type { SiteConfig } from "@/types/content";
+import { enquiryWhatsAppNumber } from "@/content/contact";
+import { whatsappChatHref } from "@/lib/contact";
 
 const name = "ROCK-TAMA";
 const productLine = "Natural Spring Water";
@@ -38,6 +40,7 @@ export const site: SiteConfig = {
       id: "delivery",
       icon: "truck",
       text: "Ask About Delivery to Your Area",
+      href: whatsappChatHref(enquiryWhatsAppNumber, "Hello ROCK-TAMA, do you deliver to my area?"),
       placement: "start",
       priority: 1,
     },

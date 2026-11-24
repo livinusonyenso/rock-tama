@@ -1,9 +1,12 @@
 import { Icon } from "@/components/icons/Icon";
 import { TestimonialSlider } from "@/components/home/TestimonialSlider";
+import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { enquiryWhatsAppNumber } from "@/content/contact";
 import { testimonials } from "@/content/testimonials";
+import { whatsappChatHref } from "@/lib/contact";
 
 /**
  * Customer testimonials: server-rendered card design with a lightweight continuous-motion island.
@@ -38,6 +41,16 @@ export function TestimonialsSection() {
             ))}
           </TestimonialSlider>
         </Reveal>
+        <div className="mt-6 text-center">
+          <ButtonLink
+            href={whatsappChatHref(enquiryWhatsAppNumber, testimonials.shareMessage)}
+            variant="outline-light"
+            surface="light"
+            icon="message-circle"
+          >
+            {testimonials.shareLabel}
+          </ButtonLink>
+        </div>
       </Container>
     </section>
   );

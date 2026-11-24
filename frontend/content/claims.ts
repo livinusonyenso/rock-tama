@@ -28,10 +28,15 @@ export const claims = {
   preservedNaturalPurity: { text: "Preserved Natural Purity", status: "unverified", evidence: "Documented handling/process and relevant current analyses supporting preservation of natural purity; rendered in homepage origin, evidence pending" },
   ultraPure: { text: "Ultra Pure", status: "unverified", evidence: "Lab analysis supporting a purity claim; owner approval of the marketing wording" },
   bottledAtSource: { text: "Bottled at Source", status: "unverified", evidence: "Confirmation that bottling takes place at the spring site" },
+  naturalSpringWaterBottledAtSource: { text: "Natural Spring Water • Bottled at Source", status: "unverified", evidence: "Source documentation and confirmation that bottling takes place at the spring site" },
+  sensoryQuality: { text: "Colourless • Odourless • Pure Taste", status: "unverified", evidence: "Current sensory and laboratory evidence supporting the colour, odour and taste claims" },
   lowTds: { text: "Low TDS (6–8 mg/L)", status: "unverified", evidence: "Current lab report showing total dissolved solids of 6–8 mg/L" },
+  lowTdsAndPh: { text: "Low TDS (8 mg/L) • pH 6.58", status: "unverified", evidence: "Current lab report showing 8 mg/L total dissolved solids and pH 6.58" },
   heavyMetalsNotDetected: { text: "Heavy Metals Not Detected", status: "unverified", evidence: "Lab report covering the heavy-metal panel with detection limits" },
   pathogensAbsent: { text: "Pathogens Absent", status: "unverified", evidence: "Microbiological lab report" },
+  pesticidesNotDetected: { text: "Pesticides Not Detected", status: "unverified", evidence: "Lab report covering the pesticide panel with detection limits" },
   labTested: { text: "Lab Tested", status: "unverified", evidence: "Name/accreditation of the testing laboratory and test frequency" },
+  labTestedAndNafdacRegistered: { text: "Lab Tested • NAFDAC Registered", status: "unverified", evidence: "Testing laboratory, accreditation and frequency, and a current NAFDAC registration covering this product" },
   rockFiltered: { text: "Naturally filtered through ancient rock formations", status: "unverified", evidence: "Hydrogeological survey or equivalent (hero description)" },
 } as const satisfies Record<string, Claim>;
 

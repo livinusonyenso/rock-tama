@@ -14,6 +14,7 @@ const visibilityByPriority: Record<AnnouncementPriority, string> = {
 };
 
 const divider = "before:h-3 before:w-px before:shrink-0 before:bg-line-dark-strong lg:before:h-4";
+const itemLayout = "flex min-w-0 items-center gap-2.5 lg:gap-3";
 
 /** Top-of-page store information strip (UI_BREAKDOWN §01). Server Component. */
 export function AnnouncementBar() {
@@ -26,28 +27,42 @@ export function AnnouncementBar() {
       {/* xl:pl-bar-inset: fluid left inset, 32px at 1280 → 88px at 1440 as measured in the reference (V-008) */}
       <Container size="wide" className="xl:pl-bar-inset">
         <ul className="flex min-h-announcement flex-wrap items-center justify-center gap-x-3.5 gap-y-1 py-2 text-sm sm:justify-start lg:gap-x-4 lg:text-base">
-          {messages.map((message, index) => (
-            <li
-              key={message.id}
-              className={[
-                visibilityByPriority[message.priority],
-                "items-center gap-2.5 lg:gap-3",
-                index > 0 && divider,
-                message === end[0] && "sm:ml-auto",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              {message.icon && (
-                <Icon
-                  name={message.icon}
-                  strokeWidth={1.75}
-                  className="size-4 shrink-0 text-gold-500 lg:size-6"
-                />
-              )}
-              <span>{message.text}</span>
-            </li>
-          ))}
+          {messages.map((message, index) => {
+            const content = (
+              <>
+                {message.icon && (
+                  <Icon
+                    name={message.icon}
+                    strokeWidth={1.75}
+                    className="size-4 shrink-0 text-gold-500 lg:size-6"
+                  />
+                )}
+                <span>{message.text}</span>
+              </>
+            );
+
+            return (
+              <li
+                key={message.id}
+                className={[
+                  visibilityByPriority[message.priority],
+                  "items-center gap-2.5 lg:gap-3",
+                  index > 0 && divider,
+                  message === end[0] && "sm:ml-auto",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {message.href ? (
+                  <a href={message.href} className={`${itemLayout} focus-ring-dark underline underline-offset-2 hover:text-gold-500`}>
+                    {content}
+                  </a>
+                ) : (
+                  <span className={itemLayout}>{content}</span>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </Container>
     </aside>

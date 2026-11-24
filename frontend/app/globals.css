@@ -251,18 +251,18 @@
 /* One stationary decorative waterfall; shade the copy column rather than animating scenery. */
 .hero-background-image { object-position: 65% center; }
 .hero-background-overlay { background: rgb(6 39 30 / .86); }
-.hero-carousel { position: relative; display: grid; gap: 1.5rem; padding-block: 2.5rem 1.5rem; }
-.hero-carousel-copy { min-width: 0; align-self: center; }
+.hero-carousel { position: relative; display: grid; grid-template-areas: "image" "copy"; gap: 1.5rem; padding-block: 2.5rem 1.5rem; }
+.hero-carousel-copy { grid-area: copy; min-width: 0; align-self: center; }
 .hero-copy-stack { display: grid; }
 .hero-slide-copy { grid-area: 1 / 1; min-width: 0; visibility: hidden; pointer-events: none; }
 .hero-slide-copy[data-active="true"] { visibility: visible; pointer-events: auto; }
-.hero-bottle-stage { position: relative; width: min(100%, 18rem); height: 20rem; margin-inline: auto; touch-action: pan-y; }
+.hero-bottle-stage { grid-area: image; position: relative; width: min(100%, 18rem); height: 20rem; margin-inline: auto; touch-action: pan-y; }
 .hero-bottle-frame { position: absolute; inset: 0; transition: opacity 450ms var(--ease-out-soft), translate 450ms var(--ease-out-soft); }
 .hero-carousel-controls { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem 1.5rem; padding: .5rem; border-radius: var(--radius-button); background: rgb(6 39 30 / .92); justify-self: center; max-width: 100%; }
 @media (min-width: 48rem) {
   .hero-background-image { object-position: center; }
   .hero-background-overlay { background: linear-gradient(90deg, rgb(6 39 30 / .94), rgb(6 39 30 / .86) 58%, rgb(6 39 30 / .2) 78%, rgb(6 39 30 / .12)); }
-  .hero-carousel { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.5rem; }
+  .hero-carousel { grid-template-areas: "copy image"; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 1.5rem; }
   .hero-bottle-stage { width: min(100%, 22rem); height: 26rem; align-self: center; }
 }
 @media (min-width: 64rem) {

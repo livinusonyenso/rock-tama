@@ -33,6 +33,9 @@ export function MobileNav({ label, closeLabel, openIcon, closeIcon, children }: 
     if (!dialog || !button) return;
 
     const onClose = () => {
+      for (const details of dialog.querySelectorAll<HTMLDetailsElement>("nav details[open]")) {
+        details.open = false;
+      }
       setOpen(false);
       buttonRef.current?.focus();
     };

@@ -25,7 +25,7 @@ const drawerActions = headerActions.filter((action) => action.id !== "cart");
 /**
  * Drawer contents (Server Component, passed to MobileNav as children so it adds
  * no client JavaScript beyond NavLink). Uses the same data and resolvers as the
- * desktop header. Dropdown items (Shop) render their available children as an indented list (F2).
+ * desktop header. Shop uses a native disclosure for its product links.
  */
 export function MobileNavPanel() {
   return (
@@ -35,21 +35,24 @@ export function MobileNavPanel() {
           {mainNav.map((item) => {
             const children = resolveNavChildren(item);
             if (item.children && children.length > 0) {
-              // Dropdown items become a labelled group with an indented list of their available links.
+              const labelId = `mobile-${item.route}-label`;
               return (
                 <li key={item.label}>
-                  <p id={`mobile-${item.label}`} className={`${mainRowClass} cursor-default`}>
-                    {item.label}
-                  </p>
-                  <ul aria-labelledby={`mobile-${item.label}`} className="pb-3 pl-8">
-                    {children.map((child) => (
-                      <li key={child.href}>
-                        <NavLink href={child.href} tone="dark" className={childRowClass}>
-                          {child.label}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
+                  <details className="group">
+                    <summary id={labelId} className={`${mainRowClass} focus-ring-dark cursor-pointer list-none pr-3 hover:text-gold-500 [&::-webkit-details-marker]:hidden`}>
+                      {item.label}
+                      <Icon name="chevron-down" strokeWidth={2} className="size-5 shrink-0 text-gold-500 group-open:rotate-180 motion-safe:transition-transform" />
+                    </summary>
+                    <ul aria-labelledby={labelId} className="ml-4 border-l border-line-dark/40 pb-2 pl-3">
+                      {children.map((child) => (
+                        <li key={child.href}>
+                          <NavLink href={child.href} tone="dark" className={childRowClass}>
+                            {child.label}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
                 </li>
               );
             }

@@ -126,6 +126,7 @@ export type AnnouncementMessage = {
   id: string;
   text: string;
   icon?: IconName;
+  href?: string;
   /** Side of the bar on wider screens, as in the reference. */
   placement: "start" | "end";
   priority: AnnouncementPriority;

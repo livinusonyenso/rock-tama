@@ -1,9 +1,17 @@
 import type { Highlight } from "@/types/content";
 
-/**
- * Homepage purity / trust strip (UI_BREAKDOWN §04), in reference order. Every item is a claim
- * (content/claims.ts) that needs evidence before publication.
- */
+/** The trust strip uses the exact wording from the claims register. */
+export const homePurityHighlights: readonly Pick<Highlight, "icon" | "claim">[] = [
+  { icon: "mountain-snow", claim: "naturalSpringWaterBottledAtSource" },
+  { icon: "droplet", claim: "sensoryQuality" },
+  { icon: "waves", claim: "lowTdsAndPh" },
+  { icon: "flask-conical", claim: "heavyMetalsNotDetected" },
+  { icon: "bug-off", claim: "pathogensAbsent" },
+  { icon: "leaf", claim: "pesticidesNotDetected" },
+  { icon: "clipboard-check", claim: "labTestedAndNafdacRegistered" },
+];
+
+/** Quality highlights used on the shop and product pages. */
 export const purityHighlights: readonly Highlight[] = [
   { icon: "droplet", label: "Ultra Pure", claim: "ultraPure" },
   { icon: "mountain-snow", label: "Bottled\nat Source", claim: "bottledAtSource" },

@@ -16,7 +16,7 @@ export async function SiteFooter() {
       <Container size="wide">
         <div className="grid grid-cols-2 gap-8 py-8 md:grid-cols-3 xl:grid-cols-[1.1fr_1fr_1fr_1fr_2fr] xl:gap-8 xl:py-6">
           <div className="col-span-2 flex justify-center md:col-span-3 xl:col-span-1 xl:border-r xl:border-line-dark/70 xl:pr-8">
-            {homeHref ? <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring-dark self-start"><Logo variant="footer" /></Link> : <Logo variant="footer" />}
+            {homeHref ? <Link href={homeHref} aria-label={`${site.name} home`} className="focus-ring-dark max-w-full self-start"><Logo variant="footer" /></Link> : <Logo variant="footer" />}
           </div>
           {footer.groups.map(group => (
             <nav key={group.heading} aria-labelledby={`footer-${group.heading.toLowerCase()}`} className="min-w-0">

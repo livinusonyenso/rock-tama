@@ -1,3 +1,6 @@
+/** WhatsApp number used by enquiry links, in international digits-only format. */
+export const enquiryWhatsAppNumber = "2349034018849";
+
 /**
  * Contact channels (D-111). Owner: WhatsApp number + email.
  * PLACEHOLDERS until the owner supplies the real details: replace `display`/`number`/`address` and set

@@ -296,3 +296,57 @@ node deploy/smoke-staging.mjs --shop rocktamanaturalsprings.com \
 node deploy/verify-d1-browser.mjs --shop https://rocktamanaturalsprings.com \
   --api https://api.rocktamanaturalsprings.com
 ```
+
+## Automatic staging deployment from GitHub
+
+Pushes to `refactor/frontend-backend-structure` trigger `Deploy ROCK-TAMA staging`. This is the branch that contains the EC2 deployment stack. The workflow runs backend unit tests and frontend lint, builds the AMD64 images for the full Git SHA, publishes missing tags to ECR, and calls the existing EC2 deployment script through Systems Manager. The host takes its normal database backup before switching releases. GitHub then checks the public storefront and API readiness over HTTPS. A rerun reuses any images already published for that SHA. GitHub serializes deployments to the instance.
+
+### One-time connection
+
+Run from the repository root with an AWS administrator authorized to configure IAM. Confirm the account prints `638486126885`.
+
+```bash
+export AWS_PROFILE=rocktama-dev AWS_REGION=eu-north-1
+aws login --profile "$AWS_PROFILE"
+aws sts get-caller-identity --query Account --output text
+aws iam get-open-id-connect-provider \
+  --open-id-connect-provider-arn arn:aws:iam::638486126885:oidc-provider/token.actions.githubusercontent.com \
+  --query ClientIDList
+```
+
+If the provider is absent, create it once. If it already exists, confirm its audience list includes `sts.amazonaws.com` before proceeding.
+
+```bash
+aws iam create-open-id-connect-provider \
+  --url https://token.actions.githubusercontent.com --client-id-list sts.amazonaws.com
+```
+
+Review the included trust and permissions policies, then create a dedicated deployment role if it does not exist. The trust policy uses this repository's immutable GitHub subject and matches only the deployment branch. The role can publish to the four existing ECR repositories and send a shell command to the staging instance. Give deployment-branch write access to people trusted to operate that host. [GitHub OIDC subject reference](https://docs.github.com/en/actions/reference/security/oidc)
+
+```bash
+aws iam create-role --role-name rocktama-github-deploy \
+  --assume-role-policy-document file://deploy/aws/github-deploy-trust-policy.json
+aws iam put-role-policy --role-name rocktama-github-deploy --policy-name PublishAndDeployStaging \
+  --policy-document file://deploy/aws/github-deploy-policy.json
+gh variable set ROCKTAMA_AWS_DEPLOY_ROLE_ARN --repo livinusonyenso/rock-tama \
+  --body arn:aws:iam::638486126885:role/rocktama-github-deploy
+```
+
+The ARN is a repository variable. GitHub obtains temporary AWS credentials through OIDC. The existing EC2 instance role pulls images and the existing server-side secret files supply application credentials.
+
+### First release and verification
+
+Review and commit the release, then push to the deployment branch when ready to publish. Every new deployment can add ECR image storage. Check EC2 free disk space periodically because the deployment script retains its local database backups. [Amazon ECR pricing](https://aws.amazon.com/ecr/pricing/)
+
+```bash
+git push origin HEAD:refactor/frontend-backend-structure
+```
+
+Open **Actions → Deploy ROCK-TAMA staging** in the GitHub repository. A successful deployment shows the same full Git SHA in the EC2 release output and finishes both HTTPS checks.
+
+```bash
+curl -fsS -o /dev/null -w '%{http_code}\n' https://rocktamanaturalsprings.com/
+curl -fsS https://api.rocktamanaturalsprings.com/health/ready
+```
+
+If the workflow fails, check its test output and the SSM command result in the deployment step. Rerun the failed job to retry the same release. Use the existing rollback procedure if a deployed release must be rolled back. [Restore, rollback and updates](#7-restore-rollback-and-updates)

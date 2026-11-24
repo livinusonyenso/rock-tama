@@ -11,6 +11,8 @@ import {adminJourneys} from "./admin-check.config.mjs";
 const MENU_BUTTON_SELECTOR = 'button[aria-controls="mobile-nav"]';
 const MENU_BUTTON = `document.querySelector('${MENU_BUTTON_SELECTOR}')`;
 const DRAWER = 'document.getElementById("mobile-nav")';
+const MOBILE_SHOP_SELECTOR = "#mobile-shop-label";
+const MOBILE_SHOP = `document.querySelector('${MOBILE_SHOP_SELECTOR}').parentElement`;
 const MOBILE = ["small", "mobile", "tablet"];
 const HERO = 'document.querySelector(\'section[aria-labelledby="hero-heading"]\')';
 const HERO_ANIMATED = `[...${HERO}.querySelectorAll('[class*="animate-enter"]')]`;
@@ -126,9 +128,8 @@ const config = {
       name: "trust",
       page: "home",
       selector: 'section[aria-label="Purity highlights"]',
-      reference: { x: 0, y: 492, width: 1086, height: 88 },
       expect: [
-        { name: "6 highlights in a list", js: "document.querySelectorAll('section[aria-label=\"Purity highlights\"] ul > li').length === 6" },
+        { name: "7 highlights exposed to assistive technology", js: "document.querySelectorAll('section[aria-label=\"Purity highlights\"] ul:not([aria-hidden]) > li').length === 7 && document.querySelectorAll('section[aria-label=\"Purity highlights\"] ul[aria-hidden=true] > li').length === 7" },
         { name: "every highlight references a registered claim", js: "[...document.querySelectorAll('section[aria-label=\"Purity highlights\"] li')].every(li => Boolean(li.dataset.claim))" },
         { name: "icons hidden from assistive technology", js: "[...document.querySelectorAll('section[aria-label=\"Purity highlights\"] svg')].every(svg => svg.getAttribute('aria-hidden') === 'true')" },
       ],
@@ -251,8 +252,8 @@ const config = {
     {
       name: "brand-assets", page: "home", selector: "body > header",
       expect: [
-        {name:"header and footer use supplied logos with meaningful alt and no filters",js:"[document.querySelector('header img'),document.querySelector('footer img')].every(i=>i?.alt==='ROCK-TAMA' && getComputedStyle(i).filter==='none' && Math.abs(i.width/i.height-Number(i.getAttribute('width'))/Number(i.getAttribute('height')))<0.06)"},
-        {name:"footer dark lettering has ivory contrast backing",js:"getComputedStyle(document.querySelector('footer img').parentElement).backgroundColor==='rgb(249, 244, 237)'"},
+        {name:"header and footer logos keep their aspect ratios and alt text",js:"[document.querySelector('header img'),document.querySelector('footer img')].every(i=>i?.alt==='ROCK-TAMA' && Math.abs(i.width/i.height-Number(i.getAttribute('width'))/Number(i.getAttribute('height')))<0.06)"},
+        {name:"footer logo uses a light mark on phones and ivory backing at wider sizes",js:"(() => { const logo=document.querySelector('footer img'); const filter=getComputedStyle(logo).filter; const backing=getComputedStyle(logo.parentElement).backgroundColor; return innerWidth<768 ? filter==='brightness(0) invert(1)' && backing==='rgba(0, 0, 0, 0)' : filter==='none' && backing==='rgb(249, 244, 237)'; })()"},
       ],
     },
     ...rangeMediaJourneys(),
@@ -342,6 +343,7 @@ const config = {
       expect: [
         { name: "drawer open as modal (top layer, background inert)", js: `${DRAWER}.open && ${DRAWER}.matches(":modal")` },
         { name: "aria-expanded true", js: `${MENU_BUTTON}.getAttribute("aria-expanded") === "true"` },
+        { name: "Shop products start collapsed", js: `!${MOBILE_SHOP}.open && !${MOBILE_SHOP}.querySelector("a").checkVisibility()` },
         { name: "focus moved into drawer", js: `${DRAWER}.contains(document.activeElement)` },
         { name: "background scroll locked", js: `getComputedStyle(document.documentElement).overflow === "hidden"` },
         { name: "drawer within viewport (not clipped)", js: `(() => { const r = ${DRAWER}.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth + 0.5 && r.top >= 0 && r.bottom <= innerHeight + 0.5; })()` },
@@ -695,12 +697,23 @@ function functionalJourneys() {
       javascript: false,
       expect: [{ name: "without JS, Shop is a working link to /shop", js: "document.querySelector('header nav a[href=\"/shop\"]')?.textContent.trim().startsWith('Shop') === true" }],
     },
-    // -- Mobile Shop list --
+    // -- Mobile Shop disclosure --
     {
       ...base,
       name: "mobile-shop-list",
       page: "home",
-      actions: [{ click: 'button[aria-controls="mobile-nav"]' }, { click: '#mobile-nav a[href="/shop/1-5l-bottle"]' }, { waitFor: "location.pathname === '/shop/1-5l-bottle'" }],
+      viewports: MOBILE,
+      actions: [
+        { click: MENU_BUTTON_SELECTOR },
+        { waitFor: `!${MOBILE_SHOP}.open` },
+        { click: MOBILE_SHOP_SELECTOR },
+        { waitFor: `${MOBILE_SHOP}.open && [...${MOBILE_SHOP}.querySelectorAll("a")].every(a => a.checkVisibility())` },
+        { click: MOBILE_SHOP_SELECTOR },
+        { waitFor: `!${MOBILE_SHOP}.open` },
+        { click: MOBILE_SHOP_SELECTOR },
+        { click: '#mobile-nav a[href="/shop/1-5l-bottle"]' },
+        { waitFor: `location.pathname === '/shop/1-5l-bottle' && document.querySelector('#shop-heading') && !${MOBILE_SHOP}.open` },
+      ],
       expect: [
         { name: "drawer lists Shop's 4 links in a labelled group", js: "[...document.querySelectorAll('#mobile-nav ul[aria-labelledby] a')].length === 4" },
         { name: "tapping a product opens the storefront with its 1.5 L pack preselected and closes the drawer", js: "(()=>{const m=[...document.querySelectorAll('main')].find(e=>e.checkVisibility());return !!m && m.querySelector('nav[aria-label=Breadcrumb] [aria-current=page]')?.textContent==='1.5 L Bottle' && m.querySelector('[data-pack=\"1500-carton\"] [data-pack-view]')?.getAttribute('aria-pressed')==='true' && !!m.querySelector('#shop-heading');})() && !document.getElementById('mobile-nav').open" },

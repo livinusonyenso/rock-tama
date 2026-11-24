@@ -9,6 +9,8 @@ export const testimonials = {
   sampleNotice: "Sample testimonials for preview. They will be replaced with real customer feedback before launch.",
   eyebrow: "Testimonials",
   heading: "What Our Customers Say",
+  shareLabel: "Share your testimonial on WhatsApp",
+  shareMessage: "Hello ROCK-TAMA, I'd like to share my testimonial:",
   items: [
     { quote: "Our guests have started asking for ROCK-TAMA by name, and deliveries arrive when agreed, which matters for a busy hotel.", role: "Front Office Manager", place: "Hotel, Awka" },
     { quote: "The carton packs move well on our shelves, and the team responds quickly whenever we need to restock.", role: "Store Owner", place: "Supermarket, Onitsha" },

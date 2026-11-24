@@ -41,18 +41,29 @@ type LogoProps = {
 export function Logo({ variant, className, eager }: LogoProps) {
   const { asset, height, placeholder } = variants[variant];
   const sizing = className ?? height;
+  const siteFooter = variant === "footer" && !className;
 
   if (asset.available) {
+    const frameClass = siteFooter
+      ? "inline-flex max-w-full rounded-button md:bg-ivory-100 md:p-3 forced-colors:bg-ivory-100 forced-colors:p-2 forced-colors:forced-color-adjust-none"
+      : variant === "footer" ? "inline-flex max-w-full rounded-button bg-ivory-100 p-3" : "inline-flex";
+    const imageSizes = {
+      header: "(min-width: 1280px) 163px, 122px",
+      footer: siteFooter ? "(min-width: 1024px) 200px, (min-width: 768px) 168px, 144px" : "(min-width: 1024px) 199px, 166px",
+    };
+
     return (
-      <span className={variant === "footer" ? "inline-flex max-w-full rounded-button bg-ivory-100 p-3" : "inline-flex"}>
+      <span className={frameClass}>
         <Image
           src={asset.src}
           alt={asset.alt}
           width={asset.width}
           height={asset.height}
-          sizes={variant === "header" ? "(min-width: 1280px) 163px, 122px" : "(min-width: 1024px) 199px, 166px"}
+          sizes={imageSizes[variant]}
           loading={eager || variant === "header" ? "eager" : "lazy"}
-          className={variant === "footer" && !className ? "h-auto w-42 object-contain lg:w-50" : `w-auto object-contain ${sizing}`}
+          className={siteFooter
+            ? "h-auto w-36 object-contain brightness-0 invert md:w-42 md:filter-none lg:w-50 forced-colors:filter-none"
+            : `w-auto object-contain ${sizing}`}
         />
       </span>
     );

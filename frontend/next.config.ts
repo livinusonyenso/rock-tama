@@ -5,6 +5,7 @@ import { launchPlaceholders } from "./content/launch";
 
 const nextConfig: NextConfig = {
   ...(process.env.ROCKTAMA_STANDALONE === "1" ? { output: "standalone" as const } : {}),
+  devIndicators: false,
   experimental: {
     agentFeedback: true,
     // D-124: bank-transfer receipts (≤ 4 MB) are uploaded through a Server Action; Vercel caps bodies at 4.5 MB.
