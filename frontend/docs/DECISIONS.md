@@ -282,3 +282,13 @@ PostgreSQL, Docker Compose, ECR and deployment require separate owner approval a
   - Backups: nightly and per-deploy `pg_dump`, plus daily EBS snapshots through DLM.
   - Migrations stay forward-only and compatible with the previous release.
 - **Account plan risk:** the Free plan ($100 credits, expiring 2027-05-18) suspends the account when the credits or the time run out. Upgrade to a paid plan before relying on the site.
+
+## D-137 — Account roles: customer, driver, distributor, admin
+
+**APPROVED 2026-11-24 (owner: "approved" to the role-based accounts briefing, with the recommended answers: distributors stay a self-registration type; admins sign in through the shared login with an Express account).**
+
+- Public registration chooses `customer`, `driver` or `distributor` (`accountType`, default distributor for older forms). Customers start approved; drivers and distributors wait for review. Drivers give a vehicle type; plate numbers and IDs wait for a real vetting step.
+- **Admins never self-register.** A database trigger (migration 005) rejects any other role from non-owner roles and sets the starting status itself. Admins are created only by `backend/src/create-admin.mjs` with the migrator connection.
+- `requireRole(...)` gates role routes; only approved accounts pass.
+- Delivery: step 1 backend roles (this entry); step 2 role-based registration, login and dashboards (`/account/dashboard` for customers and distributors, `/driver`, `/admin`); step 3 mock order-to-driver assignment. No real-time matching, GPS or order database yet. The separate `/auth/admin` environment login is retired after step 2 moves `/admin` to Express admin sessions.
+- Deploy order: API before frontend. The change is backward compatible with the current storefront (distributor registration unchanged).

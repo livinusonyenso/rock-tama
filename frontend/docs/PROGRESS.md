@@ -341,3 +341,7 @@ Scope: [D-136](DECISIONS.md#d-136--ec2-staging-topology-and-release-process-d2);
 ## 2026-11-21: staging update df7a850
 
 Deployed the franchise page and header/layout overflow fixes to `i-0ad28bbea578fa416`. Lint and tsc pass, and the Next.js production build succeeded inside the amd64 web image. web/db-bootstrap/edge were pushed to ECR under the full SHA; the API is unchanged, pinned by digest. SSM `deploy.sh` backed up the database first; all services are healthy. Public smoke test passed (HTTPS, ports, auth lifecycle), and `/franchise` returns 200. `npm run verify:visual` was not run for this change. Rollback: `deploy.sh rollback` returns to `ae9f789`.
+
+## 2026-11-24: account roles, step 1 (backend, D-137)
+
+Migration `005_account_roles.sql` (additive): roles customer/driver/distributor/admin, company required only for distributors, `vehicle_type` for drivers, and a trigger that refuses self-registered admins and sets the starting status per role. Registration accepts `accountType` (distributor by default, so the live form keeps working); `/me` returns `vehicleType` and a nullable `company`; `requireRole()` guard; `src/create-admin.mjs` operator script (password on stdin). Verified: backend unit 20/20, PostgreSQL integration 28/28 (new: per-role status, admin refused through the API and through direct SQL as `rocktama_api`, admin script and admin login). Migration 005 applied to the existing local dev database. Not deployed. Next: step 2, role-based registration/login and the customer, driver and admin dashboards.

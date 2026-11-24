@@ -37,17 +37,36 @@ function normalizeLabel(value, maximum) {
   return label;
 }
 
+export const accountTypes = ["customer", "driver", "distributor"];
+export const vehicleTypes = ["motorcycle", "tricycle", "van", "truck"];
+
+// Fields each self-service account type sends (D-137). `accountType` may be omitted for a distributor,
+// so forms built before account types keep working.
+const registrationFields = {
+  customer: ["email", "password", "name", "phone", "location", "consent", "accountType"],
+  driver: ["email", "password", "name", "phone", "location", "vehicleType", "consent", "accountType"],
+  distributor: ["email", "password", "name", "company", "phone", "location", "consent"],
+};
+
 export function validateRegistration(body) {
-  if (!exactFields(body, ["email", "password", "name", "company", "phone", "location", "consent"])) return null;
+  if (!body || typeof body !== "object" || Array.isArray(body)) return null;
+  const role = body.accountType ?? "distributor";
+  if (!accountTypes.includes(role)) return null;
+  const fields = registrationFields[role];
+  const expected = role === "distributor" && Object.hasOwn(body, "accountType") ? [...fields, "accountType"] : fields;
+  if (!exactFields(body, expected)) return null;
   const email = normalizeEmail(body.email);
   const name = normalizeLabel(body.name, 100);
-  const company = normalizeLabel(body.company, 150);
+  const company = role === "distributor" ? normalizeLabel(body.company, 150) : null;
   const phone = normalizePhone(body.phone);
   const location = normalizeLabel(body.location, 80);
+  const vehicleType = role === "driver" ? body.vehicleType : null;
   // Consent must be an explicit true; the form's required checkbox sends it.
-  if (!email || !name || !company || !phone || !location || [...location].length < 2) return null;
+  if (!email || !name || !phone || !location || [...location].length < 2) return null;
+  if (role === "distributor" && !company) return null;
+  if (role === "driver" && !vehicleTypes.includes(vehicleType)) return null;
   if (body.consent !== true || !validPassword(body.password, 15)) return null;
-  return { email, password: body.password, name, company, phone, location };
+  return { email, password: body.password, name, company, phone, location, role, vehicleType };
 }
 
 export function validateLogin(body) {

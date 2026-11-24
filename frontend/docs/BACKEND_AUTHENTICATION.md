@@ -17,7 +17,7 @@ Browsers use the storefront's `/api/v1/auth/*` (the gateway). The API itself is 
 
 | Method and path | Request | Success |
 |---|---|---|
-| `POST /register` | `email`, `password`, `name`, `company`, `phone`, `location`, `consent: true` | `202` with `{ "registration": { "status": "received" } }`, identical for new and existing emails. A new account starts pending; registration sets no cookie. |
+| `POST /register` | Distributor: `email`, `password`, `name`, `company`, `phone`, `location`, `consent: true`, optional `accountType: "distributor"`. Customer: the same without `company`, with `accountType: "customer"`. Driver: as customer plus `vehicleType` (`motorcycle`, `tricycle`, `van`, `truck`) and `accountType: "driver"`. Any other field, or `accountType: "admin"`, is `400`. (D-137) | `202` with `{ "registration": { "status": "received" } }`, identical for new and existing emails. The database sets the status: customers start `approved`, drivers and distributors `pending`. Registration sets no cookie. |
 | `POST /login` | `email`, `password` | `200` with `{ "user": … }` and a session cookie. |
 | `POST /logout` | Current session cookie | `204` with an empty body and a clearing cookie. |
 | `GET /me` | Current session cookie | `200` with `{ "user": … }`. |
@@ -70,6 +70,14 @@ Errors use `{ "error": { "code": "…", "message": "…" } }`. For example, an e
 | `429` | `rate_limited` | See [Rate limits](#rate-limits). `Retry-After` gives the seconds until the blocking counter resets. |
 | `500` | `internal_error` | An unexpected backend failure. |
 | `503` | `try_again` | Four password jobs are already running in this API process. Retry after one second. |
+
+## Account roles (D-137)
+
+- Roles: `customer`, `driver`, `distributor` (self-registration) and `admin` (operator only). `/me` and login return `role`, `status`, `company` (null except distributors) and `vehicleType` (null except drivers).
+- Migration `005_account_roles.sql` adds a `BEFORE INSERT` trigger. For any role other than the table owner it refuses roles outside the three public ones (`42501`) and sets the starting status from the role, so neither the API code nor direct SQL as `rocktama_api` can create an admin or self-approve.
+- Guards: `requireRole("driver")`, `requireRole("admin")` etc. after `requireSession`. Wrong role → `403 role_forbidden`; right role but not approved → `403 account_approval_required`.
+- Create an admin on a host (password on stdin, never on the command line):
+  `printf '%s' "$ADMIN_PASSWORD" | stack run --rm -T migrate node src/create-admin.mjs --email <email> --name "<name>"`. Locally, set `DATABASE_URL` to the migrator URL. An existing email is never changed.
 
 ## Rate limits
 

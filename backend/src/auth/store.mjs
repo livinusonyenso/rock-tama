@@ -1,13 +1,14 @@
-const publicUserColumns = "id, email, name, company, phone, location, role, status";
+const publicUserColumns = "id, email, name, company, phone, location, role, status, vehicle_type";
 
 // consented_at is the database time of this request; the request body only carries the explicit consent flag.
-export async function insertPendingUser(db, { email, name, company, phone, location }, passwordHash) {
+// The requested role is checked again, and the starting status chosen, by a database trigger (005).
+export async function insertRegisteredUser(db, { email, name, company, phone, location, role, vehicleType }, passwordHash) {
   const { rows } = await db.query(
-    `INSERT INTO auth.users (email, name, company, phone, location, consented_at, password_hash)
-     VALUES ($1, $2, $3, $4, $5, statement_timestamp(), $6)
+    `INSERT INTO auth.users (email, name, company, phone, location, role, vehicle_type, consented_at, password_hash)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, statement_timestamp(), $8)
      ON CONFLICT (email) DO NOTHING
      RETURNING ${publicUserColumns}`,
-    [email, name, company, phone, location, passwordHash],
+    [email, name, company, phone, location, role, vehicleType, passwordHash],
   );
   return rows[0];
 }
@@ -30,7 +31,7 @@ export async function insertSession(db, userId, tokenHash, previousHash) {
 
 export async function findSessionUser(db, tokenHash) {
   const { rows } = await db.query(
-    `SELECT u.id, u.email, u.name, u.company, u.phone, u.location, u.role, u.status
+    `SELECT u.id, u.email, u.name, u.company, u.phone, u.location, u.role, u.status, u.vehicle_type
      FROM auth.sessions AS s JOIN auth.users AS u ON u.id = s.user_id
      WHERE s.token_hash = $1 AND s.expires_at > statement_timestamp()`,
     [tokenHash],

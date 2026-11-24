@@ -19,7 +19,9 @@ test("registration normalizes identity fields and preserves the password", () =>
   assert.deepEqual(validateRegistration(registration), {
     email: "owner+shop@example.test", name: "Ada Okafor", company: "Ada's Water Supply",
     phone: "+234 803 123 4567", location: "Enugu, Enugu State", password: registration.password,
+    role: "distributor", vehicleType: null,
   });
+  assert.equal(validateRegistration({ ...registration, accountType: "distributor" }).role, "distributor");
   assert.equal(validateLogin({ email: registration.email, password: "wrong" }).email, "owner+shop@example.test");
 });
 
@@ -34,6 +36,28 @@ test("validation rejects malformed fields, short passwords and privilege injecti
     { ...registration, confirmPassword: registration.password },
   ]) assert.equal(validateRegistration(invalid), null);
   assert.equal(validateLogin({ email: registration.email, password: "" }), null);
+});
+
+const { company: _company, ...personal } = registration;
+
+test("customers and drivers register without a company; drivers must give a vehicle type", () => {
+  assert.deepEqual(validateRegistration({ ...personal, accountType: "customer" }), {
+    email: "owner+shop@example.test", name: "Ada Okafor", company: null, phone: "+234 803 123 4567",
+    location: "Enugu, Enugu State", password: registration.password, role: "customer", vehicleType: null,
+  });
+  const driver = validateRegistration({ ...personal, accountType: "driver", vehicleType: "tricycle" });
+  assert.equal(driver.role, "driver");
+  assert.equal(driver.vehicleType, "tricycle");
+});
+
+test("account types reject admin, unknown types and fields that belong to another type", () => {
+  for (const invalid of [
+    { ...personal, accountType: "admin" }, { ...personal, accountType: "Customer" }, { ...personal, accountType: null },
+    { ...registration, accountType: "customer" }, { ...personal, accountType: "customer", vehicleType: "van" },
+    { ...personal, accountType: "driver" }, { ...personal, accountType: "driver", vehicleType: "helicopter" },
+    { ...personal, accountType: "driver", vehicleType: "van", company: "x" }, { ...registration, vehicleType: "van" },
+    { ...personal, accountType: "customer", role: "admin" }, personal,
+  ]) assert.equal(validateRegistration(invalid), null);
 });
 
 test("Argon2id produces uniquely salted, verifiable hashes with the configured cost", async () => {

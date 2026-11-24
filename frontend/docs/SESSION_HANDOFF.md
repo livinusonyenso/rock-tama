@@ -1,5 +1,7 @@
 # Session Handoff
 
+**Account roles (D-137), 2026-11-24:** step 1 done (backend: migration 005, `accountType` registration, `requireRole`, `src/create-admin.mjs`; not deployed). Next: step 2 (role-based forms, `/driver`, customer dashboard, `/admin` on Express admin sessions), then step 3 (mock order-to-driver assignment). `lib/server/api.ts` still accepts only `role: "distributor"` until step 2.
+
 _Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
 
 **D2 (D-136):** EC2 staging is prepared but **not created**. `deploy/build-release.sh <registry>` builds four arm64 images tagged with the full SHA. `deploy/compose.staging.yml` and `deploy/ec2/*.sh` run on the instance; `deploy/smoke-staging.mjs` verifies from the Mac. Follow `docs/AWS_STAGING_RUNBOOK.md` steps D2-1 to D2-10, each with owner approval. The account is on the AWS Free plan ($100 credits, expiry 2027-05-18).

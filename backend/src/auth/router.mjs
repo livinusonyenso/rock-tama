@@ -5,7 +5,7 @@ import {
 } from "./security.mjs";
 import {
   clearLimit, consumeAttempt, deleteActiveSession, findBlockingLimit, findUserForLogin,
-  insertPendingUser, insertSession, pruneExpiredAuthRows, recordFailures,
+  insertRegisteredUser, insertSession, pruneExpiredAuthRows, recordFailures,
 } from "./store.mjs";
 import { validateLogin, validateRegistration } from "./validation.mjs";
 
@@ -20,10 +20,11 @@ const safeMethods = new Set(["GET", "HEAD", "OPTIONS"]);
 const dummyHash = await hashPassword(createSessionToken());
 
 function sendUser(response, status, user) {
-  const { id, email, name, company, phone, location, role, status: accountStatus } = user;
+  const { id, email, name, company, phone, location, role, status: accountStatus, vehicle_type: vehicleType } = user;
   return response.status(status).json({
     user: {
-      id, email, name, company, phone: phone ?? null, location: location ?? null, role, status: accountStatus,
+      id, email, name, company: company ?? null, phone: phone ?? null, location: location ?? null, role, status: accountStatus,
+      vehicleType: vehicleType ?? null,
       canAccessDistributorFeatures: canAccessDistributorFeatures(user),
     },
   });
@@ -88,13 +89,13 @@ export function createAuthRouter({ db, origin }) {
       return tooManyAttempts(response, seconds);
     }
     const registration = validateRegistration(request.body);
-    if (!registration) return fail(response, 400, "invalid_input", "Provide a valid email, name, company, phone, location, consent and 15–128 character password.");
+    if (!registration) return fail(response, 400, "invalid_input", "Provide the details for a valid account type, explicit consent and a 15–128 character password.");
 
     return runPasswordJob(response, async () => {
       // New and already-registered emails take the same path and get the same response, so registration
       // does not reveal which emails have accounts. An existing account is never modified.
       const passwordHash = await hashPassword(registration.password);
-      await insertPendingUser(db, registration, passwordHash);
+      await insertRegisteredUser(db, registration, passwordHash);
       return response.status(202).json({ registration: { status: "received" } });
     });
   });

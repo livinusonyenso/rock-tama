@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash, randomUUID } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import { once } from "node:events";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
@@ -133,7 +134,7 @@ test("real PostgreSQL registration, credential checks and session lifecycle", { 
       assert.match(passwordHash, /^\$argon2id\$/);
       assert.equal(await verifyPassword(passwordHash, password), true);
       assert.equal((await db.query("SELECT 1 FROM auth.sessions WHERE user_id = $1", [stored.id])).rowCount, 0);
-      user = { ...stored, canAccessDistributorFeatures: false };
+      user = { ...stored, vehicleType: null, canAccessDistributorFeatures: false };
     });
 
     await t.test("a duplicate email gets the same response and never changes the existing account", async () => {
@@ -342,9 +343,80 @@ test("the migrator owns auth objects and only it can change privileges or schema
       await db.query("ROLLBACK");
     }
   }
-  for (const file of ["002_auth.sql", "003_auth_login_limits.sql", "004_distributor_profile.sql"]) {
+  for (const file of ["002_auth.sql", "003_auth_login_limits.sql", "004_distributor_profile.sql", "005_account_roles.sql"]) {
     const migration = await readFile(new URL(`../../migrations/${file}`, import.meta.url));
     const { rows: checksums } = await db.query("SELECT checksum FROM public.schema_migrations WHERE name = $1", [file]);
     assert.deepEqual(checksums, [{ checksum: createHash("sha256").update(migration).digest("hex") }], file);
   }
+});
+
+test("account types: customers start approved, drivers and distributors pending, admins never self-register", { skip, timeout: 20_000 }, async (t) => {
+  await inRuntimeTransaction(t, async (request, db) => {
+    const { company: _company, ...personal } = registration();
+    const stored = (email) => db.query("SELECT role, status, company, vehicle_type FROM auth.users WHERE email = $1", [email]).then((r) => r.rows);
+
+    const customer = { ...personal, email: `${randomUUID()}@example.test`, accountType: "customer" };
+    assert.equal((await request("register", { body: customer })).status, 202);
+    assert.deepEqual(await stored(customer.email), [{ role: "customer", status: "approved", company: null, vehicle_type: null }]);
+
+    const driver = { ...personal, email: `${randomUUID()}@example.test`, accountType: "driver", vehicleType: "van" };
+    assert.equal((await request("register", { body: driver })).status, 202);
+    assert.deepEqual(await stored(driver.email), [{ role: "driver", status: "pending", company: null, vehicle_type: "van" }]);
+
+    const login = await request("login", { body: { email: driver.email, password } });
+    assert.equal(login.status, 200);
+    assert.equal(login.body.user.role, "driver");
+    assert.equal(login.body.user.vehicleType, "van");
+    assert.equal(login.body.user.company, null);
+    assert.equal(login.body.user.canAccessDistributorFeatures, false);
+    const cookie = login.headers.get("set-cookie").split(";", 1)[0];
+    assert.equal((await request("me", { method: "GET", headers: { cookie } })).body.user.status, "pending");
+
+    for (const body of [
+      { ...personal, accountType: "admin" },
+      { ...personal, accountType: "driver" },
+      { ...personal, accountType: "customer", vehicleType: "van" },
+    ]) assertError(await request("register", { body }), 400, "invalid_input");
+
+    // Even with direct SQL as the API role, the database refuses admins and chooses the status itself.
+    const hash = await hashPassword(password);
+    for (const role of ["admin", "superuser"]) {
+      await db.query("SAVEPOINT attempt");
+      await assert.rejects(db.query(
+        "INSERT INTO auth.users (email, name, role, password_hash) VALUES ($1, 'x', $2, $3)",
+        [`${randomUUID()}@example.test`, role, hash]), { code: "42501" });
+      await db.query("ROLLBACK TO SAVEPOINT attempt");
+    }
+    const direct = `${randomUUID()}@example.test`;
+    await db.query("INSERT INTO auth.users (email, name, role, vehicle_type, password_hash) VALUES ($1, 'x', 'driver', 'truck', $2)", [direct, hash]);
+    assert.deepEqual(await stored(direct), [{ role: "driver", status: "pending", company: null, vehicle_type: "truck" }]);
+    await db.query("SAVEPOINT attempt");
+    await assert.rejects(db.query("INSERT INTO auth.users (email, name, role, password_hash) VALUES ($1, 'x', 'distributor', $2)",
+      [`${randomUUID()}@example.test`, hash]), { code: "23514" }, "a distributor needs a company");
+    await db.query("ROLLBACK TO SAVEPOINT attempt");
+  });
+});
+
+test("only the operator script creates admins, and an admin signs in like any account", { skip, timeout: 30_000 }, async (t) => {
+  const db = await connection(t, apiUrl);
+  const migrator = await connection(t, migratorUrl);
+  const email = `admin-${randomUUID()}@example.test`;
+  onCleanup(t, () => migrator.query("DELETE FROM auth.users WHERE email = $1", [email]));
+  const run = (input) => spawnSync(process.execPath, ["src/create-admin.mjs", "--email", email, "--name", "Fixture Admin"], {
+    input, encoding: "utf8", env: { PATH: process.env.PATH, DATABASE_URL: migratorUrl },
+    cwd: new URL("../..", import.meta.url),
+  });
+  assert.equal(run("too short").status, 1);
+  const created = run(`${password}\n`);
+  assert.equal(created.status, 0, created.stderr);
+  assert.doesNotMatch(created.stdout + created.stderr, /argon2|C2 disposable/);
+  assert.equal(run(password).status, 1, "an existing email is never changed");
+  assert.deepEqual((await migrator.query("SELECT role, status FROM auth.users WHERE email = $1", [email])).rows, [{ role: "admin", status: "approved" }]);
+
+  await withTestApi(t, db, async (request) => {
+    const login = await request("login", { body: { email, password } });
+    assert.equal(login.status, 200);
+    assert.equal(login.body.user.role, "admin");
+    assert.equal(login.body.user.canAccessDistributorFeatures, false);
+  });
 });

@@ -50,3 +50,21 @@ test("guards: approved passes, pending gets 403, no session gets 401 and a stale
   assert.equal(none.response.statusCode, 401);
   assert.equal(none.response.cleared, false);
 });
+
+test("requireRole admits only approved accounts of the listed roles", async () => {
+  const header = `rocktama_session=${createSessionToken()}`;
+  async function attempt(user, roles) {
+    const db = { query: async () => ({ rows: [user] }) };
+    const { requireSession, requireRole } = createSessionGuards({ db, cookie });
+    const response = fakeResponse();
+    let reached = false;
+    const request = { get: () => header };
+    await requireSession(request, response, () => requireRole(...roles)(request, response, () => { reached = true; }));
+    return { reached, code: response.body?.error.code };
+  }
+  assert.deepEqual(await attempt({ role: "driver", status: "approved" }, ["driver"]), { reached: true, code: undefined });
+  assert.deepEqual(await attempt({ role: "admin", status: "approved" }, ["driver", "admin"]), { reached: true, code: undefined });
+  assert.deepEqual(await attempt({ role: "driver", status: "pending" }, ["driver"]), { reached: false, code: "account_approval_required" });
+  assert.deepEqual(await attempt({ role: "customer", status: "approved" }, ["admin"]), { reached: false, code: "role_forbidden" });
+  assert.deepEqual(await attempt({ role: "distributor", status: "approved" }, ["driver"]), { reached: false, code: "role_forbidden" });
+});

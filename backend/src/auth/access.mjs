@@ -40,5 +40,16 @@ export function createSessionGuards({ db, cookie }) {
     return next();
   }
 
-  return { requireSession, requireApprovedDistributor };
+  // Use after requireSession: requireRole("driver") or requireRole("admin"). Only approved accounts pass,
+  // so a pending driver application cannot use driver routes (D-137).
+  function requireRole(...roles) {
+    return (_request, response, next) => {
+      const { role, status } = response.locals.user;
+      if (!roles.includes(role)) return fail(response, 403, "role_forbidden", "Your account type cannot use this feature.");
+      if (status !== "approved") return fail(response, 403, "account_approval_required", "This feature is available after your account is approved.");
+      return next();
+    };
+  }
+
+  return { requireSession, requireApprovedDistributor, requireRole };
 }
