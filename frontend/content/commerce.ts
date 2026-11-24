@@ -7,7 +7,8 @@ const allVariants: readonly ShopVariant[] = [
   {id:"750-pack12",label:"Pack of 12",detail:"12 × 750 ml",product:"750ml-glass-bottle",size:"750",pack:"pack12",amount:7500,bottles:12,unit:"bottles"},
   // D-118: owner-supplied 24 × 750 ml tray artwork; sold on request only, no price invented.
   {id:"750-pack24",label:"Pack of 24",detail:"24 × 750 ml",product:"750ml-glass-bottle",size:"750",pack:"pack24",amount:null,bottles:24,unit:"bottles"},
-  {id:"1500-single",label:"Single bottle",detail:"1.5 L · price on request",product:"1-5l-bottle",size:"1500",pack:"single",amount:null,bottles:1,unit:"bottles"},
+  // PLACEHOLDER price (owner, 2026-11-24: "put random price i will fix it"). Replace with the real 1.5 L price.
+  {id:"1500-single",label:"Single bottle",detail:"1.5 L",product:"1-5l-bottle",size:"1500",pack:"single",amount:1200,bottles:1,unit:"bottles"},
   {id:"1500-carton",label:"Carton",detail:"12 × 1.5 L · draft configuration",product:"carton-packs",size:"1500",pack:"carton",amount:14500,bottles:1,unit:"cartons"},
 ];
 /**
@@ -36,7 +37,7 @@ export function selectionHref(lines: readonly BasketLine[]) {
 const productSize: Record<string, ShopSize> = { "750ml-glass-bottle": "750", "1-5l-bottle": "1500", "carton-packs": "1500" };
 /**
  * Pack a product URL opens with (D-125): its own first pack on sale, else the first pack on sale in the same
- * size (the 1.5 L single has no price yet, so /shop/1-5l-bottle opens the 1.5 L carton), else the first pack.
+ * size, else the first pack. /shop/1-5l-bottle opens the 1.5 L single bottle.
  */
 export const defaultVariantFor = (product: string) =>
   shopVariants.find(v=>v.product===product) ?? shopVariants.find(v=>v.size===productSize[product]) ?? shopVariants[0];
