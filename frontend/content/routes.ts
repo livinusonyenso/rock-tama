@@ -19,6 +19,9 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   contact: { status: "live", path: "/contact" }, // D-111: WhatsApp + email (placeholders until supplied)
   search: { status: "planned", path: "/search" },
   account: { status: "live", path: "/account" },
+  accountDashboard: { status: "live", path: "/account/dashboard" }, // customers and distributors (D-137)
+  driverDashboard: { status: "live", path: "/driver" }, // D-137
+  admin: { status: "live", path: "/admin" },
   deliveryReturns: { status: "planned", path: "/delivery-returns" },
   faqs: { status: "planned", path: "/faqs" },
   terms: { status: "planned", path: "/terms" },

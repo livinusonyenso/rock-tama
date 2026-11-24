@@ -1,6 +1,6 @@
 # Session Handoff
 
-**Account roles (D-137), 2026-11-24:** step 1 done (backend: migration 005, `accountType` registration, `requireRole`, `src/create-admin.mjs`; not deployed). Next: step 2 (role-based forms, `/driver`, customer dashboard, `/admin` on Express admin sessions), then step 3 (mock order-to-driver assignment). `lib/server/api.ts` still accepts only `role: "distributor"` until step 2.
+**Account roles (D-137), 2026-11-24:** step 1 (backend roles, migration 005) and step 2 (registration picker, role routing, `/driver` and customer dashboards) done and committed; not deployed. Deploy the API (with migration 005) before or together with the web image. Next: `/admin` on Express admin sessions, then step 3 (mock order-to-driver assignment).
 
 _Last updated: 2026-11-20 (DevOps Phase D2 preflight)_
 

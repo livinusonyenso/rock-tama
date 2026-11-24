@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { vehicleTypes, type AccountRole, type VehicleType } from "@/content/accounts";
 
 /**
  * Server-only access to the Express API (D-134). API_URL is read at request time and never reaches the
@@ -7,20 +8,28 @@ import { cookies } from "next/headers";
  */
 export const SESSION_COOKIE_NAMES = ["__Host-rocktama_session", "rocktama_session"] as const;
 
-export type DistributorAccount = {
+/** The signed-in user from GET /me (D-137). company is set for distributors, vehicleType for drivers. */
+export type Account = {
   id: string;
   email: string;
   name: string;
-  company: string;
+  company: string | null;
   phone: string | null;
   location: string | null;
-  role: "distributor";
+  role: AccountRole;
   status: "pending" | "approved";
+  vehicleType: VehicleType | null;
   canAccessDistributorFeatures: boolean;
 };
 
+export type DistributorAccount = Account & { role: "distributor"; company: string };
+
+export function isDistributor(account: Account): account is DistributorAccount {
+  return account.role === "distributor" && account.company !== null;
+}
+
 export type AccountState =
-  | { state: "signed-in"; account: DistributorAccount }
+  | { state: "signed-in"; account: Account }
   | { state: "signed-out" }
   | { state: "unavailable" };
 
@@ -39,13 +48,22 @@ export function sessionCookieHeader(header: string | null | undefined): string |
   return kept.length ? kept.join("; ") : null;
 }
 
-function isAccount(value: unknown): value is DistributorAccount {
-  const user = value as DistributorAccount | null;
-  return !!user && typeof user.id === "string" && typeof user.email === "string" && user.role === "distributor"
-    && typeof user.name === "string" && typeof user.company === "string"
-    && (user.phone === null || typeof user.phone === "string") && (user.location === null || typeof user.location === "string")
-    && (user.status === "pending" || user.status === "approved")
-    && user.canAccessDistributorFeatures === (user.status === "approved");
+const roles: readonly string[] = ["customer", "driver", "distributor", "admin"];
+const nullableString = (value: unknown) => value === null || typeof value === "string";
+
+/** Shape check of the API response; anything unexpected is treated as "unavailable", never as signed in. */
+function isAccount(value: unknown): value is Account {
+  const user = value as Account | null;
+  if (!user || typeof user.id !== "string" || typeof user.email !== "string" || typeof user.name !== "string") return false;
+  if (!roles.includes(user.role) || (user.status !== "pending" && user.status !== "approved")) return false;
+  if (!nullableString(user.company) || !nullableString(user.phone) || !nullableString(user.location)) return false;
+  if (user.role === "distributor" && user.company === null) return false;
+  // Older APIs omit vehicleType; treat that as null.
+  const vehicle = user.vehicleType ?? null;
+  if (vehicle !== null && !vehicleTypes.some((type) => type.value === vehicle)) return false;
+  if ((user.role === "driver") !== (vehicle !== null)) return false;
+  user.vehicleType = vehicle;
+  return user.canAccessDistributorFeatures === (user.role === "distributor" && user.status === "approved");
 }
 
 /**
