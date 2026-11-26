@@ -1,0 +1,64 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.viewport {
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: scroll-right 48s linear infinite;
+}
+
+.group {
+  display: flex;
+  flex: none;
+  min-width: 100cqw;
+}
+
+.item {
+  flex: 1 0 auto;
+  max-width: min(100cqw, 28rem);
+  border-inline-end: 1px solid var(--color-line-dark-strong);
+}
+
+.layout:has(.pause:checked) .track {
+  animation-play-state: paused;
+}
+
+.control:has(.pause:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+/* Both groups have identical widths, so the reset lands on the same frame. */
+@keyframes scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .track {
+    width: 100%;
+    animation: none;
+  }
+
+  .group {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .control,
+  .group[aria-hidden="true"] {
+    display: none;
+  }
+}

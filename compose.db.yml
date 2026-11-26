@@ -1,0 +1,11 @@
+# Database connectivity for the API (D-131, D-132). The API connects as rocktama_api.
+# The role is created by db-bootstrap in compose.migrate.yml, so always include that file too.
+services:
+  api:
+    environment:
+      DATABASE_URL: postgresql://rocktama_api:${API_DB_PASSWORD:?required}@db:5432/${POSTGRES_DB:?required}
+      # Exact browser origins allowed to make state-changing auth requests (D-134): the storefront through the
+      # Next.js gateway (next dev on :3000, the visual harness on :3100) and direct local API checks on :4000.
+      AUTH_ORIGIN: ${AUTH_ORIGIN:-http://localhost:3000,http://127.0.0.1:3000,http://127.0.0.1:3100,http://127.0.0.1:4000}
+      # Empty by default: no proxy sits in front of the API locally, so X-Forwarded-For is ignored (D-133).
+      TRUST_PROXY: ${TRUST_PROXY:-}

@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,14 +11,16 @@
 !.yarn/versions
 
 # testing
-/coverage
+coverage/
 
 # next.js
-/.next/
+.next/
 /out/
+/frontend/out/
 
 # production
 /build
+/frontend/build/
 
 # misc
 .DS_Store
@@ -33,6 +35,7 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.example
+!.env.docker.example
 
 # vercel
 .vercel
@@ -45,7 +48,13 @@ next-env.d.ts
 .claude/settings.local.json
 
 # visual verification output (generated; approved baselines live in docs/verification/baselines)
-/.verification/
+.verification/
 
 # development-only enquiry store (personal data; never commit)
-/.data/
+.data/
+
+.env.docker
+
+# Local production rehearsal credentials, public CA and verification output
+/.d1/
+/.d1.init.*/

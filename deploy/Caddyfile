@@ -1,0 +1,22 @@
+{
+	admin off
+	auto_https disable_redirects
+}
+
+https://api.rocktama.localhost {
+	tls internal
+	reverse_proxy api:4000
+}
+
+https://shop.rocktama.localhost {
+	tls internal
+	# Next.js streams request-time account state and proxies auth to the private API.
+	reverse_proxy frontend:3000 {
+		flush_interval -1
+	}
+}
+
+http://127.0.0.1:8080 {
+	bind 127.0.0.1
+	respond /health 200
+}

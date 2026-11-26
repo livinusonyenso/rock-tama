@@ -1,0 +1,8 @@
+*
+!Caddyfile
+!Caddy.Dockerfile
+!Caddyfile.staging
+!Caddy.staging.Dockerfile
+!compose.staging.yml
+!ec2/
+!ec2/*.sh

@@ -1,0 +1,75 @@
+.layout { display:grid;gap:1.5rem;align-items:start; }
+.sidebar { min-width:0;overflow:hidden;border-radius:var(--radius-card);background:var(--color-forest-850);color:var(--color-on-dark); }
+.sidebar nav { display:flex;overflow-x:auto; }
+.sidebar nav a { flex:none;white-space:nowrap; display:flex;min-height:2.75rem;align-items:center;gap:.75rem;padding:.75rem;border-radius:var(--radius-button);font-size:.875rem; }
+.sidebar nav a svg { width:1.25rem;height:1.25rem;flex:none;color:var(--color-gold-500); }
+.sidebar nav a:hover,.sidebar nav a:focus-visible { background:var(--color-forest-700);outline:2px solid var(--color-gold-500);outline-offset:-2px; }
+.sidebar nav .active,.sidebar nav a[aria-current="page"] { background:var(--color-forest-700);color:var(--color-gold-500); }
+.notice { display:flex;align-items:start;gap:.75rem;border:1px solid var(--color-line-card);border-radius:var(--radius-button);background:var(--color-cream-200);padding:1rem;color:var(--color-ink-700);font-size:.875rem;line-height:1.6; }
+.primary { display:flex;min-height:3rem;align-items:center;justify-content:center;gap:.75rem;border-radius:var(--radius-button);background:var(--color-forest-850);padding:.75rem 1.25rem;color:var(--color-on-dark);font-size:.875rem;font-weight:600; }
+.primary:focus-visible { outline:2px solid var(--color-gold-700);outline-offset:3px; }
+.stats { display:grid;gap:1rem;margin-top:1.5rem; }
+.stat { display:grid;grid-template-columns:1fr auto;gap:.5rem;border:1px solid var(--color-line-card);border-radius:var(--radius-card);background:var(--color-ivory-100);padding:1.25rem; }
+.stat svg { grid-column:2;grid-row:1/3;width:1.75rem;height:1.75rem; }
+.stat span { font-size:.875rem;color:var(--color-ink-700); }
+.stat strong { font-family:var(--font-serif);font-size:2rem;line-height:1.25;color:var(--color-forest-heading); }
+.stat small { grid-column:1/-1;color:var(--color-ink-500);font-size:.75rem; }
+.card { min-width:0;border:1px solid var(--color-line-card);border-radius:var(--radius-card);background:var(--color-ivory-100);overflow:hidden; }
+.order { display:grid;align-items:start;gap:1rem;padding:1.25rem; }
+.goldStatus,.greenStatus { width:fit-content;border-radius:999px;padding:.3rem .75rem;font-size:.75rem;font-weight:600; }
+.goldStatus { background:#f3e5cd;color:var(--color-gold-800); }
+.greenStatus { background:#e5e9df;color:var(--color-forest-heading); }
+.details { font-size:.875rem;color:var(--color-ink-700); }
+.details summary { display:flex;min-height:2.75rem;align-items:center;cursor:pointer;color:var(--color-gold-700);text-decoration:underline;text-underline-offset:3px; }
+.details summary:focus-visible { outline:2px solid var(--color-gold-700);outline-offset:3px; }
+@media(min-width:40rem){.stats{grid-template-columns:repeat(3,minmax(0,1fr));}.order{grid-template-columns:minmax(0,1fr) auto;}.details{grid-column:1/-1;}}
+@media(min-width:64rem){.layout{grid-template-columns:15rem minmax(0,1fr);gap:2rem;}.sidebar{position:sticky;top:1.5rem;}.order{padding:1.5rem;}}
+
+.sidebarFooter { border-top:1px solid var(--color-line-dark);padding:.5rem 1rem; }
+.sidebarFooter>p,.sidebarFooter>a { display:none; }
+.sidebarFooter form { margin-top:0; }
+@media(min-width:64rem){.sidebar nav{display:grid;overflow:visible;}.sidebarFooter{padding:1.25rem;}.sidebarFooter>p{display:block;}.sidebarFooter>a{display:flex;}.sidebarFooter form{margin-top:1rem;}}
+
+[data-dashboard-role="driver"] .sidebar nav a[aria-current="page"] {
+  box-shadow: inset 3px 0 var(--color-gold-500);
+  font-weight: 600;
+}
+
+@media (forced-colors: active) {
+  [data-dashboard-role="driver"] .sidebar nav a[aria-current="page"] {
+    border-inline-start: 3px solid LinkText;
+  }
+}
+
+@media (width < 64rem) {
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"],[data-dashboard-role="driver"]) .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    overflow: visible;
+  }
+
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"],[data-dashboard-role="driver"]) .sidebar nav a {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  [data-dashboard-role="driver"] .sidebarFooter > div {
+    margin-top: 0;
+  }
+}
+
+@media (width < 40rem) {
+  [data-dashboard-role="driver"] .sidebar > div:first-child {
+    padding: 1rem;
+  }
+
+  [data-dashboard-role="driver"] .sidebar nav {
+    padding: .5rem;
+  }
+
+  [data-dashboard-role="driver"] .sidebar nav a {
+    gap: .5rem;
+    padding: .5rem;
+  }
+}

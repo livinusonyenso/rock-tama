@@ -1,0 +1,31 @@
+# Public edge for the EC2 staging stack (D-136). Hostnames come from the environment, for example
+# SHOP_HOST=shop.13-48-1-2.sslip.io and API_HOST=api.13-48-1-2.sslip.io. Caddy obtains publicly trusted
+# certificates automatically (Let's Encrypt, with ZeroSSL as its built-in fallback) and redirects HTTP to HTTPS.
+# It ignores client-supplied X-Forwarded-* headers at the edge and sets them from the real connection.
+{
+	admin off
+}
+
+{$SHOP_HOST} {
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=86400"
+	# Next.js streams request-time account state and forwards auth to the private API.
+	reverse_proxy web:3000 {
+		flush_interval -1
+	}
+}
+
+{$API_HOST} {
+	header Strict-Transport-Security "max-age=86400"
+	reverse_proxy api:4000
+}
+
+www.{$SHOP_HOST} {
+	header Strict-Transport-Security "max-age=86400"
+	redir https://{$SHOP_HOST}{uri} 308
+}
+
+http://127.0.0.1:8080 {
+	bind 127.0.0.1
+	respond /health 200
+}

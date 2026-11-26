@@ -107,3 +107,6 @@ Receipt safeguard2026-11-18: send customer payment receipts only from verified p
 
 
 Receipt/prefill safeguard2026-11-18: PDF downloads require reference-bound signed browser proof plus verified paid status; never return another customer receipt by bare reference. Keep download private/no-store, test receipts clearly marked, and email PDF identical to download. Checkout must prefill only known details, validate saved profile and owner, keep guest/edit paths and explicit consent, and clear demo profile on logout/new login. Never pretend demo email is a complete real account profile. Tests checkout-prefill.config.mjs and receipt-profile-check.mjs; guide RECEIPT_DOWNLOAD_AND_CHECKOUT_PREFILL.md.
+
+
+Backend guide boundary2026-11-18: user selected Node.js/Express + PostgreSQL + Docker + GitHub Actions, and requested Markdown guidance, not immediate migration. Follow docs/NODE_EXPRESS_POSTGRES_DOCKER_GITHUB_ACTIONS_GUIDE.md when implementation is authorised. Keep frontend and api toolchains separate; retain existing payment/receipt owner until an explicit cutover, preserve secret handling, migrate data deliberately and review Vercel-specific launch guards before Docker production. Guide syntax/Compose validation does not prove containers/CI ran.

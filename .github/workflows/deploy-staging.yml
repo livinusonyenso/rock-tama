@@ -1,0 +1,91 @@
+name: Deploy ROCK-TAMA staging
+
+on:
+  push:
+    branches:
+      - refactor/frontend-backend-structure
+
+concurrency:
+  group: rocktama-ec2-staging
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the pushed commit
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "26.13.1"
+
+      - name: Test the API
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+
+      - name: Lint the frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run lint
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: eu-north-1
+      AWS_PAGER: ""
+      ROCKTAMA_ACCOUNT: "638486126885"
+      ROCKTAMA_INSTANCE: i-0ad28bbea578fa416
+      ROCKTAMA_REGISTRY: 638486126885.dkr.ecr.eu-north-1.amazonaws.com
+    steps:
+      - name: Check out the verified commit
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Check deployment configuration
+        env:
+          DEPLOY_ROLE: ${{ vars.ROCKTAMA_AWS_DEPLOY_ROLE_ARN }}
+        run: |
+          if [[ -z "$DEPLOY_ROLE" ]]; then
+            echo "::error::Set the ROCKTAMA_AWS_DEPLOY_ROLE_ARN repository variable. See the AWS staging runbook."
+            exit 1
+          fi
+
+      - name: Get temporary AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.ROCKTAMA_AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          allowed-account-ids: ${{ env.ROCKTAMA_ACCOUNT }}
+          role-session-name: github-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Publish and deploy the immutable release
+        shell: bash
+        run: bash deploy/github-deploy.sh
+
+      - name: Verify public HTTPS
+        shell: bash
+        run: |
+          status=$(curl -fsS --retry 5 --retry-all-errors --max-time 15 -o /dev/null \
+            -w '%{http_code}' https://rocktamanaturalsprings.com/)
+          if [[ "$status" != 200 ]]; then
+            echo "::error::The storefront returned HTTP $status."
+            exit 1
+          fi
+          curl -fsS --retry 5 --retry-all-errors --max-time 15 https://api.rocktamanaturalsprings.com/health/ready \
+            | jq -e '.status == "ok" and .database == "ready"'

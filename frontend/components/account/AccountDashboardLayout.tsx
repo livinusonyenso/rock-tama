@@ -1,0 +1,36 @@
+import Link from "next/link";
+import type {ReactNode} from "react";
+import {Container} from "@/components/ui/Container";
+import {Icon} from "@/components/icons/Icon";
+import {NavLink} from "@/components/layout/NavLink";
+import type {Account,AccountProfile} from "@/lib/server/api";
+import type {IconName} from "@/types/content";
+import {LogoutButton} from "./LogoutButton";
+import styles from "./dashboard.module.css";
+
+export type DashboardLink={href:string;label:string;icon:IconName};
+type DashboardIdentity = { name: string; role: Account["role"] | "demo"; subtitle?: string };
+
+/** Sidebar + content frame shared by the customer and driver dashboards (D-137), styled like the distributor portal. */
+export function AccountDashboardLayout({identity,portal,links,help,logout,children}:{identity:DashboardIdentity;portal:string;links:readonly DashboardLink[];help?:{text:string;link:DashboardLink};logout?:ReactNode;children:ReactNode}){
+ return <main id="main" className="flex-1 bg-ivory-50" data-dashboard-role={identity.role}><Container size="wide" className="py-6 lg:py-10"><div className={styles.layout}>
+ <aside className={styles.sidebar} aria-label={`${portal} navigation`}><div className="flex items-center gap-3 border-b border-line-dark p-6"><span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-gold-600 bg-forest-700 font-serif text-2xl text-gold-500" aria-hidden="true">{(identity.name[0]??"R").toUpperCase()}</span><div className="min-w-0"><p className="font-serif text-xl font-semibold">{portal}</p><p className="mt-1 truncate text-xs uppercase tracking-widest text-gold-500">{identity.subtitle ?? identity.name}</p></div></div>
+ <nav aria-label="Dashboard" className="grid gap-1 p-3">{links.map((link,index)=><NavLink key={link.href} href={link.href} tone="dark" className={index===0&&link.href.startsWith("#")?styles.active:undefined}><Icon name={link.icon}/>{link.label}</NavLink>)}</nav>
+ <div className={styles.sidebarFooter}>{help&&<><p className="text-sm leading-relaxed text-on-dark-muted">{help.text}</p><Link href={help.link.href} className="mt-4 flex min-h-11 items-center justify-center rounded-button border border-gold-600 px-3 text-sm text-gold-500 focus-ring-dark">{help.link.label}</Link></>}{logout ?? <LogoutButton/>}</div></aside>
+ <div className="min-w-0" data-dashboard-content>{children}</div>
+ </div></Container></main>;
+}
+
+/** The "My profile" card: label/value pairs from the real account. */
+export function ProfileCard({rows,heading:Heading="h2",note="To change these details, contact our team."}:{rows:[string,string][];heading?:"h1"|"h2";note?:string}){
+ return <section id="account-profile" className={`${styles.card} ${Heading==="h2"?"mt-6 ":""}scroll-mt-8 p-5 sm:p-6`} aria-labelledby="profile-heading"><div className="flex items-center gap-3"><Icon name="user" className="text-gold-700"/><Heading id="profile-heading" className="font-serif text-2xl font-bold text-forest-heading">My profile</Heading></div><dl className="mt-5 grid gap-5 text-sm sm:grid-cols-2">{rows.map(([label,value])=><div key={label}><dt className="text-ink-500">{label}</dt><dd className="mt-1 wrap-anywhere font-semibold">{value}</dd></div>)}</dl><p className="mt-5 border-t border-line-card pt-4 text-xs leading-relaxed text-ink-500">{note}</p></section>;
+}
+
+/** "12 Zik Avenue, Awka, Anambra", or null for accounts registered before addresses were collected. */
+export function formatAddress(address:AccountProfile["address"]){return address?`${address.street}, ${address.city}, ${address.state}`:null;}
+
+/** The label for a stored option value, falling back to the value itself. */
+export function optionLabel(options:readonly {value:string;label:string}[],value:string|undefined|null){return value?options.find(option=>option.value===value)?.label??value:null;}
+
+/** Profile rows, dropping details this account does not have. */
+export function rows(entries:[string,string|null|undefined][]):[string,string][]{return entries.filter((entry):entry is [string,string]=>!!entry[1]);}
