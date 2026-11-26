@@ -37,7 +37,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${cormorant.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {/* Storefront chrome everywhere except the admin portal (D-128). */}
         <SiteChrome
           header={
             <>

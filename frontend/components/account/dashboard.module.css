@@ -30,16 +30,46 @@
 .sidebarFooter form { margin-top:0; }
 @media(min-width:64rem){.sidebar nav{display:grid;overflow:visible;}.sidebarFooter{padding:1.25rem;}.sidebarFooter>p{display:block;}.sidebarFooter>a{display:flex;}.sidebarFooter form{margin-top:1rem;}}
 
+[data-dashboard-role="driver"] .sidebar nav a[aria-current="page"] {
+  box-shadow: inset 3px 0 var(--color-gold-500);
+  font-weight: 600;
+}
+
+@media (forced-colors: active) {
+  [data-dashboard-role="driver"] .sidebar nav a[aria-current="page"] {
+    border-inline-start: 3px solid LinkText;
+  }
+}
+
 @media (width < 64rem) {
-  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"]) .sidebar nav {
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"],[data-dashboard-role="driver"]) .sidebar nav {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
     overflow: visible;
   }
 
-  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"]) .sidebar nav a {
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"],[data-dashboard-role="driver"]) .sidebar nav a {
     min-width: 0;
     white-space: normal;
     overflow-wrap: anywhere;
+  }
+
+  [data-dashboard-role="driver"] .sidebarFooter > div {
+    margin-top: 0;
+  }
+}
+
+@media (width < 40rem) {
+  [data-dashboard-role="driver"] .sidebar > div:first-child {
+    padding: 1rem;
+  }
+
+  [data-dashboard-role="driver"] .sidebar nav {
+    padding: .5rem;
+  }
+
+  [data-dashboard-role="driver"] .sidebar nav a {
+    gap: .5rem;
+    padding: .5rem;
   }
 }

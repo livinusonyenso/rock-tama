@@ -53,6 +53,8 @@ export function distributorAuthJourneys(){
  const customerPath=section=>`/account/dashboard/${section}`;
  const customerPage=(section,selector)=>({waitFor:`location.pathname===${JSON.stringify(customerPath(section))} && [...document.querySelectorAll(${JSON.stringify(selector)})].some(panel=>panel.checkVisibility())`});
  const customerLink=section=>({click:`main nav[aria-label="Dashboard"] a[href="${customerPath(section)}"]`});
+ const driverPage=(path,selector)=>({waitFor:`location.pathname===${JSON.stringify(path)} && document.querySelector('main[data-dashboard-role=driver] ${selector}')?.checkVisibility() && document.querySelectorAll('[data-dashboard-panel]').length===1 && document.querySelector('main nav a[aria-current=page]')?.getAttribute('href')===${JSON.stringify(path)}`});
+ const driverLink=path=>({click:`main nav[aria-label="Dashboard"] a[href="${path}"]`});
  const registration=address=>({email:address,password,name:"Gateway Check",company:"Example Supplies",phone:"+234 803 123 4567",location:"Enugu, Enugu State",consent:true});
  return [
  {...base,name:"auth-register",actions:register(main),expect:[{name:"registration shows a received message without claiming a new account",js:"document.querySelector('[data-registration-received]').textContent.includes('Application received') && document.querySelector('[data-registration-received]').textContent.includes('If this email can be registered') && !/created|welcome/i.test(document.querySelector('[data-registration-received]').textContent) && !document.querySelector('#auth-password')"}]},
@@ -132,13 +134,36 @@ export function distributorAuthJourneys(){
   {clearCookies:true},{navigate:customerPath("profile")},{waitFor:"location.pathname==='/account/login'"},
   {navigate:customerPath("orders")},{waitFor:"location.pathname==='/account/login'"},
  ],expect:[{name:"direct links to customer pages require a real session",js:"!document.querySelector('#account-profile,#my-orders') && !!document.querySelector('form[aria-label=\"Account login\"]')"}]},
- {...base,name:"auth-customer-blocked-from-driver",actions:[{clearCookies:true},...login(customer),customerPage("overview","#dashboard-overview"),{navigate:"/driver"},customerPage("overview","#dashboard-overview"),{navigate:"/account/dashboard"},customerPage("overview","#dashboard-overview")],expect:[
-  {name:"a customer opening /driver is sent back to their own dashboard",js:"!!document.querySelector('[data-dashboard-role=customer]') && !document.querySelector('#my-deliveries')"}]},
- {...base,name:"auth-driver-journey",selector:"main",viewports:["mobile","desktop"],actions:[...registerAs("driver",driver),...login(driver),{waitFor:"location.pathname==='/driver' && !!document.querySelector('[data-dashboard-role=driver]')"}],expect:[
-  {name:"a driver lands on /driver, pending review, with the vehicle and area they registered",js:"document.querySelector('[data-account-status]').dataset.accountStatus==='pending' && document.querySelector('[data-account-status] h2').textContent==='Application under review' && ['Tricycle (keke)','NIN •••• 8901','ABC123DE','Awka, Nnewi','Part-time','12 Zik Avenue, Enugu, Enugu'].every(t=>document.querySelector('#account-profile').textContent.includes(t)) && !document.querySelector('main').textContent.includes('12345678901') && !!document.querySelector('[data-deliveries-empty]')"},
-  {name:"no horizontal overflow",js:"document.documentElement.scrollWidth<=innerWidth+1"}]},
- {...base,name:"auth-driver-routing",actions:[{clearCookies:true},...login(driver),{waitFor:"location.pathname==='/driver'"},{navigate:"/account/dashboard"},{waitFor:"location.pathname==='/driver'"},{navigate:customerPath("profile")},{waitFor:"location.pathname==='/driver'"},{navigate:"/account"},{waitFor:"location.pathname==='/driver'"},{click:"[data-logout]"},{waitFor:"location.pathname==='/account/login'"},{navigate:"/driver"},{waitFor:"location.pathname==='/account/login'"}],expect:[
-  {name:"a driver's /account and /account/dashboard lead to /driver; after logout /driver requires login",js:"!!document.querySelector('form[aria-label=\"Account login\"]')"}]},
+ {...base,name:"auth-customer-blocked-from-driver",actions:[
+  {clearCookies:true},...login(customer),customerPage("overview","#dashboard-overview"),
+  {navigate:"/driver"},customerPage("overview","#dashboard-overview"),
+  {navigate:"/driver/profile"},customerPage("overview","#dashboard-overview"),
+ ],expect:[
+  {name:"driver overview and nested profile redirect customers to their own dashboard",js:"!!document.querySelector('[data-dashboard-role=customer]') && !document.querySelector('[data-dashboard-role=driver]')"}]},
+ {...base,name:"auth-driver-journey",selector:"main",viewports:["small","mobile","tablet","desktop"],actions:[
+  ...registerAs("driver",driver),...login(driver),driverPage("/driver","#dashboard-overview"),
+  {evaluate:"window.driverSidebar=document.querySelector('main aside');window.pendingDriver=document.querySelector('[data-account-status=pending] h2')?.textContent==='Application under review' && document.querySelector('[data-dashboard-panel]').textContent.includes('Tricycle (keke)');true"},
+  driverLink("/driver/deliveries"),driverPage("/driver/deliveries","#my-deliveries"),
+  {evaluate:"window.driverRestricted=document.querySelector('[data-deliveries-empty]').textContent.includes('after your application is approved') && !document.querySelector('#dashboard-overview');true"},
+  driverLink("/driver/profile"),driverPage("/driver/profile","#account-profile"),
+  {evaluate:"window.driverProfileData=['Tricycle (keke)','NIN •••• 8901','ABC123DE','Awka, Nnewi','Part-time','12 Zik Avenue, Enugu, Enugu'].every(text=>document.querySelector('#account-profile').textContent.includes(text)) && !document.querySelector('main').textContent.includes('12345678901');true"},
+  {evaluate:"history.back();true"},driverPage("/driver/deliveries","#my-deliveries"),
+  driverLink("/driver/support"),driverPage("/driver/support","#driver-support"),
+ ],expect:[
+  {name:"nested pages replace main content and preserve the sidebar, including back navigation",js:"window.driverSidebar===document.querySelector('main aside') && document.querySelectorAll('[data-dashboard-panel]').length===1 && !document.querySelector('#my-deliveries,#account-profile,#dashboard-overview')"},
+  {name:"pending drivers see their status and delivery restriction, with registration data and masked ID in Profile",js:"window.pendingDriver && window.driverRestricted && window.driverProfileData"},
+  {name:"the support channels have live destinations and the layout fits the viewport",js:"!!document.querySelector('#driver-support a[href^=\"https://wa.me/2349034018849\"]') && !!document.querySelector('#driver-support a[href^=\"mailto:\"]') && document.documentElement.scrollWidth<=innerWidth+1"}]},
+ {...base,name:"auth-driver-routing",actions:[
+  {clearCookies:true},...login(driver),driverPage("/driver","#dashboard-overview"),
+  {navigate:"/account/dashboard"},driverPage("/driver","#dashboard-overview"),
+  {navigate:customerPath("profile")},driverPage("/driver","#dashboard-overview"),
+  {navigate:"/account"},driverPage("/driver","#dashboard-overview"),
+  {navigate:"/driver/profile"},driverPage("/driver/profile","#account-profile"),
+  {click:"[data-logout]"},{waitFor:"location.pathname==='/account/login'"},
+  {navigate:"/driver/profile"},{waitFor:"location.pathname==='/account/login'"},
+  {navigate:"/driver/deliveries"},{waitFor:"location.pathname==='/account/login'"},
+ ],expect:[
+  {name:"drivers can open a nested URL directly and all driver routes require a session after logout",js:"!!document.querySelector('form[aria-label=\"Account login\"]') && !document.querySelector('[data-dashboard-role=driver]')"}]},
  {...base,name:"auth-gateway-security",expect:[
   {name:"gateway forwards Origin: a foreign or missing Origin is refused by Express",server:async({baseUrl})=>{const foreign=await gateway(baseUrl,"login",{body:{email:"a@example.test",password:"x"},headers:{origin:"https://attacker.example"}});const missing=await fetch(`${baseUrl}/api/v1/auth/logout`,{method:"POST"});return foreign.status===403&&(await foreign.json()).error.code==="origin_forbidden"&&missing.status===403;}},
   {name:"session cookie set through the gateway is HttpOnly, SameSite=Lax, host-only; /me, logout and revocation work",server:async({baseUrl})=>{const address=email("gateway");if((await gateway(baseUrl,"register",{body:registration(address)})).status!==202)return false;const login=await gateway(baseUrl,"login",{body:{email:address,password}});const set=login.headers.getSetCookie();if(login.status!==200||set.length!==1)return false;const attrs=set[0];if(!/^rocktama_session=[A-Za-z0-9_-]{43};/.test(attrs)||!/HttpOnly/.test(attrs)||!/SameSite=Lax/.test(attrs)||/Domain=/i.test(attrs))return false;const cookie=attrs.split(";")[0];const me=await gateway(baseUrl,"me",{method:"GET",headers:{cookie:`rt_admin=not-forwarded; ${cookie}`}});const user=(await me.json()).user;const out=await gateway(baseUrl,"logout",{headers:{cookie}});const after=await gateway(baseUrl,"me",{method:"GET",headers:{cookie}});return me.status===200&&user.status==="pending"&&user.canAccessDistributorFeatures===false&&!("password_hash" in user)&&out.status===204&&after.status===401;}},

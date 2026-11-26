@@ -51,6 +51,8 @@ Open [local sign-in](http://localhost:3000/account/login) and use **Log in** wit
 | Driver | `driver.demo@example.test` | Approved | [Driver dashboard](http://localhost:3000/driver) |
 | Distributor | `distributor.demo@example.test` | Approved | [Distributor dashboard](http://localhost:3000/account/dashboard) |
 
+When the frontend runs with `npm run dev`, the approved demo driver sees sample delivery counts on Overview and fictional stops on My deliveries.
+
 Set `API_URL=http://127.0.0.1:4000` in `frontend/.env.local` for the local storefront. The `--approve` flag uses the local database owner to approve only the verified demo accounts above. Omit it to seed the accounts with their regular registration statuses or check an existing setup.
 
 See the [Phase C2 authentication guide](frontend/docs/BACKEND_AUTHENTICATION.md) for the API contracts and PostgreSQL tests, and the [backend setup guide](frontend/docs/NODE_EXPRESS_POSTGRES_DOCKER_GITHUB_ACTIONS_GUIDE.md) for the broader infrastructure plan.

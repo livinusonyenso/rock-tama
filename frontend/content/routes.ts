@@ -25,6 +25,9 @@ export const routes: Record<RouteKey, RouteDefinition> = {
   accountDashboardProfile: { status: "live", path: "/account/dashboard/profile" },
   accountDashboardSupport: { status: "live", path: "/account/dashboard/support" },
   driverDashboard: { status: "live", path: "/driver" }, // D-137
+  driverDeliveries: { status: "live", path: "/driver/deliveries" },
+  driverProfile: { status: "live", path: "/driver/profile" },
+  driverSupport: { status: "live", path: "/driver/support" },
   admin: { status: "live", path: "/admin" },
   deliveryReturns: { status: "planned", path: "/delivery-returns" },
   faqs: { status: "planned", path: "/faqs" },

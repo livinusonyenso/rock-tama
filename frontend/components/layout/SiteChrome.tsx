@@ -2,13 +2,10 @@
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
-/** Paths with their own full-screen UI (admin portal, D-128): no shop announcement bar, header or footer. */
-const BARE = [/^\/admin(\/|$)/, /^\/auth(\/|$)/];
+/** Workspaces with their own navigation use a dedicated layout. */
+const BARE = [/^\/admin(\/|$)/, /^\/auth(\/|$)/, /^\/driver(\/|$)/];
 
-/**
- * Shows the storefront chrome (server-rendered, passed in) everywhere except the admin portal. Chosen over
- * route groups so no existing page has to move (D-128).
- */
+/** Shows the server-rendered storefront chrome on shopping and public account pages. */
 export function SiteChrome({ header, footer, children }: { header: ReactNode; footer: ReactNode; children: ReactNode }) {
   const pathname = usePathname() ?? "";
   const bare = BARE.some((pattern) => pattern.test(pathname));
