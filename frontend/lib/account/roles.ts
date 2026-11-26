@@ -8,6 +8,7 @@ export function parseAccountType(value: string | string[] | undefined): AccountT
 
 /** Where each role lands after signing in (D-137). Used by the login form and the server-side redirects. */
 export function dashboardPath(role: AccountRole): string {
+  if (role === "customer") return routes.accountDashboardOverview.path;
   if (role === "driver") return routes.driverDashboard.path;
   if (role === "admin") return routes.admin.path;
   return routes.accountDashboard.path;

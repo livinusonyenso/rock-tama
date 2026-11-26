@@ -4,7 +4,7 @@
 .sidebar nav a { flex:none;white-space:nowrap; display:flex;min-height:2.75rem;align-items:center;gap:.75rem;padding:.75rem;border-radius:var(--radius-button);font-size:.875rem; }
 .sidebar nav a svg { width:1.25rem;height:1.25rem;flex:none;color:var(--color-gold-500); }
 .sidebar nav a:hover,.sidebar nav a:focus-visible { background:var(--color-forest-700);outline:2px solid var(--color-gold-500);outline-offset:-2px; }
-.sidebar nav .active { background:var(--color-forest-700);color:var(--color-gold-500); }
+.sidebar nav .active,.sidebar nav a[aria-current="page"] { background:var(--color-forest-700);color:var(--color-gold-500); }
 .notice { display:flex;align-items:start;gap:.75rem;border:1px solid var(--color-line-card);border-radius:var(--radius-button);background:var(--color-cream-200);padding:1rem;color:var(--color-ink-700);font-size:.875rem;line-height:1.6; }
 .primary { display:flex;min-height:3rem;align-items:center;justify-content:center;gap:.75rem;border-radius:var(--radius-button);background:var(--color-forest-850);padding:.75rem 1.25rem;color:var(--color-on-dark);font-size:.875rem;font-weight:600; }
 .primary:focus-visible { outline:2px solid var(--color-gold-700);outline-offset:3px; }
@@ -29,3 +29,17 @@
 .sidebarFooter>p,.sidebarFooter>a { display:none; }
 .sidebarFooter form { margin-top:0; }
 @media(min-width:64rem){.sidebar nav{display:grid;overflow:visible;}.sidebarFooter{padding:1.25rem;}.sidebarFooter>p{display:block;}.sidebarFooter>a{display:flex;}.sidebarFooter form{margin-top:1rem;}}
+
+@media (width < 64rem) {
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"]) .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    overflow: visible;
+  }
+
+  :is([data-dashboard-role="customer"],[data-dashboard-role="distributor"],[data-dashboard-role="demo"]) .sidebar nav a {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

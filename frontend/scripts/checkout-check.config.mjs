@@ -6,12 +6,32 @@ export function checkoutJourneys(){
  const ready={waitFor:"!!document.querySelector('form[aria-label=\"Checkout order request\"]')"};
  const base={page:"checkout",kind:"functional",viewports:["mobile","desktop"]};
  const name=`Checkout test ${Date.now()}`;
- const fill=[...Object.entries({name,email:"checkout@example.com",phone:"+2348031234567",address:"12 Test Street",city:"Enugu",state:"Enugu",notes:"Reception delivery"}).map(([field,text])=>({type:{selector:`#checkout-${field}`,text}})),{check:'input[name="consent"]'}];
+ const next={evaluate:"(()=>{const next=document.querySelector('[data-checkout-next]');if(next?.checkVisibility())next.click();return true})()"};
+ const inputs=values=>Object.entries(values).map(([field,text])=>({type:{selector:`#checkout-${field}`,text}}));
+ const contact=inputs({name,email:"checkout@example.com",phone:"+2348031234567"});
+ const delivery=inputs({address:"12 Test Street",city:"Enugu",state:"Enugu",notes:"Reception delivery"});
+ const fill=[next,...contact,next,...delivery,{check:'input[name="consent"]'}];
  const journeys=[
  {...base,name:"checkout-layout",selector:"main",viewports:["small","mobile","tablet","laptop","large","desktop"],actions:[seed,ready],expect:[{name:"live basket, draft total, matching pack images and usable controls",js:"document.querySelectorAll('main aside li').length===3 && document.querySelector('main aside').textContent.includes('23,300.00') && document.querySelector('main aside img[alt*=twelve]') && !/₦1,500|WELCOME10/.test(document.querySelector('main').innerText) && [...document.querySelectorAll('main input:not([type=hidden]),main textarea,main button')].filter(e=>e.checkVisibility()).every(e=>{const r=e.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.height>=16})"}]},
  {...base,name:"checkout-quantity",actions:[seed,ready,{click:'button[aria-label="Increase 750 ml"]'}],expect:[{name:"quantity changes recalculate summary and saved basket",js:"document.querySelector('main aside').textContent.includes('23,950.00') && JSON.parse(localStorage.getItem('rocktama.basket.v1'))[0].quantity===3"}]},
  {...base,name:"checkout-empty",actions:[{evaluate:"localStorage.removeItem('rocktama.basket.v1');window.dispatchEvent(new Event('rocktama:basket'));true"}],expect:[{name:"empty basket gives a real shop link and cannot submit",js:"document.querySelector('main').innerText.includes('Your basket is empty') && !!document.querySelector('main a[href=\"/shop\"]') && !document.querySelector('main button[type=submit]')"}]},
- {...base,name:"checkout-invalid",actions:[seed,ready,{click:'button[type="submit"]'},{waitFor:"!!document.querySelector('#checkout-name[aria-invalid=true]')"}],expect:[{name:"invalid submission identifies fields and focuses first error",js:"document.activeElement.id==='checkout-name' && !!document.querySelector('#checkout-name-error') && !document.querySelector('[data-checkout-reference]')"}]},
+ {...base,name:"checkout-invalid",viewports:["desktop"],actions:[seed,ready,{click:'button[type="submit"]'},{waitFor:"document.activeElement.id==='checkout-name'"}],expect:[{name:"invalid submission identifies fields and focuses first error",js:"!!document.querySelector('#checkout-name-error') && !document.querySelector('[data-checkout-reference]')"}]},
+ {...base,name:"checkout-mobile-steps",viewports:["small","mobile","tablet"],actions:[
+  seed,ready,
+  {waitFor:"document.querySelector('[data-checkout-step=basket]') && document.querySelector('main aside').checkVisibility() && !document.querySelector('#checkout-name').checkVisibility() && !document.querySelector('[data-checkout-submit]').checkVisibility()"},
+  next,{evaluate:"document.querySelector('form[data-checkout-step=contact]').requestSubmit();true"},
+  {waitFor:"location.pathname==='/checkout' && document.activeElement.id==='checkout-name' && !!document.querySelector('#checkout-name-error')"},
+  ...contact,next,
+  {waitFor:"document.querySelector('[data-checkout-step=delivery]') && document.querySelector('#checkout-address').checkVisibility() && !document.querySelector('#checkout-name').checkVisibility() && !document.querySelector('main aside ul').checkVisibility()"},
+  ...delivery,
+  {click:'[data-checkout-submit]'},{waitFor:"document.activeElement.name==='consent' && document.querySelector('#checkout-consent-error')"},
+  {click:'[data-checkout-back]'},{waitFor:"document.querySelector('[data-checkout-step=contact]') && document.querySelector('#checkout-name').checkVisibility()"},
+  {click:'[data-checkout-back]'},{waitFor:"document.querySelector('[data-checkout-step=basket]') && document.querySelector('main aside ul').checkVisibility()"},
+  next,next,
+ ],expect:[
+  {name:"back and continue preserve values and bring the shopper to the current step",js:"document.querySelector('[aria-current=step]').textContent.includes('Delivery') && document.querySelector('#checkout-email').value==='checkout@example.com' && document.querySelector('#checkout-address').value==='12 Test Street' && document.querySelector('#checkout-notes').value==='Reception delivery'"},
+  {name:"only the final step shows the payment action and consent",js:"location.pathname==='/checkout' && document.querySelector('[data-checkout-submit]').checkVisibility() && document.querySelector('input[name=consent]').checkVisibility()"},
+ ]},
  // D-122 online payment: built-in test gateway (no Paystack key in the test environment).
  {...base,name:"checkout-pay-default",actions:[seed,ready],expect:[
   {name:"step 1 continues to the payment page (card or bank transfer); no unpaid order option (D-123/D-124)",js:"document.querySelector('[data-checkout-submit]').textContent.includes('Continue to payment') && !document.querySelector('input[name=payment]') && !/Arrange payment|Send order request/.test(document.querySelector('main').innerText) && /card or bank transfer/i.test(document.querySelector('[data-payment-option]').textContent)"},

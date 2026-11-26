@@ -6,7 +6,7 @@
     "node": "^26.13.1"
   },
   "scripts": {
-    "start": "node src/server.mjs",
+    "start": "node src/start.mjs",
     "test": "node --test \"test/*.test.mjs\"",
     "test:integration": "node --test \"test/integration/*.test.mjs\"",
     "test:compose": "node --env-file=../.env.docker test/run-compose-integration.mjs"

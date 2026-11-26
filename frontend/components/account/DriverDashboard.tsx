@@ -13,7 +13,7 @@ export function DriverDashboard({account}:{account:Account}){
  const {profile}=account;
  // Only the ID type and last four characters ever reach the site (D-138).
  const id=profile.idType&&profile.idLast4?`${profile.idType==="nin"?"NIN":"Driver’s licence"} •••• ${profile.idLast4}`:null;
- return <AccountDashboardLayout account={account} portal="Driver portal"
+ return <AccountDashboardLayout identity={account} portal="Driver portal"
   links={[{href:"#dashboard-overview",label:"Overview",icon:"layers"},{href:"#my-deliveries",label:"My deliveries",icon:"truck"},{href:"#account-profile",label:"My profile",icon:"user"},{href:"/contact",label:"Help & support",icon:"message-circle"}]}
   help={{text:"Questions about your application or a delivery?",link:{href:"/contact",label:"Contact logistics team",icon:"message-circle"}}}>
   <section id="dashboard-overview" className="scroll-mt-8"><p className="text-xs font-semibold uppercase tracking-eyebrow text-gold-700">ROCK-TAMA LOGISTICS</p><h1 className="mt-2 font-serif text-3xl font-bold text-forest-heading sm:text-4xl">Welcome, {account.name}</h1>
